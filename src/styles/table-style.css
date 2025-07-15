@@ -1,0 +1,30 @@
+.p-button {
+  color: #4b5563;
+  background: white;
+  border: none;
+}
+
+.p-tabview .p-tabview-nav {
+  background: #ffffff;
+  border: none;
+  border-width: 0;
+}
+
+.p-tabview .p-tabview-panels {
+  padding: 0px;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 0;
+  border: 0;
+}
+
+/* Allow text selection inside PrimeReact DataTable cells */
+.p-datatable .p-datatable-tbody td,
+.p-datatable .p-datatable-thead th {
+  user-select: text !important;
+}
+
+.p-datatable .p-datatable-tbody td {
+  cursor: auto !important;
+}

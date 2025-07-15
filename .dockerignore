@@ -1,0 +1,10 @@
+.dockerignore
+.eslintrc.cjs
+.git
+.gitignore
+.prettierignore
+.prettierrc
+Dockerfile
+node_modules
+LICENSE
+README.md

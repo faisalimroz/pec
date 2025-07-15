@@ -1,0 +1,165 @@
+/* Group Name Input styling */
+.group-name-input {
+  margin-bottom: 1rem;
+}
+
+.group-name-input label {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.group-name-input .p-inputtext {
+  width: 465px;
+}
+.authdiv {
+  width: 600px;
+}
+.layout_guideline {
+  background-color: #eeeeee;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+.layout_guideline li {
+  color: #888888;
+}
+/* .p-sortable-column-icon{
+    visibility: hidden;
+  } */
+
+/* Header styling */
+.tree-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-bottom: none;
+  font-weight: bold;
+}
+
+.tree-header .menu-name {
+  flex-grow: 1; /* Allow menu name to take remaining space */
+}
+
+.tree-header .authority {
+  margin-left: auto; /* Push authority to the right */
+}
+
+/* Tree styling */
+.custom-tree .p-treenode-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0; /* Remove default padding */
+}
+
+.custom-tree .p-treenode-children {
+  padding-left: 1.5rem; /* Add indentation for child nodes */
+}
+
+.custom-tree .p-treenode-icon {
+  margin-right: 0.5rem; /* Add spacing between icon and label */
+}
+
+.custom-tree .p-checkbox {
+  order: 2;
+  margin-left: 10px;
+}
+
+.custom-tree .p-treenode-label {
+  order: 1;
+  flex-grow: 1;
+}
+
+/* Customize the dropdown arrow */
+.custom-tree .p-tree-toggler {
+  order: 0;
+  margin-right: 0.5rem;
+}
+
+.announcement-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.announcement-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+.fixed-bottom-buttons {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  background-color: white;
+  border-top: 1px solid #dee2e6;
+  width: calc(100% - 260px); /* Adjust based on sidebar width */
+  margin-left: 250px; /* Adjust based on sidebar width */
+  text-align: right;
+}
+
+.fixed-bottom-buttons .p-button {
+  margin-left: 0.5rem;
+}
+
+/* Cancel Button (White) */
+.fixed-bottom-buttons .p-button-outlined {
+  background-color: white;
+  color: #6c757d; /* Secondary color */
+  border: 1px solid #6c757d;
+}
+
+/* Save Button (Black) */
+.fixed-bottom-buttons .p-button-primary {
+  background-color: black;
+  border-color: black;
+  color: white;
+}
+.custom-permission-tree {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.custom-permission-tree .p-treenode-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.custom-permission-tree .p-treenode-children {
+  padding-left: 3rem;
+}
+
+.custom-permission-tree .p-checkbox {
+  margin-right: 0;
+}
+
+.fixed-bottom-buttons {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.tree-header {
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+}
