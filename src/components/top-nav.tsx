@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from './custom/button'
 import { Menu } from 'lucide-react'
-import logo from '@/assets/rhd.png'
+import logo from '@/assets/bba.png'
 import { useAuth } from '@/provider/authProvider'
 
 // Extended Permission interface to include displayName property
@@ -139,7 +139,10 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
       >
         {showLogo && (
           <Link to='/dashboard' className='mr-4'>
-            <img src={logo} alt='Logo' className='h-12 w-auto' />
+            <div className='flex gap-4 items-center font-medium'>
+              <img src={logo} alt='Logo' className='h-12 w-auto' />
+              <h3>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+            </div>
           </Link>
         )}
         {processedLinks.map(({ title, href, isActive, logo: Logo }) => (

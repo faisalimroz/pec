@@ -1,28 +1,25 @@
+import TotalVehicle from '@/components/ai-dashboard/TotalVehicle'
 import { Button } from '@/components/ui/button'
 import { Video } from 'lucide-react'
-import Logo from '@/assets/ai-assets/logo.png'
-import TotalVehicle from '@/components/ai-dashboard/TotalVehicle'
 // import WeatherBoard from '@/components/ai-dashboard/WeatherBoard'
-import WeatherBoard from '@/components/dashboard/weather-board'
-
+import logo from '@/assets/bba.png'
+import kecLogo from '@/assets/ex-pic.png'
 import { ChartBoard } from '@/components/ai-dashboard/ChartBoard'
 import VideoFeed from '@/components/ai-dashboard/VideoFeed'
-import { Link } from 'react-router-dom'
-import { LineChartComponent } from '@/components/ai-dashboard/LineChart'
-import { BarChartVT } from '@/components/ai-dashboard/BarChartVT'
-import { TrafficOfTollDash } from '@/components/charts/traffic-toll-dash'
-import { DhaleshwariChartDashboard } from '@/components/charts/dhaleshwari-chart-dash'
 import { TollOfTollDash } from '@/components/charts/toll-of-toll-dash'
-import logo from '@/assets/rhd.png'
-import kecLogo from '@/assets/ex-pic.png'
+import { TrafficOfTollDash } from '@/components/charts/traffic-toll-dash'
+import { Link } from 'react-router-dom'
 
 export default function AiDashboard() {
   return (
     <>
       <div className='py-2 px-6 flex justify-between items-center bg-main'>
-        <div>
-          <img className='w-auto h-12' src={logo} alt='' />
-        </div>
+        <Link to='/dashboard' className='mr-4'>
+          <div className='flex gap-4 items-center font-medium'>
+            <img src={logo} alt='Logo' className='h-12 w-auto' />
+            <h3>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+          </div>
+        </Link>
 
         <div className='flex items-center gap-4'>
           <Link

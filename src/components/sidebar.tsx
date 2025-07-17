@@ -5,8 +5,8 @@ import { Button } from './custom/button'
 import Nav from './nav'
 import { cn } from '@/lib/utils'
 import { Link } from 'react-router-dom'
-import logo from '@/assets/rhd.png'
 import rhdLogo from '@/assets/rhd-logo.png'
+import logo from '@/assets/bba.png'
 
 interface SideLink {
   title: string
@@ -103,146 +103,11 @@ export default function Sidebar2({
             <div
               className={`flex flex-col justify-end truncate ${isCollapsed ? 'invisible w-0' : 'visible w-auto'}`}
             >
-              <Link to='/dashboard' className=''>
-                <img src={logo} alt='Logo' className='w-auto h-12' />
-                {/* <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='152.06'
-                  height='16.846'
-                  viewBox='0 0 152.06 16.846'
-                >
-                  <g
-                    id='vSF5RA0qHP0RB93EoC4HUWsAyKk534C_fcK6S4oxXlvIkZ9AlgmRhxBMPqd-r8HIu79FXcNyKT9zVHcG_birsVj7HxuFht6ZaIddwzFF8s6I2Akt6GJNGRZRQZnp2UXxmWMKZUuHfmStFXfpjKD3pg'
-                    transform='translate(0 149.717)'
-                  >
-                    <path
-                      id='Path_21'
-                      data-name='Path 21'
-                      d='M-842.794-85.663c-1.348,1.326-2.941,1.6-4.919,1.6h-16.954a3.579,3.579,0,0,1-3.106-2.625h-4.405a7.9,7.9,0,0,0,7.512,6.473h16.954a10.853,10.853,0,0,0,8.075-2.849l2.776-2.732-2.9-2.852c-1.656,1.629-3.034,2.987-3.034,2.987'
-                      transform='translate(879.129 -52.654)'
-                      fill='#ed1b2f'
-                    />
-                    <path
-                      id='Path_22'
-                      data-name='Path 22'
-                      d='M-215.449-110.393H-204.4a1.224,1.224,0,0,1,1.032,1.313,1.226,1.226,0,0,1-1.032,1.314h-14.157a5.631,5.631,0,0,0-.337,1.924,5.639,5.639,0,0,0,.337,1.925H-204.4a5.243,5.243,0,0,0,5.307-5.163,5.242,5.242,0,0,0-5.307-5.162h-11.051a7.9,7.9,0,0,0-7.512,6.475h4.405a3.579,3.579,0,0,1,3.106-2.626'
-                      transform='translate(229.911 -35.427)'
-                      fill='#ed1b2f'
-                    />
-                    <path
-                      id='Path_23'
-                      data-name='Path 23'
-                      d='M-122.648-55.188a5.634,5.634,0,0,1,.336-1.924h-4.4a9.088,9.088,0,0,0-.207,1.924,9.1,9.1,0,0,0,.207,1.925h4.4a5.639,5.639,0,0,1-.336-1.925'
-                      transform='translate(133.666 -86.082)'
-                      fill='#802629'
-                    />
-                    <path
-                      id='Path_24'
-                      data-name='Path 24'
-                      d='M-199.319,0h-4.811a2.04,2.04,0,0,0-2.138,1.924,2.04,2.04,0,0,0,2.138,1.925h4.811a9.1,9.1,0,0,1-.207-1.925A9.091,9.091,0,0,1-199.319,0'
-                      transform='translate(206.269 -143.194)'
-                      fill='#ed1b2f'
-                    />
-                    <path
-                      id='Path_25'
-                      data-name='Path 25'
-                      d='M-168.148-156.233c1.347-1.326,2.942-1.6,4.92-1.6h1.407a2.039,2.039,0,0,0,2.139-1.924,2.041,2.041,0,0,0-2.139-1.925h-1.407a10.85,10.85,0,0,0-8.075,2.85l-2.707,2.664,2.9,2.852Z'
-                      transform='translate(216.276 12.011)'
-                      fill='#ed1b2f'
-                    />
-                    <path
-                      id='Path_26'
-                      data-name='Path 26'
-                      d='M-204.842-72.056a8.906,8.906,0,0,0-4.432-2.46,2.22,2.22,0,0,0-2.632,1.338,1.908,1.908,0,0,0,1.488,2.37A5.063,5.063,0,0,1-208-69.46l3.311,3.252,2.9-2.851Z'
-                      transform='translate(244.054 -75.095)'
-                      fill='#0071ce'
-                    />
-                    <path
-                      id='Path_27'
-                      data-name='Path 27'
-                      d='M-350.368-130.534h-1.409c-1.978,0-3.57-.271-4.919-1.6l-2.992-2.954-2.9,2.852,2.733,2.7a10.855,10.855,0,0,0,8.074,2.849h1.409a2.04,2.04,0,0,0,2.139-1.924,2.04,2.04,0,0,0-2.139-1.924'
-                      transform='translate(404.85 -6.218)'
-                      fill='#0071ce'
-                    />
-                    <path
-                      id='Path_28'
-                      data-name='Path 28'
-                      d='M-83.113,0l-2.9,2.852,2.9,2.852,2.9-2.852Z'
-                      transform='translate(125.379 -144.155)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_29'
-                      data-name='Path 29'
-                      d='M-62.955,0h-2.2V15.616h2.2V6.291h1.825V4.775h-1.825Z'
-                      transform='translate(213.191 -149.172)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_30'
-                      data-name='Path 30'
-                      d='M-163.677-92.513v-3.226h-2.2v3.226a7.047,7.047,0,0,1-3.511,6.358l.965,1.243a9.052,9.052,0,0,0,3.645-3.549,9.046,9.046,0,0,0,3.641,3.549l.968-1.243a7.041,7.041,0,0,1-3.512-6.358'
-                      transform='translate(307.092 -53.307)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_31'
-                      data-name='Path 31'
-                      d='M-62.955-117.43v-4.094h-2.2v11.372h2.2v-5.763h1.826v-1.515Z'
-                      transform='translate(140.428 -27.649)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_32'
-                      data-name='Path 32'
-                      d='M-67.256-164.816a2.19,2.19,0,0,1,1.851-2.415,2.19,2.19,0,0,1,1.851,2.415A2.191,2.191,0,0,1-65.4-162.4a2.19,2.19,0,0,1-1.851-2.416m5.9,0a3.5,3.5,0,0,0-1.44-2.847h1.534v-1.516h-3.07v-1.383h-2.2v1.383H-69.6v1.516h1.589a3.5,3.5,0,0,0-1.439,2.847,3.968,3.968,0,0,0,4.046,3.885,3.968,3.968,0,0,0,4.046-3.885'
-                      transform='translate(134.689 20.846)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_33'
-                      data-name='Path 33'
-                      d='M-298.97-140.732v-1.515H-307.2v-3.392h-2.2v3.613a1.311,1.311,0,0,0,1.38,1.294Z'
-                      transform='translate(376.559 7.126)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_34'
-                      data-name='Path 34'
-                      d='M-23.149,0V6.873a1.313,1.313,0,0,0,1.381,1.3h2.821v4.569h-5.009v1.517h12.212V12.739h-5.008V8.17H-12.8V6.651h-8.155V1.518H-12.8V0Z'
-                      transform='translate(119.789 -148.963)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_35'
-                      data-name='Path 35'
-                      d='M-213.257-273.408v-2.619h5.241v-1.516h-1.1v-4.1a1.314,1.314,0,0,0-1.381-1.3h-9.419v1.518h8.6v3.879h-9.375v1.516h5.241v2.619h-4.47v1.518h8.6v4.356h2.2v-5.874Z'
-                      transform='translate(301.393 133.977)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_36'
-                      data-name='Path 36'
-                      d='M-23.183-223.709a1.312,1.312,0,0,0,1.38,1.3h2.936v3.643h-5.125v1.518h12.446v-1.518H-16.67v-3.643H-12.6v-1.517H-20.99V-226.1H-12.6v-4.115a1.313,1.313,0,0,0-1.381-1.3h-9.2v1.518H-14.8v2.378h-8.386Z'
-                      transform='translate(133.946 82.546)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_37'
-                      data-name='Path 37'
-                      d='M-32.022,0V1.518h8.491V6.5h-3.064V3.549h-2.2V6.5h-4.348V8.016H-20V6.5h-1.336V1.3A1.313,1.313,0,0,0-22.716,0Z'
-                      transform='translate(157.058 -148.963)'
-                      fill='#0b1f8f'
-                    />
-                    <path
-                      id='Path_38'
-                      data-name='Path 38'
-                      d='M-134.834-164.289a2.339,2.339,0,0,1-2.506-2.125,2.339,2.339,0,0,1,2.506-2.126,2.339,2.339,0,0,1,2.506,2.126,2.339,2.339,0,0,1-2.506,2.125m0-5.728c-2.6,0-4.7,1.613-4.7,3.6s2.106,3.6,4.7,3.6,4.7-1.614,4.7-3.6-2.1-3.6-4.7-3.6'
-                      transform='translate(265.252 29.892)'
-                      fill='#0b1f8f'
-                    />
-                  </g>
-                </svg> */}
+              <Link to='/dashboard' className='mr-4'>
+                <div className='flex gap-4 items-center font-medium text-white'>
+                  <img src={logo} alt='Logo' className='h-12 w-auto' />
+                  <h3 className='text-xs'>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+                </div>
               </Link>
             </div>
           </div>

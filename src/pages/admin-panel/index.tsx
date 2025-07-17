@@ -53,12 +53,11 @@ export default function AdminPanelLayout({
           <div className='max-w-full mx-auto px-4 sm:px-6 lg:px-6'>
             <div className='flex justify-between py-2'>
               <div className='flex items-center'>
-                <Link to='/dashboard'>
-                  <img
-                    className='h-12 w-fit cursor-pointer'
-                    src={logo}
-                    alt='Logo'
-                  />
+                <Link to='/dashboard' className='mr-4'>
+                  <div className='flex gap-4 items-center font-medium'>
+                    <img src={logo} alt='Logo' className='h-12 w-auto' />
+                    <h3>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+                  </div>
                 </Link>
                 <div className='hidden sm:ml-6 sm:flex sm:space-x-8 text-white'>
                   {isSuperAdminOrAdmin && (

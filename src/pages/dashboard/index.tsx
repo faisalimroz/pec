@@ -48,6 +48,30 @@ const topNav = [
     uName: 'administration',
   },
   {
+    title: 'RTW',
+    href: '/rtw',
+    isActive: false,
+    logo: documentSearchIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'rtw',
+  },
+  {
+    title: 'MB PMIS',
+    href: '/mb-pmis',
+    isActive: false,
+    logo: documentSearchIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'mb-pmis',
+  },
+  {
+    title: 'Toll Operation',
+    href: '/toll-operation',
+    isActive: false,
+    logo: documentSearchIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'toll-operation',
+  },
+  {
     title: 'EDMS',
     href: '/edms/dispatched',
     isActive: false,
@@ -277,6 +301,26 @@ function edmsIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d='M8 15h3' />
       <path d='M16.5 17.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0' />
       <path d='M18.5 19.5l2.5 2.5' />
+    </svg>
+  )
+}
+
+
+function documentSearchIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="21" height="20"
+      viewBox="0 0 21 20"
+      fill="none">
+      <path d="M7.10665 4.17166H5.43998C4.99795 4.17166 4.57403 4.34726 4.26147 4.65982C3.94891 4.97238 3.77332 5.3963 3.77332 5.83833V15.8383C3.77332 16.2804 3.94891 16.7043 4.26147 17.0168C4.57403 17.3294 4.99795 17.505 5.43998 17.505H10.1875" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M15.44 10.005V5.83833C15.44 5.3963 15.2644 4.97238 14.9519 4.65982C14.6393 4.34726 14.2154 4.17166 13.7734 4.17166H12.1067" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M7.10669 4.17167C7.10669 3.72964 7.28228 3.30572 7.59485 2.99316C7.90741 2.6806 8.33133 2.505 8.77336 2.505H10.44C10.8821 2.505 11.306 2.6806 11.6185 2.99316C11.9311 3.30572 12.1067 3.72964 12.1067 4.17167C12.1067 4.6137 11.9311 5.03762 11.6185 5.35018C11.306 5.66274 10.8821 5.83834 10.44 5.83834H8.77336C8.33133 5.83834 7.90741 5.66274 7.59485 5.35018C7.28228 5.03762 7.10669 4.6137 7.10669 4.17167Z" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M7.10669 9.17166H10.44" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M7.10669 12.505H9.60669" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M12.1067 14.5883C12.1067 15.1409 12.3262 15.6708 12.7169 16.0615C13.1076 16.4522 13.6375 16.6717 14.19 16.6717C14.7426 16.6717 15.2725 16.4522 15.6632 16.0615C16.0539 15.6708 16.2734 15.1409 16.2734 14.5883C16.2734 14.0358 16.0539 13.5059 15.6632 13.1152C15.2725 12.7245 14.7426 12.505 14.19 12.505C13.6375 12.505 13.1076 12.7245 12.7169 13.1152C12.3262 13.5059 12.1067 14.0358 12.1067 14.5883Z" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M15.8567 16.255L17.94 18.3383" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
   )
 }
