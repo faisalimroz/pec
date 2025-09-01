@@ -466,6 +466,54 @@ export default function AssetManagementTable() {
     )
   }
 
+
+ const ButtonGroup = () => {
+  const [activeButton, setActiveButton] = useState('All')
+
+  const buttons = [
+    { label: 'All', value: 'All' },
+    { label: 'Service Area 1', value: 'Service Area 1' },
+    { label: 'Service Area 2', value: 'Service Area 2' },
+    { label: 'Service Area 3', value: 'Service Area 3' },
+    { label: 'Mawa', value: 'Mawa' },
+    { label: 'Janjira', value: 'Janjira' },
+  ]
+
+  const handleButtonClick = (buttonValue:string) => {
+    setActiveButton(buttonValue)
+    
+    console.log(`Button clicked: ${buttonValue}`)
+  }
+
+  return (
+    <>
+     <div className='flex items-center space-x-2 p-4 bg-gray-100 rounded-lg'>
+      {buttons.map((button) => (
+        <button
+          key={button.value}
+          onClick={() => handleButtonClick(button.value)}
+          className={`
+            px-6 py-3 font-semibold text-lg rounded-lg transition-colors duration-200 ease-in-out
+            ${
+              activeButton === button.value
+                ? 'bg-[#6F90AE] text-white' 
+                : 'p-3 bg-main text-base font-semibold text-white' 
+            }
+            ${
+              button.value === 'All'
+                ? 'bg-blue-600 border-2 border-blue-400'
+                : ''
+            }
+          `}
+        >
+          {button.label}
+        </button>
+      ))}
+    </div>
+    </>
+   
+  )
+}
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
@@ -743,7 +791,9 @@ export default function AssetManagementTable() {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-
+        <div className='mt-2'>
+          <ButtonGroup></ButtonGroup>
+        </div>
         <DataTable
           ref={dt}
           value={products}

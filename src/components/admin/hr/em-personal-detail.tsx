@@ -118,9 +118,9 @@ export default function EmPersonalDetail({
     setUpdatedEmployee((prev) =>
       prev
         ? {
-            ...prev,
-            profileImg: '',
-          }
+          ...prev,
+          profileImg: '',
+        }
         : null
     )
     // Reset the file input
@@ -591,10 +591,11 @@ export default function EmPersonalDetail({
     { label: 'Employee ID', value: employeeData.employeeId },
     { label: 'Department Name', value: employeeData.dept },
     { label: 'Position', value: employeeData.position },
-    { label: 'Salary', value: employeeData.salary },
-    { label: 'BOQ NO.', value: employeeData.boqNo },
+    // { label: 'Salary', value: employeeData.salary },
+
     { label: 'Location', value: employeeData.location },
-    { label: 'Branch', value: employeeData.branch },
+    { label: 'BOQ NO.', value: employeeData.boqNo },
+    // { label: 'Branch', value: employeeData.branch },
     { label: 'Firm Name', value: employeeData.firmName },
     { label: 'Date of Mobilization', value: employeeData.dateOfMobilization },
     {
@@ -611,12 +612,12 @@ export default function EmPersonalDetail({
   ]
 
   const documents = [
-    { label: 'CV, Certificates, etc', files: employeeData.cvCertificates },
-    { label: 'Employment Agreement', files: employeeData.agreement },
-    { label: 'Showcase Letter', files: employeeData.showcaseLetter },
-    { label: 'Warning Letter', files: employeeData.warningLetter },
-    { label: 'Resignation or Termination', files: employeeData.termination },
-    { label: 'Insurance Claiming', files: employeeData.insuranceClaiming },
+    { label: 'Upload CV', files: employeeData.cvCertificates },
+    // { label: 'Employment Agreement', files: employeeData.agreement },
+    // { label: 'Showcase Letter', files: employeeData.showcaseLetter },
+    // { label: 'Warning Letter', files: employeeData.warningLetter },
+    // { label: 'Resignation or Termination', files: employeeData.termination },
+    // { label: 'Insurance Claiming', files: employeeData.insuranceClaiming },
   ]
 
   // console.log(employeeData)
@@ -626,9 +627,8 @@ export default function EmPersonalDetail({
       {!isDialog && (
         <div className='flex justify-between items-center'>
           <Link
-            to={`/administrative/employee-personal-profile${
-              pageParam ? `?page=${pageParam}` : ''
-            }`}
+            to={`/administrative/employee-personal-profile${pageParam ? `?page=${pageParam}` : ''
+              }`}
             className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400 hover:text-white ml-3'
           >
             <i className='pi pi-arrow-left' /> Go Back
@@ -662,26 +662,29 @@ export default function EmPersonalDetail({
 
       <div className='p-4'>
         <Card className='mb-4'>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-3'>
-            <div className='col-span-1'>
+          <div className='flex flex-col md:flex-row items-start gap-6 p-6 bg-white  rounded-lg'>
+       
+            <div className='flex-shrink-0'>
               <img
                 src={
                   employeeData?.profileImg ||
                   `https://avatar.iran.liara.run/username?username=${employeeData?.employeeName?.replace(/\s+/g, '+') || 'unknown'}}`
                 }
-                alt='Updated Employee'
+                alt='Employee Profile'
                 className='w-[250px] h-auto object-cover rounded'
               />
             </div>
-            <div className='col-span-2'>
-              <h2 className='text-xl font-bold mb-4 bg-red-200 p-3 rounded'>
+
+       
+            <div className='flex-grow'>
+              <h2 className='text-xl font-bold mb-4 bg-red-200 p-2 rounded'>
                 Employee Personal Profile
               </h2>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4'>
                 {personalInfo.map((item, index) => (
-                  <div key={index} className='flex'>
+                  <div key={index} className='flex items-start'>
                     <span className='font-semibold mr-2'>{item.label}:</span>
-                    <span>{item.value}</span>
+                    <span className='text-gray-900'>{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -1000,11 +1003,11 @@ export default function EmPersonalDetail({
                 value={
                   updatedEmployee?.dateOfMobilization
                     ? new Date(
-                        updatedEmployee.dateOfMobilization
-                          .split('-')
-                          .reverse()
-                          .join('-')
-                      )
+                      updatedEmployee.dateOfMobilization
+                        .split('-')
+                        .reverse()
+                        .join('-')
+                    )
                     : null
                 }
                 onChange={(e) =>
@@ -1013,7 +1016,7 @@ export default function EmPersonalDetail({
                     dateOfMobilization: e.value ? formatDate(e.value) : '',
                   })
                 }
-                // dateFormat='dd/mm/yy'
+              // dateFormat='dd/mm/yy'
               />
             </div>
 
@@ -1026,11 +1029,11 @@ export default function EmPersonalDetail({
                 value={
                   updatedEmployee?.dateOfDemobilization
                     ? new Date(
-                        updatedEmployee.dateOfDemobilization
-                          .split('-')
-                          .reverse()
-                          .join('-')
-                      )
+                      updatedEmployee.dateOfDemobilization
+                        .split('-')
+                        .reverse()
+                        .join('-')
+                    )
                     : null
                 }
                 onChange={(e) =>
@@ -1039,7 +1042,7 @@ export default function EmPersonalDetail({
                     dateOfDemobilization: e.value ? formatDate(e.value) : '',
                   })
                 }
-                // dateFormat='dd/mm/yy'
+              // dateFormat='dd/mm/yy'
               />
             </div>
 

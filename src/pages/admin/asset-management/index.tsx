@@ -44,7 +44,7 @@ export default function AssetManagement() {
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
                   Asset Management
                 </h1>
-
+                 
                 <DemoTable />
               </div>
             </LayoutBody>
