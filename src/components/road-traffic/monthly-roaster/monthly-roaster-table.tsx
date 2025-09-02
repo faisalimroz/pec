@@ -13,7 +13,7 @@ import { searchMonthlyRoaster } from '@/api/roadTrafficAPIs'
 import axios from 'axios'
 import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
-import { Dropdown } from 'primereact/dropdown'
+// import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
@@ -94,6 +94,22 @@ export default function MonthlyRoasterTable() {
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState('')
 
+ // updated component with button
+  const handleButtonClick = (newType: string) => {
+ 
+    const newProduct = updatedProduct ? { ...updatedProduct, type: newType } : { type: newType, _id: '', slNo: '',actions:'', description: '', date: '', remarks: '', attachments: [], title: '' };
+
+    setUpdatedProduct(newProduct);
+  };
+
+  const buttonClasses = (buttonType: string) => {
+    const isActive = updatedProduct && updatedProduct.type === buttonType;
+    const baseClasses = 'p-3 text-base font-semibold text-white rounded-md transition-colors duration-200';
+    const activeColor = 'bg-[#6F90AE]';
+    const inactiveColor = 'bg-main'; // Assuming 'bg-main' is your default color
+
+    return `${baseClasses} ${isActive ? activeColor : inactiveColor}`;
+  };
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
@@ -470,6 +486,7 @@ export default function MonthlyRoasterTable() {
         <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
           Document List
         </div>
+
         {/* {isRnT && (
           <button
             onClick={confirmDeleteSelected}
@@ -529,11 +546,10 @@ export default function MonthlyRoasterTable() {
             <button
               onClick={confirmDeleteSelected}
               disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
-                selectedProducts && selectedProducts.length > 0
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-gray-400 cursor-not-allowed'
-              }`}
+              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-gray-400 cursor-not-allowed'
+                }`}
             >
               Delete Selected ({selectedProducts?.length || 0})
             </button>
@@ -722,7 +738,7 @@ export default function MonthlyRoasterTable() {
         icon={() => <i className='pi pi-angle-down' />}
       />
 
-      <div>
+      {/* <div>
         <Dropdown
           value={selectedCode}
           onChange={(e) => setSelectedCode(e.value)}
@@ -731,7 +747,7 @@ export default function MonthlyRoasterTable() {
           placeholder='Select Type'
           className='border-none rounded-none ml-4 cursor-pointer ring-0'
         />
-      </div>
+      </div> */}
 
       <IconField iconPosition='left' className='relative'>
         <InputIcon className='pi pi-search' />
@@ -847,7 +863,20 @@ export default function MonthlyRoasterTable() {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-
+        <div className='flex gap-2 py-5'>
+          <button
+            className={buttonClasses('Plan')}
+            onClick={() => handleButtonClick('Plan')}
+          >
+            Plan
+          </button>
+          <button
+            className={buttonClasses('Actual')}
+            onClick={() => handleButtonClick('Actual')}
+          >
+            Actual
+          </button>
+        </div>
         <DataTable
           ref={dt}
           value={products}
@@ -1061,7 +1090,7 @@ export default function MonthlyRoasterTable() {
               />
             </div>
 
-            <div className='field'>
+            {/* <div className='field'>
               <label htmlFor='type' className='font-bold'>
                 Select Type
               </label>
@@ -1072,7 +1101,7 @@ export default function MonthlyRoasterTable() {
                 onChange={(e) => setType(e.target.value)}
                 placeholder='Select Type'
               />
-            </div>
+            </div> */}
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -1165,7 +1194,7 @@ export default function MonthlyRoasterTable() {
                 required
               />
             </div>
-            <div className='field'>
+            {/* <div className='field'>
               <label htmlFor='type' className='font-bold'>
                 Select Type
               </label>
@@ -1182,7 +1211,7 @@ export default function MonthlyRoasterTable() {
                 placeholder='Select Type'
                 required
               />
-            </div>
+            </div> */}
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
                 Remarks

@@ -5,12 +5,12 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
 import { adminTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
-import DemoTable from '@/components/admin/asset-management/asset-manage-table'
+import DemoTable from '@/components/admin/vehicle-mgt-record/vehicle-mgt-record'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
-  
+
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
@@ -42,7 +42,7 @@ export default function AssetManagement() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                  Asset Management
+                 Vehicle Mgt. Record
                 </h1>
                  
                 <DemoTable />

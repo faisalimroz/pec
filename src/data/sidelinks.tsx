@@ -20,6 +20,7 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
+  
 
   {
     title: 'HR',
@@ -79,6 +80,7 @@ export const administrationLinks: SideLink[] = [
     uName: 'admin-monthly-roster',
     icon: <FileIcon />,
   },
+   
   {
     title: 'Asset Management',
     label: '',
@@ -91,6 +93,13 @@ export const administrationLinks: SideLink[] = [
     label: '',
     href: '/administrative/notice',
     uName: 'admin-notice',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Vehicle Mgt. Record',
+    label: '',
+    href: '/administrative/vehicle-mgt',
+    uName: 'vehicle-mgt-record',
     icon: <FileIcon />,
   },
 

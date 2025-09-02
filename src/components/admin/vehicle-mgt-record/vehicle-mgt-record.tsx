@@ -20,7 +20,20 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { Dropdown } from 'primereact/dropdown';
-        
+        interface Vehicle {
+  _id: string;
+  slNo: string;
+  vehicleName: string;
+  registrationNumber: string;
+  vehicleClass: string;
+  status: string;
+  fitnessDuration: string;
+  taxAndTokenReport: string;
+  creator?: string;
+  creationTimestamp?: string;
+  updater?: string;
+  updatingTimestamp?: string;
+}
 interface Attachment {
   url: string
   _id: string

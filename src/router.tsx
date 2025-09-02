@@ -239,6 +239,13 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'administrative/vehicle-mgt-record',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/vehicle-mgt-record'))
+                .default,
+            }),
+          },
+          {
             path: 'administrative/mobilization',
             lazy: async () => ({
               Component: (await import('@/pages/admin/hr/mobilization'))
