@@ -421,17 +421,8 @@ export const rntTopNav = [
     uName: 'edms',
   },
 ]
-
-export const edmsTopNav = [
-  // {
-  //   title: 'General Information',
-  //   href: '/general-information/general-status',
-  //   isActive: false,
-  //   logo: GiIcon,
-  //   roles: ['general-information', 'superadmin'],
-  //   uName: 'general-information',
-  // },
-  {
+export const edmsSecondNav=[
+   {
     title: 'Administration',
     href: '/administrative',
     isActive: false,
@@ -480,6 +471,65 @@ export const edmsTopNav = [
     roles: ['superadmin', 'its-manager'],
     uName: 'its',
   },
+]
+export const edmsTopNav = [
+  // {
+  //   title: 'General Information',
+  //   href: '/general-information/general-status',
+  //   isActive: false,
+  //   logo: GiIcon,
+  //   roles: ['general-information', 'superadmin'],
+  //   uName: 'general-information',
+  // },
+  // {
+  //   title: 'Administration',
+  //   href: '/administrative',
+  //   isActive: false,
+  //   logo: AdminIcon,
+  //   roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+  //   uName: 'administration',
+  // },
+  // {
+  //   title: 'Road & Traffic',
+  //   href: '/road-and-traffic/procurement',
+  //   isActive: false,
+  //   logo: RntIcon,
+  //   roles: ['superadmin', 'r&t-manager'],
+  //   uName: 'road-&-traffic',
+  // },
+  // {
+  //   title: 'Main Bridge',
+  //   href: '/mb-pmis',
+  //   isActive: false,
+  //   logo: edmsIcon,
+  //   roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+  //   uName: 'mb-pmis',
+  // },
+  // {
+  //   title: 'RTW',
+  //   href: '/rtw',
+  //   isActive: false,
+  //   logo: edmsIcon,
+  //   roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+  //   uName: 'rtw',
+  // },
+
+  // {
+  //   title: 'Toll Operation',
+  //   href: '/toll/monthly-toll-revenue',
+  //   isActive: false,
+  //   logo: edmsIcon,
+  //   roles: ['superadmin', 'toll-manager'],
+  //   uName: 'toll',
+  // },
+  // {
+  //   title: 'ITS',
+  //   href: '/its/overview',
+  //   isActive: false,
+  //   logo: ItsIcon,
+  //   roles: ['superadmin', 'its-manager'],
+  //   uName: 'its',
+  // },
   {
     title: 'EDMS',
     href: '/edms/dispatched',
