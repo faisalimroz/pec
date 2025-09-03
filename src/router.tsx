@@ -246,6 +246,20 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'administrative/gardening-monthly-activity',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/gardening-monthly-activity'))
+                .default,
+            }),
+          },
+           {
+            path: 'administrative/vehicle-mgt-record',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/vehicle-mgt-record'))
+                .default,
+            }),
+          },
+          {
             path: 'administrative/mobilization',
             lazy: async () => ({
               Component: (await import('@/pages/admin/hr/mobilization'))
