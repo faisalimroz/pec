@@ -12,9 +12,9 @@ interface NewNavbarProps {
 
 const NewNavbar: React.FC<NewNavbarProps> = ({ links }) => {
   return (
-    <nav className=" bg-blue flex  items-center h-auto px-10 py-3">
+    <nav className=" bg-nav flex  items-center h-auto px-10 py-3">
       {links.map((link) => (
-        <a key={link.title} href={link.href} className="flex flex-1 items-center rounded-md gap-2 py-2 px-4 text-sm font-semibold text-white hover:bg-gray">
+        <a key={link.title} href={link.href} className="flex flex-1 items-center rounded-md gap-2 py-2 px-4 text-sm font-semibold text-white hover:bg-shadow">
           {link.logo && <link.logo className='h-4 w-4' />}
           <span>{link.title}</span>
         </a>

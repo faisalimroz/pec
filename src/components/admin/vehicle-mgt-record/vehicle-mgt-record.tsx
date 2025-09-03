@@ -20,7 +20,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { Dropdown } from 'primereact/dropdown';
-        interface Vehicle {
+interface Vehicle {
   _id: string;
   slNo: string;
   vehicleName: string;
@@ -29,45 +29,39 @@ import { Dropdown } from 'primereact/dropdown';
   status: string;
   fitnessDuration: string;
   taxAndTokenReport: string;
+  roadTaxExpiry: Date;
   creator?: string;
   creationTimestamp?: string;
   updater?: string;
   updatingTimestamp?: string;
+  attachments: Attachment[]
 }
 interface Attachment {
   url: string
   _id: string
 }
-interface Product {
-  _id: string | null
-  slNo: string
-  assetId: string
-  chalanNo: string
-  itemName: string
-  date: string
-  quantity: string
-  usingLocation: string
-  remarks: string
-  attachments: Attachment[]
-  creator?: string
-  creationTimestamp?: string
-  updater?: string
-  updatingTimestamp?: string
-}
-
+const options = [
+  { label: 'Exemption', value: 'exemption' },
+  { label: 'Non Exemption', value: 'non-exemption' },
+];
 export default function AssetManagementTable() {
-  let emptyProduct: Product = {
+  let emptyVehicle: Vehicle = {
     _id: '',
     slNo: '',
-    assetId: '',
-    chalanNo: '',
-    itemName: '',
-    date: '',
-    quantity: '',
-    usingLocation: '',
-    remarks: '',
+    vehicleName: '',
+    registrationNumber: '',
+    vehicleClass: '',
+    status: '',
+    fitnessDuration: '',
+    taxAndTokenReport: '',
+    roadTaxExpiry: new Date(),
+    creator: '',
+    creationTimestamp: '',
+    updater: '',
+    updatingTimestamp: '',
     attachments: [],
-  }
+  };
+
   const { roles, permissions } = useAuth()
   const checkRole = permissions.find((p) => p.name === 'admin')
   const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
@@ -82,35 +76,43 @@ export default function AssetManagementTable() {
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [deleteProductsDialog, setDeleteProductsDialog] =
     useState<boolean>(false)
-  const [product, setProduct] = useState<any>(emptyProduct)
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
+  const [product, setProduct] = useState<any>(emptyVehicle)
+  const [selectedProducts, setSelectedProducts] = useState<Vehicle[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
-  const dt = useRef<DataTable<Product[]>>(null)
+  const dt = useRef<DataTable<Vehicle[]>>(null)
   const [date, setDate] = useState<string>('')
   const [date2, setDate2] = useState<string>('')
+  const [dropdownStatus, setDropdownStatus] = useState<string>('')
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
   const [itemName, setItemName] = useState('')
+  const [vehicleClass, setvehicleClass] = useState('')
+  const [vehicleName, setVehicleName] = useState('')
+  const [registrationNumber, setRegistrationNumber] = useState('')
+  const [taxToken, setTaxToken] = useState('')
   const [assetId, setAssetId] = useState('')
+  const [fitnessDuration, setFitnessDuration] = useState('')
   const [chalanNo, setChalanNo] = useState('')
   const [quantity, setQuantity] = useState('')
   const [usingLocation, setUsingLoaction] = useState('')
-  const [remarks, setRemarks] = useState('')
+  const [status, setStatus] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [formDate, setFormDate] = useState<string>('')
+  const [formDates, setFormDates] = useState<(Date | null)[] | null>(null);
+
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<Vehicle | null>(null)
 
   const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
-  const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
+  const [updatedProduct, setUpdatedProduct] = useState<Vehicle | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
   // all update dialog func here
-  const openUpdateDialog = (product: Product) => {
+  const openUpdateDialog = (product: Vehicle) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
   }
@@ -127,14 +129,22 @@ export default function AssetManagementTable() {
 
     try {
       setLoading2(true)
-      const formData = new FormData()
-      formData.append('assetId', updatedProduct.assetId)
-      formData.append('itemName', updatedProduct.itemName)
-      formData.append('chalanNo', updatedProduct.chalanNo)
-      formData.append('quantity', updatedProduct.quantity)
-      formData.append('usingLocation', updatedProduct.usingLocation)
-      formData.append('remarks', updatedProduct.remarks)
-      formData.append('date', updatedProduct.date)
+      const formData = new FormData();
+
+      formData.append('_id', updatedProduct._id);
+      formData.append('slNo', updatedProduct.slNo);
+      formData.append('vehicleName', updatedProduct.vehicleName);
+      formData.append('registrationNumber', updatedProduct.registrationNumber);
+      formData.append('vehicleClass', updatedProduct.vehicleClass);
+      formData.append('status', updatedProduct.status);
+      formData.append('fitnessDuration', updatedProduct.fitnessDuration);
+      formData.append('taxAndTokenReport', updatedProduct.taxAndTokenReport);
+      formData.append('roadTaxExpiry', updatedProduct.roadTaxExpiry.toISOString());
+      formData.append('creator', updatedProduct.creator || '');
+      formData.append('creationTimestamp', updatedProduct.creationTimestamp || '');
+      formData.append('updater', updatedProduct.updater || '');
+      formData.append('updatingTimestamp', updatedProduct.updatingTimestamp || '');
+
 
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
@@ -169,7 +179,21 @@ export default function AssetManagementTable() {
       setLoading2(false)
     }
   }
+  const itemTemplate = (option: any) => {
+    return (
+      <div className="flex items-center space-x-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+          <path d="M14 2.01953H6C5.46957 2.01953 4.96086 2.23024 4.58579 2.60532C4.21071 2.98039 4 3.4891 4 4.01953V20.0195C4 20.55 4.21071 21.0587 4.58579 21.4337C4.96086 21.8088 5.46957 22.0195 6 22.0195H18C18.5304 22.0195 19.0391 21.8088 19.4142 21.4337C19.7893 21.0587 20 20.55 20 20.0195V8.01953L14 2.01953Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M14 2.01953V8.01953H20" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M16 13.0195H8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M16 17.0195H8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M10 9.01953H9H8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>{option.label}</span>
 
+      </div>
+    );
+  };
   const handleNewAttachments = (files: File[]) => {
     setNewAttachments(files)
   }
@@ -202,10 +226,9 @@ export default function AssetManagementTable() {
     </>
   )
 
-  // ending all update dialog funcs
 
   const openNew = () => {
-    setProduct(emptyProduct)
+    setProduct(emptyVehicle)
     setSubmitted(false)
     setProductDialog(true)
   }
@@ -244,15 +267,18 @@ export default function AssetManagementTable() {
       const formData = new FormData()
 
       formData.append('itemName', itemName)
-      formData.append('assetId', assetId)
-      formData.append('chalanNo', chalanNo)
-      formData.append('quantity', quantity)
+      formData.append('taxToken', taxToken)
+      formData.append('fitnessDuration', formatDate(formDates))
+      formData.append('registrationNumber', registrationNumber)
+      formData.append('vehicleClass', vehicleClass)
+      formData.append('vehicleName', vehicleName)
       formData.append('usingLocation', usingLocation)
-      formData.append('remarks', remarks)
+      formData.append('status', status)
       formData.append('date', formatDate(formDate))
       filesInput.forEach((file) => {
         formData.append('attachments', file)
       })
+   console.log(Array.from(formData.entries()));
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/upload`,
         formData,
@@ -281,7 +307,7 @@ export default function AssetManagementTable() {
     }
   }
 
-  const confirmDeleteProduct = (product: Product) => {
+  const confirmDeleteProduct = (product: Vehicle) => {
     setProduct(product)
     setDeleteProductDialog(true)
   }
@@ -317,7 +343,7 @@ export default function AssetManagementTable() {
 
     setProducts(_products)
     setDeleteProductDialog(false)
-    setProduct(emptyProduct)
+    setProduct(emptyVehicle)
   }
 
   const exportCSV = () => {
@@ -328,17 +354,6 @@ export default function AssetManagementTable() {
     }
   }
 
-  // const deleteSelectedProducts = () => {
-  //   let _products = products.filter(
-  //     (val: Product) => !selectedProducts.includes(val)
-  //   )
-
-  //   setProducts(_products)
-  //   setDeleteProductsDialog(false)
-  //   setSelectedProducts([])
-  // }
-
-  // multi delete funcs
   const confirmDeleteSelected = () => {
     if (selectedProducts.length > 0) {
       setDeleteMultipleDialog(true)
@@ -412,32 +427,7 @@ export default function AssetManagementTable() {
         <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
           Document List
         </div>
-        {/* {isAdmin && (
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-        {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-        {/* <Button
-          label='Delete'
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected}
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+
       </div>
     )
   }
@@ -465,11 +455,10 @@ export default function AssetManagementTable() {
             <button
               onClick={confirmDeleteSelected}
               disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
-                selectedProducts && selectedProducts.length > 0
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-gray-400 cursor-not-allowed'
-              }`}
+              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-gray-400 cursor-not-allowed'
+                }`}
             >
               Delete Selected ({selectedProducts?.length || 0})
             </button>
@@ -481,55 +470,13 @@ export default function AssetManagementTable() {
   }
 
 
- const ButtonGroup = () => {
-  const [activeButton, setActiveButton] = useState('All')
 
-  const buttons = [
-    { label: 'All', value: 'All' },
-    { label: 'Service Area 1', value: 'Service Area 1' },
-    { label: 'Service Area 2', value: 'Service Area 2' },
-    { label: 'Service Area 3', value: 'Service Area 3' },
-    { label: 'Mawa', value: 'Mawa' },
-    { label: 'Janjira', value: 'Janjira' },
-  ]
-
-  const handleButtonClick = (buttonValue:string) => {
-    setActiveButton(buttonValue)
-    //api is not ready yet
-    console.log(`Button clicked: ${buttonValue}`)
-  }
-
-  return (
-    <>
-     <div className='flex items-center space-x-2 p-4 bg-gray-100 rounded-lg'>
-      {buttons.map((button) => (
-        <button
-          key={button.value}
-          onClick={() => handleButtonClick(button.value)}
-          className={`
-            px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-            ${
-              activeButton === button.value
-                ? 'bg-[#6F90AE] text-base font-semibold text-white' 
-                : ' bg-main text-base font-semibold text-white' 
-            }
-            
-          `}
-        >
-          {button.label}
-        </button>
-      ))}
-    </div>
-    </>
-   
-  )
-}
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
   }
 
-  const viewProduct = (product: Product) => {
+  const viewProduct = (product: Vehicle) => {
     setSelectedProduct(product)
     setViewProductDialog(true)
   }
@@ -556,7 +503,7 @@ export default function AssetManagementTable() {
     saveAs(content, 'attachments.zip')
   }
 
-  const actionBodyTemplate = (rowData: Product) => {
+  const actionBodyTemplate = (rowData: Vehicle) => {
     const menuRef = useRef<Menu>(null)
     const items = [
       {
@@ -688,7 +635,14 @@ export default function AssetManagementTable() {
         showIcon
         icon={() => <i className='pi pi-angle-down' />}
       />
-    
+      <Dropdown
+        value={dropdownStatus}
+        options={options}
+        onChange={(e) => setDropdownStatus(e.value)}
+        placeholder="Select Status"
+        className="w-60 border-none ml-2 focus:ring-0"
+        itemTemplate={itemTemplate}
+      />
       <IconField iconPosition='left' className='relative'>
         <InputIcon className='pi pi-search' />
         <InputText
@@ -792,7 +746,6 @@ export default function AssetManagementTable() {
   }, [])
 
   // console.log(products)
-
   return (
     <div className='ml-4'>
       <div className='card'>
@@ -801,9 +754,7 @@ export default function AssetManagementTable() {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-        <div className='mt-2'>
-          <ButtonGroup></ButtonGroup>
-        </div>
+
         <DataTable
           ref={dt}
           value={products}
@@ -841,70 +792,77 @@ export default function AssetManagementTable() {
             bodyClassName='text-sm truncate max-w-xs'
             sortable
           ></Column>
+          <Column
+            field="vehicleName"
+            header="Vehicle Name"
+            headerClassName="bg-[#ffc2c2] text-sm"
+            bodyClassName="text-sm truncate max-w-xs"
+          />
 
           <Column
-            field='assetId'
-            header='Asset ID'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-          ></Column>
+            field="registrationNumber"  // <-- must match updatedProduct key
+            header="Registration Number"
+            headerClassName="bg-[#ffc2c2] text-sm"
+            bodyClassName="text-sm truncate max-w-xs"
+          />
 
           <Column
-            field='chalanNo'
-            header='Chalan No.'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-          ></Column>
-
+            field="vehicleClass"  // <-- must match updatedProduct key
+            header="Vehicle Class"
+            headerClassName="bg-[#ffc2c2] text-sm"
+            bodyClassName="text-sm truncate max-w-xs"
+          />
           <Column
-            field='itemName'
+            field='taxToken'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             sortable
-            header='Item Name'
+            header='Tax and Token Report'
           ></Column>
+
+          <Column
+            field='status'
+            header='Status'
+            headerClassName='bg-[#ffc2c2] text-sm'
+            bodyClassName='text-sm truncate max-w-xs'
+          // sortable
+          ></Column>
+          <Column
+            field='fitnessDuration'
+            header='Fitness Duration'
+            headerClassName='bg-[#ffc2c2] text-sm'
+            bodyClassName='text-sm truncate max-w-xs'
+          // sortable
+          ></Column>
+
+
 
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-            header='Date'
+            header='Road Tax Expiry Date'
           ></Column>
 
-          <Column
+          {/* <Column
             field='quantity'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             sortable
             header='Quantity'
-          ></Column>
+          ></Column> */}
 
-          <Column
-            field='usingLocation'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-            header='Using Location'
-          ></Column>
 
-          <Column
+
+          {/* <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             // sortable
             header='Attachment'
-          ></Column>
+          ></Column> */}
 
-          <Column
-            field='remarks'
-            header='Remarks'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-          ></Column>
+
 
           <Column
             body={actionBodyTemplate}
@@ -931,37 +889,52 @@ export default function AssetManagementTable() {
           <div className='grid grid-cols-2 gap-4'>
             <div className='field'>
               <label htmlFor='assetId' className='font-bold'>
-                Asset ID
+                SL No.
               </label>
               <InputText
                 id='assetId'
-                value={updatedProduct.assetId}
+                value={updatedProduct.slNo}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    assetId: e.target.value,
+                    slNo: e.target.value,
                   })
                 }
               />
             </div>
 
             <div className='field'>
-              <label htmlFor='itemName' className='font-bold'>
-                Item Name
+              <label htmlFor='vehicleClass' className='font-bold'>
+                Vehicle Class
               </label>
               <InputText
-                id='itemName'
-                value={updatedProduct.itemName}
+                id='vehicleClass'
+                value={updatedProduct.vehicleClass}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    itemName: e.target.value,
+                    vehicleClass: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='vehicleName' className='font-bold'>
+                Vehicle Name
+              </label>
+              <InputText
+                id='vehicleName'
+                value={updatedProduct.vehicleName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    vehicleName: e.target.value,
                   })
                 }
               />
             </div>
 
-            <div className='field'>
+            {/* <div className='field'>
               <label htmlFor='quantity' className='font-bold'>
                 Quantity
               </label>
@@ -975,19 +948,34 @@ export default function AssetManagementTable() {
                   })
                 }
               />
-            </div>
+            </div> */}
 
             <div className='field'>
-              <label htmlFor='usingLocation' className='font-bold'>
-                Using Location
+              <label htmlFor='taxToken' className='font-bold'>
+                Tax and Token Report
               </label>
               <InputText
-                id='usingLocation'
-                value={updatedProduct.usingLocation}
+                id='taxToken'
+                value={updatedProduct.taxAndTokenReport}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    usingLocation: e.target.value,
+                    taxAndTokenReport: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='vehicleName' className='font-bold'>
+                Vehicle Name
+              </label>
+              <InputText
+                id='vahicleName'
+                value={updatedProduct.vehicleName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    vehicleName: e.target.value,
                   })
                 }
               />
@@ -995,38 +983,38 @@ export default function AssetManagementTable() {
 
             <div className='field'>
               <label htmlFor='chalanNo' className='font-bold'>
-                Chalan No
+                Registration Number
               </label>
               <InputText
                 id='chalanNo'
-                value={updatedProduct.chalanNo}
+                value={updatedProduct.registrationNumber}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    chalanNo: e.target.value,
+                    registrationNumber: e.target.value,
                   })
                 }
               />
             </div>
 
             <div className='field'>
-              <label htmlFor='remarks' className='font-bold'>
-                Remarks
+              <label htmlFor='status' className='font-bold'>
+                Status
               </label>
               <InputText
-                id='remarks'
-                value={updatedProduct.remarks}
+                id='status'
+                value={updatedProduct.status}
                 onChange={(e) =>
-                  setUpdatedProduct({
+                  setStatus({
                     ...updatedProduct,
-                    remarks: e.target.value,
+                    status: e.target.value,
                   })
                 }
               />
             </div>
             <div className='field'>
               <label htmlFor='date' className='font-bold'>
-                Date
+                Road Tax Expiry Date
               </label>
               <Calendar
                 id='date'
@@ -1151,32 +1139,32 @@ export default function AssetManagementTable() {
                 <p className='break-all'>{selectedProduct.slNo}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Date</h3>
-                <p>{selectedProduct.date}</p>
+                <h3 className='font-bold'>Vehicle Name</h3>
+                <p>{selectedProduct.vehicleName}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Asset ID</h3>
-                <p className='break-all'>{selectedProduct.assetId}</p>
+                <h3 className='font-bold'>Registration Number</h3>
+                <p className='break-all'>{selectedProduct.registrationNumber}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Chalan No.</h3>
-                <p className='break-all'>{selectedProduct.chalanNo}</p>
+                <h3 className='font-bold'>Vehicle Class.</h3>
+                <p className='break-all'>{selectedProduct.vehicleClass}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Item Name</h3>
-                <p className='break-all'>{selectedProduct.itemName}</p>
+                <h3 className='font-bold'>Status</h3>
+                <p className='break-all'>{selectedProduct.status}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Using Location</h3>
-                <p className='break-all'>{selectedProduct.usingLocation}</p>
+                <h3 className='font-bold'>Fitness Duration</h3>
+                <p className='break-all'>{selectedProduct.fitnessDuration}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Quantity</h3>
-                <p className='break-all'>{selectedProduct.quantity}</p>
+                <h3 className='font-bold'>Tax and Token Report</h3>
+                <p className='break-all'>{selectedProduct.taxAndTokenReport}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Remarks</h3>
-                <p className='break-all'>{selectedProduct.remarks}</p>
+                <h3 className='font-bold'>Road Tax Expiry Date</h3>
+                <p className='break-all'>{selectedProduct.roadTaxExpiry.toISOString()}</p>
               </div>
 
               {hasEditAccess && (
@@ -1213,30 +1201,34 @@ export default function AssetManagementTable() {
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
             <div className='field'>
-              <label htmlFor='assetId' className='font-bold'>
-                AssetID
+              <label htmlFor='fitnessDuration' className='font-bold'>
+                Fitness Duration
               </label>
-              <InputText
-                id='assetId'
-                onChange={(e) => setAssetId(e.target.value)}
-                required
-                autoFocus
-                className={classNames({
-                  'p-invalid': submitted && !assetId,
-                })}
-              />
-              {submitted && !assetId && (
-                <small className='p-error'>AssetId is required.</small>
+              <div className='border rounded-md'>
+                <Calendar
+                  id='date'
+                  // @ts-ignore
+                  selectionMode='range'
+                  value={formDates}
+                  onChange={(e) => setFormDates(e.value ?? null)}
+                  dateFormat='dd/mm/yy'
+                  inputClassName='border-0 focus:ring-0 cursor-pointer'
+                  className='focus:ring-0'
+                  placeholder='Select Date'
+                />
+              </div>
+              {submitted && !fitnessDuration && (
+                <small className='p-error'>Fitness Duration is required.</small>
               )}
             </div>
 
             <div className='field'>
-              <label htmlFor='itemName' className='font-bold'>
-                Item Name
+              <label htmlFor='vehicleClass' className='font-bold'>
+                Vehicle Class
               </label>
               <InputText
-                id='itemName'
-                onChange={(e) => setItemName(e.target.value)}
+                id='vehicleClass'
+                onChange={(e) => setvehicleClass(e.target.value)}
                 required
                 autoFocus
                 className={classNames({
@@ -1244,22 +1236,38 @@ export default function AssetManagementTable() {
                 })}
               />
               {submitted && !itemName && (
-                <small className='p-error'>Item Name is required.</small>
+                <small className='p-error'>Vehicle Class is required.</small>
               )}
             </div>
-
+            <div className='field'>
+              <label htmlFor='vehicleName' className='font-bold'>
+                Vehicle Name
+              </label>
+              <InputText
+                id='vehicleName'
+                onChange={(e) => setVehicleName(e.target.value)}
+                required
+                autoFocus
+                className={classNames({
+                  'p-invalid': submitted && !itemName,
+                })}
+              />
+              {submitted && !itemName && (
+                <small className='p-error'>Vehicle Name is required.</small>
+              )}
+            </div>
             <div className='field'>
               <label htmlFor='chalanNo' className='font-bold'>
-                Chalan No.
+                Registration Number
               </label>
               <InputText
                 id='chalanNo'
-                onChange={(e) => setChalanNo(e.target.value)}
+                onChange={(e) => setRegistrationNumber(e.target.value)}
                 required
               />
             </div>
 
-            <div className='field'>
+            {/* <div className='field'>
               <label htmlFor='quantity' className='font-bold'>
                 Quantity
               </label>
@@ -1268,22 +1276,22 @@ export default function AssetManagementTable() {
                 onChange={(e) => setQuantity(e.target.value)}
                 required
               />
-            </div>
+            </div> */}
 
             <div className='field'>
-              <label htmlFor='usingLocation' className='font-bold'>
-                Using Location
+              <label htmlFor='taxToken' className='font-bold'>
+                Tax and Token Report
               </label>
               <InputText
-                id='usingLocation'
-                onChange={(e) => setUsingLoaction(e.target.value)}
+                id='taxToken'
+                onChange={(e) => setTaxToken(e.target.value)}
                 required
               />
             </div>
 
             <div>
               <label htmlFor='date' className='font-bold'>
-                Date
+                Road Tax Expiry Date
               </label>
               <div className='border rounded-md'>
                 <Calendar
@@ -1299,12 +1307,12 @@ export default function AssetManagementTable() {
             </div>
 
             <div className='field'>
-              <label htmlFor='remarks' className='font-bold'>
-                Remarks
+              <label htmlFor='status' className='font-bold'>
+                Status
               </label>
               <InputText
-                id='remarks'
-                onChange={(e) => setRemarks(e.target.value)}
+                id='status'
+                onChange={(e) => setStatus(e.target.value)}
                 required
               />
             </div>

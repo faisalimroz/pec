@@ -77,8 +77,8 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         main: "#0b1f8f",
-        blue:"#08135E",
-        gray:"#2F365D"
+        nav:"#08135E",
+        shadow:"#2F365D"
       },
       borderRadius: {
         lg: "var(--radius)",
