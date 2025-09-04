@@ -5,12 +5,14 @@ import axios from 'axios'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CalendarIcon, Clock, TrafficCone } from 'lucide-react'
+import { date } from 'zod'
 
 interface DashboardData {
   date: string
   totalPass: number
   totalAmount: number
 }
+const todaysDate = new Date()
 
 const StatCard = ({
   icon: Icon,
@@ -24,7 +26,7 @@ const StatCard = ({
   bgColor: string
 }) => (
   <Card
-    className={`${bgColor} rounded-[8px] overflow-hidden text-white h-[200px]`}
+    className={`${bgColor} rounded-[8px] overflow-hidden text-white h-[150px]`}
   >
     <div className='p-6'>
       <div className='flex items-start gap-3 mb-4'>
@@ -32,7 +34,7 @@ const StatCard = ({
           <Icon className='w-6 h-6' />
         </div>
         <div className='space-y-6'>
-          <span className='text-[34px] font-semibold'>{label}</span>
+          <span className='text-2xl font-semibold '>{label}</span>
           <p className='text-4xl font-bold tabular-nums pl-2'>
             {typeof value === 'number' ? value.toLocaleString('en-IN') : value}
           </p>
@@ -98,51 +100,23 @@ export function TotalTollTraffic() {
   return (
     <div className='w-full rounded-xl overflow-hidden border shadow-md'>
       <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center gap-2'>
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='24'
-          height='24'
-          viewBox='0 0 24 24'
-          fill='none'
-        >
-          <g clip-path='url(#clip0_180_635)'>
-            <path
-              d='M23.2969 9.89062H0.703125C0.314484 9.89062 0 10.2051 0 10.5938C0 10.9824 0.314484 11.2969 0.703125 11.2969H1.40625V13.4062C1.40625 13.7949 1.72073 14.1094 2.10938 14.1094C2.49802 14.1094 2.8125 13.7949 2.8125 13.4062V11.2969H21.1875V13.4062C21.1875 13.7949 21.502 14.1094 21.8906 14.1094C22.2793 14.1094 22.5938 13.7949 22.5938 13.4062V11.2969H23.2969C23.6855 11.2969 24 10.9824 24 10.5938C24 10.2051 23.6855 9.89062 23.2969 9.89062Z'
-              fill='white'
-            />
-            <path
-              d='M16.2656 0H13.4062C13.0176 0 12.7031 0.314484 12.7031 0.703125V8.48438H18.431L16.9564 0.573328C16.8946 0.241031 16.6042 0 16.2656 0Z'
-              fill='white'
-            />
-            <path
-              d='M21.0255 23.7459C21.1593 23.5852 21.2143 23.3731 21.1751 23.1671L19.222 12.7031H12.7031V23.2969C12.7031 23.6855 13.0176 24 13.4062 24H20.4844C20.6938 24 20.8916 23.9066 21.0255 23.7459Z'
-              fill='white'
-            />
-            <path
-              d='M10.5937 24C10.9824 24 11.2969 23.6855 11.2969 23.2969V12.7031H4.77809L2.82485 23.1671C2.78571 23.3731 2.84065 23.5852 2.97452 23.7459C3.1084 23.9066 3.30617 24 3.5156 24H10.5937Z'
-              fill='white'
-            />
-            <path
-              d='M7.73434 0C7.39581 0 7.10537 0.241031 7.04359 0.573328L5.56909 8.48438H11.2968V0.703125C11.2968 0.314484 10.9824 0 10.5937 0H7.73434Z'
-              fill='white'
-            />
-          </g>
-          <defs>
-            <clipPath id='clip0_180_635'>
-              <rect width='24' height='24' fill='white' />
-            </clipPath>
-          </defs>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M16 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M8 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M3 10H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <h2 className='text-[20px] font-bold'>
-          {data?.date ? data?.date : 'N/A'}
+          {data?.date ? data?.date : new Date().toISOString().split("T")[0]}
         </h2>
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4 '>
         <StatCard
           icon={TrafficIcon}
           label='TRAFFIC'
           value={data?.totalPass ?? 0}
           bgColor='bg-[#059669]'
+          
         />
         <StatCard
           icon={TakaIcon}

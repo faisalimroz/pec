@@ -253,9 +253,9 @@ const router = createBrowserRouter([
             }),
           },
            {
-            path: 'administrative/vehicle-mgt-record',
+            path: 'administrative/monthly-roaster',
             lazy: async () => ({
-              Component: (await import('@/pages/admin/vehicle-mgt-record'))
+              Component: (await import('@/pages/admin/planning/monthly-roster'))
                 .default,
             }),
           },

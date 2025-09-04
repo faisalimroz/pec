@@ -91,8 +91,9 @@ export default function Dashboard() {
       {/* ===== Main ===== */}
       <LayoutBody className='space-y-4'>
         <div className='space-y-2 bg-none'>
+           <AccidentWindy />
           <NoticeCalender />
-          <AccidentWindy />
+         
           <TrafficWeather />
         </div>
 

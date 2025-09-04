@@ -102,6 +102,13 @@ export const administrationLinks: SideLink[] = [
     uName: 'vehicle-mgt-record',
     icon: <FileIcon />,
   },
+    {
+    title: 'Monthly Report',
+    label: '',
+    href: '/administrative/gardening-monthly-activity',
+    uName: 'gardening-monthly-activity',
+    icon: <FileIcon />,
+  },
 
   // start of finance links
   {

@@ -155,61 +155,66 @@ export default function NoticeCalender(): JSX.Element {
 
   return (
     <div className='grid grid-cols-12 gap-2 max-w-full mx-auto bg-none'>
-      <div className='col-span-3'>
-        <EDMSLettersList />
-      </div>
-      <div className='col-span-6'>
-        <Card className='flex-1 flex flex-col h-[350px] my-0 overflow-hidden shadow-md'>
-          <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
-            <div className='flex items-center'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='19'
-                height='20'
-                viewBox='0 0 19 20'
-                fill='none'
-                className='mr-2'
-              >
-                <g clip-path='url(#clip0_177_448)'>
-                  <path
-                    d='M5.54159 10H13.4583V11.5833H5.54159V10ZM5.54159 14.75H11.0833V13.1667H5.54159V14.75ZM17.4166 6.50558V19.5H1.58325V2.875C1.58325 2.24511 1.83347 1.64102 2.27887 1.19562C2.72427 0.750222 3.32836 0.5 3.95825 0.5L11.411 0.5L17.4166 6.50558ZM11.8749 6.04167H14.7138L11.8749 3.20275V6.04167ZM15.8333 17.9167V7.625H10.2916V2.08333H3.95825C3.74829 2.08333 3.54693 2.16674 3.39846 2.31521C3.24999 2.46367 3.16659 2.66504 3.16659 2.875V17.9167H15.8333Z'
-                    fill='white'
-                  />
-                </g>
-                <defs>
-                  <clipPath id='clip0_177_448'>
-                    <rect
-                      width='19'
-                      height='19'
-                      fill='white'
-                      transform='translate(0 0.5)'
-                    />
-                  </clipPath>
-                </defs>
-              </svg>
-              <span className='font-bold text-[20px]'>NOTICE BOARD</span>
-            </div>
-            {hasEditAccess && (
-              <Link to='/admin-panel/notice-board'>
-                <Button
-                  variant='secondary'
-                  className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+
+      <div className='col-span-9 flex gap-2 my-0'>
+        <div className='w-[50%]'>
+          <EDMSLettersList />
+        </div>
+        <div className='w-[50%]'
+        >
+          <Card className='flex-1 flex flex-col h-[350px] my-0 overflow-hidden shadow-md'>
+            <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
+              <div className='flex items-center'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='19'
+                  height='20'
+                  viewBox='0 0 19 20'
+                  fill='none'
+                  className='mr-2'
                 >
-                  View More
-                </Button>
-              </Link>
-            )}
-          </div>
-          <div className='flex-grow overflow-auto p-4'>{renderContent()}</div>
-          {date !== null && (
-            <div className='p-2 border-t'>
-              <Button variant='outline' size='sm' onClick={handleReset}>
-                Reset Date Filter
-              </Button>
+                  <g clip-path='url(#clip0_177_448)'>
+                    <path
+                      d='M5.54159 10H13.4583V11.5833H5.54159V10ZM5.54159 14.75H11.0833V13.1667H5.54159V14.75ZM17.4166 6.50558V19.5H1.58325V2.875C1.58325 2.24511 1.83347 1.64102 2.27887 1.19562C2.72427 0.750222 3.32836 0.5 3.95825 0.5L11.411 0.5L17.4166 6.50558ZM11.8749 6.04167H14.7138L11.8749 3.20275V6.04167ZM15.8333 17.9167V7.625H10.2916V2.08333H3.95825C3.74829 2.08333 3.54693 2.16674 3.39846 2.31521C3.24999 2.46367 3.16659 2.66504 3.16659 2.875V17.9167H15.8333Z'
+                      fill='white'
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id='clip0_177_448'>
+                      <rect
+                        width='19'
+                        height='19'
+                        fill='white'
+                        transform='translate(0 0.5)'
+                      />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span className='font-bold text-[20px]'>NOTICE BOARD</span>
+              </div>
+              {hasEditAccess && (
+                <Link to='/admin-panel/notice-board'>
+                  <Button
+                    variant='secondary'
+                    className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+                  >
+                    View More
+                  </Button>
+                </Link>
+              )}
             </div>
-          )}
-        </Card>
+            <div className='flex-grow overflow-auto p-4'>{renderContent()}</div>
+            {date !== null && (
+              <div className='p-2 border-t'>
+                <Button variant='outline' size='sm' onClick={handleReset}>
+                  Reset Date Filter
+                </Button>
+              </div>
+            )}
+          </Card>
+        </div>
       </div>
+
       <div className='col-span-3'>
         <Card className='flex-1 flex flex-col my-0 shadow-md'>
           <Calendar
