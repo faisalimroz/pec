@@ -40,20 +40,20 @@ interface Attachment {
   _id: string
 }
 
- const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-    ];
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
 export default function GardeningMonthlyReport() {
   let emptyGardeningMonthlyReport: GardeningMonthlyReport = {
     _id: '',
@@ -93,7 +93,7 @@ export default function GardeningMonthlyReport() {
   const [itemName, setItemName] = useState('')
   const [vehicleClass, setvehicleClass] = useState('')
   const [vehicleName, setVehicleName] = useState('')
- 
+
   const [registrationNumber, setRegistrationNumber] = useState('')
   const [taxToken, setTaxToken] = useState('')
   const [remarks, setRemarks] = useState('')
@@ -896,23 +896,23 @@ export default function GardeningMonthlyReport() {
               />
             </div>
             <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    placeholder='Select a Month'
-                                    className='w-full'
-                                />
-                            </div>
+              <label htmlFor='monthName' className='font-bold'>
+                Month Name
+              </label>
+              <Dropdown
+                id='monthName'
+                value={updatedProduct.monthName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    monthName: e.value,
+                  })
+                }
+                options={months}
+                placeholder='Select a Month'
+                className='w-full'
+              />
+            </div>
             <div className='field'>
               <label htmlFor='description' className='font-bold'>
                 Description
@@ -1142,18 +1142,18 @@ export default function GardeningMonthlyReport() {
 
 
             <div className="field">
-                            <label htmlFor="monthName" className="font-bold">
-                                Month Name
-                            </label>
-                            <Dropdown
-                                id="monthName"
-                                value={monthName} // must be one of the strings from months
-                                onChange={(e) => setMonthName(e.value)}
-                                options={months}
-                                placeholder="Select a Month"
-                                className="w-full"
-                            />
-                        </div>
+              <label htmlFor="monthName" className="font-bold">
+                Month Name
+              </label>
+              <Dropdown
+                id="monthName"
+                value={monthName} // must be one of the strings from months
+                onChange={(e) => setMonthName(e.value)}
+                options={months}
+                placeholder="Select a Month"
+                className="w-full"
+              />
+            </div>
             <div className='field'>
               <label htmlFor='description' className='font-bold'>
                 Description

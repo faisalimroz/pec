@@ -463,7 +463,7 @@ const router = createBrowserRouter([
             }),
           },
  {
-            path: 'administrative/health-center-monthly-report',
+            path: 'administrative/health-center-monthly-equipment-record',
             lazy: async () => ({
               Component: (await import('@/pages/admin/health-center/medical-equipment-record')).default,
             }),
