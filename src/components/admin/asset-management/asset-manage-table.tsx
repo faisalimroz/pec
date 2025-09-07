@@ -642,30 +642,30 @@ export default function AssetManagementTable() {
         handleSearch()
       }}
     >
-      <Calendar
-        // @ts-ignore
-        value={date}
-        // @ts-ignore
-        onChange={(e) => setDate(e.value)}
-        view='month'
-        dateFormat='MM'
-        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-        placeholder='By Month'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
-      <Calendar
-        // @ts-ignore
-        value={date2}
-        // @ts-ignore
-        onChange={(e) => setDate2(e.value)}
-        view='year'
-        dateFormat='yy'
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-        placeholder='By Year'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
+       <Calendar
+                    // @ts-ignore
+                    value={date}
+                    // @ts-ignore
+                    onChange={(e) => setDate(e.value)}
+
+                    dateFormat="dd/mm/yy"
+                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+                    placeholder='Start Date'
+                    showIcon
+                    icon={() => <i className='pi pi-angle-down' />}
+                />
+                <Calendar
+                    // @ts-ignore
+                    value={date2}
+                    // @ts-ignore
+                    onChange={(e) => setDate2(e.value)}
+
+                    dateFormat="dd/mm/yy"
+                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                    placeholder='End Date'
+                    showIcon
+                    icon={() => <i className='pi pi-angle-down' />}
+                />
     
       <IconField iconPosition='left' className='relative'>
         <InputIcon className='pi pi-search' />

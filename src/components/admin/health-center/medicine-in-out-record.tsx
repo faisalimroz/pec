@@ -14,12 +14,14 @@ import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
+import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
+import FileIcon from '@/components/icons/FileIcon'
 
 interface Attachment {
     url: string
@@ -28,8 +30,10 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    subjectName: string
-    description: string
+    medicineName: string
+    refNo: string
+    problem: string
+    inoutType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -39,12 +43,14 @@ interface Product {
     updatingTimestamp?: string
 }
 
-export default function MedicalEquipment() {
+export default function MedicineInOutRecord() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        subjectName: '',
-        description: '',
+        medicineName: '',
+        refNo: '',
+        problem: '',
+        inoutType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -76,14 +82,15 @@ export default function MedicalEquipment() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [subjectName, setSubjectName] = useState('')
-    const [description, setDescription] = useState('')
+    const [medicineName, setMedicineName] = useState('')
+    const [refNo, setRefNo] = useState('')
+    const [problem, setproblem] = useState('')
     const [remarks, setRemarks] = useState('')
+    const [inoutType, setInOutType] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-  
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -92,7 +99,6 @@ export default function MedicalEquipment() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -113,11 +119,13 @@ export default function MedicalEquipment() {
         try {
             setLoading2(true)
             const formData = new FormData()
-         
-            formData.append('subjectName', updatedProduct.subjectName)
-            formData.append('description', updatedProduct.description)           
+            formData.append('inoutType', updatedProduct.inoutType)
+            formData.append('medicineName', updatedProduct.medicineName)
+            formData.append('refNo', updatedProduct.refNo)
+            formData.append('problem', updatedProduct.problem)
             formData.append('remarks', updatedProduct.remarks)
-            formData.append('date', updatedProduct.date)       
+            formData.append('date', updatedProduct.date)
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -166,6 +174,14 @@ export default function MedicalEquipment() {
             }
         })
     }
+  const itemTemplate = (option: { name: string; code: string }) => {
+  return (
+    <div className="flex items-center gap-2">
+     <FileIcon/>      
+      <span>{option.name}</span> 
+    </div>
+  );
+};
 
     const updateProductDialogFooter = (
         <>
@@ -187,8 +203,8 @@ export default function MedicalEquipment() {
     // ending all update dialog funcs
 
     const codes = [
-        { name: 'Internal Patient', code: 'Internal' },
-        { name: 'Outside Patient', code: 'Outside' },
+        { name: 'IN', code: 'IN' },
+        { name: 'OUT', code: 'OUT' },
     ]
 
     const handleFileChange = (newFiles: File[]) => {
@@ -230,9 +246,11 @@ export default function MedicalEquipment() {
             setLoading2(true)
             const formData = new FormData()
 
-            formData.append('subjectName', subjectName)
-            formData.append('description', description)
+            formData.append('medicineName', medicineName)
+            formData.append('refNo', refNo)
+            formData.append('problem', problem)
             formData.append('remarks', remarks)
+            formData.append('inoutType', inoutType)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -250,7 +268,6 @@ export default function MedicalEquipment() {
 
             const response = res
             console.log(response)
-
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -391,7 +408,7 @@ export default function MedicalEquipment() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -420,8 +437,8 @@ export default function MedicalEquipment() {
                             onClick={confirmDeleteSelected}
                             disabled={!selectedProducts || selectedProducts.length === 0}
                             className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
-                                ? 'bg-red-500 hover:bg-red-600'
-                                : 'bg-gray-400 cursor-not-allowed'
+                                    ? 'bg-red-500 hover:bg-red-600'
+                                    : 'bg-gray-400 cursor-not-allowed'
                                 }`}
                         >
                             Delete Selected ({selectedProducts?.length || 0})
@@ -454,9 +471,9 @@ export default function MedicalEquipment() {
             try {
                 const response = await fetch(attachment.url)
                 const blob = await response.blob()
-                const subjectName = attachment.url.split('/').pop()
+                const filename = attachment.url.split('/').pop()
                 //@ts-ignore
-                folder.file(subjectName, blob)
+                folder.file(filename, blob)
             } catch (error) {
                 console.error(`Failed to fetch ${attachment.url}:`, error)
             }
@@ -517,7 +534,11 @@ export default function MedicalEquipment() {
                 outlined
                 onClick={hideViewDialog}
             />
-           
+            {/* <Button
+        label='Download All'
+        icon='pi pi-download'
+        onClick={downloadAllFiles}
+      /> */}
         </>
     )
 
@@ -538,7 +559,7 @@ export default function MedicalEquipment() {
             year: date2 ? getYear(date2) : '',
             searchQuery: searchKey,
             // @ts-ignore
-            patientType: selectedCode?.code || '',
+            inoutType: selectedCode?.code || '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
@@ -552,7 +573,7 @@ export default function MedicalEquipment() {
             year: '',
             searchQuery: '',
             month: '',
-            patientType: '',
+            inoutType: '',
         }
 
         setDate('')
@@ -606,7 +627,18 @@ export default function MedicalEquipment() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                
+                <div>
+                    <Dropdown
+                        value={selectedCode}
+                        onChange={(e) => setSelectedCode(e.value)}
+                        options={codes}
+                        optionLabel='name'
+                        placeholder='IN/OUT'
+                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                        itemTemplate={itemTemplate}
+
+                    />
+                </div>
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -690,12 +722,11 @@ export default function MedicalEquipment() {
             month: '',
             year: '',
             searchQuery: '',
-            patientType: '',
+            inoutType: '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
             setProducts(result?.Treatments)
-            console.log(result, "ress")
             setLoading(false)
         })
     }
@@ -765,7 +796,34 @@ export default function MedicalEquipment() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 className='min-w-[10rem]'
+                                sortable
+                            ></Column>
 
+                            <Column
+                                field='refNo'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+                                sortable
+                                className='min-w-[8rem]'
+                                header='Ref No'
+                            ></Column>
+
+                            <Column
+                                field='medicineName'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+
+                                className='min-w-[8rem]'
+                                header='Medicine Name'
+                            ></Column>
+
+                            <Column
+                                field='IN/OUT'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+                                sortable
+                                className='min-w-[8rem]'
+                                header='Type'
                             ></Column>
 
 
@@ -773,35 +831,16 @@ export default function MedicalEquipment() {
                                 field='date'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-
+                                sortable
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
 
                             <Column
-                                field='subject'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-
-                                className='min-w-[8rem]'
-                                header='Subject'
-                            ></Column>
-                         
-                            <Column
-                                field='description'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-
-                                className='min-w-[8rem]'
-                                header='Description'
-                            ></Column>
-
-
-
-                            <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
+                                sortable
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -814,7 +853,6 @@ export default function MedicalEquipment() {
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
-
 
                             <Column
                                 body={actionBodyTemplate}
@@ -841,38 +879,55 @@ export default function MedicalEquipment() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                    
                         <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
+                            <label htmlFor='inoutType' className='font-bold'>
+                                IN/OUT
                             </label>
-                            <InputText
-                                id='description'
-                                value={updatedProduct.description}
+                            <Dropdown
+                                id='inoutType'
+                                value={updatedProduct.inoutType}
+                                options={['In', 'Out']}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        description: e.target.value,
+                                        inoutType: e.target.value,
+                                    })
+                                }
+                                placeholder='Select IN/OUT'
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='refNo' className='font-bold'>
+                                Ref No
+                            </label>
+                            <InputText
+                                id='refNo'
+                                value={updatedProduct.refNo}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        refNo: e.target.value,
                                     })
                                 }
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='subjectName' className='font-bold'>
-                                Subject
+                            <label htmlFor='medicineName' className='font-bold'>
+                                Medicine Name
                             </label>
                             <InputText
-                                id='subjectName'
-                                value={updatedProduct.subjectName}
+                                id='medicineName'
+                                value={updatedProduct.medicineName}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        subjectName: e.target.value,
+                                        medicineName: e.target.value,
                                     })
                                 }
                             />
                         </div>
-                    
+
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -905,7 +960,6 @@ export default function MedicalEquipment() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1020,11 +1074,18 @@ export default function MedicalEquipment() {
                                 <p>{selectedProduct.date}</p>
                             </div>
                             <div>
-                                <h3 className='font-bold'>Subject</h3>
-                                <p className='break-all'>{selectedProduct.subjectName}</p>
+                                <h3 className='font-bold'>Medicine Name</h3>
+                                <p className='break-all'>{selectedProduct.medicineName}</p>
                             </div>
-                       
-                            
+                            <div>
+                                <h3 className='font-bold'>IN/OUT</h3>
+                                <p className='break-all'>{selectedProduct.inoutType}</p>
+                            </div>
+                            <div>
+                                <h3 className='font-bold'>Ref No.</h3>
+                                <p className='break-all'>{selectedProduct.refNo}</p>
+                            </div>
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1063,35 +1124,48 @@ export default function MedicalEquipment() {
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
-                       
                         <div className='field'>
-                            <label htmlFor='subjectName' className='font-bold'>
-                                Subject
+                            <label htmlFor='inoutType' className='font-bold'>
+                                IN/OUT
+                            </label>
+                            <Dropdown
+                                id='inoutType'
+                                value={inoutType}
+                                options={['In', 'Out']}
+                                onChange={(e) => setInOutType(e.value)}
+                                placeholder='Select Type'
+                                optionLabel='inoutType'
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='refNo' className='font-bold'>
+                                Ref No
                             </label>
                             <InputText
-                                id='subjectName'
-                                onChange={(e) => setSubjectName(e.target.value)}
+                                id='refNo'
+                                onChange={(e) => setRefNo(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='medicineName' className='font-bold'>
+                                Medicine Name
+                            </label>
+                            <InputText
+                                id='medicineName'
+                                onChange={(e) => setMedicineName(e.target.value)}
                                 required
                                 autoFocus
                                 className={classNames({
-                                    'p-invalid': submitted && !subjectName,
+                                    'p-invalid': submitted && !medicineName,
                                 })}
                             />
-                            {submitted && !subjectName && (
-                                <small className='p-error'>Subject is required.</small>
+                            {submitted && !medicineName && (
+                                <small className='p-error'>Medicine Name is required.</small>
                             )}
                         </div>
-                        <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
-                            </label>
-                            <InputText
-                                id='problem'
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            />
-                        </div>
-                       
+
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

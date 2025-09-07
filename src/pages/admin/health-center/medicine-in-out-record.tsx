@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
 import { clinicTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
-import DemoTable from '@/components/clinic-center/treatment-record-table'
+import DemoTable from '@/components/admin/health-center/medicine-in-out-record'
 import { useAuth } from '@/provider/authProvider'
 
 export default function TreatmentRecord() {
@@ -42,7 +42,7 @@ export default function TreatmentRecord() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                  Treatment Record
+                  Medicine IN /OUT Record
                 </h1>
 
                 <DemoTable />
