@@ -112,13 +112,13 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Medicine In/Out Record',
         label: '',
-        href: '/administrative/healt-center-medicine-record',
+        href: '/administrative/health-center-medicine-record',
         icon: '',
       },
       {
         title: 'Medicine Equipment Record',
         label: '',
-        href: '/administrative/healt-center-medical-record',
+        href: '/administrative/health-center-monthly-report',
         icon: '',
       },
      

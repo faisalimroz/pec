@@ -450,6 +450,25 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin/notice')).default,
             }),
           },
+          {
+            path: 'administrative/health-center-monthly-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/health-center/monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/health-center-medicine-record',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/health-center/medicine-in-out-record')).default,
+            }),
+          },
+ {
+            path: 'administrative/health-center-monthly-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/health-center/medical-equipment-record')).default,
+            }),
+          },
+
 
           {
             path: 'clinic-center/medicine-record',

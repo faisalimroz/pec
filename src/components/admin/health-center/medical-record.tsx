@@ -10,128 +10,97 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchAssetManagement } from '@/api/adminAPIs'
+import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
+import { toast } from 'sonner'
+import { TabView, TabPanel } from 'primereact/tabview'
+import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
-import { toast } from 'sonner'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import { Dropdown } from 'primereact/dropdown'
-interface GardeningMonthlyReport {
-  _id: string;
-  slNo: string;
-  date: string;
-  fileName: string;
-  name: string;
-  monthName: string;
-  description: string;
-  attachment: Attachment[];
-  remarks: string;
-  creator?: string;
-  creationTimestamp?: string;
-  updater?: string;
-  updatingTimestamp?: string;
-}
+
 interface Attachment {
   url: string
   _id: string
 }
+interface Product {
+  _id: string | null
+  slNo: string
+  patientName: string
+  patientNo: string
+  problem: string
+  patientType: string
+  date: string
+  remarks: string
+  attachments: Attachment[]
+  creator?: string
+  creationTimestamp?: string
+  updater?: string
+  updatingTimestamp?: string
+}
 
- const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-    ];
-export default function GardeningMonthlyReport() {
-  let emptyGardeningMonthlyReport: GardeningMonthlyReport = {
+export default function TreatmentRecordTable() {
+  let emptyProduct: Product = {
     _id: '',
     slNo: '',
+    patientName: '',
+    patientNo: '',
+    problem: '',
+    patientType: '',
     date: '',
-    fileName: '',
-    name: '',
-    monthName: '',
-    description: '',
-    attachment: [],
     remarks: '',
-  };
+    attachments: [],
+  }
 
   const { roles, permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
-  const hasEditAccess = checkPermission?.edit_authority || false
-
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
+  const clinicPermission = permissions.find((p) => p.name === 'clinic')
+  const treatmentRecordPermission = clinicPermission?.children.find(
+    (c) => c.name === 'treatment-record'
   )
+
+  const hasEditAccess = treatmentRecordPermission?.edit_authority || false
+
+  const isClinic = roles.some((role) =>
+    ['superadmin', 'clinic'].includes(role.title)
+  )
+  const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [deleteProductsDialog, setDeleteProductsDialog] =
     useState<boolean>(false)
-  const [product, setProduct] = useState<any>(emptyGardeningMonthlyReport)
-  const [selectedProducts, setSelectedProducts] = useState<GardeningMonthlyReport[]>([])
+  const [product, setProduct] = useState<any>(emptyProduct)
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
-  const dt = useRef<DataTable<GardeningMonthlyReport[]>>(null)
+  const dt = useRef<DataTable<Product[]>>(null)
   const [date, setDate] = useState<string>('')
   const [date2, setDate2] = useState<string>('')
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
-  const [itemName, setItemName] = useState('')
-  const [vehicleClass, setvehicleClass] = useState('')
-  const [vehicleName, setVehicleName] = useState('')
- 
-  const [registrationNumber, setRegistrationNumber] = useState('')
-  const [taxToken, setTaxToken] = useState('')
+  const [patientName, setPatientName] = useState('')
+  const [patientNo, setPatientNo] = useState('')
+  const [problem, setproblem] = useState('')
   const [remarks, setRemarks] = useState('')
-  const [assetId, setAssetId] = useState('')
-  const [fitnessDuration, setFitnessDuration] = useState('')
-  const [chalanNo, setChalanNo] = useState('')
-  const [description, setDescription] = useState('')
-  const [usingLocation, setUsingLoaction] = useState('')
-  const [status, setStatus] = useState('')
-  const [filesInput, setFilesInput] = useState<File[]>([])
+  const [department, setDepartment] = useState<string>('')
   const [formDate, setFormDate] = useState<string>('')
-  const [formDates, setFormDates] = useState<(Date | null)[] | null>(null);
-  const [monthName, setMonthName] = useState<string>("");
+  const [filesInput, setFilesInput] = useState<File[]>([])
+  const [selectedCode, setSelectedCode] = useState(null)
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
-  const [selectedProduct, setSelectedProduct] = useState<GardeningMonthlyReport | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
-  const [updatedProduct, setUpdatedProduct] = useState<GardeningMonthlyReport | null>(null)
+  const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+
   // all update dialog func here
-  const openUpdateDialog = (product: GardeningMonthlyReport) => {
+  const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
   }
@@ -148,20 +117,13 @@ export default function GardeningMonthlyReport() {
 
     try {
       setLoading2(true)
-      const formData = new FormData();
-
-      formData.append('_id', updatedProduct._id);
-      formData.append('slNo', updatedProduct.slNo);
-      formData.append('date', updatedProduct.date);
-      formData.append('description', updatedProduct.description);
-      formData.append('remarks', updatedProduct.remarks);
-      formData.append('monthName', updatedProduct.monthName);
-      formData.append('fileName', updatedProduct.fileName);
-      formData.append('creator', updatedProduct.creator || '');
-      formData.append('creationTimestamp', updatedProduct.creationTimestamp || '');
-      formData.append('updater', updatedProduct.updater || '');
-      formData.append('updatingTimestamp', updatedProduct.updatingTimestamp || '');
-
+      const formData = new FormData()
+      formData.append('patientType', updatedProduct.patientType)
+      formData.append('patientName', updatedProduct.patientName)
+      formData.append('patientNo', updatedProduct.patientNo)
+      formData.append('problem', updatedProduct.problem)
+      formData.append('remarks', updatedProduct.remarks)
+      formData.append('date', updatedProduct.date)
 
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
@@ -172,7 +134,7 @@ export default function GardeningMonthlyReport() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -196,21 +158,7 @@ export default function GardeningMonthlyReport() {
       setLoading2(false)
     }
   }
-  const itemTemplate = (option: any) => {
-    return (
-      <div className="flex items-center space-x-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
-          <path d="M14 2.01953H6C5.46957 2.01953 4.96086 2.23024 4.58579 2.60532C4.21071 2.98039 4 3.4891 4 4.01953V20.0195C4 20.55 4.21071 21.0587 4.58579 21.4337C4.96086 21.8088 5.46957 22.0195 6 22.0195H18C18.5304 22.0195 19.0391 21.8088 19.4142 21.4337C19.7893 21.0587 20 20.55 20 20.0195V8.01953L14 2.01953Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M14 2.01953V8.01953H20" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M16 13.0195H8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M16 17.0195H8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M10 9.01953H9H8" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <span>{option.label}</span>
 
-      </div>
-    );
-  };
   const handleNewAttachments = (files: File[]) => {
     setNewAttachments(files)
   }
@@ -243,15 +191,21 @@ export default function GardeningMonthlyReport() {
     </>
   )
 
+  // ending all update dialog funcs
 
-  const openNew = () => {
-    setProduct(emptyGardeningMonthlyReport)
-    setSubmitted(false)
-    setProductDialog(true)
-  }
+  const codes = [
+    { name: 'Internal Patient', code: 'Internal' },
+    { name: 'Outside Patient', code: 'Outside' },
+  ]
 
   const handleFileChange = (newFiles: File[]) => {
     setFilesInput(newFiles)
+  }
+
+  const openNew = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setProductDialog(true)
   }
 
   const hideDialog = () => {
@@ -283,21 +237,17 @@ export default function GardeningMonthlyReport() {
       setLoading2(true)
       const formData = new FormData()
 
-      formData.append('itemName', itemName)
-      formData.append('taxToken', taxToken)
-      formData.append('fitnessDuration', formatDate(formDates))
-      formData.append('registrationNumber', registrationNumber)
-      formData.append('vehicleClass', vehicleClass)
-      formData.append('vehicleName', vehicleName)
-      formData.append('usingLocation', usingLocation)
-      formData.append('status', status)
+      formData.append('patientName', patientName)
+      formData.append('patientNo', patientNo)
+      formData.append('problem', problem)
+      formData.append('remarks', remarks)
+      formData.append('patientType', department)
       formData.append('date', formatDate(formDate))
       filesInput.forEach((file) => {
         formData.append('attachments', file)
       })
-      console.log(Array.from(formData.entries()));
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
         formData,
         {
           headers: {
@@ -324,7 +274,12 @@ export default function GardeningMonthlyReport() {
     }
   }
 
-  const confirmDeleteProduct = (product: GardeningMonthlyReport) => {
+  const editProduct = (product: Product) => {
+    setProduct({ ...product })
+    setProductDialog(true)
+  }
+
+  const confirmDeleteProduct = (product: Product) => {
     setProduct(product)
     setDeleteProductDialog(true)
   }
@@ -337,7 +292,7 @@ export default function GardeningMonthlyReport() {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -360,7 +315,7 @@ export default function GardeningMonthlyReport() {
 
     setProducts(_products)
     setDeleteProductDialog(false)
-    setProduct(emptyGardeningMonthlyReport)
+    setProduct(emptyProduct)
   }
 
   const exportCSV = () => {
@@ -370,7 +325,7 @@ export default function GardeningMonthlyReport() {
       dt.current?.exportCSV()
     }
   }
-
+  // multi delete funcs
   const confirmDeleteSelected = () => {
     if (selectedProducts.length > 0) {
       setDeleteMultipleDialog(true)
@@ -387,7 +342,7 @@ export default function GardeningMonthlyReport() {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -436,15 +391,47 @@ export default function GardeningMonthlyReport() {
     </div>
   )
 
-  // multi delete func ends
+  // multi delete func end
 
   const leftToolbarTemplate = () => {
     return (
-      <div className=''>
+      <div className='flex items-center gap-3'>
         <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
           Document List
         </div>
+        {/* {isClinic && ( 
+          <button
+            onClick={confirmDeleteSelected}
+            disabled={!selectedProducts || selectedProducts.length === 0}
+            className={`p-3 text-lg font-semibold text-white rounded-t ${
+              selectedProducts && selectedProducts.length > 0
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
+          >
+            Delete Selected ({selectedProducts?.length || 0})
+          </button>
+        )} */}
 
+        {/* <button
+          onClick={() => setActiveIndex(1)}
+          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
+        >
+          Outside Patient
+        </button> */}
+        {/* <Button
+          label='Upload Document'
+          icon='pi pi-file-pdf'
+          severity='success'
+          onClick={openNew}
+        /> */}
+        {/* <Button
+          label='Delete' 
+          icon='pi pi-trash'
+          severity='danger'
+          onClick={confirmDeleteSelected} 
+          disabled={!selectedProducts || !selectedProducts.length}
+        /> */}
       </div>
     )
   }
@@ -472,28 +459,28 @@ export default function GardeningMonthlyReport() {
             <button
               onClick={confirmDeleteSelected}
               disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-                }`}
+              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
+                selectedProducts && selectedProducts.length > 0
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-gray-400 cursor-not-allowed'
+              }`}
             >
               Delete Selected ({selectedProducts?.length || 0})
             </button>
           </div>
         )}
+
         <RefreshButton className='text-base ml-2' onClick={handleReset} />
       </>
     )
   }
-
-
 
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
   }
 
-  const viewProduct = (product: GardeningMonthlyReport) => {
+  const viewProduct = (product: Product) => {
     setSelectedProduct(product)
     setViewProductDialog(true)
   }
@@ -520,7 +507,7 @@ export default function GardeningMonthlyReport() {
     saveAs(content, 'attachments.zip')
   }
 
-  const actionBodyTemplate = (rowData: GardeningMonthlyReport) => {
+  const actionBodyTemplate = (rowData: Product) => {
     const menuRef = useRef<Menu>(null)
     const items = [
       {
@@ -595,10 +582,12 @@ export default function GardeningMonthlyReport() {
       month: date ? getMonthName(date) : '',
       year: date2 ? getYear(date2) : '',
       searchQuery: searchKey,
+      // @ts-ignore
+      patientType: selectedCode?.code || '',
     }
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchTreatmentRecord(initialPayload).then((result) => {
+      setProducts(result?.Treatments)
       setLoading(false)
     })
   }
@@ -608,81 +597,101 @@ export default function GardeningMonthlyReport() {
       year: '',
       searchQuery: '',
       month: '',
+      patientType: '',
     }
 
     setDate('')
     setDate2('')
     setSearchKey('')
+    setSelectedCode(null)
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchTreatmentRecord(initialPayload).then((result) => {
+      setProducts(result?.Treatments)
       setLoading(false)
     })
   }
 
   const filterSearchForm = (
-    <form
-      className='flex mx-auto w-fit gap-4 divide-x-2 border p-2 rounded-md bg-white'
-      onSubmit={(e) => {
-        e.preventDefault()
-        handleSearch()
-      }}
-    >
-      <Calendar
-        // @ts-ignore
-        value={date}
-        // @ts-ignore
-        onChange={(e) => setDate(e.value)}
-
-        dateFormat="dd/mm/yy"
-        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-        placeholder='Start Date'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
-      <Calendar
-        // @ts-ignore
-        value={date2}
-        // @ts-ignore
-        onChange={(e) => setDate2(e.value)}
-
-        dateFormat="dd/mm/yy"
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-        placeholder='End Date'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
-      <IconField iconPosition='left' className='relative'>
-        <InputIcon className='pi pi-search' />
-        <InputText
-          type='search'
-          placeholder='Search'
-          className='border-none ml-2 focus:ring-0'
-          onChange={(e) => setSearchKey(e.target.value)}
-          value={searchKey}
+    <div className='flex items-center justify-center'>
+      <div
+        role='search'
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSearch()
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            handleSearch()
+          }
+        }}
+        className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
+      >
+        <Calendar
+          // @ts-ignore
+          value={date}
+          // @ts-ignore
+          onChange={(e) => setDate(e.value)}
+          view='month'
+          dateFormat='MM'
+          inputClassName='border-none rounded-none cursor-pointer focus:ring-0 ring-0'
+          placeholder='By Month'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
         />
-      </IconField>
+        <Calendar
+          // @ts-ignore
+          value={date2}
+          // @ts-ignore
+          onChange={(e) => setDate2(e.value)}
+          view='year'
+          dateFormat='yy'
+          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0 ring-0'
+          placeholder='By Year'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
+        />
+        <div>
+          <Dropdown
+            value={selectedCode}
+            onChange={(e) => setSelectedCode(e.value)}
+            options={codes}
+            optionLabel='name'
+            placeholder='Patient Type'
+            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+          />
+        </div>
+        <IconField iconPosition='left' className='relative'>
+          <InputIcon className='pi pi-search' />
+          <InputText
+            type='search'
+            placeholder='Search'
+            className='border-none ml-4 focus:ring-0'
+            onChange={(e) => setSearchKey(e.target.value)}
+            value={searchKey}
+          />
 
-      <div>
-        <button
-          type='submit'
-          className='ml-6 border bg-green-500 px-4 py-2.5 rounded-lg'
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='white'
-            className='size-6'
+          <button
+            onClick={() => handleSearch()}
+            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+            type='submit'
           >
-            <path
-              fillRule='evenodd'
-              d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-              clipRule='evenodd'
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='white'
+              className='size-6'
+            >
+              <path
+                fillRule='evenodd'
+                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </IconField>
       </div>
-    </form>
+    </div>
   )
 
   const productDialogFooter = (
@@ -697,22 +706,20 @@ export default function GardeningMonthlyReport() {
     </>
   )
   const deleteProductDialogFooter = (
-    <div className='flex justify-end gap-2'>
-      <button
-        type='button'
-        className='text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 font-semibold py-2 px-4 rounded border'
+    <>
+      <Button
+        label='No'
+        icon='pi pi-times'
+        outlined
         onClick={hideDeleteProductDialog}
-      >
-        No
-      </button>
-      <button
-        type='button'
-        className='bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded'
+      />
+      <Button
+        label='Yes'
+        icon='pi pi-check'
+        severity='danger'
         onClick={deleteProduct}
-      >
-        Yes
-      </button>
-    </div>
+      />
+    </>
   )
   const deleteProductsDialogFooter = (
     <>
@@ -731,132 +738,170 @@ export default function GardeningMonthlyReport() {
     </>
   )
 
-  const attachmentBodyTemplate = (rowData: any) => {
-    return <div>{rowData?.attachments?.length}</div>
-  }
-
   const refetch = () => {
     setLoading(true)
     const initialPayload = {
       month: '',
       year: '',
       searchQuery: '',
+      patientType: '',
     }
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchTreatmentRecord(initialPayload).then((result) => {
+      setProducts(result?.Treatments)
       setLoading(false)
     })
   }
 
-  // initial data load
+  // initial data load - Internal
   useEffect(() => {
     refetch()
   }, [])
 
+  const attachmentBodyTemplate = (rowData: any) => {
+    return <div>{rowData?.attachments?.length}</div>
+  }
+
   // console.log(products)
+
   return (
-    <div className='ml-4'>
-      <div className='card'>
+    <div className=''>
+      <div className='ml-4'>
         <Toolbar
           className='rounded-none border-none p-0 bg-white'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
 
-        <DataTable
-          ref={dt}
-          value={products}
-          selection={selectedProducts}
-          onSelectionChange={(e: any) => {
-            if (Array.isArray(e.value)) {
-              setSelectedProducts(e.value)
-            }
-          }}
-          dataKey='_id'
-          paginator
-          rows={10}
-          rowsPerPageOptions={[5, 10, 25]}
-          paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
-          currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
-          header={filterSearchForm}
-          selectionMode='multiple'
-          showGridlines
-          cellSelection
-          emptyMessage='No data found!'
-          loading={loading}
-          removableSort
+        <TabView
+          activeIndex={activeIndex}
+          onTabChange={(e) => setActiveIndex(e.index)}
         >
-          <Column
-            selectionMode='multiple'
-            headerStyle={{ width: '3rem' }}
-            exportable={false}
-            headerClassName='bg-[#ffc2c2] '
-          ></Column>
+          {/* 1st tab  */}
+          <TabPanel>
+            <DataTable
+              ref={dt}
+              value={products}
+              selection={selectedProducts}
+              onSelectionChange={(e: any) => {
+                if (Array.isArray(e.value)) {
+                  setSelectedProducts(e.value)
+                }
+              }}
+              dataKey='_id'
+              paginator
+              rows={10}
+              rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
+              currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
+              header={filterSearchForm}
+              selectionMode='multiple'
+              showGridlines
+              cellSelection
+              emptyMessage='No data found!'
+              loading={loading}
+              scrollable
+            >
+              {hasEditAccess && (
+                <Column
+                  selectionMode='multiple'
+                  headerStyle={{ width: '3rem' }}
+                  exportable={false}
+                  headerClassName='bg-[#ffc2c2] text-sm'
+                  bodyClassName='text-sm truncate max-w-xs'
+                ></Column>
+              )}
 
-          <Column
-            field='slNo'
-            header='SL No.'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-          ></Column>
-          <Column
-            field="date"
-            header="Date"
-            headerClassName="bg-[#ffc2c2] text-sm"
-            bodyClassName="text-sm truncate max-w-xs"
-          />
+              <Column
+                field='slNo'
+                header='SL No.'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[10rem]'
+                sortable
+              ></Column>
 
-          <Column
-            field="fileName"
-            header="File Name/Subject"
-            headerClassName="bg-[#ffc2c2] text-sm"
-            bodyClassName="text-sm truncate max-w-xs"
-          />
+              <Column
+                field='patientNo'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[8rem]'
+                header='Patient No'
+              ></Column>
 
-          <Column
-            field="monthName"
-            header="Month Name"
-            headerClassName="bg-[#ffc2c2] text-sm"
-            bodyClassName="text-sm truncate max-w-xs"
-          />
-          <Column
-            field='description'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            header='Description'
-          ></Column>
+              <Column
+                field='patientName'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[8rem]'
+                header='Patient Name'
+              ></Column>
 
+              <Column
+                field='patientType'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[8rem]'
+                header='Type'
+              ></Column>
 
-          <Column
-            field='attachment'
-            header='Attachment'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-          ></Column>
-          <Column
-            field='remarks'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            header='Remarks'
-          ></Column>
-          <Column
-            body={actionBodyTemplate}
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            header='Actions'
-            headerStyle={{ width: '3rem' }}
-            exportable={false}
-          ></Column>
-        </DataTable>
+              <Column
+                field='problem'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[8rem]'
+                header='Problem'
+              ></Column>
+
+              <Column
+                field='date'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[12rem]'
+                header='Date'
+              ></Column>
+
+              <Column
+                body={attachmentBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[12rem]'
+                header='Attachment'
+              ></Column>
+
+              <Column
+                field='remarks'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[12rem]'
+                header='Remarks'
+              ></Column>
+
+              <Column
+                body={actionBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                header='Actions'
+                headerStyle={{ width: '3rem' }}
+                exportable={false}
+              ></Column>
+            </DataTable>
+          </TabPanel>
+        </TabView>
       </div>
 
       {/* update data dialog  */}
       <Dialog
         visible={updateProductDialog}
-        style={{ width: '50rem' }}
-        header='Update Data'
+        style={{ width: '60rem' }}
+        header='Update Treatment Record'
         modal
         className='p-fluid'
         footer={updateProductDialogFooter}
@@ -865,89 +910,101 @@ export default function GardeningMonthlyReport() {
         {updatedProduct && (
           <div className='grid grid-cols-2 gap-4'>
             <div className='field'>
-              <label htmlFor='assetId' className='font-bold'>
-                SL No.
+              <label htmlFor='patientType' className='font-bold'>
+                Patient Type
               </label>
-              <InputText
-                id='assetId'
-                value={updatedProduct.slNo}
+              <Dropdown
+                id='patientType'
+                value={updatedProduct.patientType}
+                options={['Internal', 'Outside']}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    slNo: e.target.value,
+                    patientType: e.target.value,
+                  })
+                }
+                placeholder='Select Patient Type'
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='patientNo' className='font-bold'>
+                Patient No
+              </label>
+              <InputText
+                id='patientNo'
+                value={updatedProduct.patientNo}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    patientNo: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='patientName' className='font-bold'>
+                Patient Name
+              </label>
+              <InputText
+                id='patientName'
+                value={updatedProduct.patientName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    patientName: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='problem' className='font-bold'>
+                Problem
+              </label>
+              <InputText
+                id='problem'
+                value={updatedProduct.problem}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    problem: e.target.value,
                   })
                 }
               />
             </div>
 
             <div className='field'>
-              <label htmlFor='fileName' className='font-bold'>
-                File Name/Subject
+              <label htmlFor='remarks' className='font-bold'>
+                Remarks
               </label>
               <InputText
-                id='vehicleClass'
-                value={updatedProduct.fileName}
+                id='remarks'
+                value={updatedProduct.remarks}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    fileName: e.target.value,
+                    remarks: e.target.value,
                   })
                 }
               />
             </div>
             <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    placeholder='Select a Month'
-                                    className='w-full'
-                                />
-                            </div>
-            <div className='field'>
-              <label htmlFor='description' className='font-bold'>
-                Description
+              <label htmlFor='date' className='font-bold'>
+                Date
               </label>
-              <InputText
-                id='description'
-                value={updatedProduct.description}
+              <Calendar
+                id='date'
+                value={
+                  new Date(updatedProduct.date.split('-').reverse().join('-'))
+                }
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    description: e.target.value,
+                    date: e.value ? formatDate(e.value) : '',
                   })
                 }
+                dateFormat='dd/mm/yy'
               />
             </div>
-            <div className='field'>
-              <label htmlFor='vehicleName' className='font-bold'>
-                Attachment
-              </label>
-              <InputText
-                id='vahicleName'
-                value={updatedProduct.attachment}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    attachments: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-
-
-
-
             <div className='col-span-2'>
               <h3 className='font-bold mb-2'>Existing Attachments</h3>
               <div className='flex flex-wrap gap-3'>
@@ -984,7 +1041,7 @@ export default function GardeningMonthlyReport() {
       <Dialog
         visible={viewProductDialog}
         style={{ width: '50rem' }}
-        header='Document Details'
+        header='File Details'
         modal
         className='p-fluid'
         footer={viewProductDialogFooter}
@@ -1061,35 +1118,31 @@ export default function GardeningMonthlyReport() {
                 <p>{selectedProduct.date}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Month Name</h3>
-                <p className='break-all'>{selectedProduct.monthName}</p>
+                <h3 className='font-bold'>Patient Name</h3>
+                <p className='break-all'>{selectedProduct.patientName}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Description</h3>
-                <p className='break-all'>{selectedProduct.description}</p>
-              </div>
-
-              <div>
-                <h3 className='font-bold'>Attachment</h3>
-                <p className='break-all'>{selectedProduct.date}</p>
+                <h3 className='font-bold'>Patient Type</h3>
+                <p className='break-all'>{selectedProduct.patientType}</p>
               </div>
               <div>
-                <h3 className='font-bold'>File Name/Subject</h3>
-                <p className='break-all'>{selectedProduct.attachment?.length || 0}</p>
+                <h3 className='font-bold'>Patient No.</h3>
+                <p className='break-all'>{selectedProduct.patientNo}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Tax and Token Report</h3>
-                <p className='break-all'>{selectedProduct.attachment && selectedProduct.attachment.length > 0
-                  ? selectedProduct.attachment[0].name
-                  : 'No file selected'}</p>
+                <h3 className='font-bold'>Problem</h3>
+                <p className='break-all'>{selectedProduct.problem}</p>
               </div>
-
+              <div>
+                <h3 className='font-bold'>Remarks</h3>
+                <p className='break-all'>{selectedProduct.remarks}</p>
+              </div>
 
               {hasEditAccess && (
                 <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
-                    {selectedProduct.attachment.map((attachment, index) => (
+                    {selectedProduct.attachments.map((attachment, index) => (
                       <Button
                         key={attachment._id}
                         label={`File No. ${index + 1}: ${attachment?.url?.split('/').pop()}`}
@@ -1119,53 +1172,55 @@ export default function GardeningMonthlyReport() {
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
             <div className='field'>
-              <label htmlFor='fitnessDuration' className='font-bold'>
-                Date
+              <label htmlFor='department' className='font-bold'>
+                Patient Type
               </label>
-              <div className='border rounded-md'>
-                <Calendar
-                  id='date'
-                  // @ts-ignore
-
-                  value={formDate}
-                  onChange={(e) => setFormDate(e.value)}
-                  dateFormat='dd/mm/yy'
-                  inputClassName='border-0 focus:ring-0 cursor-pointer'
-                  className='focus:ring-0'
-                  placeholder='Select Date'
-                />
-              </div>
-              {submitted && !fitnessDuration && (
-                <small className='p-error'>Date is required.</small>
-              )}
+              <Dropdown
+                id='department'
+                value={department}
+                options={['Internal', 'Outside']}
+                onChange={(e) => setDepartment(e.value)}
+                placeholder='Select Type'
+                optionLabel='department'
+              />
             </div>
-
-
-            <div className="field">
-                            <label htmlFor="monthName" className="font-bold">
-                                Month Name
-                            </label>
-                            <Dropdown
-                                id="monthName"
-                                value={monthName} // must be one of the strings from months
-                                onChange={(e) => setMonthName(e.value)}
-                                options={months}
-                                placeholder="Select a Month"
-                                className="w-full"
-                            />
-                        </div>
             <div className='field'>
-              <label htmlFor='description' className='font-bold'>
-                Description
+              <label htmlFor='patientNo' className='font-bold'>
+                Patient No
               </label>
               <InputText
-                id='remarks'
-                onChange={(e) => setDescription(e.target.value)}
+                id='patientNo'
+                onChange={(e) => setPatientNo(e.target.value)}
                 required
               />
             </div>
-
-
+            <div className='field'>
+              <label htmlFor='patientName' className='font-bold'>
+                Patient Name
+              </label>
+              <InputText
+                id='patientName'
+                onChange={(e) => setPatientName(e.target.value)}
+                required
+                autoFocus
+                className={classNames({
+                  'p-invalid': submitted && !patientName,
+                })}
+              />
+              {submitted && !patientName && (
+                <small className='p-error'>Patient Name is required.</small>
+              )}
+            </div>
+            <div className='field'>
+              <label htmlFor='problem' className='font-bold'>
+                Problem
+              </label>
+              <InputText
+                id='problem'
+                onChange={(e) => setproblem(e.target.value)}
+                required
+              />
+            </div>
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -1173,16 +1228,32 @@ export default function GardeningMonthlyReport() {
               </label>
               <InputText
                 id='remarks'
-                onChange={(e) => setTaxToken(e.target.value)}
+                onChange={(e) => setRemarks(e.target.value)}
                 required
               />
             </div>
-          </div>
 
+            <div>
+              <label htmlFor='date' className='font-bold'>
+                Date
+              </label>
+              <div className='border rounded-md'>
+                <Calendar
+                  id='date'
+                  // @ts-ignore
+                  onChange={(e) => setFormDate(e.value)}
+                  dateFormat='dd/mm/yy'
+                  inputClassName='border-0 focus:ring-0 cursor-pointer'
+                  className='focus:ring-0'
+                  placeholder='Select Date'
+                />
+              </div>
+            </div>
+          </div>
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              <span className='text-red-500 ml-1'>*</span>
+              <span className='text-red-500'>*</span>
             </label>
 
             <div>
@@ -1210,6 +1281,26 @@ export default function GardeningMonthlyReport() {
             <span>
               Are you sure you want to delete <b>{product.name}</b>?
             </span>
+          )}
+        </div>
+      </Dialog>
+
+      <Dialog
+        visible={deleteProductsDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Confirm'
+        modal
+        footer={deleteProductsDialogFooter}
+        onHide={hideDeleteProductsDialog}
+      >
+        <div className='confirmation-content'>
+          <i
+            className='pi pi-exclamation-triangle mr-3'
+            style={{ fontSize: '3rem' }}
+          />
+          {product && (
+            <span>Are you sure you want to delete the selected products?</span>
           )}
         </div>
       </Dialog>
