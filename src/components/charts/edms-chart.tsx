@@ -120,8 +120,8 @@ export function EDMSLettersList() {
   }, [])
 
   return (
-    <div className='w-full rounded-xl overflow-hidden border shadow-md'>
-      <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center gap-2'>
+    <div className='w-full rounded-xl overflow-hidden border shadow-md h-[350px] '>
+      <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center gap-2 '>
         <div className='flex justify-between items-center w-full'>
           <div className='flex gap-3'>
             <div className='mt-1'>
@@ -176,7 +176,7 @@ export function EDMSLettersList() {
         </div>
 
       </div>
-      <div className=' '>
+      <div className=''>
         <WaterLevelCards></WaterLevelCards>
       </div>
       {/* <CardContent className='min-h-[280px] m-0'>

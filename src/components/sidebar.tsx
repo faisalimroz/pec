@@ -87,7 +87,7 @@ export default function Sidebar2({
             {navOpened ? <X /> : <Menu />}
           </Button>
         </LayoutHeader>
-
+         
         {/* Navigation links */}
         <Nav
           id='sidebar-menu'

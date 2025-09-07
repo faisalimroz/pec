@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
 import { adminTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
-import DemoTable from '@/components/admin/gardening-monthly-activity/gardening-monthly-activity'
+import DemoTable from '@/components/admin/gardening/gardening-monthly-activity'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {

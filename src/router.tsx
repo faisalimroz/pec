@@ -248,7 +248,14 @@ const router = createBrowserRouter([
           {
             path: 'administrative/gardening-monthly-activity',
             lazy: async () => ({
-              Component: (await import('@/pages/admin/gardening-monthly-activity'))
+              Component: (await import('@/pages/admin/gardening/gardening-monthly-activity'))
+                .default,
+            }),
+          },
+            {
+            path: 'administrative/gardening-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/gardening/gardening-tools'))
                 .default,
             }),
           },

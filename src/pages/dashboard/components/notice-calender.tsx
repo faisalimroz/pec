@@ -157,7 +157,7 @@ export default function NoticeCalender(): JSX.Element {
     <div className='grid grid-cols-12 gap-2 max-w-full mx-auto bg-none'>
 
       <div className='col-span-9 flex gap-2 my-0'>
-        <div className='w-[50%]'>
+        <div className='w-[50%] '>
           <EDMSLettersList />
         </div>
         <div className='w-[50%]'

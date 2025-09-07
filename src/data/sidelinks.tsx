@@ -73,6 +73,58 @@ export const administrationLinks: SideLink[] = [
       },
     ],
   },
+    {
+    title: 'Gardening Mgt.',
+    label: '',
+    href: '',
+    uName: 'hr',
+    icon: <FileIcon />,
+    sub: [
+       {
+        title: 'Monthly Activity',
+        label: '',
+        href: '/administrative/gardening-monthly-activity',
+        icon: '',
+      },
+      {
+        title: 'Gardening Tools',
+        label: '',
+        href: '/administrative/gardening-tools',
+        icon: '',
+      },
+     
+      
+    ],
+  },
+   {
+    title: 'Health Center',
+    label: '',
+    href: '',
+    uName: 'hr',
+    icon: <FileIcon />,
+    sub: [
+       {
+        title: 'Monthly Report',
+        label: '',
+        href: '/administrative/health-center-monthly-report',
+        icon: '',
+      },
+      {
+        title: 'Medicine In/Out Record',
+        label: '',
+        href: '/administrative/healt-center-medicine-record',
+        icon: '',
+      },
+      {
+        title: 'Medicine Equipment Record',
+        label: '',
+        href: '/administrative/healt-center-medical-record',
+        icon: '',
+      },
+     
+      
+    ],
+  },
   {
     title: 'Monthly Roster',
     label: '',
@@ -85,7 +137,7 @@ export const administrationLinks: SideLink[] = [
     title: 'Asset Management',
     label: '',
     href: '/administrative/asset-management',
-    uName: 'asset-management',
+    uName: 'hr',
     icon: <FileIcon />,
   },
   {
@@ -98,15 +150,15 @@ export const administrationLinks: SideLink[] = [
   {
     title: 'Vehicle Mgt. Record',
     label: '',
-    href: '/administrative/vehicle-mgt',
-    uName: 'vehicle-mgt-record',
+    href: '/administrative/vehicle-mgt-record',
+    uName: 'hr',
     icon: <FileIcon />,
   },
     {
     title: 'Monthly Report',
     label: '',
     href: '/administrative/gardening-monthly-activity',
-    uName: 'gardening-monthly-activity',
+    uName: 'hr',
     icon: <FileIcon />,
   },
 

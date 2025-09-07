@@ -40,20 +40,7 @@ interface Attachment {
   _id: string
 }
 
- const months = [
-    { label: 'January', value: 'January' },
-    { label: 'February', value: 'February' },
-    { label: 'March', value: 'March' },
-    { label: 'April', value: 'April' },
-    { label: 'May', value: 'May' },
-    { label: 'June', value: 'June' },
-    { label: 'July', value: 'July' },
-    { label: 'August', value: 'August' },
-    { label: 'September', value: 'September' },
-    { label: 'October', value: 'October' },
-    { label: 'November', value: 'November' },
-    { label: 'December', value: 'December' },
-  ];
+ 
 export default function GardeningMonthlyReport() {
   let emptyGardeningMonthlyReport: GardeningMonthlyReport = {
     _id: '',
@@ -116,21 +103,7 @@ export default function GardeningMonthlyReport() {
   const [updatedProduct, setUpdatedProduct] = useState<GardeningMonthlyReport | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-  // all update dialog func here
+
   const openUpdateDialog = (product: GardeningMonthlyReport) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
@@ -155,7 +128,6 @@ export default function GardeningMonthlyReport() {
       formData.append('date', updatedProduct.date);
       formData.append('description', updatedProduct.description);
       formData.append('remarks', updatedProduct.remarks);
-      formData.append('monthName', updatedProduct.monthName);
       formData.append('fileName', updatedProduct.fileName);
       formData.append('creator', updatedProduct.creator || '');
       formData.append('creationTimestamp', updatedProduct.creationTimestamp || '');
@@ -810,17 +782,12 @@ export default function GardeningMonthlyReport() {
 
           <Column
             field="fileName"
-            header="File Name"
+            header="File Name/Subject"
             headerClassName="bg-[#ffc2c2] text-sm"
             bodyClassName="text-sm truncate max-w-xs"
           />
 
-          <Column
-            field="monthName"
-            header="Month Name"
-            headerClassName="bg-[#ffc2c2] text-sm"
-            bodyClassName="text-sm truncate max-w-xs"
-          />
+        
           <Column
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
@@ -882,7 +849,7 @@ export default function GardeningMonthlyReport() {
 
             <div className='field'>
               <label htmlFor='fileName' className='font-bold'>
-                File Name
+                File Name/Subject
               </label>
               <InputText
                 id='vehicleClass'
@@ -895,24 +862,7 @@ export default function GardeningMonthlyReport() {
                 }
               />
             </div>
-            <div className='field'>
-              <label htmlFor='monthName' className='font-bold'>
-                Month
-              </label>
-              <Dropdown
-                id='monthName'
-                value={updatedProduct.monthName}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    monthName: e.value,
-                  })
-                }
-                options={months}
-                placeholder='Select a Month'
-                className='w-full'
-              />
-            </div>
+          
             <div className='field'>
               <label htmlFor='description' className='font-bold'>
                 Description
@@ -1060,10 +1010,7 @@ export default function GardeningMonthlyReport() {
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
-              <div>
-                <h3 className='font-bold'>Month Name</h3>
-                <p className='break-all'>{selectedProduct.monthName}</p>
-              </div>
+              
               <div>
                 <h3 className='font-bold'>Description</h3>
                 <p className='break-all'>{selectedProduct.description}</p>
@@ -1074,7 +1021,7 @@ export default function GardeningMonthlyReport() {
                 <p className='break-all'>{selectedProduct.date}</p>
               </div>
               <div>
-                <h3 className='font-bold'>File Name</h3>
+                <h3 className='font-bold'>File Name/Subject</h3>
                 <p className='break-all'>{selectedProduct.attachment?.length || 0}</p>
               </div>
               <div>
@@ -1141,24 +1088,6 @@ export default function GardeningMonthlyReport() {
             </div>
 
 
-            <div className='field'>
-              <label htmlFor='monthName' className='font-bold'>
-                Month Name
-              </label>
-              <Dropdown
-                id='monthName'
-             value={updatedProduct?.monthName || ''}
-                  onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    monthName: e.value,
-                  })
-                }
-                options={months}
-                placeholder='Select a Month'
-                className='w-full'
-              />
-            </div>
             <div className='field'>
               <label htmlFor='description' className='font-bold'>
                 Description

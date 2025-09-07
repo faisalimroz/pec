@@ -28,12 +28,11 @@ interface Attachment {
 interface Product {
   _id: string | null
   slNo: string
-  assetId: string
-  chalanNo: string
-  itemName: string
+ 
+  fileName: string
   date: string
-  quantity: string
-  usingLocation: string
+
+  description: string
   remarks: string
   attachments: Attachment[]
   creator?: string
@@ -46,12 +45,10 @@ export default function AssetManagementTable() {
   let emptyProduct: Product = {
     _id: '',
     slNo: '',
-    assetId: '',
-    chalanNo: '',
-    itemName: '',
+    fileName: '',
     date: '',
-    quantity: '',
-    usingLocation: '',
+  
+    description: '',
     remarks: '',
     attachments: [],
   }
@@ -78,11 +75,9 @@ export default function AssetManagementTable() {
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
-  const [itemName, setItemName] = useState('')
-  const [assetId, setAssetId] = useState('')
-  const [chalanNo, setChalanNo] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [usingLocation, setUsingLoaction] = useState('')
+  const [fileName, setfileName] = useState('')
+ 
+  const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [formDate, setFormDate] = useState<string>('')
@@ -115,11 +110,8 @@ export default function AssetManagementTable() {
     try {
       setLoading2(true)
       const formData = new FormData()
-      formData.append('assetId', updatedProduct.assetId)
-      formData.append('itemName', updatedProduct.itemName)
-      formData.append('chalanNo', updatedProduct.chalanNo)
-      formData.append('quantity', updatedProduct.quantity)
-      formData.append('usingLocation', updatedProduct.usingLocation)
+      formData.append('fileName', updatedProduct.fileName)
+      formData.append('description', updatedProduct.description)
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
 
@@ -230,11 +222,10 @@ export default function AssetManagementTable() {
       setLoading2(true)
       const formData = new FormData()
 
-      formData.append('itemName', itemName)
-      formData.append('assetId', assetId)
-      formData.append('chalanNo', chalanNo)
-      formData.append('quantity', quantity)
-      formData.append('usingLocation', usingLocation)
+      formData.append('fileName', fileName)
+ 
+
+      formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
       filesInput.forEach((file) => {
@@ -829,28 +820,14 @@ export default function AssetManagementTable() {
             sortable
           ></Column>
 
-          <Column
-            field='assetId'
-            header='Asset ID'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-          ></Column>
+        
 
           <Column
-            field='chalanNo'
-            header='Chalan No.'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-          ></Column>
-
-          <Column
-            field='itemName'
+            field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             sortable
-            header='Item Name'
+            header='File Name/Subject'
           ></Column>
 
           <Column
@@ -862,19 +839,11 @@ export default function AssetManagementTable() {
           ></Column>
 
           <Column
-            field='quantity'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Quantity'
-          ></Column>
-
-          <Column
-            field='usingLocation'
+            field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             // sortable
-            header='Using Location'
+            header='Description'
           ></Column>
 
           <Column
@@ -916,85 +885,43 @@ export default function AssetManagementTable() {
       >
         {updatedProduct && (
           <div className='grid grid-cols-2 gap-4'>
+            
+
             <div className='field'>
-              <label htmlFor='assetId' className='font-bold'>
-                Asset ID
+              <label htmlFor='fileName' className='font-bold'>
+               File Name/Subject
               </label>
               <InputText
-                id='assetId'
-                value={updatedProduct.assetId}
+                id='fileName'
+                value={updatedProduct.fileName}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    assetId: e.target.value,
+                    fileName: e.target.value,
                   })
                 }
               />
             </div>
 
+            
+
             <div className='field'>
-              <label htmlFor='itemName' className='font-bold'>
-                Item Name
+              <label htmlFor='description' className='font-bold'>
+                Description
               </label>
               <InputText
-                id='itemName'
-                value={updatedProduct.itemName}
+                id='description'
+                value={updatedProduct.description}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    itemName: e.target.value,
+                    description: e.target.value,
                   })
                 }
               />
             </div>
 
-            <div className='field'>
-              <label htmlFor='quantity' className='font-bold'>
-                Quantity
-              </label>
-              <InputText
-                id='quantity'
-                value={updatedProduct.quantity}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    quantity: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className='field'>
-              <label htmlFor='usingLocation' className='font-bold'>
-                Using Location
-              </label>
-              <InputText
-                id='usingLocation'
-                value={updatedProduct.usingLocation}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    usingLocation: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className='field'>
-              <label htmlFor='chalanNo' className='font-bold'>
-                Chalan No
-              </label>
-              <InputText
-                id='chalanNo'
-                value={updatedProduct.chalanNo}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    chalanNo: e.target.value,
-                  })
-                }
-              />
-            </div>
+          
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -1141,26 +1068,17 @@ export default function AssetManagementTable() {
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
-              <div>
-                <h3 className='font-bold'>Asset ID</h3>
-                <p className='break-all'>{selectedProduct.assetId}</p>
-              </div>
-              <div>
-                <h3 className='font-bold'>Chalan No.</h3>
-                <p className='break-all'>{selectedProduct.chalanNo}</p>
-              </div>
+           
+            
               <div>
                 <h3 className='font-bold'>Item Name</h3>
-                <p className='break-all'>{selectedProduct.itemName}</p>
+                <p className='break-all'>{selectedProduct.fileName}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Using Location</h3>
-                <p className='break-all'>{selectedProduct.usingLocation}</p>
+                <h3 className='font-bold'>Description</h3>
+                <p className='break-all'>{selectedProduct.description}</p>
               </div>
-              <div>
-                <h3 className='font-bold'>Quantity</h3>
-                <p className='break-all'>{selectedProduct.quantity}</p>
-              </div>
+         
               <div>
                 <h3 className='font-bold'>Remarks</h3>
                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1199,71 +1117,37 @@ export default function AssetManagementTable() {
       >
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
-            <div className='field'>
-              <label htmlFor='assetId' className='font-bold'>
-                AssetID
-              </label>
-              <InputText
-                id='assetId'
-                onChange={(e) => setAssetId(e.target.value)}
-                required
-                autoFocus
-                className={classNames({
-                  'p-invalid': submitted && !assetId,
-                })}
-              />
-              {submitted && !assetId && (
-                <small className='p-error'>AssetId is required.</small>
-              )}
-            </div>
+           
 
             <div className='field'>
-              <label htmlFor='itemName' className='font-bold'>
+              <label htmlFor='fileName' className='font-bold'>
                 Item Name
               </label>
               <InputText
-                id='itemName'
-                onChange={(e) => setItemName(e.target.value)}
+                id='fileName'
+                onChange={(e) => setfileName(e.target.value)}
                 required
                 autoFocus
                 className={classNames({
-                  'p-invalid': submitted && !itemName,
+                  'p-invalid': submitted && !fileName,
                 })}
               />
-              {submitted && !itemName && (
+              {submitted && !fileName && (
                 <small className='p-error'>Item Name is required.</small>
               )}
             </div>
 
-            <div className='field'>
-              <label htmlFor='chalanNo' className='font-bold'>
-                Chalan No.
-              </label>
-              <InputText
-                id='chalanNo'
-                onChange={(e) => setChalanNo(e.target.value)}
-                required
-              />
-            </div>
+            
+
+            
 
             <div className='field'>
-              <label htmlFor='quantity' className='font-bold'>
-                Quantity
+              <label htmlFor='description' className='font-bold'>
+                Description
               </label>
               <InputText
-                id='quantity'
-                onChange={(e) => setQuantity(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className='field'>
-              <label htmlFor='usingLocation' className='font-bold'>
-                Using Location
-              </label>
-              <InputText
-                id='usingLocation'
-                onChange={(e) => setUsingLoaction(e.target.value)}
+                id='description'
+                onChange={(e) => setDescription(e.target.value)}
                 required
               />
             </div>
