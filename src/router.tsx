@@ -486,6 +486,18 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin/fire-mgt/fire-tools')).default,
             }),
           },
+           {
+            path: '/finance/ipc-monthly-updates',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/ipc/ipc-monthly-updates')).default,
+            }),
+          },
+          {
+            path: '/finance/ipc-records',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/ipc/ipc-records')).default,
+            }),
+          },
           {
             path: 'administrative/building-maintenance-report',
             lazy: async () => ({
