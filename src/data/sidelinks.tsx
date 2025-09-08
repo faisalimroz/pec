@@ -97,6 +97,29 @@ export const administrationLinks: SideLink[] = [
     ],
   },
    {
+    title: 'Fire Mgt.',
+    label: '',
+    href: '',
+    uName: 'hr',
+    icon: <FileIcon />,
+    sub: [
+       {
+        title: 'Monthly Activity',
+        label: '',
+        href: '/administrative/fire-mgt-monthly-report',
+        icon: '',
+      },
+      {
+        title: ' Tools',
+        label: '',
+        href: '/administrative/fire-mgt-tools',
+        icon: '',
+      },
+     
+      
+    ],
+  },
+   {
     title: 'Health Center',
     label: '',
     href: '',
