@@ -20,7 +20,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { Dropdown } from 'primereact/dropdown';
-        
+
 interface Attachment {
   url: string
   _id: string
@@ -28,7 +28,7 @@ interface Attachment {
 interface Product {
   _id: string | null
   slNo: string
- 
+
   fileName: string
   date: string
 
@@ -47,7 +47,7 @@ export default function AssetManagementTable() {
     slNo: '',
     fileName: '',
     date: '',
-  
+
     description: '',
     remarks: '',
     attachments: [],
@@ -76,7 +76,7 @@ export default function AssetManagementTable() {
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
   const [fileName, setfileName] = useState('')
- 
+
   const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
@@ -223,7 +223,7 @@ export default function AssetManagementTable() {
       const formData = new FormData()
 
       formData.append('fileName', fileName)
- 
+
 
       formData.append('description', description)
       formData.append('remarks', remarks)
@@ -443,11 +443,10 @@ export default function AssetManagementTable() {
             <button
               onClick={confirmDeleteSelected}
               disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
-                selectedProducts && selectedProducts.length > 0
+              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
                   ? 'bg-red-500 hover:bg-red-600'
                   : 'bg-gray-400 cursor-not-allowed'
-              }`}
+                }`}
             >
               Delete Selected ({selectedProducts?.length || 0})
             </button>
@@ -459,49 +458,48 @@ export default function AssetManagementTable() {
   }
 
 
- const ButtonGroup = () => {
-  const [activeButton, setActiveButton] = useState('All')
+  const ButtonGroup = () => {
+    const [activeButton, setActiveButton] = useState('All')
 
-  const buttons = [
-    { label: 'All', value: 'All' },
-    { label: 'Service Area 1', value: 'Service Area 1' },
-    { label: 'Service Area 2', value: 'Service Area 2' },
-    { label: 'Service Area 3', value: 'Service Area 3' },
-    { label: 'Mawa', value: 'Mawa' },
-    { label: 'Janjira', value: 'Janjira' },
-  ]
+    const buttons = [
+      { label: 'All', value: 'All' },
+      { label: 'Service Area 1', value: 'Service Area 1' },
+      { label: 'Service Area 2', value: 'Service Area 2' },
+      { label: 'Service Area 3', value: 'Service Area 3' },
+      { label: 'Mawa', value: 'Mawa' },
+      { label: 'Janjira', value: 'Janjira' },
+    ]
 
-  const handleButtonClick = (buttonValue:string) => {
-    setActiveButton(buttonValue)
-    //api is not ready yet
-    console.log(`Button clicked: ${buttonValue}`)
-  }
+    const handleButtonClick = (buttonValue: string) => {
+      setActiveButton(buttonValue)
+      //api is not ready yet
+      console.log(`Button clicked: ${buttonValue}`)
+    }
 
-  return (
-    <>
-     <div className='flex items-center space-x-2 p-4 bg-gray-100 rounded-lg'>
-      {buttons.map((button) => (
-        <button
-          key={button.value}
-          onClick={() => handleButtonClick(button.value)}
-          className={`
+    return (
+      <>
+        <div className='flex items-center space-x-2 p-4 bg-gray-100 rounded-lg'>
+          {buttons.map((button) => (
+            <button
+              key={button.value}
+              onClick={() => handleButtonClick(button.value)}
+              className={`
             px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-            ${
-              activeButton === button.value
-                ? 'bg-[#6F90AE] text-base font-semibold text-white' 
-                : ' bg-main text-base font-semibold text-white' 
-            }
+            ${activeButton === button.value
+                  ? 'bg-[#6F90AE] text-base font-semibold text-white'
+                  : ' bg-main text-base font-semibold text-white'
+                }
             
           `}
-        >
-          {button.label}
-        </button>
-      ))}
-    </div>
-    </>
-   
-  )
-}
+            >
+              {button.label}
+            </button>
+          ))}
+        </div>
+      </>
+
+    )
+  }
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
@@ -642,31 +640,31 @@ export default function AssetManagementTable() {
         handleSearch()
       }}
     >
-       <Calendar
-                    // @ts-ignore
-                    value={date}
-                    // @ts-ignore
-                    onChange={(e) => setDate(e.value)}
+      <Calendar
+        // @ts-ignore
+        value={date}
+        // @ts-ignore
+        onChange={(e) => setDate(e.value)}
 
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-                    placeholder='Start Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-                <Calendar
-                    // @ts-ignore
-                    value={date2}
-                    // @ts-ignore
-                    onChange={(e) => setDate2(e.value)}
+        dateFormat="dd/mm/yy"
+        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+        placeholder='Start Date'
+        showIcon
+        icon={() => <i className='pi pi-angle-down' />}
+      />
+      <Calendar
+        // @ts-ignore
+        value={date2}
+        // @ts-ignore
+        onChange={(e) => setDate2(e.value)}
 
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-                    placeholder='End Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-    
+        dateFormat="dd/mm/yy"
+        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+        placeholder='End Date'
+        showIcon
+        icon={() => <i className='pi pi-angle-down' />}
+      />
+
       <IconField iconPosition='left' className='relative'>
         <InputIcon className='pi pi-search' />
         <InputText
@@ -820,7 +818,7 @@ export default function AssetManagementTable() {
             sortable
           ></Column>
 
-        
+
 
           <Column
             field='fileName'
@@ -859,7 +857,7 @@ export default function AssetManagementTable() {
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+          // sortable
           ></Column>
 
           <Column
@@ -885,11 +883,11 @@ export default function AssetManagementTable() {
       >
         {updatedProduct && (
           <div className='grid grid-cols-2 gap-4'>
-            
+
 
             <div className='field'>
               <label htmlFor='fileName' className='font-bold'>
-               File Name/Subject
+                File Name/Subject
               </label>
               <InputText
                 id='fileName'
@@ -903,7 +901,7 @@ export default function AssetManagementTable() {
               />
             </div>
 
-            
+
 
             <div className='field'>
               <label htmlFor='description' className='font-bold'>
@@ -921,7 +919,7 @@ export default function AssetManagementTable() {
               />
             </div>
 
-          
+
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -1068,17 +1066,17 @@ export default function AssetManagementTable() {
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
-           
-            
+
+
               <div>
-                <h3 className='font-bold'>Item Name</h3>
+                <h3 className='font-bold'>File Name/Subject</h3>
                 <p className='break-all'>{selectedProduct.fileName}</p>
               </div>
               <div>
                 <h3 className='font-bold'>Description</h3>
                 <p className='break-all'>{selectedProduct.description}</p>
               </div>
-         
+
               <div>
                 <h3 className='font-bold'>Remarks</h3>
                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1117,11 +1115,11 @@ export default function AssetManagementTable() {
       >
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
-           
+
 
             <div className='field'>
               <label htmlFor='fileName' className='font-bold'>
-                Item Name
+                File Name/Subject
               </label>
               <InputText
                 id='fileName'
@@ -1133,13 +1131,13 @@ export default function AssetManagementTable() {
                 })}
               />
               {submitted && !fileName && (
-                <small className='p-error'>Item Name is required.</small>
+                <small className='p-error'>File Name/ Subject is required.</small>
               )}
             </div>
 
-            
 
-            
+
+
 
             <div className='field'>
               <label htmlFor='description' className='font-bold'>

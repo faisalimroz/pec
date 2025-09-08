@@ -125,6 +125,29 @@ export const administrationLinks: SideLink[] = [
       
     ],
   },
+   {
+    title: 'Building Maintenance',
+    label: '',
+    href: '',
+    uName: 'hr',
+    icon: <FileIcon />,
+    sub: [
+       {
+        title: 'Monthly Maintenance Report',
+        label: '',
+        href: '/administrative/building-maintenance-report',
+        icon: '',
+      },
+      {
+        title: 'Tools',
+        label: '',
+        href: '/administrative/building-maintenance-tools',
+        icon: '',
+      }
+     
+      
+    ],
+  },
   {
     title: 'Monthly Roster',
     label: '',

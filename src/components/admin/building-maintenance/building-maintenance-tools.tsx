@@ -21,6 +21,7 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
+import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 
 interface Attachment {
     url: string
@@ -31,7 +32,7 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    monthName: string;
+   
     problem: string
     patientType: string
     date: string
@@ -50,7 +51,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         problem: '',
-        monthName: '',
+        
         patientType: '',
         date: '',
         remarks: '',
@@ -92,7 +93,7 @@ export default function MonthlyReport() {
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [monthName, setMonthName] = useState<string>("");
+    
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -103,20 +104,6 @@ export default function MonthlyReport() {
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
 
-    const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-    ];
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -142,7 +129,7 @@ export default function MonthlyReport() {
             formData.append('problem', updatedProduct.problem)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-            formData.append('monthName', updatedProduct.monthName);
+           
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -459,36 +446,16 @@ export default function MonthlyReport() {
         return (
             <>
                 {hasEditAccess && (
-                    <div className='space-x-2'>
-                        <button
-                            className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-                            onClick={openNew}
-                        >
-                            Upload Document
-                        </button>
-                        <button
-                            className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-                            onClick={exportCSV}
-                        >
-                            Download Files{' '}
-                            {selectedProducts?.length === 0
-                                ? '(All)'
-                                : `(${selectedProducts?.length})`}
-                        </button>
-                        <button
-                            onClick={confirmDeleteSelected}
-                            disabled={!selectedProducts || selectedProducts.length === 0}
-                            className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
-                                ? 'bg-red-500 hover:bg-red-600'
-                                : 'bg-gray-400 cursor-not-allowed'
-                                }`}
-                        >
-                            Delete Selected ({selectedProducts?.length || 0})
-                        </button>
-                    </div>
+                    <ButtonGroupWithIcons
+                        selectedProducts={selectedProducts}
+                        openNew={openNew}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
+                        handleReset={handleReset}
+                    />
                 )}
 
-                <RefreshButton className='text-base ml-2' onClick={handleReset} />
+                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
             </>
         )
     }
@@ -858,14 +825,7 @@ export default function MonthlyReport() {
                                 className='min-w-[8rem]'
                                 header='File Name/Subject'
                             ></Column>
-                            <Column
-                                field='monthName'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[12rem]'
-                                header='Month Name'
-                            ></Column>
+                           
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -920,23 +880,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+                     
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -967,21 +911,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        {/* <div className='field'>
-              <label htmlFor='problem' className='font-bold'>
-                Problem
-              </label>
-              <InputText
-                id='problem'
-                value={updatedProduct.problem}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    problem: e.target.value,
-                  })
-                }
-              />
-            </div> */}
+                        
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1015,24 +945,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month Name
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    placeholder='Select a Month'
-                                    className='w-full'
-                                />
-                            </div>
+                           
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1150,11 +1063,8 @@ export default function MonthlyReport() {
                                 <h3 className='font-bold'>File Name/Subject</h3>
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
+
                             
-                            <div>
-                                <h3 className='font-bold'>Month Name</h3>
-                                <p className='break-all'>{selectedProduct.monthName}</p>
-                            </div>
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1193,7 +1103,7 @@ export default function MonthlyReport() {
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
-                  
+
                         <div className='field'>
                             <label htmlFor='subjectName' className='font-bold'>
                                 File Name/Subject
@@ -1221,19 +1131,7 @@ export default function MonthlyReport() {
                                 required
                             />
                         </div>
-                        <div className="field">
-                            <label htmlFor="monthName" className="font-bold">
-                                Month Name
-                            </label>
-                            <Dropdown
-                                id="monthName"
-                                value={monthName} // must be one of the strings from months
-                                onChange={(e) => setMonthName(e.value)}
-                                options={months}
-                                placeholder="Select a Month"
-                                className="w-full"
-                            />
-                        </div>
+                        
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

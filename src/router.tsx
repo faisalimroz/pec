@@ -451,6 +451,18 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'administrative/building-maintenance-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/building-maintenance/monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/building-maintenance-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/building-maintenance/tools')).default,
+            }),
+          },
+          {
             path: 'administrative/health-center-monthly-report',
             lazy: async () => ({
               Component: (await import('@/pages/admin/health-center/monthly-report')).default,
@@ -468,7 +480,7 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin/health-center/medical-equipment-record')).default,
             }),
           },
-
+ 
 
           {
             path: 'clinic-center/medicine-record',

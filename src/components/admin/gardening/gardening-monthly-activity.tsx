@@ -984,7 +984,7 @@ export default function GardeningMonthlyReport() {
       <Dialog
         visible={viewProductDialog}
         style={{ width: '50rem' }}
-        header='Document Details'
+        header='File Details'
         modal
         className='p-fluid'
         footer={viewProductDialogFooter}
@@ -1075,10 +1075,10 @@ export default function GardeningMonthlyReport() {
               </div>
               <div>
                 <h3 className='font-bold'>File Name/Subject</h3>
-                <p className='break-all'>{selectedProduct.attachment?.length || 0}</p>
+                <p className='break-all'>{selectedProduct.fileName}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Tax and Token Report</h3>
+                <h3 className='font-bold'>Attachment</h3>
                 <p className='break-all'>{selectedProduct.attachment && selectedProduct.attachment.length > 0
                   ? selectedProduct.attachment[0].name
                   : 'No file selected'}</p>
@@ -1159,7 +1159,7 @@ export default function GardeningMonthlyReport() {
                 Description
               </label>
               <InputText
-                id='remarks'
+                id='description'
                 onChange={(e) => setDescription(e.target.value)}
                 required
               />
@@ -1173,7 +1173,7 @@ export default function GardeningMonthlyReport() {
               </label>
               <InputText
                 id='remarks'
-                onChange={(e) => setTaxToken(e.target.value)}
+                onChange={(e) => setRemarks(e.target.value)}
                 required
               />
             </div>
