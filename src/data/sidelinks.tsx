@@ -149,7 +149,30 @@ export const administrationLinks: SideLink[] = [
     ],
   },
   {
-    title: 'IT Electronics Communication',
+    title: 'Security Mgt.',
+    label: '',
+    href: '',
+    uName: 'hr',
+    icon: <FileIcon />,
+    sub: [
+       {
+        title: 'Monthly Report',
+        label: '',
+        href: '/administrative/security-mgt-monthly-report',
+        icon: '',
+      },
+      {
+        title: 'Tools',
+        label: '',
+        href: '/administrative/security-mgt-tools',
+        icon: '',
+      }
+     
+      
+    ],
+  },
+  {
+    title: 'IT Electronics',
     label: '',
     href: '',
     uName: 'hr',

@@ -523,24 +523,48 @@ export default function EmPersonalProfileTable() {
       aria-label='Search and filter form'
     >
       <div>
-        <Calendar
+        {/* <Calendar
           value={searchDate}
           // @ts-ignore
           onChange={(e) => setSearchDate(e.value)}
           inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           placeholder='Start Date'
           showIcon
-        />
+        /> */}
+         <Calendar
+                    // @ts-ignore
+                      value={searchDate}
+                    // @ts-ignore
+                    onChange={(e) => setSearchDate(e.value)}
+
+                    dateFormat="dd/mm/yy"
+                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+                    placeholder='Start Date'
+                    showIcon
+                    icon={() => <i className='pi pi-angle-down' />}
+                />
       </div>
       <div>
-        <Calendar
+        {/* <Calendar
           value={searchDate2}
           // @ts-ignore
           onChange={(e) => setSearchDate2(e.value)}
           inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           placeholder='End Date'
           showIcon
-        />
+        /> */}
+          <Calendar
+                    // @ts-ignore
+                   value={searchDate2}
+                    // @ts-ignore
+                   onChange={(e) => setSearchDate2(e.value)}
+
+                    dateFormat="dd/mm/yy"
+                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                    placeholder='End Date'
+                    showIcon
+                    icon={() => <i className='pi pi-angle-down' />}
+                />
       </div>
 
       <div>

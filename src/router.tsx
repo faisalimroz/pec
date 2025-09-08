@@ -463,6 +463,18 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'administrative/security-mgt-monthly-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/security-mgt/security-monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/security-mgt-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/security-mgt/security-tools')).default,
+            }),
+          },
+          {
             path: 'administrative/building-maintenance-report',
             lazy: async () => ({
               Component: (await import('@/pages/admin/building-maintenance/monthly-report')).default,
