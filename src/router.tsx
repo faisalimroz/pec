@@ -451,6 +451,18 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: 'administrative/it-electronics-communication-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/it-electronics-communication/it-electronics-monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/it-electronics-communication-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/it-electronics-communication/it-electronics-tools')).default,
+            }),
+          },
+          {
             path: 'administrative/building-maintenance-report',
             lazy: async () => ({
               Component: (await import('@/pages/admin/building-maintenance/monthly-report')).default,

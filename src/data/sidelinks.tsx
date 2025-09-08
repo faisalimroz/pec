@@ -149,6 +149,29 @@ export const administrationLinks: SideLink[] = [
     ],
   },
   {
+    title: 'IT Electronics Communication',
+    label: '',
+    href: '',
+    uName: 'hr',
+    icon: <FileIcon />,
+    sub: [
+       {
+        title: 'Monthly Report',
+        label: '',
+        href: '/administrative/it-electronics-communication-report',
+        icon: '',
+      },
+      {
+        title: 'Tools',
+        label: '',
+        href: '/administrative/it-electronics-communication-tools',
+        icon: '',
+      }
+     
+      
+    ],
+  },
+  {
     title: 'Monthly Roster',
     label: '',
     href: '/administrative/monthly-roster',
