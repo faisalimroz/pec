@@ -3,7 +3,7 @@ import GuardIcon from '@/components/icons/GuardIcon'
 import PatrolIcon from '@/components/icons/PatrolIcon'
 import WorkshopIcon from '@/components/icons/WorkshopIcon'
 import KecIcon from '@/components/icons/KecIcon'
-import ReportIcon from '@/components/icons/ReportICon'
+import ReportIcon from '@/components/icons/ReportIcon'
 import SignalIcon from '@/components/icons/SignalIcon'
 
 export interface NavLink {
@@ -594,7 +594,69 @@ export const rntLinks: SideLink[] = [
     uName: 'building-maint',
     icon: <KecIcon />,
   },
-  
+   {
+    title: 'Road and ',
+    label: '',
+    href: '',
+    uName: 'drawing',
+    icon: <PatrolIcon />,
+    sub: [
+      {
+        title: 'Accident / Incident Report',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/accident-incident-report',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/requisition-form',
+        icon: '',
+      },
+      {
+        title: 'Completion Form',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/completion-form',
+        icon: '',
+      },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Inspection Report',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/inspection-report',
+        icon: '',
+      },
+       {
+        title: 'Controller’s Report',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/controllers-report',
+        icon: '',
+      },
+      {
+        title: 'Letter Attachment',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/letter-attachment',
+        icon: '',
+      },
+      {
+        title: 'Drawing',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/drawing',
+        icon: '',
+      },
+      {
+        title: 'Miscellaneous',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/miscellaneous',
+        icon: '',
+      },
+    ],
+  },
   
   {
     title: 'Workshop ',

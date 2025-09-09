@@ -947,6 +947,80 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
+            {
+            path: 'road-and-traffic/road-and-patrol/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/accident')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/drawing')
+              ).default,
+            }),
+          },
+            {
+            path: 'road-and-traffic/road-and-patrol/controllers-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/controllers-report')
+              ).default,
+            }),
+          },
+         
+         
+          {
+            path: 'road-and-traffic/road-and-patrol/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/miscellaneous')
+              ).default,
+            }),
+          },
           {
             path: 'road-and-traffic/workshop/accident-incident-report',
             lazy: async () => ({
