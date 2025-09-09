@@ -1162,6 +1162,30 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/its/Staff/overview')).default,
             }),
           },
+           {
+            path: 'its/system-configure',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/SystemConfigure')).default,
+            }),
+          },
+            {
+            path: 'its/notice',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/Notice')).default,
+            }),
+          },
+          //   {
+          //   path: 'its/organization',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/its/Organization')).default,
+          //   }),
+          // },
+           {
+            path: 'its/organization',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/Organization')).default,
+            }),
+          },
           {
             path: 'its/staff-summary',
             lazy: async () => ({

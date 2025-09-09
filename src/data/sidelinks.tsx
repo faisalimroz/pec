@@ -788,6 +788,13 @@ export const itsLinks: SideLink[] = [
         href: '/its/overview',
         icon: '',
       },
+       {
+        title: 'Organization',
+        label: '',
+        href: '/its/organization',
+        icon: '',
+      },
+       
       {
         title: 'Staff Summary',
         label: '',
@@ -802,6 +809,24 @@ export const itsLinks: SideLink[] = [
       },
     ],
   },
+  {
+        title: 'System configure',
+        label: '',
+        href: '/its/system-configure',
+        icon: <FileIcon/>,
+      },
+       {
+        title: 'Notice',
+        label: '',
+        href: '/its/notice',
+        icon: <FileIcon/>,
+      },
+       {
+        title: 'Organization',
+        label: '',
+        href: '/its/organization',
+        icon: <FileIcon/>,
+      },
   {
     title: 'Report',
     label: '',
