@@ -924,10 +924,18 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'road-and-traffic/building-maintenance',
+            path: 'road-and-traffic/kec-letter',
             lazy: async () => ({
               Component: (
-                await import('@/pages/road-and-traffic/building-maintenance')
+                await import('@/pages/road-and-traffic/kec-letter')
+              ).default,
+            }),
+          },
+            {
+            path: 'road-and-traffic/organization-organogram',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/orgaorganization-organogram')
               ).default,
             }),
           },
