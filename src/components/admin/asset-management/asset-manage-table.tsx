@@ -478,7 +478,7 @@ export default function AssetManagementTable() {
 
     return (
       <>
-        <div className='flex items-center space-x-2 p-4 rounded-lg'>
+        <div className='flex items-center space-x-2 py-2 rounded-lg'>
           {buttons.map((button) => (
             <button
               key={button.value}

@@ -1,4 +1,10 @@
 import FileIcon from '@/components/icons/FileIcon'
+import GuardIcon from '@/components/icons/GuardIcon'
+import PatrolIcon from '@/components/icons/PatrolIcon'
+import WorkshopIcon from '@/components/icons/WorkshopIcon'
+import KecIcon from '@/components/icons/KecIcon'
+import ReportIcon from '@/components/icons/ReportICon'
+import SignalIcon from '@/components/icons/SignalIcon'
 
 export interface NavLink {
   title: string
@@ -579,7 +585,7 @@ export const rntLinks: SideLink[] = [
     label: '',
     href: '/road-and-traffic/monthly-roaster',
     uName: 'r&t-monthly-roster',
-    icon: <FileIcon />,
+    icon: <GuardIcon />,
   },
   {
     title: 'Drawing',
