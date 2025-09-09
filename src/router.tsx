@@ -252,14 +252,14 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
-            {
+          {
             path: 'administrative/gardening-tools',
             lazy: async () => ({
               Component: (await import('@/pages/admin/gardening/gardening-tools'))
                 .default,
             }),
           },
-           {
+          {
             path: 'administrative/monthly-roaster',
             lazy: async () => ({
               Component: (await import('@/pages/admin/planning/monthly-roster'))
@@ -474,7 +474,7 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin/security-mgt/security-tools')).default,
             }),
           },
-           {
+          {
             path: 'administrative/fire-mgt-monthly-report',
             lazy: async () => ({
               Component: (await import('@/pages/admin/fire-mgt/fire-monthly-report')).default,
@@ -486,7 +486,7 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin/fire-mgt/fire-tools')).default,
             }),
           },
-           {
+          {
             path: '/finance/ipc-monthly-updates',
             lazy: async () => ({
               Component: (await import('@/pages/admin/ipc/ipc-monthly-updates')).default,
@@ -522,13 +522,13 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin/health-center/medicine-in-out-record')).default,
             }),
           },
- {
+          {
             path: 'administrative/health-center-monthly-equipment-record',
             lazy: async () => ({
               Component: (await import('@/pages/admin/health-center/medical-equipment-record')).default,
             }),
           },
- 
+
 
           {
             path: 'clinic-center/medicine-record',
@@ -931,7 +931,7 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-            {
+          {
             path: 'road-and-traffic/organization-organogram',
             lazy: async () => ({
               Component: (
@@ -947,7 +947,70 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-
+          {
+            path: 'road-and-traffic/workshop/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/accident')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/drawing')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/miscellaneous')
+              ).default,
+            }),
+          },
           {
             path: 'its',
             lazy: async () => ({

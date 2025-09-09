@@ -596,27 +596,63 @@ export const rntLinks: SideLink[] = [
   },
   
   
-  // {
-  //   title: 'Drawing',
-  //   label: '',
-  //   href: '',
-  //   uName: 'drawing',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Structural',
-  //       label: '',
-  //       href: '/road-and-traffic/drawing/structural',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Electrical',
-  //       label: '',
-  //       href: '/road-and-traffic/drawing/electrical',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
+  {
+    title: 'Workshop ',
+    label: '',
+    href: '',
+    uName: 'drawing',
+    icon: <WorkshopIcon />,
+    sub: [
+      {
+        title: 'Accident / Incident Report',
+        label: '',
+        href: '/road-and-traffic/workshop/accident-incident-report',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/road-and-traffic/workshop/requisition-form',
+        icon: '',
+      },
+      {
+        title: 'Completion Form',
+        label: '',
+        href: '/road-and-traffic/workshop/completion-form',
+        icon: '',
+      },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/road-and-traffic/workshop/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Inspection Report',
+        label: '',
+        href: '/road-and-traffic/workshop/inspection-report',
+        icon: '',
+      },
+      {
+        title: 'Letter Attachment',
+        label: '',
+        href: '/road-and-traffic/workshop/letter-attachment',
+        icon: '',
+      },
+      {
+        title: 'Drawing',
+        label: '',
+        href: '/road-and-traffic/workshop/drawing',
+        icon: '',
+      },
+      {
+        title: 'Miscellaneous',
+        label: '',
+        href: '/road-and-traffic/workshop/miscellaneous',
+        icon: '',
+      },
+    ],
+  },
 ]
 
 export const itsLinks: SideLink[] = [
