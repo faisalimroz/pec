@@ -1085,6 +1085,71 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
+          
+          {
+            path: 'road-and-traffic/road-and-maintanance/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/accident')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/drawing')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/miscellaneous')
+              ).default,
+            }),
+          },
           {
             path: 'its',
             lazy: async () => ({

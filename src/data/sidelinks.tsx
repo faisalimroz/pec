@@ -595,6 +595,63 @@ export const rntLinks: SideLink[] = [
     icon: <KecIcon />,
   },
    {
+    title: 'Road Main ',
+    label: '',
+    href: '',
+    uName: 'drawing',
+    icon: <SignalIcon />,
+    sub: [
+      {
+        title: 'Accident / Incident Report',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/accident-incident-report',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/requisition-form',
+        icon: '',
+      },
+      {
+        title: 'Completion Form',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/completion-form',
+        icon: '',
+      },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Inspection Report',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/inspection-report',
+        icon: '',
+      },
+      {
+        title: 'Letter Attachment',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/letter-attachment',
+        icon: '',
+      },
+      {
+        title: 'Drawing',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/drawing',
+        icon: '',
+      },
+      {
+        title: 'Miscellaneous',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/miscellaneous',
+        icon: '',
+      },
+    ],
+  },
+   {
     title: 'Road and ',
     label: '',
     href: '',
