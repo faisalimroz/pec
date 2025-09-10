@@ -9,15 +9,24 @@ import { searchKecManual, useKecManual } from '@/api/tollApi'
 import { ColumnGroup } from 'primereact/columngroup'
 import { Row } from 'primereact/row'
 import trailor from '@/assets/ai-assets/vehicles/trailor.svg'
+import trailer5axle from '@/assets/ai-assets/vehicle/trailer-5axle.svg'
+import trailer4axle from '@/assets/ai-assets/vehicle/trailer-4axle.svg'
+import trailer3axle from '@/assets/ai-assets/vehicle/truck-3axle.svg'
+
 import heavyTruck from '@/assets/ai-assets/vehicles/heavyTruck.svg'
-import mediumTruck from '@/assets/ai-assets/vehicles/mediumTruck.svg'
+import mediumTruck9 from '@/assets/ai-assets/vehicle/medium-truck11.svg'
+import mediumTruck8 from '@/assets/ai-assets/vehicle/medium-truck8.svg'
 import bus from '@/assets/ai-assets/vehicles/bus.svg'
-import smallTruck from '@/assets/ai-assets/vehicles/smalltruck.svg'
-import miniBus from '@/assets/ai-assets/vehicles/miniBus.svg'
-import microBus from '@/assets/ai-assets/vehicles/microBus.svg'
-import pickUp from '@/assets/ai-assets/vehicles/pickup.svg'
+import miniTruck from '@/assets/ai-assets/vehicle/mini-truck.svg'
+import bigBus from '@/assets/ai-assets/vehicle/big-bus.svg'
+import meduiumBus from '@/assets/ai-assets/vehicle/medium-bus.svg'
+import miniBus from '@/assets/ai-assets/vehicle/mini-bus.svg'
+import microBus from '@/assets/ai-assets/vehicle/micro-bus.svg'
+import pickUp from '@/assets/ai-assets/vehicle/pickup.svg'
 import sedan from '@/assets/ai-assets/vehicles/sedan.svg'
-import motorBike from '@/assets/ai-assets/vehicles/motorBike.svg'
+import motorBike from '@/assets/ai-assets/vehicle/bike.svg'
+import car from '@/assets/ai-assets/vehicle/car.svg'
+import bike from '@/assets/ai-assets/vehicle/bike.svg'
 import { Dropdown } from 'primereact/dropdown'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -25,6 +34,7 @@ import axios from 'axios'
 import { Dialog } from 'primereact/dialog'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
+import { Bike } from 'lucide-react'
 
 interface Product {
   lane: number
@@ -51,6 +61,7 @@ export default function VehicleDetectTollTable() {
   const [date, setDate] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [totalOverallVehicles, setTotalOverallVehicles] = useState<number>(0)
+  const [totalTollCollection, setTotalTollCollection] = useState<number>(0)
   const [selectedLane, setSelectedLane] = useState(null)
   const [selectedShift, setSelectedShift] = useState(null)
   const [selectedDataType, setSelectedDataType] = useState(null)
@@ -324,6 +335,7 @@ export default function VehicleDetectTollTable() {
     searchKecManual(initialPayload).then((result) => {
       setProducts(result?.laneData)
       setTotalOverallVehicles(result?.overallTotals?.totalOverallVehicles)
+      setTotalTollCollection(result?.overallTotals?.data?.totalOverallAmount)
       setAllData(result?.overallTotals)
       setTodaysDate(result?.date)
       setLoading(false)
@@ -345,14 +357,16 @@ export default function VehicleDetectTollTable() {
     searchKecManual(initialPayload).then((result) => {
       setProducts(result?.laneData)
       setTotalOverallVehicles(result?.overallTotals?.totalOverallVehicles)
+      setTotalTollCollection(result?.overallTotals?.totalOverallAmount)
       setAllData(result?.overallTotals)
       setTodaysDate(result?.date)
       setLoading(false)
     })
   }
-
+ 
   const filterSearchForm = (
-    <div className='flex mx-auto w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'>
+    <div>
+       <div className='flex mx-auto w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'>
       <div>
         <Calendar
           // @ts-ignore
@@ -413,6 +427,9 @@ export default function VehicleDetectTollTable() {
         </svg>
       </button>
     </div>
+    <h1 className='text-center pt-10 text-xl font-bold text-[#000000]'>Traffic Report</h1>
+    </div>
+   
   )
 
   const [payload, setPayload] = useState<any>({
@@ -429,6 +446,7 @@ export default function VehicleDetectTollTable() {
     if (data) {
       setProducts(data?.laneData)
       setTotalOverallVehicles(data?.overallTotals?.totalOverallVehicles)
+      setTotalTollCollection(data?.overallTotals?.totalOverallAmount)
       setAllData(data?.overallTotals)
       setTodaysDate(data?.date)
     }
@@ -457,14 +475,20 @@ export default function VehicleDetectTollTable() {
   // console.log(allData)
 
   const totalSummary = (
-    <div className='flex justify-center items-center bg-gray-100 p-4 rounded'>
-      <div className='text-lg font-bold text-center'>
-        <span className='font-bold'>Total Vehicle Passing:</span>{' '}
+
+    <div className=' font-bold flex justify-between items-center bg-gray-100 p-4 rounded '>
+      <div>
+        <span className='font-bold text-lg'>Total Vehicle Passing:</span>{' '}
         {totalOverallVehicles}
-        <br />
-        <span className='font-bold'>Data Showing For Date:</span> {todaysDate}
+      </div>
+      <div>
+        <span className='font-bold text-lg'>Data Showing For Date:</span> {todaysDate}
+      </div>
+      <div>
+        <span className='font-bold text-lg'>Total Toll Collection</span> {totalTollCollection}
       </div>
     </div>
+
   )
 
   const vehicleHeaderTemplate = (image: string, label: string) => (
@@ -495,62 +519,74 @@ export default function VehicleDetectTollTable() {
       <Row>
         <Column
           header='Lane No.'
-          headerClassName='min-w-[8rem]'
+          headerClassName='min-w-[10rem]'
           rowSpan={2}
           frozen
         />
         <Column
-          header={vehicleHeaderTemplate(trailor, 'Trailer')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(trailer5axle, 'Trailer (Above 4Axle)')}
+          headerClassName='min-w-[10rem]'
         />
         <Column
-          header={vehicleHeaderTemplate(heavyTruck, 'Heavy Truck')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(trailer4axle, 'Trailer (4Axle)')}
+          headerClassName='min-w-[10rem]'
         />
         <Column
-          header={vehicleHeaderTemplate(mediumTruck, 'Medium Truck')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(trailer3axle, 'Trailer (3Axle)')}
+          headerClassName='min-w-[10rem]'
         />
         <Column
-          header={vehicleHeaderTemplate(bus, 'Bus')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(mediumTruck9, 'Medium Truck (8-11)')}
+          headerClassName='min-w-[10rem]'
         />
         <Column
-          header={vehicleHeaderTemplate(smallTruck, 'Small Truck')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(mediumTruck8, 'Medium Truck (5-8)')}
+          headerClassName='min-w-[10rem]'
+        />
+        <Column
+          header={vehicleHeaderTemplate(miniTruck, 'Mini Truck')}
+          headerClassName='min-w-[10rem]'
+        />
+        <Column
+          header={vehicleHeaderTemplate(bigBus, 'Big Bus')}
+          headerClassName='min-w-[10rem]'
+        />
+        <Column
+          header={vehicleHeaderTemplate(meduiumBus, 'Medium Bus')}
+          headerClassName='min-w-[10rem]'
         />
         <Column
           header={vehicleHeaderTemplate(miniBus, 'Mini Bus')}
-          headerClassName='min-w-[8rem]'
+          headerClassName='min-w-[10rem]'
         />
         <Column
           header={vehicleHeaderTemplate(microBus, 'Micro Bus')}
-          headerClassName='min-w-[8rem]'
+          headerClassName='min-w-[10rem]'
         />
         <Column
-          header={vehicleHeaderTemplate(pickUp, 'Four Wheeler')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(pickUp, 'Pickup')}
+          headerClassName='min-w-[10rem]'
         />
         <Column
-          header={vehicleHeaderTemplate(sedan, 'Private Car')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(car, 'Car/Jeep')}
+          headerClassName='min-w-[10rem]'
         />
         <Column
-          header={vehicleHeaderTemplate(motorBike, 'Motor Cycle')}
-          headerClassName='min-w-[8rem]'
+          header={vehicleHeaderTemplate(bike, 'Motorcycle')}
+          headerClassName='min-w-[10rem]'
         />
-        <Column header='Shift' headerClassName='min-w-[12rem]' rowSpan={2} />
-        <Column
+        {/* <Column header='Shift' headerClassName='min-w-[12rem]' rowSpan={2} /> */}
+        {/* <Column
           header='Vehicle Passing'
           headerClassName='min-w-[12rem]'
           rowSpan={2}
-        />
+        /> */}
         {/* <Column
           header='Toll Collection'
-          headerClassName='min-w-[8rem]'
+          headerClassName='min-w-[10rem]'
           rowSpan={2}
         />
-        <Column header='Action' headerClassName='min-w-[8rem]' rowSpan={2} /> */}
+        <Column header='Action' headerClassName='min-w-[10rem]' rowSpan={2} /> */}
       </Row>
     </ColumnGroup>
   )
@@ -573,6 +609,7 @@ export default function VehicleDetectTollTable() {
         <Column footer={allData?.totalfour_wheeler} />
         <Column footer={allData?.totalprivate_car} />
         <Column footer={allData?.totalmotor_cycle} />
+        <Column footer={allData?.totalmotor_cycle} />
         <Column />
         <Column />
         {/* <Column />
@@ -592,7 +629,7 @@ export default function VehicleDetectTollTable() {
           ></Toolbar>
 
           {totalSummary}
-
+          
           <DataTable
             ref={dt}
             value={products}
@@ -607,6 +644,7 @@ export default function VehicleDetectTollTable() {
             dataKey='_id'
             rows={12}
             header={filterSearchForm}
+          
             showGridlines
             emptyMessage='No data found!'
             loading={isLoading || loading}
@@ -641,8 +679,9 @@ export default function VehicleDetectTollTable() {
           ></Column> */}
           </DataTable>
         </div>
+        
       </div>
-
+         
       {/* Bulk Upload Dialog  */}
       <Dialog
         visible={bulkDialog}
@@ -669,7 +708,7 @@ export default function VehicleDetectTollTable() {
               />
             </div>
           </div>
-
+        
           <div>
             <Dropdown
               value={dataType}
@@ -680,7 +719,7 @@ export default function VehicleDetectTollTable() {
               className='mt-5'
             />
           </div>
-
+          
           <div className='field col-span-2'>
             <label htmlFor='bulkUpload' className='font-bold'>
               Select File (.xlsx Only):
@@ -709,8 +748,9 @@ export default function VehicleDetectTollTable() {
             )}
           </div>
         </div>
+        
       </Dialog>
-
+     
       {/* Delete Item Dialog  */}
       <Dialog
         visible={deleteDialog}
@@ -737,6 +777,10 @@ export default function VehicleDetectTollTable() {
           </div>
         </div>
       </Dialog>
+        <div className='px4 py-4 bg-white mt-5'>
+              <h1 className='text-center text-sm text-[#000000]'>Note: 3rd-2 Shift(00:00 to 06:00)/1st Shift(06:00 to 14:00)/2nd Shift(14:00 to 22:00)/3rd-1 Shift(22:00 to 00:00)</h1>
+
+      </div>
     </>
   )
 }
