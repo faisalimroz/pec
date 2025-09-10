@@ -1163,6 +1163,12 @@ const router = createBrowserRouter([
             }),
           },
            {
+            path: 'its/about-its',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/AboutUs')).default,
+            }),
+          },
+           {
             path: 'its/system-configure',
             lazy: async () => ({
               Component: (await import('@/pages/its/SystemConfigure')).default,
@@ -1172,6 +1178,24 @@ const router = createBrowserRouter([
             path: 'its/notice',
             lazy: async () => ({
               Component: (await import('@/pages/its/Notice')).default,
+            }),
+          },
+            {
+            path: 'its/operation-manual',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/OperationManual')).default,
+            }),
+          },
+            {
+            path: 'its/work-plan',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/WorkPlan')).default,
+            }),
+          },
+           {
+            path: 'its/monthly-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/MonthlyReport')).default,
             }),
           },
           //   {

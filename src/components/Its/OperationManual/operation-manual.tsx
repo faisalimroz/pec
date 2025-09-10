@@ -388,8 +388,8 @@ export default function AssetManagementTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
-          Document List
+        <div className='p-3'>
+          <ButtonGroup/>
         </div>
         {/* {isAdmin && (
           <button
@@ -425,30 +425,29 @@ export default function AssetManagementTable() {
     return (
       <>
         {hasEditAccess && (
-           <ButtonGroupWithIcons
-                        selectedProducts={selectedProducts}
-                        openNew={openNew}
-                        exportCSV={exportCSV}
-                        confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
-                    />
+          <ButtonGroupWithIcons
+                                 selectedProducts={selectedProducts}
+                                 openNew={openNew}
+                                 exportCSV={exportCSV}
+                                 confirmDeleteSelected={confirmDeleteSelected}
+                                 handleReset={handleReset}
+                             />
         )}
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+        {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
       </>
     )
   }
 
 
   const ButtonGroup = () => {
-    const [activeButton, setActiveButton] = useState('All')
+    const [activeButton, setActiveButton] = useState('Toll Software')
 
     const buttons = [
-      { label: 'All', value: 'All' },
-      { label: 'Service Area 1', value: 'Service Area 1' },
-      { label: 'Service Area 2', value: 'Service Area 2' },
-      { label: 'Service Area 3', value: 'Service Area 3' },
-      { label: 'Mawa', value: 'Mawa' },
-      { label: 'Janjira', value: 'Janjira' },
+      { label: 'Toll Software', value: 'Toll Software' },
+      { label: 'Wim Software', value: 'Wim Software' },
+      { label: 'Server & Network', value: 'Server & Network' },
+      { label: 'ITS Manual', value: 'ITS Manual' },
+      { label: 'Other', value: 'Other' }
     ]
 
     const handleButtonClick = (buttonValue: string) => {
@@ -759,7 +758,7 @@ export default function AssetManagementTable() {
           right={rightToolbarTemplate}
         ></Toolbar>
         <div className='mt-2'>
-          <ButtonGroup></ButtonGroup>
+          {/* <ButtonGroup></ButtonGroup> */}
         </div>
         <DataTable
           ref={dt}
@@ -796,7 +795,7 @@ export default function AssetManagementTable() {
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            sortable
+            
           ></Column>
 
 
@@ -805,7 +804,7 @@ export default function AssetManagementTable() {
             field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            sortable
+            
             header='File Name/Subject'
           ></Column>
 
@@ -813,7 +812,7 @@ export default function AssetManagementTable() {
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+            // 
             header='Date'
           ></Column>
 
@@ -821,7 +820,7 @@ export default function AssetManagementTable() {
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+            // 
             header='Description'
           ></Column>
 
@@ -829,7 +828,7 @@ export default function AssetManagementTable() {
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+            // 
             header='Attachment'
           ></Column>
 
@@ -838,7 +837,7 @@ export default function AssetManagementTable() {
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-          // sortable
+          // 
           ></Column>
 
           <Column
