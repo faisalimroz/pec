@@ -1011,7 +1011,113 @@ export const itsLinks: SideLink[] = [
 ]
 
 export const tollLinks: SideLink[] = [
+ 
+   {
+    title: 'Daily Toll & Traffic Data',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Daily Toll & Traffic Data',
+        label: '',
+        href: '/toll/daily-toll-traffic-data',
+        icon: '',
+      },
+      {
+        title: 'Daily Toll & Traffic Data Comparisons',
+        label: '',
+        href: '/toll/daily-toll-traffic-data-comparisons',
+        icon: '',
+      },
+      
+    ],
+  },
   {
+    title: 'Shift Wise Toll & Traffic Data',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Shift Wise Toll & Traffic Data',
+        label: '',
+        href: '/toll/shift/shift-wise-toll-traffic-data',
+        icon: '',
+      },
+      {
+        title: 'Daily Toll & Traffic Data Comparisons',
+        label: '',
+        href: '/toll/shift/shift-wise-toll-traffic-data-comparisons',
+        icon: '',
+      },
+      
+    ],
+  },
+   {
+    title: 'WIM Data',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Represent WIM data',
+        label: '',
+        href: '/toll/wim-data/represent-wim-data',
+        icon: '',
+      },
+      {
+        title: 'WIM data Comparisons',
+        label: '',
+        href: '/toll/wim-data/wim-data-comparisons',
+        icon: '',
+      },
+      
+    ],
+  },
+   {
+    title: 'Daily Report',
+    label: '',
+    href: '/toll/daily-report',
+    uName: 'toll-monthly-roster',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Monthly Roster',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+     {
+    title: 'Main Bridge Bills',
+    label: '',
+    href: '/toll/monthly-roster/main-bridge-bills',
+    uName: 'toll-monthly-roster',
+    icon: <FileIcon />,
+  }
+      
+    ],
+  },
+   
+   {
+    title: 'Employee Personal Report',
+    label: '',
+    href: '/toll/employee-personal-report',
+    uName: 'toll-monthly-roster',
+    icon: <FileIcon />,
+  },
+    {
+    title: 'Hierarchy',
+    label: '',
+    href: '/toll/hierarchy',
+    uName: 'toll-monthly-roster',
+    icon: <FileIcon />,
+  },
+   {
     title: 'Toll Collect & Traffic',
     label: '',
     href: '',
@@ -1091,13 +1197,7 @@ export const tollLinks: SideLink[] = [
     uName: 'vehicle-detect-toll',
     icon: <FileIcon />,
   },
-  {
-    title: 'Monthly Roster',
-    label: '',
-    href: '/toll/monthly-roster',
-    uName: 'toll-monthly-roster',
-    icon: <FileIcon />,
-  },
+ 
   {
     title: 'Comparison',
     label: '',

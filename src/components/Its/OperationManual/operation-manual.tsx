@@ -388,7 +388,7 @@ export default function AssetManagementTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3'>
+        <div className=''>
           <ButtonGroup/>
         </div>
         {/* {isAdmin && (

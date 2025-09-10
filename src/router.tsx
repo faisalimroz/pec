@@ -1198,12 +1198,7 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/its/MonthlyReport')).default,
             }),
           },
-          //   {
-          //   path: 'its/organization',
-          //   lazy: async () => ({
-          //     Component: (await import('@/pages/its/Organization')).default,
-          //   }),
-          // },
+        
            {
             path: 'its/organization',
             lazy: async () => ({
@@ -1362,6 +1357,106 @@ const router = createBrowserRouter([
             path: 'toll',
             lazy: async () => ({
               Component: (await import('@/pages/toll')).default,
+            }),
+          },
+           {
+            path: 'toll/wim-data/wim-data-comparisons',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/wim-data/represent-wim-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/shift/shift-wise-toll-traffic-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/shift/shift-wise-toll-traffic-data-comparisons',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/daily-toll-traffic-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/daily-toll-traffic-data-comparisons',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: 'toll/daily-report',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/daily-report'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/monthly-roster/main-bridge-bills',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/main-bridge/index'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/employee-personal-report',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/hierarchy',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
             }),
           },
           {

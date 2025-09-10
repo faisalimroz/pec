@@ -48,7 +48,6 @@ export default function AssetManagementTable() {
     slNo: '',
     fileName: '',
     date: '',
-
     description: '',
     remarks: '',
     attachments: [],
