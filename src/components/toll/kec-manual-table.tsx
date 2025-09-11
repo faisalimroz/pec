@@ -599,16 +599,20 @@ export default function VehicleDetectTollTable() {
           colSpan={1}
           footerStyle={{ textAlign: 'right' }}
         />
-        <Column footer={allData?.totaltrailer} />
-        <Column footer={allData?.totalheavy_truck} />
+        <Column footer={allData?.totaltrailer5xl} />
+        <Column footer={allData?.totaltrailer4xl} />
+        <Column footer={allData?.totaltrailer3xl} />
+        <Column footer={allData?.totalmedium_truck9} />
+        <Column footer={allData?.totalmedium_truck8} />
+        <Column footer={allData?.totalmini_truck} />
+        <Column footer={allData?.totalbigbus} />
+        <Column footer={allData?.totalbigbus} />
         <Column footer={allData?.totalmedium_truck} />
-        <Column footer={allData?.totalbus} />
-        <Column footer={allData?.totalsmall_truck} />
         <Column footer={allData?.totalmini_bus} />
         <Column footer={allData?.totalmicro_bus} />
-        <Column footer={allData?.totalfour_wheeler} />
-        <Column footer={allData?.totalprivate_car} />
-        <Column footer={allData?.totalmotor_cycle} />
+   
+        <Column footer={allData?.totalpickup} />
+        <Column footer={allData?.totalcar} />
         <Column footer={allData?.totalmotor_cycle} />
         <Column />
         <Column />
