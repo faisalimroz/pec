@@ -1374,7 +1374,7 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                  '@/pages/toll/wim-data'
                 )
               ).default,
             }),
@@ -1384,7 +1384,7 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                  '@/pages/toll/shift-wise/shift-wise-toll-traffic-data'
                 )
               ).default,
             }),
@@ -1444,7 +1444,7 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                  '@/pages/toll/employee-personal-report'
                 )
               ).default,
             }),

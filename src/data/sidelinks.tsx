@@ -1063,6 +1063,7 @@ export const tollLinks: SideLink[] = [
     uName: 'special-audit',
     icon: <FileIcon />,
     sub: [
+     
       {
         title: 'Represent WIM data',
         label: '',
@@ -1082,7 +1083,14 @@ export const tollLinks: SideLink[] = [
     title: 'Daily Report',
     label: '',
     href: '/toll/daily-report',
-    uName: 'toll-monthly-roster',
+    uName:  'special-audit',
+    icon: <FileIcon />,
+  },
+    {
+    title: 'WIM Data',
+    label: '',
+    href: '/toll/daily-report',
+    uName:  'special-audit',
     icon: <FileIcon />,
   },
   {

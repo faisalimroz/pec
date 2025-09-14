@@ -17,7 +17,9 @@ import { InputNumber } from 'primereact/inputnumber';
 import { useNavigate } from 'react-router-dom';
 import RefreshButton from '@/components/refresh-button';
 import { useAuth } from '@/provider/authProvider';
-
+import { Chart } from "primereact/chart";
+import { ArrowRight } from 'lucide-react';
+import TollButtonIcons from "@/components/ui/comparison-button";
 interface Product {
   id: string | null;
   code: string;
@@ -32,6 +34,37 @@ interface Product {
 }
 
 export default function TollCollectTrafficTable() {
+  const [showChart, setShowChart] = useState(false);
+
+  const toggleChart = () => {
+    setShowChart((prev) => !prev);
+  };
+
+  const chartData = {
+    labels: ["Jan 1", "Jan 2", "Jan 3", "Jan 4", "Jan 5", "Jan 6", "Jan 7"],
+    datasets: [
+      {
+        label: "First Period (Jan 1-7)",
+        backgroundColor: "#0B1F8F",
+        data: [3000, 4000, 4500, 3000, 3500, 2000, 4500],
+      },
+      {
+        label: "Second Period (Mar 1-7)",
+        backgroundColor: "#41AFFF",
+        data: [2500, 3800, 4200, 2900, 3200, 2100, 4300],
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+    },
+  };
   const op = useRef<null>(null);
   const navigate = useNavigate();
 
@@ -81,7 +114,7 @@ export default function TollCollectTrafficTable() {
     vehiclenum: '',
     organization: '',
   });
-
+ 
   // Dummy data for the two tables
   const [paymentData, setPaymentData] = useState([
     {
@@ -451,10 +484,42 @@ export default function TollCollectTrafficTable() {
 
   return (
     <div className="ml-4">
-      <Toast ref={toast} />
+      <div className="flex justify-between items-center gap-4 mb-4">
+        <div className="flex justify-center ">
+          <div className="p-6 border rounded-md">
+            <h3 className="text-lg font-bold text-[#6B7280]">Total Vehicles</h3>
+            <p>
+              <span className="font-bold text-xl ">14,499</span> vehicles →{" "} 
+              <span className="font-bold text-xl">15,230</span> vehicles
+            </p>
+            <p className="text-[#16A34A]">Increased by 5.0% (731 more vehicles)</p>
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <div className="p-12 border rounded-md">
+            <h3 className="text-lg font-bold text-[#6B7280]">Total Vehicles</h3>
+            <p>
+              <span className="font-bold text-xl">14,499</span> vehicles →{" "}
+              <span className="font-bold text-xl">15,230</span> vehicles
+            </p>
+            <p className="text-[#16A34A]">Increased by 5.0% (731 more vehicles)</p>
+          </div>
+        </div>
+        <div className="flex justify-center">
+          <div className="px-12 py-6 border rounded-md">
+            <h3 className="text-lg font-bold text-[#6B7280]">Total Vehicles</h3>
+            <p>
+              <span className="font-bold text-xl">14,499</span> vehicles →{" "}
+              <span className="font-bold text-xl">15,230</span> vehicles
+            </p>
+            <p className="text-[#16A34A]">Increased by 5.0% (731 more vehicles)</p>
+          </div>
+        </div>
+      </div>
+      {/* <Toast ref={toast} /> */}
       <div className={containerClass}>
         {/* Payment Method Comparison Table */}
-        <div className="p-3 text-lg font-semibold text-gray-800 rounded-t-lg" style={{ backgroundColor: '#ffc2c2' }}>
+        <div className="p-1 text-lg font-semibold text-black rounded-t-lg" >
           Payment Method Comparison
         </div>
         <DataTable
@@ -495,19 +560,19 @@ export default function TollCollectTrafficTable() {
             body={(rowData) => changeTemplate(rowData, 'change')}
           ></Column>
         </DataTable>
-        
-        {/* View All Button */}
+
+      
         <div className="flex justify-center p-2">
           <Button label="View All Payment Methods" className="p-button-text text-blue-500 hover:text-blue-700" />
         </div>
 
-        {/* Separator */}
+ 
         <div className="my-8"></div>
 
-        {/* Vehicle Type Comparison Table */}
-        <div className="p-3 text-lg font-semibold text-gray-800 rounded-t-lg" style={{ backgroundColor: '#ffc2c2' }}>
+     
+        <h1 className="text-lg font-semibold rounded-t-lg" >
           Vehicle Type Comparison
-        </div>
+        </h1>
         <DataTable
           value={vehicleData}
           rowClassName={tableRowClass}

@@ -257,31 +257,31 @@ export default function EmPersonalProfileTable() {
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch();
-          // Reset form data after successful save
-    setFormData({
-      employeeName: '',
-      employeeId: '',
-      dept: '',
-      firmName: '',
-      position: '',
-      dateOfMobilization: '',
-      dateOfDemobilization: '',
-      remarks: '',
-      salary: '',
-      boqNo: '',
-      location: '',
-      branch: '',
-      mobile: '',
-      address: '',
-      email: '',
-      cvCertificates: [],
-      agreement: [],
-      showcaseLetter: [],
-      warningLetter: [],
-      termination: [],
-      insuranceClaiming: [],
-      profileImg: '',
-    });
+      // Reset form data after successful save
+      setFormData({
+        employeeName: '',
+        employeeId: '',
+        dept: '',
+        firmName: '',
+        position: '',
+        dateOfMobilization: '',
+        dateOfDemobilization: '',
+        remarks: '',
+        salary: '',
+        boqNo: '',
+        location: '',
+        branch: '',
+        mobile: '',
+        address: '',
+        email: '',
+        cvCertificates: [],
+        agreement: [],
+        showcaseLetter: [],
+        warningLetter: [],
+        termination: [],
+        insuranceClaiming: [],
+        profileImg: '',
+      });
 
     } catch (error: any) {
       if (error.response) {
@@ -398,23 +398,50 @@ export default function EmPersonalProfileTable() {
     return (
       <>
         {hasEditAccess && (
-          <div className='space-x-2'>
-            <button
+          <div className='space-x-2 flex'>
+            {/* <button
               className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
               onClick={openNew}
             >
               Upload Document
+            </button> */}
+            <button
+              className="flex items-center gap-2 bg-[#0B1F8F] text-white border border-[#E2E8F0]  px-4 py-3 rounded-md font-bold"
+              onClick={openNew}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M17 8L12 3L7 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12 3V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Upload Document
             </button>
             <button
+              className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] px-4 py-3 rounded-md font-bold"
+              onClick={handleReset}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2V6" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12 18V22" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M4.92969 4.92969L7.75969 7.75969" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M16.2383 16.2402L19.0683 19.0702" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M2 12H6" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M18 12H22" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M4.92969 19.0702L7.75969 16.2402" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M16.2383 7.75969L19.0683 4.92969" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Refresh
+            </button>
+            {/* <button
               className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
               onClick={exportCSV}
             >
-              Download Files{' '}
-              {selectedProducts?.length === 0
+              Download Documents */}
+            {/* {selectedProducts?.length === 0
                 ? '(All)'
-                : `(${selectedProducts?.length})`}
-            </button>
-            <button
+                : `(${selectedProducts?.length})`} */}
+            {/* </button> */}
+            {/* <button
               onClick={confirmDeleteSelected}
               disabled={!selectedProducts || selectedProducts.length === 0}
               className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
@@ -424,10 +451,10 @@ export default function EmPersonalProfileTable() {
               }`}
             >
               Delete Selected ({selectedProducts?.length || 0})
-            </button>
+            </button> */}
           </div>
         )}
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+        {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
       </>
     )
   }
@@ -543,7 +570,7 @@ export default function EmPersonalProfileTable() {
         />
       </div>
 
-      <div>
+      {/* <div>
         <Dropdown
           value={selectedType}
           onChange={(e) => setSelectedType(e.value)}
@@ -552,7 +579,7 @@ export default function EmPersonalProfileTable() {
           placeholder='Select Type'
           className='border-none rounded-none ml-4 cursor-pointer ring-0'
         />
-      </div>
+      </div> */}
 
       <IconField iconPosition='left' className='relative w-fit'>
         <InputIcon className='pi pi-search' />
@@ -784,6 +811,14 @@ export default function EmPersonalProfileTable() {
             )}
 
             <Column
+              field='slNo'
+              header='SL'
+              headerClassName='bg-[#ffc2c2] text-sm'
+              bodyClassName='text-sm truncate max-w-lg'
+              sortable
+              showClearButton
+            ></Column>
+            <Column
               field='boqNo'
               header='BOQ'
               headerClassName='bg-[#ffc2c2] text-sm'
@@ -807,7 +842,13 @@ export default function EmPersonalProfileTable() {
               sortable
               header='Employee Name'
             ></Column>
-
+            <Column
+              field='mobile'
+              headerClassName='bg-[#ffc2c2] text-sm'
+              bodyClassName='text-sm truncate max-w-lg'
+              // sortable
+              header='Mobile'
+            ></Column>
             <Column
               field='position'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[16rem]'
@@ -829,7 +870,7 @@ export default function EmPersonalProfileTable() {
               header='Date of Mobilization'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
               bodyClassName='text-sm truncate max-w-lg'
-              // sortable
+            // sortable
             ></Column>
 
             <Column
@@ -837,39 +878,7 @@ export default function EmPersonalProfileTable() {
               header='Date of Demobilization'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-sm truncate max-w-lg'
-              // sortable
-            ></Column>
-
-            <Column
-              field='firmName'
-              header='Firm Name'
-              headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
-              // sortable
-            ></Column>
-
-            <Column
-              field='branch'
-              headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
-              sortable
-              header='Branch'
-            ></Column>
-
-            <Column
-              field='mobile'
-              headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
-              // sortable
-              header='Mobile'
-            ></Column>
-
-            <Column
-              field='salary'
-              headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
-              sortable
-              header='Salary'
+            // sortable
             ></Column>
 
             <Column
@@ -945,7 +954,7 @@ export default function EmPersonalProfileTable() {
                 />
               </div>
 
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='remarks' className='font-bold'>
                   Remarks
                 </label>
@@ -955,9 +964,9 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
 
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='salary' className='font-bold'>
                   Salary
                 </label>
@@ -967,7 +976,7 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
 
               <div className='field'>
                 <label htmlFor='boqNo' className='font-bold'>
@@ -981,7 +990,7 @@ export default function EmPersonalProfileTable() {
                 />
               </div>
 
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='location' className='font-bold'>
                   Location
                 </label>
@@ -991,9 +1000,9 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
 
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='branch' className='font-bold'>
                   Branch
                 </label>
@@ -1003,7 +1012,7 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
 
               <div className='field'>
                 <label htmlFor='mobile' className='font-bold'>
@@ -1017,7 +1026,7 @@ export default function EmPersonalProfileTable() {
                 />
               </div>
 
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='address' className='font-bold'>
                   Address
                 </label>
@@ -1027,9 +1036,9 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
 
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='email' className='font-bold'>
                   Email
                 </label>
@@ -1039,7 +1048,7 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
 
               <div>
                 <label htmlFor='date' className='font-bold'>
@@ -1079,7 +1088,7 @@ export default function EmPersonalProfileTable() {
                   />
                 </div>
               </div>
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='firmName' className='font-bold'>
                   Firm Name
                 </label>
@@ -1089,7 +1098,7 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className='gap-3 mt-5'>
@@ -1102,7 +1111,7 @@ export default function EmPersonalProfileTable() {
               </div>
             </div>
 
-            <div className='gap-3 mt-5'>
+            {/* <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Agreements Files
               </label>
@@ -1127,12 +1136,12 @@ export default function EmPersonalProfileTable() {
                 Upload Warning Letter Files
               </label>
 
-              <div>
-                <MultiFileInput onFilesChange={handleWarningLetter} />
-              </div>
-            </div>
+              <div> */}
+            {/* <MultiFileInput onFilesChange={handleWarningLetter} />
+              </div> */}
+            {/* </div> */}
 
-            <div className='gap-3 mt-5'>
+            {/* <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Resignation or Termination Files
               </label>
@@ -1150,7 +1159,7 @@ export default function EmPersonalProfileTable() {
               <div>
                 <MultiFileInput onFilesChange={handleInsuranceClaiming} />
               </div>
-            </div>
+            </div> */}
 
             <div className='field col-span-2'>
               <label htmlFor='profileImg' className='block mb-1 font-semibold'>
@@ -1247,7 +1256,7 @@ export default function EmPersonalProfileTable() {
         >
           <div
             className='overflow-y-auto'
-            // style={{ height: 'calc(90vh - 120px)' }}
+          // style={{ height: 'calc(90vh - 120px)' }}
           >
             {selectedEmployeeId && (
               <EmPersonalDetail id={selectedEmployeeId} isDialog={true} />

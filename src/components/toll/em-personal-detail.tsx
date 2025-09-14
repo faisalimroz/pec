@@ -593,22 +593,21 @@ export default function EmPersonalDetail({
     { label: 'Position', value: employeeData.position },
     // { label: 'Salary', value: employeeData.salary },
 
-    { label: 'Location', value: employeeData.location },
+    
     { label: 'BOQ NO.', value: employeeData.boqNo },
     // { label: 'Branch', value: employeeData.branch },
-    { label: 'Firm Name', value: employeeData.firmName },
+ 
     { label: 'Date of Mobilization', value: employeeData.dateOfMobilization },
     {
       label: 'Date of Demobilization',
       value: employeeData.dateOfDemobilization,
     },
-    { label: 'Remarks', value: employeeData.remarks },
+    
   ]
 
   const contactInfo = [
     { label: 'Mobile', value: employeeData.mobile },
-    { label: 'Address', value: employeeData.address },
-    { label: 'Email', value: employeeData.email },
+
   ]
 
   const documents = [
@@ -843,7 +842,7 @@ export default function EmPersonalDetail({
               />
             </div>
 
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label htmlFor='remarks' className='block font-bold mb-2'>
                 Remarks
               </label>
@@ -857,9 +856,9 @@ export default function EmPersonalDetail({
                   })
                 }
               />
-            </div>
+            </div> */}
 
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label htmlFor='salary' className='block font-bold mb-2'>
                 Salary
               </label>
@@ -879,7 +878,7 @@ export default function EmPersonalDetail({
                 mode='currency'
                 currency='BDT'
               />
-            </div>
+            </div> */}
 
             <div className='field mb-3'>
               <label htmlFor='boqNo' className='block font-bold mb-2'>
@@ -897,7 +896,7 @@ export default function EmPersonalDetail({
               />
             </div>
 
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label htmlFor='location' className='block font-bold mb-2'>
                 Location
               </label>
@@ -911,8 +910,8 @@ export default function EmPersonalDetail({
                   })
                 }
               />
-            </div>
-
+            </div> */}
+{/* 
             <div className='field mb-3'>
               <label htmlFor='firmName' className='block font-bold mb-2'>
                 Firm Name
@@ -927,9 +926,9 @@ export default function EmPersonalDetail({
                   })
                 }
               />
-            </div>
+            </div> */}
 
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label htmlFor='branch' className='block font-bold mb-2'>
                 Branch
               </label>
@@ -943,7 +942,7 @@ export default function EmPersonalDetail({
                   })
                 }
               />
-            </div>
+            </div> */}
 
             <div className='field mb-3'>
               <label htmlFor='mobile' className='block font-bold mb-2'>
@@ -961,7 +960,7 @@ export default function EmPersonalDetail({
               />
             </div>
 
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label htmlFor='address' className='block font-bold mb-2'>
                 Address
               </label>
@@ -991,7 +990,7 @@ export default function EmPersonalDetail({
                   })
                 }
               />
-            </div>
+            </div> */}
 
             {/* Add more fields for other employee properties */}
             <div className='field'>
@@ -1045,8 +1044,28 @@ export default function EmPersonalDetail({
               // dateFormat='dd/mm/yy'
               />
             </div>
-
             <div className='field mb-3'>
+              <label className='block font-bold mb-2'>
+                Existing Certificates
+              </label>
+              {updatedEmployee.cvCertificates.map((attachment) => (
+                <div key={attachment._id} className='flex items-center'>
+                  <a
+                    href={attachment.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {attachment.url?.split('/').pop()}
+                  </a>
+                  <Button
+                    icon='pi pi-times text-red-500'
+                    onClick={() => removeCertificates(attachment._id)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* <div className='field mb-3'>
               <label htmlFor='newCertificates' className='block font-bold mb-2'>
                 New Certificates
               </label>
@@ -1103,9 +1122,9 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label
                 htmlFor='newShowcaseLetters'
                 className='block font-bold mb-2'
@@ -1115,8 +1134,8 @@ export default function EmPersonalDetail({
               <MultiFileInput
                 onFilesChange={(files) => setNewShowcaseLetters(files)}
               />
-            </div>
-            <div className='field'>
+            </div> */}
+            {/* <div className='field'>
               <label className='block font-bold mb-2'>
                 Existing Showcase Letters
               </label>
@@ -1147,8 +1166,8 @@ export default function EmPersonalDetail({
               <MultiFileInput
                 onFilesChange={(files) => setNewWarningLetters(files)}
               />
-            </div>
-            <div className='field mb-2'>
+            </div> */}
+            {/* <div className='field mb-2'>
               <label className='block font-bold mb-2'>
                 Existing Warning Letters
               </label>
@@ -1167,9 +1186,9 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className='field mb-2'>
+            {/* <div className='field mb-2'>
               <label htmlFor='newTerminations' className='block font-bold mb-2'>
                 New Resignation or Termination
               </label>
@@ -1196,9 +1215,9 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className='field mb-2'>
+            {/* <div className='field mb-2'>
               <label
                 htmlFor='newInsuranceClaimings'
                 className='block font-bold mb-2'
@@ -1228,7 +1247,7 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
           </>
         )}
       </Dialog>
