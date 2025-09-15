@@ -92,7 +92,7 @@ export const adminTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw',
+    href: '/rtw/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -114,8 +114,6 @@ export const adminTopNav = [
     roles: ['superadmin', 'its-manager'],
     uName: 'its',
   },
-
-
   {
     title: 'EDMS',
     href: '/edms/dispatched',
@@ -178,14 +176,7 @@ export const clinicTopNav = [
 ]
 
 export const tollTopNav = [
-  // {
-  //   title: 'General Information',
-  //   href: '/general-information/general-status',
-  //   isActive: false,
-  //   logo: GiIcon,
-  //   roles: ['general-information', 'superadmin'],
-  //   uName: 'general-information',
-  // },
+ 
   {
     title: 'Administration',
     href: '/administrative',
@@ -212,7 +203,7 @@ export const tollTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw',
+    href: '/rtw/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -322,7 +313,7 @@ export const itsTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw',
+    href: '/rtw/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -356,14 +347,7 @@ export const itsTopNav = [
 ]
 
 export const rntTopNav = [
-  // {
-  //   title: 'General Information',
-  //   href: '/general-information/general-status',
-  //   isActive: false,
-  //   logo: GiIcon,
-  //   roles: ['general-information', 'superadmin'],
-  //   uName: 'general-information',
-  // },
+
   {
     title: 'Administration',
     href: '/administrative',
@@ -390,8 +374,66 @@ export const rntTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw',
+    href: '/rtw/project-overview',
     isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'toll',
+  },
+  {
+    title: 'Toll Operation',
+    href: '/toll/monthly-toll-revenue',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'toll-manager'],
+    uName: 'toll',
+  },
+  {
+    title: 'ITS',
+    href: '/its/overview',
+    isActive: false,
+    logo: ItsIcon,
+    roles: ['superadmin', 'its-manager'],
+    uName: 'its',
+  },
+  {
+    title: 'EDMS',
+    href: '/edms/dispatched',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['edms', 'superadmin'],
+    uName: 'edms',
+  },
+]
+export const rtwTopNav = [
+  {
+    title: 'Administration',
+    href: '/administrative',
+    isActive: false,
+    logo: AdminIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'administration',
+  },
+  {
+    title: 'Road & Traffic',
+    href: '/road-and-traffic/procurement',
+    isActive: false,
+    logo: RntIcon,
+    roles: ['superadmin', 'r&t-manager'],
+    uName: 'road-&-traffic',
+  },
+  {
+    title: 'Main Bridge',
+    href: '/mb-pmis',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'mb-pmis',
+  },
+  {
+    title: 'RTW',
+    href: '/rtw/project-overview',
+    isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
     uName: 'rtw',
@@ -448,7 +490,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'RTW',
-    href: '/rtw',
+    href: '/rtw/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -507,7 +549,7 @@ export const edmsTopNav = [
   // },
   // {
   //   title: 'RTW',
-  //   href: '/rtw',
+  //   href: '/rtw/project-overview',
   //   isActive: false,
   //   logo: edmsIcon,
   //   roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],

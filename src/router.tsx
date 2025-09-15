@@ -1697,7 +1697,37 @@ const router = createBrowserRouter([
       // },
     ],
   },
-
+  //rtw
+  {
+     path: 'rtw/project-overview',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/project-overview')).default,
+            }),
+  },
+   {
+     path: 'rtw/material-test-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/quality-safety/material-test-report')).default,
+            }),
+  },
+  {
+     path: 'rtw/safety',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/quality-safety/safety')).default,
+            }),
+  },
+  {
+     path: 'rtw/meeting-minutes',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/communication-correspondence/meeting-minutes')).default,
+            }),
+  },
+  {
+     path: 'rtw/letter-and-official-correspondence',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/communication-correspondence/letter-official-correspondence')).default,
+            }),
+  },
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },

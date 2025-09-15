@@ -1258,3 +1258,138 @@ export const edmsLinks: SideLink[] = [
     icon: <FileIcon />,
   },
 ]
+export const rtwLinks: SideLink[] = [
+ {
+    title: 'Project Overview',
+    label: '',
+    href: '/rtw/project-overview',
+    uName: 'dispatched',
+    icon: <FileIcon />,
+  },
+   {
+    title: 'Technical Documentation',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'RTW Drawings',
+        label: '',
+        href: '/rtw/rtw-drawings',
+        icon: '',
+      },  
+       {
+        title: 'Materials & Equipment List ',
+        label: '',
+        href: '/rtw/material-and-equipment',
+        icon: '',
+      },  
+       {
+        title: 'Survey Reports',
+        label: '',
+        href: '/rtw/survey-reports',
+        icon: '',
+      },  
+       {
+        title: 'RTW Maintenance Manual',
+        label: '',
+        href: '/rtw/rtw-maintenance-manual',
+        icon: '',
+      },  
+    ],
+  },
+  {
+    title: 'Monitoring & Reporting',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Daily Water Level Records',
+        label: '',
+        href: '/rtw/daily-water-level-records ',
+        icon: '',
+      },  
+       {
+        title: 'RTW Monthly Reports',
+        label: '',
+        href: '/rtw/monthly-reports',
+        icon: '',
+      }
+    ],
+  },
+    {
+    title: 'Quality, Safety',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Material Test Report',
+        label: '',
+        href: '/rtw/material-test-report',
+        icon: '',
+      },  
+       {
+        title: 'Safety',
+        label: '',
+        href: '/rtw/safety',
+        icon: '',
+      },
+    ],
+  },
+   {
+    title: 'Communication & Correspondence',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'All RTW-related Letters & Official Correspondence',
+        label: '',
+        href: '/rtw/letter-and-official-correspondence',
+        icon: '',
+      },  
+       {
+        title: 'Meeting Minutes',
+        label: '',
+        href: '/rtw/meeting-minutes',
+        icon: '',
+      }
+    ],
+  },
+  {
+    title: 'Financial Documentation',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'RTW Bills',
+        label: '',
+        href: '/rtw/rtw-bills',
+        icon: '',
+      }
+    ],
+  },
+  {
+    title: 'Visual Records',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Pictures and Videos',
+        label: '',
+        href: '/rtw/picture-and-videos',
+        icon: '',
+      }
+    ],
+  },
+]

@@ -33,7 +33,7 @@ const topNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw',
+    href: '/rtw/project-overview',
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -55,14 +55,6 @@ const topNav = [
     roles: ['its-manager', 'superadmin'],
     uName: 'its',
   },
-  // {
-  //   title: 'Toll',
-  //   href: '/toll/monthly-toll-revenue',
-  //   isActive: false,
-  //   logo: EdmsIcon,
-  //   roles: ['toll-manager', 'superadmin'],
-  //   uName: 'toll',
-  // },
   {
     title: 'EDMS',
     href: '/edms/dispatched',
