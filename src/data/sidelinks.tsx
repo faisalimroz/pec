@@ -28,7 +28,6 @@ export const administrationLinks: SideLink[] = [
     uName: 'administrative',
   },
   
-
   {
     title: 'HR',
     label: '',

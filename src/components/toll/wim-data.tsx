@@ -30,9 +30,12 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    fileName: string
+    location: string
+    pass: string
+    violation: string
+    total: string
     date: string
-    description: string
+    shiftName: string
     remarks: string
     attachments: Attachment[]
     creator?: string
@@ -46,9 +49,12 @@ export default function AssetManagementTable() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        fileName: '',
+        location: '',
         date: '',
-        description: '',
+        shiftName: '',
+        pass: '',
+        violation: '',
+        total: '',
         remarks: '',
         attachments: [],
     }
@@ -61,6 +67,31 @@ export default function AssetManagementTable() {
     const isAdmin = roles.some((role) =>
         ['superadmin', 'admin'].includes(role.title)
     )
+    const locations = [
+        { label: 'All', value: 'All' },
+        { label: 'Mawa', value: 'Mawa' },
+        { label: 'Jinjira', value: 'Jinjira' },
+    ]
+    const shifts = [
+        { label: 'Shift: 3rd-2', value: 'Shift: 3rd-2' },
+        { label: 'Shift: 1st', value: 'Shift: 1st' },
+        { label: 'Shift: 2nd', value: 'Shift: 2nd' },
+        { label: 'Shift: 3rd-1', value: 'Shift: 3rd-1' },
+    ]
+    const itemTemplate = (option: { label: string; value: string }) => {
+        return (
+            <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                    <path d="M10.5 2.16406H4.5C4.10218 2.16406 3.72064 2.3221 3.43934 2.6034C3.15804 2.88471 3 3.26624 3 3.66406V15.6641C3 16.0619 3.15804 16.4434 3.43934 16.7247C3.72064 17.006 4.10218 17.1641 4.5 17.1641H13.5C13.8978 17.1641 14.2794 17.006 14.5607 16.7247C14.842 16.4434 15 16.0619 15 15.6641V6.66406L10.5 2.16406Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10.5 2.16406V6.66406H15" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12 10.4141H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12 13.4141H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7.5 7.41406H6.75H6" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>{option.label}</span>
+            </div>
+        );
+    };
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
@@ -75,17 +106,20 @@ export default function AssetManagementTable() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [fileName, setfileName] = useState('')
+    const [location, setlocation] = useState('')
 
-    const [description, setDescription] = useState('')
+    const [shiftName, setShiftName] = useState('')
+    const [pass, setPass] = useState('')
+    const [violation, setViolation] = useState('')
+    const [total, setTotal] = useState('')
     const [remarks, setRemarks] = useState('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [formDate, setFormDate] = useState<string>('')
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
+    const [selectedLocation, setSelectedLocation] = useState(null)
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
+    const [selectedShift, setSelectedShift] = useState(null)
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
@@ -138,8 +172,11 @@ export default function AssetManagementTable() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('fileName', updatedProduct.fileName)
-            formData.append('description', updatedProduct.description)
+            formData.append('location', updatedProduct.location)
+            formData.append('pass', updatedProduct.pass)
+            formData.append('violation', updatedProduct.violation)
+            formData.append('total', updatedProduct.total)
+            formData.append('shiftName', updatedProduct.shiftName)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
 
@@ -248,8 +285,11 @@ export default function AssetManagementTable() {
             setLoading2(true)
             const formData = new FormData()
 
-            formData.append('fileName', fileName)
-            formData.append('description', description)
+            formData.append('location', location)
+            formData.append('shiftName', shiftName)
+            formData.append('pass', pass)
+            formData.append('violation', violation)
+            formData.append('total', total)
             formData.append('remarks', remarks)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
@@ -394,7 +434,7 @@ export default function AssetManagementTable() {
 
     const leftToolbarTemplate = () => {
         return (
-            <div className='flex items-center gap-4 '>
+            <div className='flex items-center gap-4  '>
 
                 <div className='flex gap-2'>
                     <button
@@ -454,43 +494,6 @@ export default function AssetManagementTable() {
         )
     }
 
-    //   const ServiceAreaButtons = () => {
-    //     const [activeButton, setActiveButton] = useState('All')
-
-    //     const buttons = [
-    //       { label: 'All', value: 'All' },
-    //       { label: 'Service Area 1', value: 'Service Area 1' },
-    //       { label: 'Service Area 2', value: 'Service Area 2' },
-    //       { label: 'Service Area 3', value: 'Service Area 3' },
-    //       { label: 'Mawa', value: 'Mawa' },
-    //       { label: 'Janjira', value: 'Janjira' },
-    //     ]
-
-    //     const handleButtonClick = (buttonValue: string) => {
-    //       setActiveButton(buttonValue)
-    //       console.log(`Button clicked: ${buttonValue}`)
-    //     }
-
-    //     return (
-    //       <div className='flex items-center space-x-2 py-2 rounded-lg'>
-    //         {buttons.map((button) => (
-    //           <button
-    //             key={button.value}
-    //             onClick={() => handleButtonClick(button.value)}
-    //             className={`
-    //               px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
-    //               ${activeButton === button.value
-    //                 ? 'bg-[#6F90AE] text-base font-semibold text-white'
-    //                 : 'bg-main text-base font-semibold text-white'
-    //               }
-    //             `}
-    //           >
-    //             {button.label}
-    //           </button>
-    //         ))}
-    //       </div>
-    //     )
-    //   }
 
     const hideViewDialog = () => {
         setViewProductDialog(false)
@@ -654,6 +657,28 @@ export default function AssetManagementTable() {
                 icon={() => <i className='pi pi-angle-down' />}
             />
 
+            <Dropdown
+                value={selectedShift}
+                onChange={(e) => setSelectedShift(e.value)}
+                options={shifts}
+                optionLabel="label"
+                placeholder="Shift"
+                itemTemplate={itemTemplate}
+
+                className='border-none rounded-none ml-4 cursor-pointer ring-0'
+            />
+
+            <Dropdown
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.value)}
+                options={locations}
+                optionLabel="label"
+                placeholder="Location"
+                itemTemplate={itemTemplate}
+                className='border-none rounded-none ml-4 cursor-pointer ring-0'
+            />
+
+
             <IconField iconPosition='left' className='relative'>
                 <InputIcon className='pi pi-search' />
                 <InputText
@@ -723,14 +748,14 @@ export default function AssetManagementTable() {
     }
 
     return (
-        <div>
+        <div className='bg-[#F6F8F9]'>
 
             {activeTab === 'wim' && (
-                <div className='mt-2 ml-4'>
+                <div className='mt-2 ml-4 bg-[#F6F8F9]'>
                     <div>
 
                         <Toolbar
-                            className='rounded-none border-none p-0 '
+                            className='rounded-none border-none p-0 bg-[#F6F8F9]'
                             left={leftToolbarTemplate}
                             right={rightToolbarTemplate}
                         ></Toolbar>
@@ -788,15 +813,6 @@ export default function AssetManagementTable() {
                                     bodyClassName='text-sm truncate max-w-xs'
                                     sortable
                                 ></Column>
-
-                                <Column
-                                    field='fileName'
-                                    headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
-                                    sortable
-                                    header='File Name/Subject'
-                                ></Column>
-
                                 <Column
                                     field='date'
                                     headerClassName='bg-[#ffc2c2] text-sm'
@@ -804,19 +820,49 @@ export default function AssetManagementTable() {
                                     header='Date'
                                 ></Column>
 
-                                <Column
-                                    field='description'
-                                    headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
-                                    header='Description'
-                                ></Column>
+
+
 
                                 <Column
+                                    field='shiftName'
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+                                    header='Shift Name'
+                                ></Column>
+                                <Column
+                                    field='location'
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+
+                                    header='Location'
+                                ></Column>
+                                <Column
+                                    field='pass'
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+
+                                    header='Pass'
+                                ></Column>
+                                <Column
+                                    field='violation'
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+
+                                    header='Violation'
+                                ></Column>
+                                <Column
+                                    field='total'
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+                                    sortable
+                                    header='Total'
+                                ></Column>
+                                {/* <Column
                                     body={attachmentBodyTemplate}
                                     headerClassName='bg-[#ffc2c2] text-sm'
                                     bodyClassName='text-sm truncate max-w-xs'
                                     header='Attachment'
-                                ></Column>
+                                ></Column> */}
 
                                 <Column
                                     field='remarks'
@@ -848,37 +894,93 @@ export default function AssetManagementTable() {
                         >
                             {updatedProduct && (
                                 <div className='grid grid-cols-2 gap-4'>
-                                    <div className='field'>
-                                        <label htmlFor='fileName' className='font-bold'>
-                                            File Name/Subject
+                                    <div className="field">
+                                        <label htmlFor="location" className="font-bold">
+                                            Location
                                         </label>
-                                        <InputText
-                                            id='fileName'
-                                            value={updatedProduct.fileName}
+
+                                        <Dropdown
+                                            id="location"
+                                            value={updatedProduct.location}
                                             onChange={(e) =>
                                                 setUpdatedProduct({
                                                     ...updatedProduct,
-                                                    fileName: e.target.value,
+                                                    location: e.value,
+                                                })
+                                            }
+                                            options={shifts}
+                                            optionLabel="label"
+                                            placeholder="Select a Location"
+                                            className="w-full"
+                                        />
+                                    </div>
+                                    <div className="field">
+                                        <label htmlFor="shiftName" className="font-bold">
+                                            Shift Name
+                                        </label>
+
+                                        <Dropdown
+                                            id="shiftName"
+                                            value={updatedProduct.shiftName}
+                                            onChange={(e) =>
+                                                setUpdatedProduct({
+                                                    ...updatedProduct,
+                                                    shiftName: e.value,
+                                                })
+                                            }
+                                            options={shifts}
+                                            optionLabel="label"
+                                            placeholder="Select a Shift"
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    <div className='field'>
+                                        <label htmlFor='pass' className='font-bold'>
+                                            Pass
+                                        </label>
+                                        <InputText
+                                            id='pass'
+                                            value={updatedProduct.pass}
+                                            onChange={(e) =>
+                                                setUpdatedProduct({
+                                                    ...updatedProduct,
+                                                    pass: e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    <div className='field'>
+                                        <label htmlFor='violation' className='font-bold'>
+                                            Violation
+                                        </label>
+                                        <InputText
+                                            id='violation'
+                                            value={updatedProduct.violation}
+                                            onChange={(e) =>
+                                                setUpdatedProduct({
+                                                    ...updatedProduct,
+                                                    violation: e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    <div className='field'>
+                                        <label htmlFor='total' className='font-bold'>
+                                            Total
+                                        </label>
+                                        <InputText
+                                            id='total'
+                                            value={updatedProduct.total}
+                                            onChange={(e) =>
+                                                setUpdatedProduct({
+                                                    ...updatedProduct,
+                                                    total: e.target.value,
                                                 })
                                             }
                                         />
                                     </div>
 
-                                    <div className='field'>
-                                        <label htmlFor='description' className='font-bold'>
-                                            Description
-                                        </label>
-                                        <InputText
-                                            id='description'
-                                            value={updatedProduct.description}
-                                            onChange={(e) =>
-                                                setUpdatedProduct({
-                                                    ...updatedProduct,
-                                                    description: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </div>
 
                                     <div className='field'>
                                         <label htmlFor='remarks' className='font-bold'>
@@ -1027,12 +1129,24 @@ export default function AssetManagementTable() {
                                         </div>
 
                                         <div>
-                                            <h3 className='font-bold'>File Name/Subject</h3>
-                                            <p className='break-all'>{selectedProduct.fileName}</p>
+                                            <h3 className='font-bold'>Location</h3>
+                                            <p className='break-all'>{selectedProduct.location}</p>
                                         </div>
                                         <div>
-                                            <h3 className='font-bold'>Description</h3>
-                                            <p className='break-all'>{selectedProduct.description}</p>
+                                            <h3 className='font-bold'>Violation</h3>
+                                            <p className='break-all'>{selectedProduct.violation}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className='font-bold'>Pass</h3>
+                                            <p className='break-all'>{selectedProduct.pass}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className='font-bold'>Total</h3>
+                                            <p className='break-all'>{selectedProduct.total}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className='font-bold'>Shift Name</h3>
+                                            <p className='break-all'>{selectedProduct.shiftName}</p>
                                         </div>
 
                                         <div>
@@ -1073,31 +1187,77 @@ export default function AssetManagementTable() {
                         >
                             <>
                                 <div className='grid grid-cols-2 items-center gap-6'>
-                                    <div className='field'>
-                                        <label htmlFor='fileName' className='font-bold'>
-                                            File Name/Subject
+                                    <div className="field">
+                                        <label htmlFor="location" className="font-bold">
+                                            Location
                                         </label>
-                                        <InputText
-                                            id='fileName'
-                                            onChange={(e) => setfileName(e.target.value)}
-                                            required
-                                            autoFocus
+
+                                        <Dropdown
+                                            id="location"
+                                            value={location}
+                                            onChange={(e) => setlocation(e.value)}
+                                            options={locations}
+                                            optionLabel="label"
+                                            placeholder="Select a Location"
                                             className={classNames({
-                                                'p-invalid': submitted && !fileName,
+                                                'p-invalid': submitted && !location,
                                             })}
                                         />
-                                        {submitted && !fileName && (
-                                            <small className='p-error'>File Name/ Subject is required.</small>
+
+                                        {submitted && !location && (
+                                            <small className="p-error">Location is required.</small>
                                         )}
                                     </div>
 
+                                    <div className="field">
+                                        <label htmlFor="shiftName" className="font-bold">
+                                            Shift Name
+                                        </label>
+
+                                        <Dropdown
+                                            id="shiftName"
+                                            value={shiftName}
+                                            onChange={(e) => setShiftName(e.value)}
+                                            options={shifts}
+                                            optionLabel="label"
+                                            placeholder="Select a Shift"
+                                            required
+                                            className={classNames({
+                                                'p-invalid': submitted && !shiftName,
+                                            })}
+                                        />
+
+                                        {submitted && !shiftName && (
+                                            <small className="p-error">Shift name is required.</small>
+                                        )}
+                                    </div>
                                     <div className='field'>
-                                        <label htmlFor='description' className='font-bold'>
-                                            Description
+                                        <label htmlFor='total' className='font-bold'>
+                                            Total
                                         </label>
                                         <InputText
-                                            id='description'
-                                            onChange={(e) => setDescription(e.target.value)}
+                                            id='total'
+                                            onChange={(e) => setTotal(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className='field'>
+                                        <label htmlFor='pass' className='font-bold'>
+                                            Pass
+                                        </label>
+                                        <InputText
+                                            id='pass'
+                                            onChange={(e) => setPass(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className='field'>
+                                        <label htmlFor='violtaion' className='font-bold'>
+                                            Violation
+                                        </label>
+                                        <InputText
+                                            id='violtaion'
+                                            onChange={(e) => setViolation(e.target.value)}
                                             required
                                         />
                                     </div>

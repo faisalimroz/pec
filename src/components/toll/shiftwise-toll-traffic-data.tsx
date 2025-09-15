@@ -92,6 +92,20 @@ export default function VehicleDetectTollTable() {
     const isToll = roles.some((role) =>
         ['superadmin', 'toll-manager'].includes(role.title)
     )
+      const itemTemplate = (option: { label: string; value: string }) => {
+        return (
+            <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                    <path d="M10.5 2.16406H4.5C4.10218 2.16406 3.72064 2.3221 3.43934 2.6034C3.15804 2.88471 3 3.26624 3 3.66406V15.6641C3 16.0619 3.15804 16.4434 3.43934 16.7247C3.72064 17.006 4.10218 17.1641 4.5 17.1641H13.5C13.8978 17.1641 14.2794 17.006 14.5607 16.7247C14.842 16.4434 15 16.0619 15 15.6641V6.66406L10.5 2.16406Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10.5 2.16406V6.66406H15" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12 10.4141H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12 13.4141H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7.5 7.41406H6.75H6" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>{option.label}</span>
+            </div>
+        );
+    };
     const location = [
         { label: 'All', value: 'All' },
         { label: 'Mawa', value: 'Mawa' },
@@ -400,6 +414,7 @@ export default function VehicleDetectTollTable() {
                         onChange={(e) => setSelectedLocation(e.value)}
                         options={location}
                         placeholder='Location'
+                          itemTemplate={itemTemplate}
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
                 </div>
@@ -410,6 +425,7 @@ export default function VehicleDetectTollTable() {
                         onChange={(e) => setTraffic(e.value)}
                         options={traffic}
                         placeholder='Traffic'
+                        itemTemplate={itemTemplate}
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
                 </div>
@@ -419,7 +435,7 @@ export default function VehicleDetectTollTable() {
                         value={selectedPeriod}
                         onChange={(e) => setSelectedPeriod(e.value)}
                         options={period}
-                       
+                        itemTemplate={itemTemplate}
                         placeholder='Period'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
