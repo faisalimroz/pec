@@ -1027,7 +1027,7 @@ export const tollLinks: SideLink[] = [
       {
         title: 'Daily Toll & Traffic Data Comparisons',
         label: '',
-        href: '/toll/daily-toll-traffic-data-comparisons',
+        href: '/toll/daily-data-comparisons',
         icon: '',
       },
       
@@ -1049,7 +1049,7 @@ export const tollLinks: SideLink[] = [
       {
         title: 'Daily Toll & Traffic Data Comparisons',
         label: '',
-        href: '/toll/shift/shift-wise-toll-traffic-data-comparisons',
+        href: '/toll/shift/shift-wise-data-comparisons',
         icon: '',
       },
       
@@ -1309,7 +1309,7 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'Daily Water Level Records',
         label: '',
-        href: '/rtw/daily-water-level-records ',
+        href: '/rtw/daily-water-level-records',
         icon: '',
       },  
        {

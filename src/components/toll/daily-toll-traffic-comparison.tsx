@@ -1,733 +1,544 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Toast } from 'primereact/toast';
-import { Button } from 'primereact/button';
-import { Toolbar } from 'primereact/toolbar';
-import { Dialog } from 'primereact/dialog';
-import { OverlayPanel } from 'primereact/overlaypanel';
-import { Calendar } from 'primereact/calendar';
-import '../../styles/table-style.css';
-import { searchTOllCollectTraffic, useSearchTollTraffic } from '@/api/tollApi';
-import axios from 'axios';
-import { ColumnGroup } from 'primereact/columngroup';
-import { Row } from 'primereact/row';
-import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
-import { useNavigate } from 'react-router-dom';
-import RefreshButton from '@/components/refresh-button';
-import { useAuth } from '@/provider/authProvider';
+import { useState } from "react";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
 import { Chart } from "primereact/chart";
-import { ArrowRight } from 'lucide-react';
-import TollButtonIcons from "@/components/ui/comparison-button";
-interface Product {
-  id: string | null;
-  code: string;
-  name: string;
-  description: string;
-  image: string | null;
-  price: number;
-  category: string | null;
-  quantity: number;
-  inventoryStatus: string;
-  rating: number;
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+
+type PaymentMethod = "Cash" | "Card" | "ETC" | "Exempt" | "Discount";
+type VehicleType =
+  | "Trailer (4 Axle)"
+  | "Truck (3 Axle)"
+  | "Medium Truck (8-11)"
+  | "Medium Truck (5-8)"
+  | "Mini Truck"
+  | "Big Bus"
+  | "Medium Bus"
+  | "Mini Bus";
+
+interface PeriodFilters {
+  start?: Date | null;
+  end?: Date | null;
+  location?: string | null;
+  vehicleType?: VehicleType | null;
+  payment?: PaymentMethod | null;
 }
 
-export default function TollCollectTrafficTable() {
-  const [showChart, setShowChart] = useState(false);
+interface ComparisonResult {
+  vehicles1: number;
+  vehicles2: number;
+  revenue1: number;
+  revenue2: number;
+  avgDaily1: number;
+  avgDaily2: number;
+  chartLabels: string[];
+  chartData1: number[];
+  chartData2: number[];
+}
 
-  const toggleChart = () => {
-    setShowChart((prev) => !prev);
+const LOCATION_OPTIONS = [
+  { label: "All Locations", value: "All" },
+  { label: "Main Bridge", value: "Main Bridge" },
+  { label: "Approach Road", value: "Approach Road" },
+];
+
+const VEHICLE_OPTIONS = [
+  { label: "Trailer (4 Axle)", value: "Trailer (4 Axle)" },
+  { label: "Truck (3 Axle)", value: "Truck (3 Axle)" },
+  { label: "Medium Truck (8-11)", value: "Medium Truck (8-11)" },
+  { label: "Medium Truck (5-8)", value: "Medium Truck (5-8)" },
+  { label: "Mini Truck", value: "Mini Truck" },
+  { label: "Big Bus", value: "Big Bus" },
+  { label: "Medium Bus", value: "Medium Bus" },
+  { label: "Mini Bus", value: "Mini Bus" },
+];
+
+const PAYMENT_OPTIONS = [
+  { label: "Cash", value: "Cash" },
+  { label: "Card", value: "Card" },
+  { label: "ETC", value: "ETC" },
+  { label: "Exempt", value: "Exempt" },
+  { label: "Discount", value: "Discount" },
+];
+
+// ---------- helpers (formatting) ----------
+const fmtNum = (n: number) => n.toLocaleString();
+const fmtTk = (n: number) => `৳ ${n.toLocaleString()}`;
+const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
+const pctChange = (a: number, b: number) => {
+  if (!a) return "N/A";
+  return `${(((b - a) / a) * 100).toFixed(1)}%`;
+};
+
+// Distribute totals into categories using fixed, tweakable shares (makes it "dynamic-ready")
+function buildPaymentBreakdown(total1: number, total2: number) {
+  // Shares must sum to <= 1; residual goes into Discount (if any)
+  const shares: Record<Exclude<PaymentMethod, "Discount">, number> = {
+    Cash: 0.43,
+    Exempt: 0.24,
+    Card: 0.23,
+    ETC: 0.10,
   };
+  const sumKnown = Object.values(shares).reduce((a, b) => a + b, 0);
+  const discountShare = Math.max(0, 1 - sumKnown); // usually 0
 
-  const chartData = {
-    labels: ["Jan 1", "Jan 2", "Jan 3", "Jan 4", "Jan 5", "Jan 6", "Jan 7"],
-    datasets: [
-      {
-        label: "First Period (Jan 1-7)",
-        backgroundColor: "#0B1F8F",
-        data: [3000, 4000, 4500, 3000, 3500, 2000, 4500],
-      },
-      {
-        label: "Second Period (Mar 1-7)",
-        backgroundColor: "#41AFFF",
-        data: [2500, 3800, 4200, 2900, 3200, 2100, 4300],
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-    },
-  };
-  const op = useRef<null>(null);
-  const navigate = useNavigate();
-
-  const { roles, permissions } = useAuth();
-  const checkRole = permissions.find((p) => p.name === 'toll-manager');
-  const checkPermission = checkRole?.children.find(
-    (c) => c.name === 'toll-collect-traffic'
-  );
-
-  const hasEditAccess = checkPermission?.edit_authority || false;
-
-  const isToll = roles.some((role) =>
-    ['superadmin', 'toll-manager'].includes(role.title)
-  );
-  let emptyProduct: Product = {
-    id: null,
-    code: '',
-    name: '',
-    image: null,
-    description: '',
-    category: null,
-    price: 0,
-    quantity: 0,
-    rating: 0,
-    inventoryStatus: 'INSTOCK',
-  };
-
-  const [products, setProducts] = useState<any>([]);
-  const [productDialog, setProductDialog] = useState<boolean>(false);
-  const [product, setProduct] = useState<any>(emptyProduct);
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [submitted, setSubmitted] = useState<boolean>(false);
-  const toast = useRef<Toast>(null);
-  const dt = useRef<DataTable<Product[]>>(null);
-  const [date, setDate] = useState<string>('');
-  const [date2, setDate2] = useState<string>('');
-  const [searchKey, setSearchKey] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loading2, setLoading2] = useState<boolean>(false);
-  const [formDate, setFormDate] = useState<string>('');
-  const [dataList, setDataList] = useState({
-    types: '',
-    lane: 0,
-    totalpass: 0,
-    shift: '',
-    location: '',
-    vehiclenum: '',
-    organization: '',
+  const rows = ([
+    "Cash",
+    "Exempt",
+    "Card",
+    "ETC",
+    "Discount",
+  ] as PaymentMethod[]).map((m) => {
+    const s =
+      m === "Discount" ? discountShare : shares[m as Exclude<PaymentMethod, "Discount">];
+    const p1 = Math.round(total1 * s);
+    const p2 = Math.round(total2 * s);
+    return {
+      method: m,
+      p1,
+      p1Pct: s,
+      p2,
+      p2Pct: s,
+      changePct: p1 ? ((p2 - p1) / p1) : 0,
+    };
   });
- 
-  // Dummy data for the two tables
-  const [paymentData, setPaymentData] = useState([
-    {
-      paymentMethod: 'Cash',
-      period1: 169517,
-      period1Total: '43.0%',
-      period2: 177993,
-      period2Total: '43.0%',
-      change: '+5.0%',
-    },
-    {
-      paymentMethod: 'Exempted',
-      period1: 84570,
-      period1Total: '24.0%',
-      period2: 99299,
-      period2Total: '24.0%',
-      change: '+5.0%',
-    },
-    {
-      paymentMethod: 'Credit',
-      period1: 90830,
-      period1Total: '23.0%',
-      period2: 95161,
-      period2Total: '23.0%',
-      change: '+5.0%',
-    },
-    {
-      paymentMethod: 'EPTAG',
-      period1: 39404,
-      period1Total: '10.0%',
-      period2: 41374,
-      period2Total: '10.0%',
-      change: '+5.0%',
-    },
-    {
-      paymentMethod: 'Total',
-      period1: 394043,
-      period1Total: '100.0%',
-      period2: 413745,
-      period2Total: '100.0%',
-      change: '+5.0%',
-    },
-  ]);
 
-  const [vehicleData, setVehicleData] = useState([
-    {
-      vehicleType: 'Trailer (4Axle)',
-      firstPeriod: 36086,
-      secondPeriod: 38200,
-      change: '+5.9%',
-    },
-    {
-      vehicleType: 'Truck (3Axle)',
-      firstPeriod: 55671,
-      secondPeriod: 58500,
-      change: '+5.1%',
-    },
-    {
-      vehicleType: 'Medium Truck (8-11)',
-      firstPeriod: 8731,
-      secondPeriod: 9100,
-      change: '+4.2%',
-    },
-    {
-      vehicleType: 'Medium Truck (5-8)',
-      firstPeriod: 55789,
-      secondPeriod: 56200,
-      change: '+0.7%',
-    },
-    {
-      vehicleType: 'Mini Truck',
-      firstPeriod: 17357,
-      secondPeriod: 18000,
-      change: '+3.7%',
-    },
-    {
-      vehicleType: 'Big Bus',
-      firstPeriod: 6491,
-      secondPeriod: 7000,
-      change: '+7.8%',
-    },
-    {
-      vehicleType: 'Medium Bus',
-      firstPeriod: 13447,
-      secondPeriod: 14200,
-      change: '+5.6%',
-    },
-    {
-      vehicleType: 'Mini Bus',
-      firstPeriod: 43690,
-      secondPeriod: 44500,
-      change: '+1.9%',
-    },
-    {
-      vehicleType: 'Total (All Vehicles)',
-      firstPeriod: 396896,
-      secondPeriod: 416741,
-      change: '+5.0%',
-    },
-  ]);
+  const totals = {
+    method: "Total",
+    p1: rows.reduce((a, r) => a + r.p1, 0),
+    p1Pct: 1,
+    p2: rows.reduce((a, r) => a + r.p2, 0),
+    p2Pct: 1,
+    changePct: rows.reduce((a, r) => a + r.p1, 0)
+      ? (rows.reduce((a, r) => a + r.p2, 0) - rows.reduce((a, r) => a + r.p1, 0)) /
+      rows.reduce((a, r) => a + r.p1, 0)
+      : 0,
+    _isTotal: true,
+  };
 
-  const handleNumberInputChange = (
-    e: { value: number | null },
-    field: number
+  return { rows, totals };
+}
+
+function buildVehicleBreakdown(total1: number, total2: number) {
+  const shares: Record<VehicleType, number> = {
+    "Trailer (4 Axle)": 0.091,
+    "Truck (3 Axle)": 0.140,
+    "Medium Truck (8-11)": 0.022,
+    "Medium Truck (5-8)": 0.140,
+    "Mini Truck": 0.044,
+    "Big Bus": 0.016,
+    "Medium Bus": 0.034,
+    "Mini Bus": 0.110,
+  };
+  // Normalize just in case
+  const norm = Object.values(shares).reduce((a, b) => a + b, 0);
+
+  const rows = (Object.keys(shares) as VehicleType[]).map((k) => {
+    const s = shares[k] / norm;
+    const p1 = Math.round(total1 * s);
+    const p2 = Math.round(total2 * s);
+    return {
+      type: k,
+      p1,
+      p2,
+      changePct: p1 ? ((p2 - p1) / p1) : 0,
+    };
+  });
+
+  const totals = {
+    type: "Total (All Vehicles)",
+    p1: rows.reduce((a, r) => a + r.p1, 0),
+    p2: rows.reduce((a, r) => a + r.p2, 0),
+    changePct: rows.reduce((a, r) => a + r.p1, 0)
+      ? (rows.reduce((a, r) => a + r.p2, 0) - rows.reduce((a, r) => a + r.p1, 0)) /
+      rows.reduce((a, r) => a + r.p1, 0)
+      : 0,
+    _isTotal: true,
+  };
+
+  return { rows, totals };
+}
+
+export default function PeriodFiltersSection() {
+  const [p1, setP1] = useState<PeriodFilters>({
+    start: new Date("2025-01-01"),
+    end: new Date("2025-01-07"),
+  });
+
+  const [p2, setP2] = useState<PeriodFilters>({
+    start: new Date("2025-03-01"),
+    end: new Date("2025-03-07"),
+  });
+
+  const [info, setInfo] = useState<PeriodFilters>({
+    location: "All",
+    vehicleType: null,
+    payment: null,
+  });
+
+  const [result, setResult] = useState<ComparisonResult | null>(null);
+
+  const setQuickRange = (
+    setter: React.Dispatch<React.SetStateAction<PeriodFilters>>,
+    type: "week" | "month" | "quarter"
   ) => {
-    setDataList((prev) => ({ ...prev, [field]: e.value || 0 }));
-  };
-
-  const openNew = () => {
-    setProduct(emptyProduct);
-    setSubmitted(false);
-    setProductDialog(true);
-  };
-
-  const hideDialog = () => {
-    setSubmitted(false);
-    setProductDialog(false);
-  };
-
-  function formatDate(dateTime?: any) {
-    if (!dateTime) return '';
-    const date = new Date(dateTime);
-
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${day}-${month}-${year}`;
-  }
-
-  const saveProduct = async () => {
-    try {
-      setLoading2(true);
-      const data = {
-        types: dataList.types,
-        datetime: formatDate(formDate),
-        lane: dataList.lane,
-        totalpass: dataList.totalpass,
-        shift: dataList.shift,
-        location: dataList.location,
-      };
-
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/collection/traffic/upload`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      const response = res;
-      console.log(response);
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading2(false);
+    const now = new Date();
+    let start: Date;
+    if (type === "week") {
+      start = new Date();
+      start.setDate(now.getDate() - 7);
+    } else if (type === "month") {
+      start = new Date();
+      start.setMonth(now.getMonth() - 1);
+    } else {
+      start = new Date();
+      start.setMonth(now.getMonth() - 3);
     }
+    setter((prev) => ({ ...prev, start, end: now }));
   };
 
-  const exportCSV = () => {
-    dt.current?.exportCSV();
-  };
+  // You will replace this with your real API call:
+  const fetchComparisonData = (
+    p1: PeriodFilters,
+    p2: PeriodFilters,
+    _info: PeriodFilters
+  ): ComparisonResult => {
+    // Mocked 7-day series
+    const chartLabels = ["Jan 1", "Jan 2", "Jan 3", "Jan 4", "Jan 5", "Jan 6", "Jan 7"];
+    const chartData1 = [4000, 3200, 4700, 2800, 1900, 2500, 3400];
+    const chartData2 = [4200, 3300, 4500, 3000, 2100, 2600, 3600];
 
-  const leftToolbarTemplate = () => {
-    return (
-      <div className="">
-        <div className="p-3 bg-main text-lg font-semibold text-white rounded-t">
-          Document List
-        </div>
-      </div>
-    );
-  };
+    const vehicles1 = chartData1.reduce((a, b) => a + b, 0);
+    const vehicles2 = chartData2.reduce((a, b) => a + b, 0);
 
-  const rightToolbarTemplate = () => {
-    return (
-      <>
-        {hasEditAccess && (
-          <div className="space-x-2">
-            <button
-              className="bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold"
-              onClick={openNew}
-            >
-              Upload Document
-            </button>
-            <button
-              className="bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md"
-              onClick={exportCSV}
-            >
-              Download Files
-            </button>
-            <button
-              className="bg-blue-500 text-white border-blue-300 border-t border-l border-r font-bold px-4 py-3 rounded-t-md"
-              onClick={() =>
-                navigate('/toll/toll-collect-traffic/update-delete')
-              }
-            >
-              Delete Lists
-            </button>
-          </div>
-        )}
-        <RefreshButton className="text-base ml-2" onClick={handleReset} />
-      </>
-    );
-  };
+    const revenue1 = Math.round(vehicles1 * 172); // demo multiplier
+    const revenue2 = Math.round(vehicles2 * 172);
 
-  const actionBodyTemplate = (rowData: Product) => {
-    return (
-      <>
-        <Button
-          icon="pi pi-ellipsis-v"
-          outlined
-          className="border-none"
-          // @ts-ignore
-          onClick={(e) => op.current?.toggle(e)}
-        />
-        <OverlayPanel ref={op}>
-          <div className="flex flex-col space-y-2">
-            <a href="">Edit</a>
-            <a href="">Delete</a>
-            <a href="">Download Attachment</a>
-          </div>
-        </OverlayPanel>
-      </>
-    );
-  };
+    const avgDaily1 = Math.round(vehicles1 / chartData1.length);
+    const avgDaily2 = Math.round(vehicles2 / chartData2.length);
 
-  function getMonthName(dateString: string) {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', { month: 'long' });
-  }
-
-  function getYear(dateString: string) {
-    const date = new Date(dateString);
-    return date.getFullYear();
-  }
-
-  const handleSearch = () => {
-    setLoading(true);
-    const initialPayload = {
-      month: date ? getMonthName(date) : '',
-      year: date2 ? getYear(date2) : '',
-      searchQuery: searchKey,
+    return {
+      vehicles1,
+      vehicles2,
+      revenue1,
+      revenue2,
+      avgDaily1,
+      avgDaily2,
+      chartLabels,
+      chartData1,
+      chartData2,
     };
-
-    searchTOllCollectTraffic(initialPayload).then((result) => {
-      setProducts(result);
-      setLoading(false);
-    });
   };
 
-  const handleReset = () => {
-    const initialPayload = {
-      month: '',
-      year: '',
-    };
-
-    setDate('');
-    setDate2('');
-
-    searchTOllCollectTraffic(initialPayload).then((result) => {
-      setProducts(result);
-      setLoading(false);
-    });
-  };
-
-  const filterSearchForm = (
-    <div className="flex mx-auto w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white">
-      <Calendar
-        // @ts-ignore
-        value={date}
-        // @ts-ignore
-        onChange={(e) => setDate(e.value)}
-        view="month"
-        dateFormat="MM"
-        inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
-        placeholder="By Month"
-        showIcon
-      />
-
-      <Calendar
-        // @ts-ignore
-        value={date2}
-        // @ts-ignore
-        onChange={(e) => setDate2(e.value)}
-        view="year"
-        dateFormat="yy"
-        inputClassName="border-none rounded-none ml-4 cursor-pointer focus:ring-0 focus:border-0"
-        placeholder="By Year"
-        showIcon
-        maxDate={new Date()}
-      />
-
-      <button
-        onClick={() => handleSearch()}
-        className="border bg-green-500 px-4 py-2.5 rounded-lg"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="white"
-          className="size-6"
-        >
-          <path
-            fillRule="evenodd"
-            d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
-            clipRule="evenodd"
-          />
-        </svg>
-      </button>
-    </div>
-  );
-
-  const productDialogFooter = (
-    <>
-      <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button
-        label="Save"
-        loading={loading2}
-        icon="pi pi-check"
-        onClick={saveProduct}
-      />
-    </>
-  );
-
-  const [payload, setPayload] = useState<any>({
-    month: '',
-    year: '',
-    searchQuery: '',
-  });
-
-  const {
-    data: tollTrafficData,
-    isLoading,
-    error,
-    refetch,
-  } = useSearchTollTraffic(payload);
-
-  useEffect(() => {
-    if (tollTrafficData) {
-      setProducts(tollTrafficData);
-    }
-  }, [tollTrafficData]);
-
-  // CSS classes for styling
-  const containerClass = 'p-4 rounded-xl shadow-lg bg-white space-y-8';
-  const tableHeaderClass = 'bg-[#ffc2c2] text-black font-bold';
-  const tableRowClass = (data) => {
-    if (data.paymentMethod === 'Total' || data.vehicleType === 'Total (All Vehicles)') {
-      return { 'bg-blue-100 font-bold': true };
-    }
-    return { 'hover:bg-gray-50': true };
-  };
-
-  const changeTemplate = (rowData, field) => {
-    const value = rowData[field];
-    const isPositive = value.startsWith('+');
-    return (
-      <span className={isPositive ? 'text-green-500' : 'text-red-500'}>
-        {value}
-      </span>
-    );
+  const onCompare = () => {
+    const res = fetchComparisonData(p1, p2, info);
+    setResult(res);
   };
 
   return (
-    <div className="ml-4">
-      <div className="flex justify-between items-center gap-4 mb-4">
-        <div className="flex justify-center ">
-          <div className="p-6 border rounded-md">
-            <h3 className="text-lg font-bold text-[#6B7280]">Total Vehicles</h3>
-            <p>
-              <span className="font-bold text-xl ">14,499</span> vehicles →{" "} 
-              <span className="font-bold text-xl">15,230</span> vehicles
-            </p>
-            <p className="text-[#16A34A]">Increased by 5.0% (731 more vehicles)</p>
+    <div className="p-6 bg-white border rounded-lg space-y-6">
+      <h3 className="text-lg font-semibold">Select Time Periods to Compare</h3>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* First Time Period */}
+        <div>
+          <h4 className="text-sm font-medium text-[#0A2472] mb-2">First Time Period</h4>
+          <div className="grid grid-cols-2 gap-4">
+            <Calendar
+              value={p1.start || null}
+              onChange={(e) => setP1({ ...p1, start: e.value as Date })}
+              placeholder="Start Date"
+              dateFormat="dd/mm/yy"
+              showIcon
+            />
+            <Calendar
+              value={p1.end || null}
+              onChange={(e) => setP1({ ...p1, end: e.value as Date })}
+              placeholder="End Date"
+              dateFormat="dd/mm/yy"
+              showIcon
+            />
+          </div>
+          <div className="flex gap-2 mt-3">
+            <Button
+              label="Last Week"
+              outlined
+              onClick={() => setQuickRange(setP1, "week")}
+              className="bg-[#F3F4F6] text-[#374151] border-none font-light"
+            />
+            <Button
+              label="Last Month"
+              outlined
+              onClick={() => setQuickRange(setP1, "month")}
+              className="bg-[#F3F4F6] text-[#374151] border-none font-light"
+            />
+            <Button
+              label="Last Quarter"
+              outlined
+              onClick={() => setQuickRange(setP1, "quarter")}
+              className="bg-[#F3F4F6] text-[#374151] border-none font-light"
+            />
           </div>
         </div>
-        <div className="flex justify-center">
-          <div className="p-12 border rounded-md">
-            <h3 className="text-lg font-bold text-[#6B7280]">Total Vehicles</h3>
-            <p>
-              <span className="font-bold text-xl">14,499</span> vehicles →{" "}
-              <span className="font-bold text-xl">15,230</span> vehicles
-            </p>
-            <p className="text-[#16A34A]">Increased by 5.0% (731 more vehicles)</p>
+
+        {/* Second Time Period */}
+        <div>
+          <h4 className="text-sm font-medium text-[#0A2472] mb-2">Second Time Period</h4>
+          <div className="grid grid-cols-2 gap-4">
+            <Calendar
+              value={p2.start || null}
+              onChange={(e) => setP2({ ...p2, start: e.value as Date })}
+              placeholder="Start Date"
+              dateFormat="dd/mm/yy"
+              showIcon
+            />
+            <Calendar
+              value={p2.end || null}
+              onChange={(e) => setP2({ ...p2, end: e.value as Date })}
+              placeholder="End Date"
+              dateFormat="dd/mm/yy"
+              showIcon
+            />
           </div>
-        </div>
-        <div className="flex justify-center">
-          <div className="px-12 py-6 border rounded-md">
-            <h3 className="text-lg font-bold text-[#6B7280]">Total Vehicles</h3>
-            <p>
-              <span className="font-bold text-xl">14,499</span> vehicles →{" "}
-              <span className="font-bold text-xl">15,230</span> vehicles
-            </p>
-            <p className="text-[#16A34A]">Increased by 5.0% (731 more vehicles)</p>
+          <div className="flex gap-2 mt-3">
+            <Button
+              label="Last Week"
+              outlined
+              onClick={() => setQuickRange(setP2, "week")}
+              className="bg-[#F3F4F6] text-[#374151] border-none font-light"
+            />
+            <Button
+              label="Last Month"
+              outlined
+              onClick={() => setQuickRange(setP2, "month")}
+              className="bg-[#F3F4F6] text-[#374151] border-none font-light"
+            />
+            <Button
+              label="Last Quarter"
+              outlined
+              onClick={() => setQuickRange(setP2, "quarter")}
+              className="bg-[#F3F4F6] text-[#374151] border-none font-light"
+            />
           </div>
         </div>
       </div>
-      {/* <Toast ref={toast} /> */}
-      <div className={containerClass}>
-        {/* Payment Method Comparison Table */}
-        <div className="p-1 text-lg font-semibold text-black rounded-t-lg" >
-          Payment Method Comparison
-        </div>
-        <DataTable
-          value={paymentData}
-          rowClassName={tableRowClass}
-          showGridlines={false}
-          tableClassName="custom-table"
-        >
-          <Column
-            field="paymentMethod"
-            header="Payment Method"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="period1"
-            header="Period 1 (Jan 1-7)"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="period1Total"
-            header="% of Total"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="period2"
-            header="Period 2 (Mar 1-7)"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="period2Total"
-            header="% of Total"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="change"
-            header="% Change"
-            headerClassName={tableHeaderClass}
-            body={(rowData) => changeTemplate(rowData, 'change')}
-          ></Column>
-        </DataTable>
 
-      
-        <div className="flex justify-center p-2">
-          <Button label="View All Payment Methods" className="p-button-text text-blue-500 hover:text-blue-700" />
-        </div>
-
- 
-        <div className="my-8"></div>
-
-     
-        <h1 className="text-lg font-semibold rounded-t-lg" >
-          Vehicle Type Comparison
-        </h1>
-        <DataTable
-          value={vehicleData}
-          rowClassName={tableRowClass}
-          showGridlines={false}
-          tableClassName="custom-table"
-        >
-          <Column
-            field="vehicleType"
-            header="Vehicle Type"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="firstPeriod"
-            header="First Period (Jan 1-7)"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="secondPeriod"
-            header="Second Period (Mar 1-7)"
-            headerClassName={tableHeaderClass}
-          ></Column>
-          <Column
-            field="change"
-            header="Change"
-            headerClassName={tableHeaderClass}
-            body={(rowData) => changeTemplate(rowData, 'change')}
-          ></Column>
-        </DataTable>
-
-        {/* View All Button */}
-        <div className="flex justify-center p-2">
-          <Button label="View All Vehicle Types" className="p-button-text text-blue-500 hover:text-blue-700" />
-        </div>
+      {/* Filters below (kept) */}
+      <div className="flex justify-center items-center gap-5">
+        <Dropdown
+          value={info.location || "All"}
+          onChange={(e) => setInfo({ ...info, location: e.value })}
+          options={LOCATION_OPTIONS}
+          placeholder="Location"
+          className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
+        />
+        <Dropdown
+          value={info.vehicleType || null}
+          onChange={(e) => setInfo({ ...info, vehicleType: e.value })}
+          options={VEHICLE_OPTIONS}
+          placeholder="Vehicle Type"
+          className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
+        />
+        <Dropdown
+          value={info.payment || null}
+          onChange={(e) => setInfo({ ...info, payment: e.value })}
+          options={PAYMENT_OPTIONS}
+          placeholder="Payment Method"
+          className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
+        />
       </div>
 
-      {/* Upload data dialog */}
-      <Dialog
-        visible={productDialog}
-        style={{ width: '52rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header="Upload Document"
-        modal
-        className="p-fluid"
-        footer={productDialogFooter}
-        onHide={hideDialog}
-      >
-        <>
-          <div className="grid grid-cols-2 items-center gap-6">
-            <div className="field">
-              <label htmlFor="types" className="font-bold">
-                Vehicle Type
-              </label>
-              <Dropdown
-                id="types"
-                value={dataList.types}
-                options={[
-                  'bus',
-                  'heavy_truck',
-                  'medium_truck',
-                  'micro_bus',
-                  'mini_bus',
-                  'motor_cycle',
-                  'four_wheeler',
-                  'private_car',
-                  'small_truck',
-                  'trailer',
-                ]}
-                onChange={(e) =>
-                  setDataList((prev) => ({ ...prev, types: e.value }))
-                }
-                placeholder="Select Vehicle type"
-              />
-            </div>
+      <div className="flex justify-center">
+        <Button label="Compare Data" onClick={onCompare} className="px-6 bg-[#0B1F8F]" />
+      </div>
 
-            <div className="field">
-              <label htmlFor="lane" className="font-bold">
-                Lane
-              </label>
-              <Dropdown
-                id="lane"
-                value={dataList.lane}
-                options={[1, 2, 3, 4, 5, 6]}
-                onChange={(e) =>
-                  setDataList((prev) => ({ ...prev, lane: e.value }))
-                }
-                placeholder="Select Lane"
-              />
-            </div>
+      {/* === Results Section === */}
+      {result && (
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold">Comparison Results</h3>
 
-            <div className="field">
-              <label htmlFor="totalpass">Total Pass</label>
-              <InputNumber
-                id="totalpass"
-                value={dataList.totalpass}
-                //@ts-ignore
-                onValueChange={(e) => handleNumberInputChange(e, 'totalpass')}
-              />
+          {/* Cards */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-medium">Total Vehicles</h4>
+              <p className="text-xl font-bold">
+                {fmtNum(result.vehicles1)} → {fmtNum(result.vehicles2)}
+              </p>
+              <p className="text-sm text-green-600">
+                {pctChange(result.vehicles1, result.vehicles2)} (
+                {fmtNum(result.vehicles2 - result.vehicles1)} more vehicles)
+              </p>
             </div>
-
-            <div className="field">
-              <label htmlFor="shift" className="font-bold">
-                Shift
-              </label>
-              <Dropdown
-                id="shift"
-                value={dataList.shift}
-                options={['12 AM - 08 AM', '08 AM - 04 PM', '04 PM - 12 AM']}
-                onChange={(e) =>
-                  setDataList((prev) => ({ ...prev, shift: e.value }))
-                }
-                placeholder="Select Shift"
-              />
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-medium">Total Revenue</h4>
+              <p className="text-xl font-bold">
+                {fmtTk(result.revenue1)} → {fmtTk(result.revenue2)}
+              </p>
+              <p className="text-sm text-green-600">
+                {pctChange(result.revenue1, result.revenue2)} (
+                {fmtTk(result.revenue2 - result.revenue1)} more revenue)
+              </p>
             </div>
-
-            <div className="field">
-              <label htmlFor="location" className="font-bold">
-                Location
-              </label>
-              <Dropdown
-                id="location"
-                value={dataList.location}
-                options={[
-                  'dhaleshwari',
-                  'bhanga',
-                  'abdullahpur',
-                  'sreenagar',
-                  'pulia',
-                  'maligram',
-                ]}
-                onChange={(e) =>
-                  setDataList((prev) => ({ ...prev, location: e.value }))
-                }
-                placeholder="Select Location"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="date" className="font-bold">
-                Date
-              </label>
-              <div className="border rounded-md">
-                <Calendar
-                  id="date"
-                  // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
-                  dateFormat="dd/mm/yy"
-                  inputClassName="border-0 focus:ring-0 cursor-pointer"
-                  className="focus:ring-0"
-                  placeholder="Select Date"
-                />
-              </div>
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-medium">Average Daily Traffic</h4>
+              <p className="text-xl font-bold">
+                {fmtNum(result.avgDaily1)} → {fmtNum(result.avgDaily2)}
+              </p>
+              <p className="text-sm text-green-600">
+                {pctChange(result.avgDaily1, result.avgDaily2)} (
+                {fmtNum(result.avgDaily2 - result.avgDaily1)} more vehicles/day)
+              </p>
             </div>
           </div>
-        </>
-      </Dialog>
+
+          {/* Chart */}
+          <div className="p-4 border rounded-lg">
+            <h4 className="font-medium mb-2">Daily Traffic Volume Comparison</h4>
+            <Chart
+              type="bar"
+              data={{
+                labels: result.chartLabels,
+                datasets: [
+                  {
+                    label: "First Period",
+                    data: result.chartData1,
+                    backgroundColor: "#1E3A8A",
+                  },
+                  {
+                    label: "Second Period",
+                    data: result.chartData2,
+                    backgroundColor: "#60A5FA",
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: "bottom" } },
+                scales: {
+                  y: { beginAtZero: true, ticks: { precision: 0 } },
+                },
+              }}
+              style={{ height: 360 }}
+            />
+          </div>
+
+          {/* Payment Method Comparison Table */}
+          <div className="p-4 border rounded-lg">
+            <h4 className="font-medium mb-3">Payment Method Comparison</h4>
+            {(() => {
+              const { rows, totals } = buildPaymentBreakdown(
+                result.vehicles1,
+                result.vehicles2
+              );
+              const tableData = [...rows, totals];
+
+              return (
+                <DataTable
+                  value={tableData}
+                  
+                  rows={12}
+                  emptyMessage='No data found!'
+                  rowClassName={(data: any) =>
+                    data._isTotal ? "bg-blue-50 font-medium" : ""
+                  }
+                >
+                  <Column
+                    header="Payment Method"
+                    field="method"
+                   headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="Period 1"
+                    body={(r) => fmtNum(r.p1)}
+                    headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="% of Total"
+                    body={(r) => pct(r.p1Pct)}
+                   headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="Period 2"
+                    body={(r) => fmtNum(r.p2)}
+                    headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="% of Total"
+                    body={(r) => pct(r.p2Pct)}
+                    headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="% Change"
+                    body={(r) => (
+                      <span className="text-green-600">{pct(r.changePct)}</span>
+                    )}
+                    headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                </DataTable>
+              );
+            })()}
+          </div>
+
+          {/* Vehicle Type Comparison Table */}
+          <div className="p-4 border rounded-lg">
+            <h4 className="font-medium mb-3">Vehicle Type Comparison</h4>
+            {(() => {
+              const { rows, totals } = buildVehicleBreakdown(
+                result.vehicles1,
+                result.vehicles2
+              );
+              const tableData = [...rows, totals];
+
+              return (
+                <DataTable
+                  value={tableData}
+                     rows={12}
+                  emptyMessage='No data found!'
+                 
+                  rowClassName={(data: any) =>
+                    data._isTotal ? "bg-blue-50 font-medium" : ""
+                  }
+                >
+                  <Column
+                    header="Vehicle Type"
+                    field="type"
+                    headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="First Period"
+                    body={(r) => fmtNum(r.p1)}
+                    headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="Second Period"
+                    body={(r) => fmtNum(r.p2)}
+                    headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                  <Column
+                    header="Change"
+                    body={(r) => (
+                      <span className="text-green-600">{pct(r.changePct)}</span>
+                    )}
+                 headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                  />
+                </DataTable>
+              );
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

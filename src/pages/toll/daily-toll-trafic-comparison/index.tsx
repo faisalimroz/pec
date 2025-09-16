@@ -40,7 +40,7 @@ export default function TollCollectModify() {
 
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
-              <div className='space-y-2'>
+              <div className='space-y-2 space-x-4'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
                  Daily Toll & Traffic Data Comparison
                 </h1>

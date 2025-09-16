@@ -1390,7 +1390,7 @@ const router = createBrowserRouter([
             }),
           },
            {
-            path: 'toll/shift/shift-wise-toll-traffic-data-comparisons',
+            path: 'toll/shift/shift-wise-data-comparisons',
             lazy: async () => ({
               Component: (
                 await import(
@@ -1410,7 +1410,7 @@ const router = createBrowserRouter([
             }),
           },
            {
-            path: 'toll/daily-toll-traffic-data-comparisons',
+            path: 'toll/daily-data-comparisons',
             lazy: async () => ({
               Component: (
                 await import(
@@ -1768,6 +1768,18 @@ const router = createBrowserRouter([
      path: '/rtw/picture-and-videos',
             lazy: async () => ({
               Component: (await import('@/pages/rtw/visual-records/pictures-and-videos')).default,
+            }),
+  },
+   {
+     path: '/rtw/monthly-reports',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/monitoring-and-reporting/monthly-report')).default,
+            }),
+  },
+   {
+     path: '/rtw/daily-water-level-records',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/monitoring-and-reporting/daily-water-level-records')).default,
             }),
   },
   // Error routes

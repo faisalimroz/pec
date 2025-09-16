@@ -686,7 +686,6 @@ export default function VehicleDetectTollTable() {
                         dataKey='_id'
                         rows={12}
                         header={filterSearchForm}
-
                         showGridlines
                         emptyMessage='No data found!'
                         loading={isLoading || loading}
