@@ -21,8 +21,8 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import FileIcon from '@/components/icons/FileIcon'
 
 interface Attachment {
     url: string
@@ -31,11 +31,11 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    fileName: string
-    refNo: string
-    sender: string
+    subjectName: string
     description: string
-    statusType: string
+    typesofDrawings: string;
+    docNo: string
+    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -45,15 +45,15 @@ interface Product {
     updatingTimestamp?: string
 }
 
-export default function MedicineInOutRecord() {
+export default function MonthlyReport() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        fileName: '',
-        refNo: '',
+        subjectName: '',
         description: '',
-        sender: '',
-        statusType: '',
+        docNo: '',
+        typesofDrawings: '',
+        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -85,17 +85,15 @@ export default function MedicineInOutRecord() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [fileName, setMedicineName] = useState('')
-    const [refNo, setRefNo] = useState('')
+    const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [sender, setSender] = useState('')
-    const [problem, setproblem] = useState('')
+    const [docNo, setDocNo] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [statusType, setInOutType] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
+   
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -104,7 +102,6 @@ export default function MedicineInOutRecord() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -124,14 +121,13 @@ export default function MedicineInOutRecord() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('statusType', updatedProduct.statusType)
-            formData.append('fileName', updatedProduct.fileName)
-            formData.append('refNo', updatedProduct.refNo)
+            
+            formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('sender', updatedProduct.sender)
+            formData.append('docNo', updatedProduct.docNo)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-
+            formData.append('typesofDrawings', updatedProduct.typesofDrawings);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -180,14 +176,6 @@ export default function MedicineInOutRecord() {
             }
         })
     }
-  const itemTemplate = (option: { name: string; code: string }) => {
-  return (
-    <div className="flex items-center gap-2">
-     <FileIcon/>      
-      <span>{option.name}</span> 
-    </div>
-  );
-};
 
     const updateProductDialogFooter = (
         <>
@@ -206,13 +194,6 @@ export default function MedicineInOutRecord() {
         </>
     )
 
-    // ending all update dialog funcs
-
-    const codes = [
-        { name: 'Approved', code: 'Approved' },
-        { name: 'Decline', code: 'Decline' },
-        { name: 'Not Applicable', code: 'Not Applicable' },
-    ]
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -253,12 +234,11 @@ export default function MedicineInOutRecord() {
             setLoading2(true)
             const formData = new FormData()
 
-            formData.append('fileName', fileName)
-            formData.append('refNo', refNo)
+            formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('sender', sender)
+            formData.append('docNo', docNo)
             formData.append('remarks', remarks)
-            formData.append('statusType', statusType)
+          
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -276,6 +256,7 @@ export default function MedicineInOutRecord() {
 
             const response = res
             console.log(response)
+
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -416,7 +397,39 @@ export default function MedicineInOutRecord() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
                     Document List
                 </div>
+                {/* {isClinic && ( 
+          <button
+            onClick={confirmDeleteSelected}
+            disabled={!selectedProducts || selectedProducts.length === 0}
+            className={`p-3 text-lg font-semibold text-white rounded-t ${
+              selectedProducts && selectedProducts.length > 0
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
+          >
+            Delete Selected ({selectedProducts?.length || 0})
+          </button>
+        )} */}
 
+                {/* <button
+          onClick={() => setActiveIndex(1)}
+          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
+        >
+          Outside Patient
+        </button> */}
+                {/* <Button
+          label='Upload Document'
+          icon='pi pi-file-pdf'
+          severity='success'
+          onClick={openNew}
+        /> */}
+                {/* <Button
+          label='Delete' 
+          icon='pi pi-trash'
+          severity='danger'
+          onClick={confirmDeleteSelected} 
+          disabled={!selectedProducts || !selectedProducts.length}
+        /> */}
             </div>
         )
     }
@@ -432,9 +445,36 @@ export default function MedicineInOutRecord() {
                         confirmDeleteSelected={confirmDeleteSelected}
                         handleReset={handleReset}
                     />
+                    // <div className='space-x-2'>
+                    //     <button
+                    //         className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
+                    //         onClick={openNew}
+                    //     >
+                    //         Upload Document
+                    //     </button>
+                    //     <button
+                    //         className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
+                    //         onClick={exportCSV}
+                    //     >
+                    //         Download Files{' '}
+                    //         {selectedProducts?.length === 0
+                    //             ? '(All)'
+                    //             : `(${selectedProducts?.length})`}
+                    //     </button>
+                    //     <button
+                    //         onClick={confirmDeleteSelected}
+                    //         disabled={!selectedProducts || selectedProducts.length === 0}
+                    //         className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
+                    //             ? 'bg-red-500 hover:bg-red-600'
+                    //             : 'bg-gray-400 cursor-not-allowed'
+                    //             }`}
+                    //     >
+                    //         Delete Selected ({selectedProducts?.length || 0})
+                    //     </button>
+                    // </div>
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+
             </>
         )
     }
@@ -459,9 +499,9 @@ export default function MedicineInOutRecord() {
             try {
                 const response = await fetch(attachment.url)
                 const blob = await response.blob()
-                const filename = attachment.url.split('/').pop()
+                const subjectName = attachment.url.split('/').pop()
                 //@ts-ignore
-                folder.file(filename, blob)
+                folder.file(subjectName, blob)
             } catch (error) {
                 console.error(`Failed to fetch ${attachment.url}:`, error)
             }
@@ -547,7 +587,7 @@ export default function MedicineInOutRecord() {
             year: date2 ? getYear(date2) : '',
             searchQuery: searchKey,
             // @ts-ignore
-            statusType: selectedCode?.code || '',
+            patientType: selectedCode?.code || '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
@@ -561,7 +601,7 @@ export default function MedicineInOutRecord() {
             year: '',
             searchQuery: '',
             month: '',
-            statusType: '',
+            patientType: '',
         }
 
         setDate('')
@@ -575,90 +615,90 @@ export default function MedicineInOutRecord() {
         })
     }
 
-    const filterSearchForm = (
-        <div className='flex items-center justify-center'>
-            <div
-                role='search'
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    handleSearch()
-                }}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault()
-                        handleSearch()
-                    }
-                }}
-                className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
-            >
-                <Calendar
-                    // @ts-ignore
-                    value={date}
-                    // @ts-ignore
-                    onChange={(e) => setDate(e.value)}
+    // const filterSearchForm = (
+    //     <div className='flex items-center justify-center'>
+    //         <div
+    //             role='search'
+    //             onSubmit={(e) => {
+    //                 e.preventDefault()
+    //                 handleSearch()
+    //             }}
+    //             onKeyDown={(e) => {
+    //                 if (e.key === 'Enter') {
+    //                     e.preventDefault()
+    //                     handleSearch()
+    //                 }
+    //             }}
+    //             className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
+    //         >
+    //             <Calendar
+    //                 // @ts-ignore
+    //                 value={date}
+    //                 // @ts-ignore
+    //                 onChange={(e) => setDate(e.value)}
 
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-                    placeholder='Start Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-                <Calendar
-                    // @ts-ignore
-                    value={date2}
-                    // @ts-ignore
-                    onChange={(e) => setDate2(e.value)}
+    //                 dateFormat="dd/mm/yy"
+    //                 inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+    //                 placeholder='Start Date'
+    //                 showIcon
+    //                 icon={() => <i className='pi pi-angle-down' />}
+    //             />
+    //             <Calendar
+    //                 // @ts-ignore
+    //                 value={date2}
+    //                 // @ts-ignore
+    //                 onChange={(e) => setDate2(e.value)}
 
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-                    placeholder='End Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-                <div>
-                    <Dropdown
-                        value={selectedCode}
-                        onChange={(e) => setSelectedCode(e.value)}
-                        options={codes}
-                        optionLabel='name'
-                        placeholder='Status'
-                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
-                        itemTemplate={itemTemplate}
+    //                 dateFormat="dd/mm/yy"
+    //                 inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+    //                 placeholder='End Date'
+    //                 showIcon
+    //                 icon={() => <i className='pi pi-angle-down' />}
+    //             />
+    //             <div>
+    //                 <Dropdown
+    //                     value={selectedCode}
+    //                     onChange={(e) => setSelectedCode(e.value)}
+    //                     options={drawingTypes}
+    //                     itemTemplate={itemTemplate}
 
-                    />
-                </div>
-                <IconField iconPosition='left' className='relative'>
-                    <InputIcon className='pi pi-search' />
-                    <InputText
-                        type='search'
-                        placeholder='Search'
-                        className='border-none ml-4 focus:ring-0'
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        value={searchKey}
-                    />
+    //                     optionLabel='name'
+    //                     placeholder='Type Of Drawings'
+    //                     className='border-none rounded-none ml-4 cursor-pointer ring-0'
+    //                 />
+    //             </div>
+    //             <IconField iconPosition='left' className='relative'>
+    //                 <InputIcon className='pi pi-search' />
+    //                 <InputText
+    //                     type='search'
+    //                     placeholder='Search'
+    //                     className='border-none ml-4 focus:ring-0'
+    //                     onChange={(e) => setSearchKey(e.target.value)}
+    //                     value={searchKey}
+    //                 />
 
-                    <button
-                        onClick={() => handleSearch()}
-                        className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
-                        type='submit'
-                    >
-                        <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 24 24'
-                            fill='white'
-                            className='size-6'
-                        >
-                            <path
-                                fillRule='evenodd'
-                                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-                                clipRule='evenodd'
-                            />
-                        </svg>
-                    </button>
-                </IconField>
-            </div>
-        </div>
-    )
+    //                 <button
+    //                     onClick={() => handleSearch()}
+    //                     className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+    //                     type='submit'
+    //                 >
+    //                     <svg
+    //                         xmlns='http://www.w3.org/2000/svg'
+    //                         viewBox='0 0 24 24'
+    //                         fill='white'
+    //                         className='size-6'
+    //                     >
+    //                         <path
+    //                             fillRule='evenodd'
+    //                             d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+    //                             clipRule='evenodd'
+    //                         />
+    //                     </svg>
+    //                 </button>
+    //             </IconField>
+    //         </div>
+    //     </div>
+    // )
 
     const productDialogFooter = (
         <>
@@ -710,11 +750,12 @@ export default function MedicineInOutRecord() {
             month: '',
             year: '',
             searchQuery: '',
-            statusType: '',
+            patientType: '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
             setProducts(result?.Treatments)
+            console.log(result, "ress")
             setLoading(false)
         })
     }
@@ -760,7 +801,7 @@ export default function MedicineInOutRecord() {
                             rowsPerPageOptions={[5, 10, 25]}
                             paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
                             currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
-                            header={filterSearchForm}
+                        
                             selectionMode='multiple'
                             showGridlines
                             cellSelection
@@ -784,25 +825,25 @@ export default function MedicineInOutRecord() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 className='min-w-[10rem]'
-                                sortable
+
                             ></Column>
-                            
+
+
                             <Column
                                 field='date'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                               
+
                                 className='min-w-[12rem]'
-                                header='Date'
+                                header='Date Of Upload'
                             ></Column>
-                            
-                              <Column
-                                field='fileName'
+                             <Column
+                                field='docNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
-                                header='File Name/Subject'
+                                className='min-w-[12rem]'
+                                header='Doc No.'
                             ></Column>
                             <Column
                                 field='description'
@@ -812,33 +853,25 @@ export default function MedicineInOutRecord() {
                                 className='min-w-[8rem]'
                                 header='Description'
                             ></Column>
-                              <Column
-                                field='sender'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-
-                                className='min-w-[8rem]'
-                                header='Sender'
-                            ></Column>
-                         
-                          
 
                             <Column
-                                field='status'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                
+
                                 className='min-w-[8rem]'
-                                header='Status'
+                                header='File Name'
                             ></Column>
-                   
+
+                            
+
+                          
 
 
                             <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                            
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -847,10 +880,11 @@ export default function MedicineInOutRecord() {
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                              
+                                sortable
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
+
 
                             <Column
                                 body={actionBodyTemplate}
@@ -877,55 +911,7 @@ export default function MedicineInOutRecord() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        <div className='field'>
-                            <label htmlFor='statusType' className='font-bold'>
-                                Status
-                            </label>
-                            <Dropdown
-                                id='statusType'
-                                value={updatedProduct.statusType}
-                                options={codes}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        statusType: e.target.value,
-                                    })
-                                }
-                                  optionLabel="name"
-                                 itemTemplate={itemTemplate}
-                                placeholder='Select status'
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
-                                Ref No
-                            </label>
-                            <InputText
-                                id='refNo'
-                                value={updatedProduct.refNo}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        refNo: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='fileName' className='font-bold'>
-                                File Name/Subject
-                            </label>
-                            <InputText
-                                id='fileName'
-                                value={updatedProduct.fileName}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        fileName: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
+                       
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -942,20 +928,21 @@ export default function MedicineInOutRecord() {
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='sender' className='font-bold'>
-                               Sender
+                            <label htmlFor='subjectName' className='font-bold'>
+                                File Name/ Subject
                             </label>
                             <InputText
-                                id='sender'
-                                value={updatedProduct.sender}
+                                id='subjectName'
+                                value={updatedProduct.subjectName}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        sender: e.target.value,
+                                        subjectName: e.target.value,
                                     })
                                 }
                             />
                         </div>
+                    
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -973,6 +960,22 @@ export default function MedicineInOutRecord() {
                             />
                         </div>
                         <div className='field'>
+                            <label htmlFor='docNo' className='font-bold'>
+                                Doc No.
+                            </label>
+                            <InputText
+                                id='docNo'
+                                value={updatedProduct.docNo}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        docNo: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                        
+                        <div className='field'>
                             <label htmlFor='date' className='font-bold'>
                                 Date
                             </label>
@@ -989,6 +992,7 @@ export default function MedicineInOutRecord() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
+                            
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1103,30 +1107,19 @@ export default function MedicineInOutRecord() {
                                 <p>{selectedProduct.date}</p>
                             </div>
                             <div>
-                                <h3 className='font-bold'>File Name/Subject</h3>
-                                <p className='break-all'>{selectedProduct.fileName}</p>
+                                <h3 className='font-bold'>File Name</h3>
+                                <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
+
+                           
                             <div>
-                                <h3 className='font-bold'>status</h3>
-                                <p className='break-all'>{selectedProduct.statusType}</p>
-                            </div>
-                            <div>
-                                <h3 className='font-bold'>Ref No.</h3>
-                                <p className='break-all'>{selectedProduct.refNo}</p>
-                            </div>
-                               <div>
-                                <h3 className='font-bold'>Description</h3>
-                                <p className='break-all'>{selectedProduct.description}</p>
-                            </div>
-                            <div>
-                                <h3 className='font-bold'>Sender</h3>
-                                <p className='break-all'>{selectedProduct.sender}</p>
+                                <h3 className='font-bold'>Doc No.</h3>
+                                <p className='break-all'>{selectedProduct.docNo}</p>
                             </div>
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
-
 
                             {hasEditAccess && (
                                 <div className='col-span-2'>
@@ -1161,70 +1154,45 @@ export default function MedicineInOutRecord() {
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
+
                         <div className='field'>
-                            <label htmlFor='statusType' className='font-bold'>
-                                Status
-                            </label>
-                            <Dropdown
-                                id='statusType'
-                                value={statusType}
-                                options={codes}
-                                onChange={(e) => setInOutType(e.value)}
-                                placeholder='Status'
-                                itemTemplate={itemTemplate}
-                                optionLabel='name'
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
-                                Ref No
+                            <label htmlFor='subjectName' className='font-bold'>
+                                File Name
                             </label>
                             <InputText
-                                id='refNo'
-                                onChange={(e) => setRefNo(e.target.value)}
+                                id='subjectName'
+                                onChange={(e) => setSubjectName(e.target.value)}
                                 required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !subjectName,
+                                })}
                             />
+                            {submitted && !subjectName && (
+                                <small className='p-error'>File Name is required.</small>
+                            )}
                         </div>
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
                             </label>
                             <InputText
-                                id='description'
+                                id='problem'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
                         </div>
-                         <div className='field'>
-                            <label htmlFor='sender' className='font-bold'>
-                                Sender
+                        <div className='field'>
+                            <label htmlFor='docNo' className='font-bold'>
+                                Doc No.
                             </label>
                             <InputText
-                                id='sender'
-                                onChange={(e) => setSender(e.target.value)}
+                                id='docNo'
+                                onChange={(e) => setDocNo(e.target.value)}
                                 required
                             />
                         </div>
                         
-                        <div className='field'>
-                            <label htmlFor='fileName' className='font-bold'>
-                                File Name/Subject
-                            </label>
-                            <InputText
-                                id='fileName'
-                                onChange={(e) => setMedicineName(e.target.value)}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !fileName,
-                                })}
-                            />
-                            {submitted && !fileName && (
-                                <small className='p-error'>File Name/Subject is required.</small>
-                            )}
-                        </div>
-
-
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

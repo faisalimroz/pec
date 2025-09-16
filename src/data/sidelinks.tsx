@@ -1280,7 +1280,7 @@ export const rtwLinks: SideLink[] = [
         icon: '',
       },  
        {
-        title: 'Materials & Equipment List ',
+        title: 'Materials & Equipment List',
         label: '',
         href: '/rtw/material-and-equipment',
         icon: '',

@@ -1728,6 +1728,42 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/rtw/communication-correspondence/letter-official-correspondence')).default,
             }),
   },
+  {
+     path: '/rtw/rtw-bills',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/financial-documentation/rtw-bills')).default,
+            }),
+  },
+   {
+     path: '/rtw/rtw-drawings',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/rtw-drawings')).default,
+            }),
+  },
+  {
+     path: '/rtw/rtw-drawings',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/rtw-drawings')).default,
+            }),
+  },
+    {
+     path: '/rtw/material-and-equipment',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/materials-and-equipment')).default,
+            }),
+  },
+  {
+     path: '/rtw/rtw-maintenance-manual',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/rtw-maintenance-manual')).default,
+            }),
+  },
+  {
+     path: '/rtw/survey-reports',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/survey-reports')).default,
+            }),
+  },
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },

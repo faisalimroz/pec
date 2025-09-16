@@ -21,8 +21,8 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import FileIcon from '@/components/icons/FileIcon'
 
 interface Attachment {
     url: string
@@ -31,11 +31,11 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    fileName: string
-    refNo: string
-    sender: string
+    subjectName: string
     description: string
-    statusType: string
+    typesofDrawings: string;
+    refNo: string
+    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -45,15 +45,15 @@ interface Product {
     updatingTimestamp?: string
 }
 
-export default function MedicineInOutRecord() {
+export default function MonthlyReport() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        fileName: '',
-        refNo: '',
+        subjectName: '',
         description: '',
-        sender: '',
-        statusType: '',
+        refNo: '',
+        typesofDrawings: '',
+        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -85,17 +85,16 @@ export default function MedicineInOutRecord() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [fileName, setMedicineName] = useState('')
-    const [refNo, setRefNo] = useState('')
+    const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [sender, setSender] = useState('')
-    const [problem, setproblem] = useState('')
+    const [refNo, setRefNo] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [statusType, setInOutType] = useState<string>('')
+    const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
+    const [typesofDrawings, setTypesofDrawings] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -104,6 +103,26 @@ export default function MedicineInOutRecord() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
+
+
+
+    const drawingTypes = [
+
+        { name: 'Hydrographic survey', code: 'Hydrographic survey' },
+        { name: 'Scour around Pile foundation', code: 'Scour around Pile foundation' },
+        { name: 'Topographic Survey', code: 'Topographic Survey' },
+        { name: 'Bank line survey', code: 'Bank line survey' },
+        { name: 'Satellite image', code: 'Satellite image' },
+
+    ]
+    const itemTemplate = (option: { name: string; code: string }) => {
+        return (
+            <div className="flex items-center gap-2">
+                <FileIcon />
+                <span>{option.name}</span>
+            </div>
+        );
+    };
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -124,14 +143,13 @@ export default function MedicineInOutRecord() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('statusType', updatedProduct.statusType)
-            formData.append('fileName', updatedProduct.fileName)
-            formData.append('refNo', updatedProduct.refNo)
+            formData.append('patientType', updatedProduct.patientType)
+            formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('sender', updatedProduct.sender)
+            formData.append('refNo', updatedProduct.refNo)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-
+            formData.append('typesofDrawings', updatedProduct.typesofDrawings);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -180,14 +198,6 @@ export default function MedicineInOutRecord() {
             }
         })
     }
-  const itemTemplate = (option: { name: string; code: string }) => {
-  return (
-    <div className="flex items-center gap-2">
-     <FileIcon/>      
-      <span>{option.name}</span> 
-    </div>
-  );
-};
 
     const updateProductDialogFooter = (
         <>
@@ -206,13 +216,6 @@ export default function MedicineInOutRecord() {
         </>
     )
 
-    // ending all update dialog funcs
-
-    const codes = [
-        { name: 'Approved', code: 'Approved' },
-        { name: 'Decline', code: 'Decline' },
-        { name: 'Not Applicable', code: 'Not Applicable' },
-    ]
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -253,12 +256,11 @@ export default function MedicineInOutRecord() {
             setLoading2(true)
             const formData = new FormData()
 
-            formData.append('fileName', fileName)
-            formData.append('refNo', refNo)
+            formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('sender', sender)
+            formData.append('problem', refNo)
             formData.append('remarks', remarks)
-            formData.append('statusType', statusType)
+            formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -276,6 +278,7 @@ export default function MedicineInOutRecord() {
 
             const response = res
             console.log(response)
+
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -416,7 +419,39 @@ export default function MedicineInOutRecord() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
                     Document List
                 </div>
+                {/* {isClinic && ( 
+          <button
+            onClick={confirmDeleteSelected}
+            disabled={!selectedProducts || selectedProducts.length === 0}
+            className={`p-3 text-lg font-semibold text-white rounded-t ${
+              selectedProducts && selectedProducts.length > 0
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
+          >
+            Delete Selected ({selectedProducts?.length || 0})
+          </button>
+        )} */}
 
+                {/* <button
+          onClick={() => setActiveIndex(1)}
+          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
+        >
+          Outside Patient
+        </button> */}
+                {/* <Button
+          label='Upload Document'
+          icon='pi pi-file-pdf'
+          severity='success'
+          onClick={openNew}
+        /> */}
+                {/* <Button
+          label='Delete' 
+          icon='pi pi-trash'
+          severity='danger'
+          onClick={confirmDeleteSelected} 
+          disabled={!selectedProducts || !selectedProducts.length}
+        /> */}
             </div>
         )
     }
@@ -432,9 +467,36 @@ export default function MedicineInOutRecord() {
                         confirmDeleteSelected={confirmDeleteSelected}
                         handleReset={handleReset}
                     />
+                    // <div className='space-x-2'>
+                    //     <button
+                    //         className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
+                    //         onClick={openNew}
+                    //     >
+                    //         Upload Document
+                    //     </button>
+                    //     <button
+                    //         className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
+                    //         onClick={exportCSV}
+                    //     >
+                    //         Download Files{' '}
+                    //         {selectedProducts?.length === 0
+                    //             ? '(All)'
+                    //             : `(${selectedProducts?.length})`}
+                    //     </button>
+                    //     <button
+                    //         onClick={confirmDeleteSelected}
+                    //         disabled={!selectedProducts || selectedProducts.length === 0}
+                    //         className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
+                    //             ? 'bg-red-500 hover:bg-red-600'
+                    //             : 'bg-gray-400 cursor-not-allowed'
+                    //             }`}
+                    //     >
+                    //         Delete Selected ({selectedProducts?.length || 0})
+                    //     </button>
+                    // </div>
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+
             </>
         )
     }
@@ -459,9 +521,9 @@ export default function MedicineInOutRecord() {
             try {
                 const response = await fetch(attachment.url)
                 const blob = await response.blob()
-                const filename = attachment.url.split('/').pop()
+                const subjectName = attachment.url.split('/').pop()
                 //@ts-ignore
-                folder.file(filename, blob)
+                folder.file(subjectName, blob)
             } catch (error) {
                 console.error(`Failed to fetch ${attachment.url}:`, error)
             }
@@ -547,7 +609,7 @@ export default function MedicineInOutRecord() {
             year: date2 ? getYear(date2) : '',
             searchQuery: searchKey,
             // @ts-ignore
-            statusType: selectedCode?.code || '',
+            patientType: selectedCode?.code || '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
@@ -561,7 +623,7 @@ export default function MedicineInOutRecord() {
             year: '',
             searchQuery: '',
             month: '',
-            statusType: '',
+            patientType: '',
         }
 
         setDate('')
@@ -619,12 +681,12 @@ export default function MedicineInOutRecord() {
                     <Dropdown
                         value={selectedCode}
                         onChange={(e) => setSelectedCode(e.value)}
-                        options={codes}
-                        optionLabel='name'
-                        placeholder='Status'
-                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                        options={drawingTypes}
                         itemTemplate={itemTemplate}
 
+                        optionLabel='name'
+                        placeholder='Survey Type'
+                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
                 </div>
                 <IconField iconPosition='left' className='relative'>
@@ -710,11 +772,12 @@ export default function MedicineInOutRecord() {
             month: '',
             year: '',
             searchQuery: '',
-            statusType: '',
+            patientType: '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
             setProducts(result?.Treatments)
+            console.log(result, "ress")
             setLoading(false)
         })
     }
@@ -784,26 +847,36 @@ export default function MedicineInOutRecord() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 className='min-w-[10rem]'
-                                sortable
+
                             ></Column>
-                            
+
+
                             <Column
                                 field='date'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                               
+
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
-                            
-                              <Column
-                                field='fileName'
+                             <Column
+                                field='refNo'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+
+                                className='min-w-[12rem]'
+                                header='Ref No.'
+                            ></Column>
+
+                            <Column
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
                                 className='min-w-[8rem]'
-                                header='File Name/Subject'
+                                header='File Name'
                             ></Column>
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -812,33 +885,21 @@ export default function MedicineInOutRecord() {
                                 className='min-w-[8rem]'
                                 header='Description'
                             ></Column>
-                              <Column
-                                field='sender'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-
-                                className='min-w-[8rem]'
-                                header='Sender'
-                            ></Column>
-                         
-                          
 
                             <Column
-                                field='status'
+                                field='typesofDrawings'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                
+
                                 className='min-w-[8rem]'
-                                header='Status'
+                                header='Survey Type'
                             ></Column>
-                   
 
 
                             <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                            
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -847,10 +908,11 @@ export default function MedicineInOutRecord() {
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                              
+                                sortable
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
+
 
                             <Column
                                 body={actionBodyTemplate}
@@ -877,55 +939,7 @@ export default function MedicineInOutRecord() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        <div className='field'>
-                            <label htmlFor='statusType' className='font-bold'>
-                                Status
-                            </label>
-                            <Dropdown
-                                id='statusType'
-                                value={updatedProduct.statusType}
-                                options={codes}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        statusType: e.target.value,
-                                    })
-                                }
-                                  optionLabel="name"
-                                 itemTemplate={itemTemplate}
-                                placeholder='Select status'
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
-                                Ref No
-                            </label>
-                            <InputText
-                                id='refNo'
-                                value={updatedProduct.refNo}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        refNo: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='fileName' className='font-bold'>
-                                File Name/Subject
-                            </label>
-                            <InputText
-                                id='fileName'
-                                value={updatedProduct.fileName}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        fileName: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
+                       
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -942,20 +956,21 @@ export default function MedicineInOutRecord() {
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='sender' className='font-bold'>
-                               Sender
+                            <label htmlFor='subjectName' className='font-bold'>
+                                File Name/ Subject
                             </label>
                             <InputText
-                                id='sender'
-                                value={updatedProduct.sender}
+                                id='subjectName'
+                                value={updatedProduct.subjectName}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        sender: e.target.value,
+                                        subjectName: e.target.value,
                                     })
                                 }
                             />
                         </div>
+                    
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -973,6 +988,41 @@ export default function MedicineInOutRecord() {
                             />
                         </div>
                         <div className='field'>
+                            <label htmlFor='refNo' className='font-bold'>
+                                Ref No.
+                            </label>
+                            <InputText
+                                id='refNo'
+                                value={updatedProduct.refNo}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        refNo: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                        <div className='field'>
+                                <label htmlFor='typesofDrawings' className='font-bold'>
+                                   Survey Type
+                                </label>
+                                <Dropdown
+                                    id='typesofDrawings'
+                                    value={updatedProduct.typesofDrawings}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            typesofDrawings: e.value,
+                                        })
+                                    }
+                                    options={drawingTypes}
+                                    itemTemplate={itemTemplate}
+                                     optionLabel='name'
+                                    placeholder='Select Type'
+                                    className='w-full'
+                                />
+                            </div>
+                        <div className='field'>
                             <label htmlFor='date' className='font-bold'>
                                 Date
                             </label>
@@ -989,6 +1039,7 @@ export default function MedicineInOutRecord() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
+                            
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1103,30 +1154,22 @@ export default function MedicineInOutRecord() {
                                 <p>{selectedProduct.date}</p>
                             </div>
                             <div>
-                                <h3 className='font-bold'>File Name/Subject</h3>
-                                <p className='break-all'>{selectedProduct.fileName}</p>
+                                <h3 className='font-bold'>File Name</h3>
+                                <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
+
                             <div>
-                                <h3 className='font-bold'>status</h3>
-                                <p className='break-all'>{selectedProduct.statusType}</p>
+                                <h3 className='font-bold'>Survey Type</h3>
+                                <p className='break-all'>{selectedProduct.typesofDrawings}</p>
                             </div>
                             <div>
                                 <h3 className='font-bold'>Ref No.</h3>
                                 <p className='break-all'>{selectedProduct.refNo}</p>
                             </div>
-                               <div>
-                                <h3 className='font-bold'>Description</h3>
-                                <p className='break-all'>{selectedProduct.description}</p>
-                            </div>
-                            <div>
-                                <h3 className='font-bold'>Sender</h3>
-                                <p className='break-all'>{selectedProduct.sender}</p>
-                            </div>
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
-
 
                             {hasEditAccess && (
                                 <div className='col-span-2'>
@@ -1161,23 +1204,37 @@ export default function MedicineInOutRecord() {
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
+
                         <div className='field'>
-                            <label htmlFor='statusType' className='font-bold'>
-                                Status
+                            <label htmlFor='subjectName' className='font-bold'>
+                                File Name
                             </label>
-                            <Dropdown
-                                id='statusType'
-                                value={statusType}
-                                options={codes}
-                                onChange={(e) => setInOutType(e.value)}
-                                placeholder='Status'
-                                itemTemplate={itemTemplate}
-                                optionLabel='name'
+                            <InputText
+                                id='subjectName'
+                                onChange={(e) => setSubjectName(e.target.value)}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !subjectName,
+                                })}
+                            />
+                            {submitted && !subjectName && (
+                                <small className='p-error'>File Name is required.</small>
+                            )}
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='description' className='font-bold'>
+                                Description
+                            </label>
+                            <InputText
+                                id='problem'
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
                             />
                         </div>
                         <div className='field'>
                             <label htmlFor='refNo' className='font-bold'>
-                                Ref No
+                                Ref No.
                             </label>
                             <InputText
                                 id='refNo'
@@ -1185,46 +1242,21 @@ export default function MedicineInOutRecord() {
                                 required
                             />
                         </div>
-                        <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
+                        <div className="field">
+                            <label htmlFor="typesofDrawings" className="font-bold">
+                              Survey Type
                             </label>
-                            <InputText
-                                id='description'
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
+                            <Dropdown
+                                id="typesofDrawings"
+                                value={typesofDrawings}
+                                onChange={(e) => setTypesofDrawings(e.value)}
+                                options={drawingTypes}
+                                optionLabel='name'
+                                placeholder="Select Type"
+                                itemTemplate={itemTemplate}
+                                className="w-full"
                             />
                         </div>
-                         <div className='field'>
-                            <label htmlFor='sender' className='font-bold'>
-                                Sender
-                            </label>
-                            <InputText
-                                id='sender'
-                                onChange={(e) => setSender(e.target.value)}
-                                required
-                            />
-                        </div>
-                        
-                        <div className='field'>
-                            <label htmlFor='fileName' className='font-bold'>
-                                File Name/Subject
-                            </label>
-                            <InputText
-                                id='fileName'
-                                onChange={(e) => setMedicineName(e.target.value)}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !fileName,
-                                })}
-                            />
-                            {submitted && !fileName && (
-                                <small className='p-error'>File Name/Subject is required.</small>
-                            )}
-                        </div>
-
-
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

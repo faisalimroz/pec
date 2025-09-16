@@ -29,10 +29,8 @@ interface Attachment {
 interface Product {
   _id: string | null
   slNo: string
-
   fileName: string
   date: string
-
   description: string
   remarks: string
   attachments: Attachment[]
