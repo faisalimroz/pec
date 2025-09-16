@@ -1764,6 +1764,12 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/rtw/technical-documentation/survey-reports')).default,
             }),
   },
+   {
+     path: '/rtw/picture-and-videos',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/visual-records/pictures-and-videos')).default,
+            }),
+  },
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },

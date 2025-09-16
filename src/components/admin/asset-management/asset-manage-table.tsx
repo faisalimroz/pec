@@ -19,7 +19,6 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import { Dropdown } from 'primereact/dropdown';
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 
 interface Attachment {
