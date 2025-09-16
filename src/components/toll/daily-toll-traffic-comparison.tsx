@@ -441,7 +441,7 @@ export default function PeriodFiltersSection() {
                   rows={12}
                   emptyMessage='No data found!'
                   rowClassName={(data: any) =>
-                    data._isTotal ? "bg-blue-50 font-medium" : ""
+                    data._isTotal ? "bg-[#E7F3FF] font-medium" : ""
                   }
                 >
                   <Column
@@ -504,7 +504,7 @@ export default function PeriodFiltersSection() {
                   emptyMessage='No data found!'
                  
                   rowClassName={(data: any) =>
-                    data._isTotal ? "bg-blue-50 font-medium" : ""
+                    data._isTotal ? "bg-[#E7F3FF] font-medium" : ""
                   }
                 >
                   <Column

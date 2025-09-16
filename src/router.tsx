@@ -1782,6 +1782,15 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/rtw/monitoring-and-reporting/daily-water-level-records')).default,
             }),
   },
+
+
+  //main bridge pmis
+  {
+     path: '/mb-pmis/project-overview',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/project-overview')).default,
+            }),
+  },
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },
