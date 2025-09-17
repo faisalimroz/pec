@@ -1840,6 +1840,20 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/mb-pis/quality-safety/material-test-report')).default,
             }),
   },
+   {
+     path: '/mb-pmis/main-bridge-bills',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/financial-documentation/main-bridge-bills')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/picture-and-videos',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/visual-records')).default,
+            }),
+  },
+  
+  
   
   // Error routes
   { path: '/500', Component: GeneralError },

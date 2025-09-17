@@ -104,20 +104,27 @@ export default function MonthlyReport() {
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
 
-    const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
+ const months = [
+        { name: "January", code: "JAN" },
+        { name: "February", code: "FEB" },
+        { name: "March", code: "MAR" },
+        { name: "April", code: "APR" },
+        { name: "May", code: "MAY" },
+        { name: "June", code: "JUN" },
+        { name: "July", code: "JUL" },
+        { name: "August", code: "AUG" },
+        { name: "September", code: "SEP" },
+        { name: "October", code: "OCT" },
+        { name: "November", code: "NOV" },
+        { name: "December", code: "DEC" },
     ];
+
+    // const itemTemplate = (option: { name: string; code: string }) => (
+    //     <div className="flex items-center gap-2">
+    //         <FileIcon />
+    //         <span>{option.name}</span>
+    //     </div>
+    // );
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -893,7 +900,7 @@ export default function MonthlyReport() {
             <Dialog
                 visible={updateProductDialog}
                 style={{ width: '60rem' }}
-                header='Update Treatment Record'
+                header='Update Document'
                 modal
                 className='p-fluid'
                 footer={updateProductDialogFooter}

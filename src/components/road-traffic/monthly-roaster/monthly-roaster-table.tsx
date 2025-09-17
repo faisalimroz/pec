@@ -904,7 +904,7 @@ export default function MonthlyReport() {
       <Dialog
         visible={updateProductDialog}
         style={{ width: '60rem' }}
-        header='Update Treatment Record'
+        header='Update Document'
         modal
         className='p-fluid'
         footer={updateProductDialogFooter}

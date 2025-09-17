@@ -1498,9 +1498,9 @@ export const pmisLinks: SideLink[] = [
     icon: <FileIcon />,
     sub: [
       {
-        title: 'RTW Bills',
+        title: 'Main Bridge Bills',
         label: '',
-        href: '/rtw/rtw-bills',
+        href: '/mb-pmis/main-bridge-bills',
         icon: '',
       }
     ],
@@ -1515,7 +1515,7 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Pictures and Videos',
         label: '',
-        href: '/rtw/picture-and-videos',
+        href: '/mb-pmis/picture-and-videos',
         icon: '',
       }
     ],
