@@ -837,7 +837,14 @@ export default function MonthlyReport() {
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
+                             <Column
+                                field='monthName'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
 
+                                className='min-w-[8rem]'
+                                header='Month Name'
+                            ></Column>
                             <Column
                                 field='subject'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -846,6 +853,7 @@ export default function MonthlyReport() {
                                 className='min-w-[8rem]'
                                 header='File Name/Subject'
                             ></Column>
+                           
                             
                             <Column
                                 field='description'

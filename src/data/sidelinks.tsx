@@ -1386,6 +1386,33 @@ export const rtwLinks: SideLink[] = [
       }
     ],
   },
+   {
+    title: 'Additional Notes',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Backup Frequency',
+        label: '',
+        href: '/rtw/additional-notes/backup-frequency',
+        icon: '',
+      },  
+       {
+        title: 'Document Control Manager',
+        label: '',
+        href: '/rtw/additional-notes/document-control-manager',
+        icon: '',
+      },
+       {
+        title: 'Document Revision Log',
+        label: '',
+        href: '/rtw/additional-notes/document-revision-log',
+        icon: '',
+      },
+    ],
+  },
 ]
 
 
@@ -1479,13 +1506,13 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'All RTW-related Letters & Official Correspondence',
         label: '',
-        href: '/rtw/letter-and-official-correspondence',
+        href: '/mb-pmis/letter-and-official-correspondence',
         icon: '',
       },  
        {
         title: 'Meeting Minutes',
         label: '',
-        href: '/rtw/meeting-minutes',
+        href: '/mb-pmis/meeting-minutes',
         icon: '',
       }
     ],
@@ -1518,6 +1545,33 @@ export const pmisLinks: SideLink[] = [
         href: '/mb-pmis/picture-and-videos',
         icon: '',
       }
+    ],
+  },
+     {
+    title: 'Additional Notes',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Backup Frequency',
+        label: '',
+        href: '/mb-pmis/additional-notes/backup-frequency',
+        icon: '',
+      },  
+       {
+        title: 'Document Control Manager',
+        label: '',
+        href: '/mb-pmis/additional-notes/document-control-manager',
+        icon: '',
+      },
+       {
+        title: 'Document Revision Log',
+        label: '',
+        href: '/mb-pmis/additional-notes/document-revision-log',
+        icon: '',
+      },
     ],
   },
 ]

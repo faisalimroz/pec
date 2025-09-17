@@ -109,8 +109,8 @@ export default function MonthlyReport() {
 
         { name: 'During Survey', code: 'During Survey' },
         { name: 'Construction', code: 'Construction' },
-        { name: 'Operationy', code: 'Operation' },
-        { name: 'Maintenance', code: 'Maintenance' }
+        { name: 'Operation', code: 'Operation' }
+        
 
     ]
     const itemTemplate = (option: { name: string; code: string }) => {

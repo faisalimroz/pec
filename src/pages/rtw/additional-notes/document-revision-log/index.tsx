@@ -3,9 +3,9 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { pmisLinks } from '@/data/sidelinks'
-import { getFilteredNavLinks, pmisTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/mb-pmis/additional-notes/backup-frequency'
+import { rtwLinks } from '@/data/sidelinks'
+import { getFilteredNavLinks, rtwTopNav } from '@/data/topNavLinks'
+import DemoTable from '@/components/rtw/additional-notes/document-revision-log'
 import { useAuth } from '@/provider/authProvider'
 
 export default function MonthlyReport() {
@@ -14,7 +14,7 @@ export default function MonthlyReport() {
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = pmisTopNav
+  const selectedNav = rtwTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -22,7 +22,7 @@ export default function MonthlyReport() {
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={pmisLinks}
+          sideLinks={rtwLinks}
         />
 
         <div
@@ -42,7 +42,7 @@ export default function MonthlyReport() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-            Document Control Manager
+              Document Revision Log
                 </h1>
 
                 <DemoTable />

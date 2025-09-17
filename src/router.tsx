@@ -1782,6 +1782,25 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/rtw/monitoring-and-reporting/daily-water-level-records')).default,
             }),
   },
+   {
+     path: '/rtw/additional-notes/backup-frequency',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/additional-notes/backup-frequency')).default,
+            }),
+  },
+   {
+     path: '/rtw/additional-notes/document-control-manager',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/additional-notes/document-control')).default,
+            }),
+  },
+   {
+     path: '/rtw/additional-notes/document-revision-log',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/additional-notes/document-revision-log')).default,
+            }),
+  },
+
 
 
   //main bridge pmis
@@ -1852,6 +1871,38 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/mb-pis/visual-records')).default,
             }),
   },
+  {
+     path: '/mb-pmis/letter-and-official-correspondence',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/communication-correspondence/letter-and-correspondence')).default,
+            }),
+  },
+  
+  {
+     path: '/mb-pmis/meeting-minutes',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/communication-correspondence/meeting-minutes')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/additional-notes/backup-frequency',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/additional-notes/backup-frequency')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/additional-notes/document-control-manager',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/additional-notes/document-control')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/additional-notes/document-revision-log',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/additional-notes/document-revision')).default,
+            }),
+  },
+  
   
   
   
