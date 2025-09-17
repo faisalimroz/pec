@@ -3,18 +3,18 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { itsLinks, rntLinks } from '@/data/sidelinks'
-import { getFilteredNavLinks, itsTopNav, rntTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/Its/AboutIts/about'
-import { useAuth } from '@/provider/authProvider'
+import {  tollLinks } from '@/data/sidelinks'
+import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
+import DemoTable from '@/components/toll/hierarchy'
+import { useAuth } from '@/provider/authProvider' 
 
-export default function AccidentReport() {
+export default function EmployeePersonalProfile() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = itsTopNav
+  const selectedNav = tollTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -22,7 +22,7 @@ export default function AccidentReport() {
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={itsLinks}
+          sideLinks={tollLinks}
         />
 
         <div
@@ -41,7 +41,7 @@ export default function AccidentReport() {
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
-          
+              
 
                 <DemoTable />
               </div>

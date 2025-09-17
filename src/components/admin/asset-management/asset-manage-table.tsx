@@ -73,16 +73,13 @@ export default function AssetManagementTable() {
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
   const [fileName, setfileName] = useState('')
-
   const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [formDate, setFormDate] = useState<string>('')
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
   const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
   const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
@@ -220,8 +217,6 @@ export default function AssetManagementTable() {
       const formData = new FormData()
 
       formData.append('fileName', fileName)
-
-
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))

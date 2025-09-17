@@ -769,44 +769,11 @@ export const rntLinks: SideLink[] = [
 ]
 
 export const itsLinks: SideLink[] = [
-  // {
-  //   title: 'About ITS',
-  //   label: '',
-  //   href: '/its',
-  //   uName: 'about-its',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Overview',
-  //       label: '',
-  //       href: '/its/overview',
-  //       icon: '',
-  //     },
-  //      {
-  //       title: 'Organization',
-  //       label: '',
-  //       href: '/its/organization',
-  //       icon: '',
-  //     },
-       
-  //     {
-  //       title: 'Staff Summary',
-  //       label: '',
-  //       href: '/its/staff-summary',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Duty Roster',
-  //       label: '',
-  //       href: '/its/duty-roster',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
+ 
    {
         title: 'About ITS',
         label: '',
-        href: '/its/about-its',
+        href: '/its/overview',
         icon: <AboutIcon/>,
       },
   {
@@ -846,161 +813,7 @@ export const itsLinks: SideLink[] = [
         icon: <FileIcon/>,
       },
      
-  // {
-  //   title: 'Report',
-  //   label: '',
-  //   href: '/its',
-  //   uName: 'report',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Reports',
-  //       label: '',
-  //       href: '/its/report/to-rhd',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Monitoring',
-  //       label: '',
-  //       href: '/its/report/monitoring',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'Inernal Letter & Announce',
-  //   label: '',
-  //   href: '/its/internal-letter/announce',
-  //   uName: 'internal-letter-announce',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'O&M Activities',
-  //   label: '',
-  //   href: '/its',
-  //   uName: 'o&m-activities',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'ITS',
-  //       label: '',
-  //       href: '/its/om-activities/its',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Electricity',
-  //       label: '',
-  //       href: '/its/om-activities/electricity',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'Inventory Management',
-  //   label: '',
-  //   href: '/its',
-  //   uName: 'inventory-management',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'ITS',
-  //       label: '',
-  //       href: '/its/inventory/its',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Electricity',
-  //       label: '',
-  //       href: '/its/inventory/electricity',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'Procurement',
-  //   label: '',
-  //   href: '/its',
-  //   uName: 'its-procurement',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Requisition',
-  //       label: '',
-  //       href: '/its/procurement/requisition',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Quotation',
-  //       label: '',
-  //       href: '/its/procurement/quotation',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Working Order',
-  //       label: '',
-  //       href: '/its/procurement/working-order',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Paid Service',
-  //       label: '',
-  //       href: '/its/procurement/paid-service',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-
-  // {
-  //   title: 'Training',
-  //   label: '',
-  //   href: '/its/training/manual',
-  //   uName: 'training',
-  //   icon: <FileIcon />,
-  // },
-
-  // {
-  //   title: 'Information & Diagram',
-  //   label: '',
-  //   href: '/its',
-  //   uName: 'information-diagram',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Information & Diagram- ITS',
-  //       label: '',
-  //       href: '/its/diagram/its',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Information & Diagram- Electricity',
-  //       label: '',
-  //       href: '/its/diagram/electricity',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-
-  // {
-  //   title: 'Warranty',
-  //   label: '',
-  //   href: '/its',
-  //   uName: 'warranty',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Product List',
-  //       label: '',
-  //       href: '/its/warranty/product-list',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Claim Report',
-  //       label: '',
-  //       href: '/its/warranty/claim-report',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
+ 
 ]
 
 export const tollLinks: SideLink[] = [
@@ -1224,6 +1037,13 @@ export const tollLinks: SideLink[] = [
     title: 'Toll & Traffic (Ver)',
     label: '',
     href: '/toll/toll-traffic-ver',
+    uName: 'toll-traffic-ver',
+    icon: <FileIcon />,
+  },
+   {
+    title: 'Hierarchy',
+    label: '',
+    href: '/toll/hierarchy',
     uName: 'toll-traffic-ver',
     icon: <FileIcon />,
   },

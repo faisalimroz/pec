@@ -8,7 +8,10 @@ import { searchAssetManagement } from '@/api/adminAPIs'
 import axios from 'axios'
 import MultiFileInput from '@/components/MultiFileInput'
 import { toast } from 'sonner'
+
 import { useAuth } from '@/provider/authProvider'
+import { InputText } from 'primereact/inputtext'
+import { Calendar } from 'primereact/calendar'
 interface Attachment {
     url: string
     _id: string
@@ -16,6 +19,10 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
+    fileName: string
+    date: string
+    description: string
+    remarks: string
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -27,6 +34,10 @@ export default function AssetManagementTable() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
+        fileName: '',
+        date: '',
+        description: '',
+        remarks: '',
         attachments: [],
     }
     const { roles, permissions } = useAuth()
@@ -45,9 +56,21 @@ export default function AssetManagementTable() {
     const dt = useRef<DataTable<Product[]>>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    
+    const [fileName, setfileName] = useState('')
+    const [formDate, setFormDate] = useState<string>('')
+    const [description, setDescription] = useState('')
+    const [remarks, setRemarks] = useState('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-  
+    function formatDate(dateTime?: any) {
+        if (!dateTime) return ''
+        const date = new Date(dateTime)
+
+        const day = date.getDate().toString().padStart(2, '0')
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const year = date.getFullYear()
+
+        return `${day}-${month}-${year}`
+    }
     console.log('data', products)
     const openNew = () => {
         setProduct(emptyProduct)
@@ -60,11 +83,17 @@ export default function AssetManagementTable() {
     const hideDialog = () => {
         setSubmitted(false)
         setProductDialog(false)
-    } 
+    }
     const saveProduct = async () => {
         try {
             setLoading2(true)
             const formData = new FormData()
+            formData.append('fileName', fileName)
+
+
+            formData.append('description', description)
+            formData.append('remarks', remarks)
+            formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -99,11 +128,11 @@ export default function AssetManagementTable() {
     const leftToolbarTemplate = () => {
         return (
             <div className=''>
-                  <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                  Overview
+                <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
+                    Hierarchy
                 </h1>
 
-               
+
             </div>
         )
     }
@@ -139,10 +168,6 @@ export default function AssetManagementTable() {
             />
         </>
     )
-   
-
-   
-
     const refetch = () => {
         setLoading(true)
         const initialPayload = {
@@ -156,7 +181,6 @@ export default function AssetManagementTable() {
             setLoading(false)
         })
     }
-
     useEffect(() => {
         refetch()
     }, [])
@@ -168,11 +192,31 @@ export default function AssetManagementTable() {
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
+                <div>
+                    <div className="flex items-start justify-center">
+                        {/* Left box */}
+                        <div className="w-[300px] h-[150px] bg-gray-300 py-4 px-3">
+                            <img src={products[0]?.attachments[0].url} alt="none" />
+                        </div>
 
+                        {/* Right box */}
+                        <div className="w-[300px]  h-[150px]  bg-gray-300 py-4 px-3">
+                            <h1></h1>
+                            <h1></h1>
+                            <h1>Joining Date: {products[9]?.date}</h1>
+                            <h1>Mobile: </h1>
+                        </div>
+                    </div>
+
+              <div>
+                  <img src={products[0]?.attachments[0].url} alt="none" />
                 <img src={products[0]?.attachments[0].url} alt="none" />
+              </div>
+                </div>
+
+                
 
             </div>
-
             <Dialog
                 visible={productDialog}
                 style={{ width: '42rem' }}
@@ -185,7 +229,60 @@ export default function AssetManagementTable() {
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
-                        
+
+
+                        <div className='field'>
+                            <label htmlFor='fileName' className='font-bold'>
+                                File Name/Subject
+                            </label>
+                            <InputText
+                                id='fileName'
+                                onChange={(e) => setfileName(e.target.value)}
+                                required
+
+                            />
+                            {submitted && !fileName && (
+                                <small className='p-error'>File Name/ Subject is required.</small>
+                            )}
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='description' className='font-bold'>
+                                Description
+                            </label>
+                            <InputText
+                                id='description'
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor='date' className='font-bold'>
+                                Date
+                            </label>
+                            <div className='border rounded-md'>
+                                <Calendar
+                                    id='date'
+                                    // @ts-ignore
+                                    onChange={(e) => setFormDate(e.value)}
+                                    dateFormat='dd/mm/yy'
+                                    inputClassName='border-0 focus:ring-0 cursor-pointer'
+                                    className='focus:ring-0'
+                                    placeholder='Select Date'
+                                />
+                            </div>
+                        </div>
+
+                        <div className='field'>
+                            <label htmlFor='remarks' className='font-bold'>
+                                Remarks
+                            </label>
+                            <InputText
+                                id='remarks'
+                                onChange={(e) => setRemarks(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
 
                     <div className='gap-3 mt-5'>
