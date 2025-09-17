@@ -1791,6 +1791,37 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/mb-pis/project-overview')).default,
             }),
   },
+   
+   {
+     path: '/mb-pmis/technical-documentation/main-bridge-drawings',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/main-bridge-drawings')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/survey-reports',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/survery-reports')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/materials-and-equipment',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/materials-and-equipment')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/other',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/others')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/maintenance-manual',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/main-bridge-maintenace')).default,
+            }),
+  },
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },

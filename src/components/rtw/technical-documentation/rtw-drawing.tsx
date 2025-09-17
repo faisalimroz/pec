@@ -34,7 +34,7 @@ interface Product {
     subjectName: string
     sender: string
     typesofDrawings: string;
-    refNo: string
+    docNo: string
     patientType: string
     date: string
     remarks: string
@@ -51,7 +51,7 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         sender: '',
-        refNo: '',
+        docNo: '',
         typesofDrawings: '',
         patientType: '',
         date: '',
@@ -87,7 +87,7 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [sender, setSender] = useState('')
-    const [refNo, setDocNo] = useState('')
+    const [docNo, setDocNo] = useState('')
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
@@ -146,7 +146,7 @@ export default function MonthlyReport() {
             formData.append('patientType', updatedProduct.patientType)
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('sender', updatedProduct.sender)
-            formData.append('refNo', updatedProduct.refNo)
+            formData.append('docNo', updatedProduct.docNo)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('typesofDrawings', updatedProduct.typesofDrawings);
@@ -258,7 +258,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('sender', sender)
-            formData.append('problem', refNo)
+            formData.append('problem', docNo)
             formData.append('remarks', remarks)
             formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
@@ -860,7 +860,7 @@ export default function MonthlyReport() {
                                 header='Date Of Upload'
                             ></Column>
                              <Column
-                                field='refNo'
+                                field='docNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -988,16 +988,16 @@ export default function MonthlyReport() {
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
+                            <label htmlFor='docNo' className='font-bold'>
                                 Doc No.
                             </label>
                             <InputText
-                                id='refNo'
-                                value={updatedProduct.refNo}
+                                id='docNo'
+                                value={updatedProduct.docNo}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        refNo: e.target.value,
+                                        docNo: e.target.value,
                                     })
                                 }
                             />
@@ -1164,7 +1164,7 @@ export default function MonthlyReport() {
                             </div>
                             <div>
                                 <h3 className='font-bold'>Doc No.</h3>
-                                <p className='break-all'>{selectedProduct.refNo}</p>
+                                <p className='break-all'>{selectedProduct.docNo}</p>
                             </div>
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
@@ -1233,11 +1233,11 @@ export default function MonthlyReport() {
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
+                            <label htmlFor='docNo' className='font-bold'>
                                 Doc No.
                             </label>
                             <InputText
-                                id='refNo'
+                                id='docNo'
                                 onChange={(e) => setDocNo(e.target.value)}
                                 required
                             />

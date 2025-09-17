@@ -3,9 +3,9 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { rntLinks } from '@/data/sidelinks'
-import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/road-traffic/kec-letter/kec-letter'
+import { pmisLinks, rntLinks } from '@/data/sidelinks'
+import { getFilteredNavLinks, pmisTopNav, rntTopNav } from '@/data/topNavLinks'
+import DemoTable from '@/components/mb-pmis/project-overview'
 import { useAuth } from '@/provider/authProvider'
 
 export default function BuildingMaintenance() {
@@ -14,7 +14,7 @@ export default function BuildingMaintenance() {
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = rntTopNav
+  const selectedNav = pmisTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -22,7 +22,7 @@ export default function BuildingMaintenance() {
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={rntLinks}
+          sideLinks={pmisLinks}
         />
 
         <div

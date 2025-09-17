@@ -65,12 +65,6 @@ export const administrationLinks: SideLink[] = [
         href: '/administrative/insurance-claiming',
         icon: '',
       },
-      // {
-      //   title: 'Salary Management',
-      //   label: '',
-      //   href: '/administrative/salary-management',
-      //   icon: '',
-      // },
       {
         title: 'Leave Management',
         label: '',
@@ -1414,29 +1408,36 @@ export const pmisLinks: SideLink[] = [
     icon: <FileIcon />,
     sub: [
       {
-        title: 'RTW Drawings',
+        title: 'Main Bridge Drawings',
         label: '',
-        href: '/rtw/rtw-drawings',
+        href: '/mb-pmis/technical-documentation/main-bridge-drawings',
         icon: '',
       },  
-       {
-        title: 'Materials & Equipment List',
+        {
+        title: 'Materials & Equipment List ',
         label: '',
-        href: '/rtw/material-and-equipment',
+        href: '/mb-pmis/technical-documentation/materials-and-equipment',
         icon: '',
       },  
+      
        {
         title: 'Survey Reports',
         label: '',
-        href: '/rtw/survey-reports',
+        href: '/mb-pmis/technical-documentation/survey-reports',
         icon: '',
       },  
        {
-        title: 'RTW Maintenance Manual',
+        title: 'Main Bridge Maintenance Manual',
         label: '',
-        href: '/rtw/rtw-maintenance-manual',
+        href: '/mb-pmis/technical-documentation/maintenance-manual',
         icon: '',
       },  
+        {
+        title: 'Other',
+        label: '',
+        href: '/mb-pmis/technical-documentation/other',
+        icon: '',
+      }, 
     ],
   },
   {

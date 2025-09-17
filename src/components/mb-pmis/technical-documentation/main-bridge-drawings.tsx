@@ -33,8 +33,8 @@ interface Product {
     slNo: string
     subjectName: string
     sender: string
-
-    refNo: string
+    typesofDrawings: string;
+    docNo: string
     patientType: string
     date: string
     remarks: string
@@ -51,8 +51,8 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         sender: '',
-        refNo: '',
-
+        docNo: '',
+        typesofDrawings: '',
         patientType: '',
         date: '',
         remarks: '',
@@ -87,14 +87,14 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [sender, setSender] = useState('')
-    const [refNo, setRefNo] = useState('')
+    const [docNo, setDocNo] = useState('')
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
+    const [typesofDrawings, setTypesofDrawings] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -106,6 +106,22 @@ export default function MonthlyReport() {
 
 
 
+    const drawingTypes = [
+
+        { name: 'Rock', code: 'Rock' },
+        { name: 'Layout', code: 'Design' },
+        { name: 'Construction', code: 'Layout' },
+        { name: 'As build drawing', code: 'As build drawing' }
+
+    ]
+    const itemTemplate = (option: { name: string; code: string }) => {
+        return (
+            <div className="flex items-center gap-2">
+                <FileIcon />
+                <span>{option.name}</span>
+            </div>
+        );
+    };
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -126,13 +142,13 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+            formData.append('patientType', updatedProduct.patientType)
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('sender', updatedProduct.sender)
-            formData.append('refNo', updatedProduct.refNo)
+            formData.append('docNo', updatedProduct.docNo)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-
+            formData.append('typesofDrawings', updatedProduct.typesofDrawings);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -241,9 +257,9 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('sender', sender)
-            formData.append('refNo', refNo)
+            formData.append('problem', docNo)
             formData.append('remarks', remarks)
-
+            formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -402,7 +418,39 @@ export default function MonthlyReport() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
                     Document List
                 </div>
+                {/* {isClinic && ( 
+          <button
+            onClick={confirmDeleteSelected}
+            disabled={!selectedProducts || selectedProducts.length === 0}
+            className={`p-3 text-lg font-semibold text-white rounded-t ${
+              selectedProducts && selectedProducts.length > 0
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
+          >
+            Delete Selected ({selectedProducts?.length || 0})
+          </button>
+        )} */}
 
+                {/* <button
+          onClick={() => setActiveIndex(1)}
+          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
+        >
+          Outside Patient
+        </button> */}
+                {/* <Button
+          label='Upload Document'
+          icon='pi pi-file-pdf'
+          severity='success'
+          onClick={openNew}
+        /> */}
+                {/* <Button
+          label='Delete' 
+          icon='pi pi-trash'
+          severity='danger'
+          onClick={confirmDeleteSelected} 
+          disabled={!selectedProducts || !selectedProducts.length}
+        /> */}
             </div>
         )
     }
@@ -418,52 +466,40 @@ export default function MonthlyReport() {
                         confirmDeleteSelected={confirmDeleteSelected}
                         handleReset={handleReset}
                     />
-
+                    // <div className='space-x-2'>
+                    //     <button
+                    //         className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
+                    //         onClick={openNew}
+                    //     >
+                    //         Upload Document
+                    //     </button>
+                    //     <button
+                    //         className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
+                    //         onClick={exportCSV}
+                    //     >
+                    //         Download Files{' '}
+                    //         {selectedProducts?.length === 0
+                    //             ? '(All)'
+                    //             : `(${selectedProducts?.length})`}
+                    //     </button>
+                    //     <button
+                    //         onClick={confirmDeleteSelected}
+                    //         disabled={!selectedProducts || selectedProducts.length === 0}
+                    //         className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
+                    //             ? 'bg-red-500 hover:bg-red-600'
+                    //             : 'bg-gray-400 cursor-not-allowed'
+                    //             }`}
+                    //     >
+                    //         Delete Selected ({selectedProducts?.length || 0})
+                    //     </button>
+                    // </div>
                 )}
 
 
             </>
         )
     }
-    const ButtonGroup = () => {
-        const [activeButton, setActiveButton] = useState('Pier Settlement Survey')
 
-        const buttons = [
-            { label: 'Pier Settlement Survey', value: 'Pier Settlement Survey' },
-            { label: 'Other Survey', value: 'Other Survey' },
-
-        ]
-
-        const handleButtonClick = (buttonValue: string) => {
-            setActiveButton(buttonValue)
-            //api is not ready yet
-            console.log(`Button clicked: ${buttonValue}`)
-        }
-
-        return (
-            <>
-                <div className='flex items-center space-x-2 py-2 rounded-lg'>
-                    {buttons.map((button) => (
-                        <button
-                            key={button.value}
-                            onClick={() => handleButtonClick(button.value)}
-                            className={`
-            px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-            ${activeButton === button.value
-                                    ? 'bg-[#6F90AE] text-base font-semibold text-white'
-                                    : ' bg-main text-base font-semibold text-white'
-                                }
-            
-          `}
-                        >
-                            {button.label}
-                        </button>
-                    ))}
-                </div>
-            </>
-
-        )
-    }
     const hideViewDialog = () => {
         setViewProductDialog(false)
         setSelectedProduct(null)
@@ -640,7 +676,18 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
+                <div>
+                    <Dropdown
+                        value={selectedCode}
+                        onChange={(e) => setSelectedCode(e.value)}
+                        options={drawingTypes}
+                        itemTemplate={itemTemplate}
 
+                        optionLabel='name'
+                        placeholder='Type Of Drawings'
+                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                    />
+                </div>
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -753,9 +800,7 @@ export default function MonthlyReport() {
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
-                <div className='mt-2'>
-                    <ButtonGroup></ButtonGroup>
-                </div>
+
                 <TabView
                     activeIndex={activeIndex}
                     onTabChange={(e) => setActiveIndex(e.index)}
@@ -811,15 +856,15 @@ export default function MonthlyReport() {
                                 bodyClassName='text-sm truncate max-w-xs'
 
                                 className='min-w-[12rem]'
-                                header='Date'
+                                header='Date Of Upload'
                             ></Column>
-                            <Column
-                                field='refNo'
+                             <Column
+                                field='docNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
                                 className='min-w-[12rem]'
-                                header='Ref No.'
+                                header='Doc No.'
                             ></Column>
 
                             <Column
@@ -840,7 +885,14 @@ export default function MonthlyReport() {
                                 header='Sender'
                             ></Column>
 
+                            <Column
+                                field='typesofDrawings'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
 
+                                className='min-w-[8rem]'
+                                header='Type Of Drawings'
+                            ></Column>
 
 
                             <Column
@@ -886,7 +938,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-
+                       
                         <div className='field'>
                             <label htmlFor='sender' className='font-bold'>
                                 Sender
@@ -917,7 +969,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-
+                    
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -935,21 +987,40 @@ export default function MonthlyReport() {
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
-                                Ref No.
+                            <label htmlFor='docNo' className='font-bold'>
+                                Doc No.
                             </label>
                             <InputText
-                                id='refNo'
-                                value={updatedProduct.refNo}
+                                id='docNo'
+                                value={updatedProduct.docNo}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        refNo: e.target.value,
+                                        docNo: e.target.value,
                                     })
                                 }
                             />
                         </div>
-
+                        <div className='field'>
+                                <label htmlFor='typesofDrawings' className='font-bold'>
+                                    Type Of Drawings
+                                </label>
+                                <Dropdown
+                                    id='typesofDrawings'
+                                    value={updatedProduct.typesofDrawings}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            typesofDrawings: e.value,
+                                        })
+                                    }
+                                    options={drawingTypes}
+                                    itemTemplate={itemTemplate}
+                                     optionLabel='name'
+                                    placeholder='Select Type'
+                                    className='w-full'
+                                />
+                            </div>
                         <div className='field'>
                             <label htmlFor='date' className='font-bold'>
                                 Date
@@ -967,7 +1038,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-
+                            
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1086,10 +1157,13 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-
                             <div>
-                                <h3 className='font-bold'>Ref No.</h3>
-                                <p className='break-all'>{selectedProduct.refNo}</p>
+                                <h3 className='font-bold'>Type Of Drawings</h3>
+                                <p className='break-all'>{selectedProduct.typesofDrawings}</p>
+                            </div>
+                            <div>
+                                <h3 className='font-bold'>Doc No.</h3>
+                                <p className='break-all'>{selectedProduct.docNo}</p>
                             </div>
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
@@ -1152,22 +1226,36 @@ export default function MonthlyReport() {
                                 Sender
                             </label>
                             <InputText
-                                id='refNo'
+                                id='problem'
                                 onChange={(e) => setSender(e.target.value)}
                                 required
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
-                                Ref No.
+                            <label htmlFor='docNo' className='font-bold'>
+                                Doc No.
                             </label>
                             <InputText
-                                id='refNo'
-                                onChange={(e) => setRefNo(e.target.value)}
+                                id='docNo'
+                                onChange={(e) => setDocNo(e.target.value)}
                                 required
                             />
                         </div>
-
+                        <div className="field">
+                            <label htmlFor="typesofDrawings" className="font-bold">
+                               Type Of Drawings
+                            </label>
+                            <Dropdown
+                                id="typesofDrawings"
+                                value={typesofDrawings}
+                                onChange={(e) => setTypesofDrawings(e.value)}
+                                options={drawingTypes}
+                                optionLabel='name'
+                                placeholder="Select Type"
+                                itemTemplate={itemTemplate}
+                                className="w-full"
+                            />
+                        </div>
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
