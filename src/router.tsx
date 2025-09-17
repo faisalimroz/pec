@@ -1822,6 +1822,25 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/mb-pis/technical-documentation/main-bridge-maintenace')).default,
             }),
   },
+   {
+     path: '/mb-pmis/monitoring-and-reporting',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/monitoring-reporting')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/quality-and-safety/safety',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/quality-safety/safety')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/quality-and-safety/material-test-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/quality-safety/material-test-report')).default,
+            }),
+  },
+  
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },

@@ -831,7 +831,7 @@ export default function KecLetter() {
                                 bodyClassName='text-sm truncate max-w-xs'
 
                                 className='min-w-[8rem]'
-                                header='MaterialType'
+                                header='Material Type'
                             ></Column>
 
 

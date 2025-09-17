@@ -1443,24 +1443,11 @@ export const pmisLinks: SideLink[] = [
   {
     title: 'Monitoring & Reporting',
     label: '',
-    href: '',
-    uName: 'special-audit',
+    href: '/mb-pmis/monitoring-and-reporting',
+    uName: 'dispatched',
     icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Daily Water Level Records',
-        label: '',
-        href: '/rtw/daily-water-level-records',
-        icon: '',
-      },  
-       {
-        title: 'RTW Monthly Reports',
-        label: '',
-        href: '/rtw/monthly-reports',
-        icon: '',
-      }
-    ],
   },
+ 
     {
     title: 'Quality, Safety',
     label: '',
@@ -1471,13 +1458,13 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Material Test Report',
         label: '',
-        href: '/rtw/material-test-report',
+        href: '/mb-pmis/quality-and-safety/material-test-report',
         icon: '',
       },  
        {
         title: 'Safety',
         label: '',
-        href: '/rtw/safety',
+        href: '/mb-pmis/quality-and-safety/safety',
         icon: '',
       },
     ],
