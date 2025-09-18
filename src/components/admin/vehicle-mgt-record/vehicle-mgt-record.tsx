@@ -10,112 +10,125 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchAssetManagement } from '@/api/adminAPIs'
+import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
+import { toast } from 'sonner'
+import { TabView, TabPanel } from 'primereact/tabview'
+import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
-import { toast } from 'sonner'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import { Dropdown } from 'primereact/dropdown';
+import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
-interface Vehicle {
-  _id: string;
-  slNo: string;
-  date:  Date;
-  vehicleName: string;
-  registrationNumber: string;
-  vehicleClass: string;
-  status: string;
-  fitnessDuration: string;
-  taxAndTokenReport: string;
-  roadTaxExpiry: Date;
-  creator?: string;
-  creationTimestamp?: string;
-  updater?: string;
-  updatingTimestamp?: string;
-  attachments: Attachment[]
-}
+
 interface Attachment {
   url: string
   _id: string
 }
-const options = [
-  { label: 'Exemption', value: 'exemption' },
-  { label: 'Non Exemption', value: 'non-exemption' },
-];
-export default function AssetManagementTable() {
-  let emptyVehicle: Vehicle = {
+interface Product {
+  _id: string | null
+  slNo: string
+  vehicleName: string
+  taxTokenReport: string
+  fitnessDurartion: { start: string; end: string };
+  status: string;
+  regNo: string
+  patientType: string
+  taxExpiryDate: string
+  vehicleClass: string
+  remarks: string
+  attachments: Attachment[]
+  creator?: string
+  creationTimestamp?: string
+  updater?: string
+  updatingTimestamp?: string
+}
+
+export default function MonthlyReport() {
+  let emptyProduct: Product = {
     _id: '',
     slNo: '',
     vehicleName: '',
-    date: new Date(),
-    registrationNumber: '',
+    taxTokenReport: '',
     vehicleClass: '',
+    regNo: '',
     status: '',
-    fitnessDuration: '',
-    taxAndTokenReport: '',
-    roadTaxExpiry: new Date(),
-    creator: '',
-    creationTimestamp: '',
-    updater: '',
-    updatingTimestamp: '',
+    patientType: '',
+    taxExpiryDate: '',
+    remarks: '',
+    fitnessDurartion: { start: '', end: '' },
     attachments: [],
-  };
+  }
 
   const { roles, permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
-  const hasEditAccess = checkPermission?.edit_authority || false
-
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
+  const clinicPermission = permissions.find((p) => p.name === 'clinic')
+  const treatmentRecordPermission = clinicPermission?.children.find(
+    (c) => c.name === 'treatment-record'
   )
+
+  const hasEditAccess = treatmentRecordPermission?.edit_authority || false
+
+  const isClinic = roles.some((role) =>
+    ['superadmin', 'clinic'].includes(role.title)
+  )
+  const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [deleteProductsDialog, setDeleteProductsDialog] =
     useState<boolean>(false)
-  const [product, setProduct] = useState<any>(emptyVehicle)
-  const [selectedProducts, setSelectedProducts] = useState<Vehicle[]>([])
+  const [product, setProduct] = useState<any>(emptyProduct)
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
-  const dt = useRef<DataTable<Vehicle[]>>(null)
+  const dt = useRef<DataTable<Product[]>>(null)
   const [date, setDate] = useState<string>('')
   const [date2, setDate2] = useState<string>('')
-  const [dropdownStatus, setDropdownStatus] = useState<string>('')
+  const [taxExpiryDate, setTaxExpiryDate] = useState<string>('')
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
-  const [itemName, setItemName] = useState('')
-  const [vehicleClass, setvehicleClass] = useState('')
   const [vehicleName, setVehicleName] = useState('')
-  const [registrationNumber, setRegistrationNumber] = useState('')
-  const [taxToken, setTaxToken] = useState('')
-  const [assetId, setAssetId] = useState('')
-  const [fitnessDuration, setFitnessDuration] = useState('')
-  const [chalanNo, setChalanNo] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [usingLocation, setUsingLoaction] = useState('')
-  const [status, setStatus] = useState('')
-  const [filesInput, setFilesInput] = useState<File[]>([])
+  const [taxTokenReport, setTaxTokenReport] = useState('')
+  const [regNo, setRegNo] = useState('')
+  const [remarks, setRemarks] = useState('')
+  const [vehicleClass, setVehicleClass] = useState('')
+  const [fitnessDuration, setFitnessDuration] = useState<string>('')
   const [formDate, setFormDate] = useState<string>('')
-  const [formDates, setFormDates] = useState<(Date | null)[] | null>(null);
-
+  const [filesInput, setFilesInput] = useState<File[]>([])
+  const [selectedCode, setSelectedCode] = useState(null)
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
+  const [status, setStatus] = useState<string>("");
 
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
-  const [selectedProduct, setSelectedProduct] = useState<Vehicle | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
-  const [updatedProduct, setUpdatedProduct] = useState<Vehicle | null>(null)
+  const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
+
+
+  const statusType = [
+
+    { name: 'Exemption', code: 'Exemption' },
+    { name: 'Non Exemption', code: 'Non Exemption' }
+
+  ]
+  const itemTemplate = (option: { name: string; code: string }) => {
+    return (
+      <div className="flex items-center gap-2">
+        <FileIcon />
+        <span>{option.name}</span>
+      </div>
+    );
+  };
+
   // all update dialog func here
-  const openUpdateDialog = (product: Vehicle) => {
+  const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
   }
@@ -132,22 +145,16 @@ export default function AssetManagementTable() {
 
     try {
       setLoading2(true)
-      const formData = new FormData();
-
-      formData.append('_id', updatedProduct._id);
-      formData.append('slNo', updatedProduct.slNo);
-      formData.append('vehicleName', updatedProduct.vehicleName);
-      formData.append('registrationNumber', updatedProduct.registrationNumber);
-      formData.append('vehicleClass', updatedProduct.vehicleClass);
+      const formData = new FormData()
+      formData.append('patientType', updatedProduct.patientType)
+      formData.append('vehicleName', updatedProduct.vehicleName)
+      formData.append('taxTokenReport', updatedProduct.taxTokenReport)
+      formData.append('regNo', updatedProduct.regNo)
+      formData.append('remarks', updatedProduct.remarks)
+      formData.append('taxExpiryDate', updatedProduct.taxExpiryDate)
       formData.append('status', updatedProduct.status);
-      formData.append('fitnessDuration', updatedProduct.fitnessDuration);
-      formData.append('taxAndTokenReport', updatedProduct.taxAndTokenReport);
-      formData.append('roadTaxExpiry', updatedProduct.roadTaxExpiry.toISOString());
-      formData.append('creator', updatedProduct.creator || '');
-      formData.append('creationTimestamp', updatedProduct.creationTimestamp || '');
-      formData.append('updater', updatedProduct.updater || '');
-      formData.append('updatingTimestamp', updatedProduct.updatingTimestamp || '');
-
+      formData.append('vehicleClass', updatedProduct.vehicleClass);
+      formData.append('fitnessDurartion', JSON.stringify(updatedProduct.fitnessDurartion));
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
       })
@@ -157,7 +164,7 @@ export default function AssetManagementTable() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -181,15 +188,7 @@ export default function AssetManagementTable() {
       setLoading2(false)
     }
   }
-   const itemTemplate = (option: { name: string; code: string }) => {
-   return (
-     <div className="flex items-center gap-2">
-      <FileIcon/>      
-       <span>{option.name}</span> 
-     </div>
-   );
- };
- 
+
   const handleNewAttachments = (files: File[]) => {
     setNewAttachments(files)
   }
@@ -223,14 +222,14 @@ export default function AssetManagementTable() {
   )
 
 
-  const openNew = () => {
-    setProduct(emptyVehicle)
-    setSubmitted(false)
-    setProductDialog(true)
-  }
-
   const handleFileChange = (newFiles: File[]) => {
     setFilesInput(newFiles)
+  }
+
+  const openNew = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setProductDialog(true)
   }
 
   const hideDialog = () => {
@@ -262,21 +261,19 @@ export default function AssetManagementTable() {
       setLoading2(true)
       const formData = new FormData()
 
-      formData.append('itemName', itemName)
-      formData.append('taxToken', taxToken)
-      formData.append('fitnessDuration', formatDate(formDates))
-      formData.append('registrationNumber', registrationNumber)
-      formData.append('vehicleClass', vehicleClass)
       formData.append('vehicleName', vehicleName)
-      formData.append('usingLocation', usingLocation)
-      formData.append('status', status)
-      formData.append('date', formatDate(formDate))
+      formData.append('taxTokenReport', taxTokenReport)
+      formData.append('regNo', regNo)
+      formData.append('remarks', remarks)
+      formData.append('fitnessDuration', fitnessDuration)
+      formData.append('vehcileClass', vehicleClass)
+
+      formData.append('taxExpiryDate', formatDate(taxExpiryDate))
       filesInput.forEach((file) => {
         formData.append('attachments', file)
       })
-   console.log(Array.from(formData.entries()));
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
         formData,
         {
           headers: {
@@ -288,6 +285,7 @@ export default function AssetManagementTable() {
 
       const response = res
       console.log(response)
+
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()
@@ -303,7 +301,12 @@ export default function AssetManagementTable() {
     }
   }
 
-  const confirmDeleteProduct = (product: Vehicle) => {
+  const editProduct = (product: Product) => {
+    setProduct({ ...product })
+    setProductDialog(true)
+  }
+
+  const confirmDeleteProduct = (product: Product) => {
     setProduct(product)
     setDeleteProductDialog(true)
   }
@@ -316,7 +319,7 @@ export default function AssetManagementTable() {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -339,7 +342,7 @@ export default function AssetManagementTable() {
 
     setProducts(_products)
     setDeleteProductDialog(false)
-    setProduct(emptyVehicle)
+    setProduct(emptyProduct)
   }
 
   const exportCSV = () => {
@@ -349,7 +352,7 @@ export default function AssetManagementTable() {
       dt.current?.exportCSV()
     }
   }
-
+  // multi delete funcs
   const confirmDeleteSelected = () => {
     if (selectedProducts.length > 0) {
       setDeleteMultipleDialog(true)
@@ -366,7 +369,7 @@ export default function AssetManagementTable() {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -415,11 +418,11 @@ export default function AssetManagementTable() {
     </div>
   )
 
-  // multi delete func ends
+  // multi delete func end
 
   const leftToolbarTemplate = () => {
     return (
-      <div className=''>
+      <div className='flex items-center gap-3'>
         <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
           Document List
         </div>
@@ -432,47 +435,27 @@ export default function AssetManagementTable() {
     return (
       <>
         {hasEditAccess && (
-          <div className='space-x-2'>
-            <button
-              className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-              onClick={openNew}
-            >
-              Upload Document
-            </button>
-            <button
-              className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-              onClick={exportCSV}
-            >
-              Download Files{' '}
-              {selectedProducts?.length === 0
-                ? '(All)'
-                : `(${selectedProducts?.length})`}
-            </button>
-            <button
-              onClick={confirmDeleteSelected}
-              disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-                }`}
-            >
-              Delete Selected ({selectedProducts?.length || 0})
-            </button>
-          </div>
+          <ButtonGroupWithIcons
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            exportCSV={exportCSV}
+            confirmDeleteSelected={confirmDeleteSelected}
+            handleReset={handleReset}
+          />
+
         )}
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+
+
       </>
     )
   }
-
-
 
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
   }
 
-  const viewProduct = (product: Vehicle) => {
+  const viewProduct = (product: Product) => {
     setSelectedProduct(product)
     setViewProductDialog(true)
   }
@@ -487,9 +470,9 @@ export default function AssetManagementTable() {
       try {
         const response = await fetch(attachment.url)
         const blob = await response.blob()
-        const filename = attachment.url.split('/').pop()
+        const vehicleName = attachment.url.split('/').pop()
         //@ts-ignore
-        folder.file(filename, blob)
+        folder.file(vehicleName, blob)
       } catch (error) {
         console.error(`Failed to fetch ${attachment.url}:`, error)
       }
@@ -499,7 +482,7 @@ export default function AssetManagementTable() {
     saveAs(content, 'attachments.zip')
   }
 
-  const actionBodyTemplate = (rowData: Vehicle) => {
+  const actionBodyTemplate = (rowData: Product) => {
     const menuRef = useRef<Menu>(null)
     const items = [
       {
@@ -574,10 +557,12 @@ export default function AssetManagementTable() {
       month: date ? getMonthName(date) : '',
       year: date2 ? getYear(date2) : '',
       searchQuery: searchKey,
+      // @ts-ignore
+      patientType: selectedCode?.code || '',
     }
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchTreatmentRecord(initialPayload).then((result) => {
+      setProducts(result?.Treatments)
       setLoading(false)
     })
   }
@@ -587,87 +572,103 @@ export default function AssetManagementTable() {
       year: '',
       searchQuery: '',
       month: '',
+      patientType: '',
     }
 
     setDate('')
     setDate2('')
     setSearchKey('')
+    setSelectedCode(null)
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchTreatmentRecord(initialPayload).then((result) => {
+      setProducts(result?.Treatments)
       setLoading(false)
     })
   }
 
   const filterSearchForm = (
-    <form
-      className='flex mx-auto w-fit gap-4 divide-x-2 border p-2 rounded-md bg-white'
-      onSubmit={(e) => {
-        e.preventDefault()
-        handleSearch()
-      }}
-    >
-      <Calendar
-        // @ts-ignore
-        value={date}
-        // @ts-ignore
-        onChange={(e) => setDate(e.value)}
-        dateFormat="dd/mm/yy"
-        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-        placeholder='Start Date'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
-      <Calendar
-        // @ts-ignore
-        value={date2}
-        // @ts-ignore
-        onChange={(e) => setDate2(e.value)}
-        dateFormat="dd/mm/yy"
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-        placeholder='End Date'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
-      <Dropdown
-        value={dropdownStatus}
-        options={options}
-        onChange={(e) => setDropdownStatus(e.value)}
-        placeholder="Select Status"
-        className="w-60 border-none ml-2 focus:ring-0"
-        itemTemplate={itemTemplate}
-      />
-      <IconField iconPosition='left' className='relative'>
-        <InputIcon className='pi pi-search' />
-        <InputText
-          type='search'
-          placeholder='Search'
-          className='border-none ml-2 focus:ring-0'
-          onChange={(e) => setSearchKey(e.target.value)}
-          value={searchKey}
-        />
-      </IconField>
+    <div className='flex items-center justify-center'>
+      <div
+        role='search'
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSearch()
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            handleSearch()
+          }
+        }}
+        className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
+      >
+        <Calendar
+          // @ts-ignore
+          value={date}
+          // @ts-ignore
+          onChange={(e) => setDate(e.value)}
 
-      <div>
-        <button
-          type='submit'
-          className='ml-6 border bg-green-500 px-4 py-2.5 rounded-lg'
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='white'
-            className='size-6'
+          dateFormat="dd/mm/yy"
+          inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+          placeholder='Start Date'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
+        />
+        <Calendar
+          // @ts-ignore
+          value={date2}
+          // @ts-ignore
+          onChange={(e) => setDate2(e.value)}
+
+          dateFormat="dd/mm/yy"
+          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+          placeholder='End Date'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
+        />
+        <div>
+          <Dropdown
+            value={selectedCode}
+            onChange={(e) => setSelectedCode(e.value)}
+            options={statusType}
+            itemTemplate={itemTemplate}
+
+            optionLabel='name'
+            placeholder='Status '
+            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+          />
+        </div>
+        <IconField iconPosition='left' className='relative'>
+          <InputIcon className='pi pi-search' />
+          <InputText
+            type='search'
+            placeholder='Search'
+            className='border-none ml-4 focus:ring-0'
+            onChange={(e) => setSearchKey(e.target.value)}
+            value={searchKey}
+          />
+
+          <button
+            onClick={() => handleSearch()}
+            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+            type='submit'
           >
-            <path
-              fillRule='evenodd'
-              d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-              clipRule='evenodd'
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='white'
+              className='size-6'
+            >
+              <path
+                fillRule='evenodd'
+                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </IconField>
       </div>
-    </form>
+    </div>
   )
 
   const productDialogFooter = (
@@ -682,22 +683,20 @@ export default function AssetManagementTable() {
     </>
   )
   const deleteProductDialogFooter = (
-    <div className='flex justify-end gap-2'>
-      <button
-        type='button'
-        className='text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 font-semibold py-2 px-4 rounded border'
+    <>
+      <Button
+        label='No'
+        icon='pi pi-times'
+        outlined
         onClick={hideDeleteProductDialog}
-      >
-        No
-      </button>
-      <button
-        type='button'
-        className='bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded'
+      />
+      <Button
+        label='Yes'
+        icon='pi pi-check'
+        severity='danger'
         onClick={deleteProduct}
-      >
-        Yes
-      </button>
-    </div>
+      />
+    </>
   )
   const deleteProductsDialogFooter = (
     <>
@@ -716,164 +715,187 @@ export default function AssetManagementTable() {
     </>
   )
 
-  const attachmentBodyTemplate = (rowData: any) => {
-    return <div>{rowData?.attachments?.length}</div>
-  }
-
   const refetch = () => {
     setLoading(true)
     const initialPayload = {
       month: '',
       year: '',
       searchQuery: '',
+      patientType: '',
     }
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchTreatmentRecord(initialPayload).then((result) => {
+      setProducts(result?.Treatments)
+      console.log(result, "ress")
       setLoading(false)
     })
   }
 
-  // initial data load
+  // initial data load - Internal
   useEffect(() => {
     refetch()
   }, [])
 
+  const attachmentBodyTemplate = (rowData: any) => {
+    return <div>{rowData?.attachments?.length}</div>
+  }
+
   // console.log(products)
+
   return (
-    <div className='ml-4'>
-      <div className='card'>
+    <div className=''>
+      <div className='ml-4'>
         <Toolbar
           className='rounded-none border-none p-0 bg-white'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
 
-        <DataTable
-          ref={dt}
-          value={products}
-          selection={selectedProducts}
-          onSelectionChange={(e: any) => {
-            if (Array.isArray(e.value)) {
-              setSelectedProducts(e.value)
-            }
-          }}
-          dataKey='_id'
-          paginator
-          rows={10}
-          rowsPerPageOptions={[5, 10, 25]}
-          paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
-          currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
-          header={filterSearchForm}
-          selectionMode='multiple'
-          showGridlines
-          cellSelection
-          emptyMessage='No data found!'
-          loading={loading}
-          removableSort
+        <TabView
+          activeIndex={activeIndex}
+          onTabChange={(e) => setActiveIndex(e.index)}
         >
-          <Column
-            selectionMode='multiple'
-            headerStyle={{ width: '3rem' }}
-            exportable={false}
-            headerClassName='bg-[#ffc2c2] '
-          ></Column>
+          {/* 1st tab  */}
+          <TabPanel>
+            <DataTable
+              ref={dt}
+              value={products}
+              selection={selectedProducts}
+              onSelectionChange={(e: any) => {
+                if (Array.isArray(e.value)) {
+                  setSelectedProducts(e.value)
+                }
+              }}
+              dataKey='_id'
+              paginator
+              rows={10}
+              rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
+              currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
+              header={filterSearchForm}
+              selectionMode='multiple'
+              showGridlines
+              cellSelection
+              emptyMessage='No data found!'
+              loading={loading}
+              scrollable
+            >
+              {hasEditAccess && (
+                <Column
+                  selectionMode='multiple'
+                  headerStyle={{ width: '3rem' }}
+                  exportable={false}
+                  headerClassName='bg-[#ffc2c2] text-sm'
+                  bodyClassName='text-sm truncate max-w-xs'
+                ></Column>
+              )}
 
-          <Column
-            field='slNo'
-            header='SL No.'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-          ></Column>
-          <Column
-            field="vehicleName"
-            header="Vehicle Name"
-            headerClassName="bg-[#ffc2c2] text-sm"
-            bodyClassName="text-sm truncate max-w-xs"
-          />
+              <Column
+                field='slNo'
+                header='SL No.'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[10rem]'
 
-          <Column
-            field="registrationNumber"  // <-- must match updatedProduct key
-            header="Registration Number"
-            headerClassName="bg-[#ffc2c2] text-sm"
-            bodyClassName="text-sm truncate max-w-xs"
-          />
+              ></Column>
 
-          <Column
-            field="vehicleClass"  // <-- must match updatedProduct key
-            header="Vehicle Class"
-            headerClassName="bg-[#ffc2c2] text-sm"
-            bodyClassName="text-sm truncate max-w-xs"
-          />
-          <Column
-            field='taxToken'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Tax and Token Report'
-          ></Column>
+              <Column
+                field='vehicleName'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
-          <Column
-            field='status'
-            header='Status'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-          // sortable
-          ></Column>
-          <Column
-            field='fitnessDuration'
-            header='Fitness Duration'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-          // sortable
-          ></Column>
+                className='min-w-[8rem]'
+                header='Vehicle Name'
+              ></Column>
+
+              <Column
+                field='regNo'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+
+                className='min-w-[12rem]'
+                header='Registration Number'
+              ></Column>
+              <Column
+                field='fitnessDuration'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+
+                className='min-w-[12rem]'
+                header='Fitness Duration'
+              ></Column>
+               <Column
+                field='vehicleClass'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+
+                className='min-w-[12rem]'
+                header='Vehicle Class'
+              ></Column>
+
+              <Column
+                field='taxTokenReport'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+
+                className='min-w-[12rem]'
+                header='	
+Tax & Token Report'
+              ></Column>
+
+              <Column
+                field='status'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+
+                className='min-w-[8rem]'
+                header='Status'
+              ></Column>
+
+              <Column
+                field='taxExpiryDate'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+
+                className='min-w-[12rem]'
+                header='Road Tax Expiry Date'
+              ></Column>
+              <Column
+                body={attachmentBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[12rem]'
+                header='Attachment'
+              ></Column>
+
+              <Column
+                field='remarks'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[12rem]'
+                header='Remarks'
+              ></Column>
 
 
-
-          <Column
-            field='date'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            header='Road Tax Expiry Date'
-          ></Column>
-
-          {/* <Column
-            field='quantity'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Quantity'
-          ></Column> */}
-
-
-
-          {/* <Column
-            body={attachmentBodyTemplate}
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-            header='Attachment'
-          ></Column> */}
-
-
-
-          <Column
-            body={actionBodyTemplate}
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            header='Actions'
-            headerStyle={{ width: '3rem' }}
-            exportable={false}
-          ></Column>
-        </DataTable>
+              <Column
+                body={actionBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                header='Actions'
+                headerStyle={{ width: '3rem' }}
+                exportable={false}
+              ></Column>
+            </DataTable>
+          </TabPanel>
+        </TabView>
       </div>
 
       {/* update data dialog  */}
       <Dialog
         visible={updateProductDialog}
-        style={{ width: '50rem' }}
-        header='Update Data'
+        style={{ width: '60rem' }}
+        header='Update Document'
         modal
         className='p-fluid'
         footer={updateProductDialogFooter}
@@ -881,33 +903,18 @@ export default function AssetManagementTable() {
       >
         {updatedProduct && (
           <div className='grid grid-cols-2 gap-4'>
-            <div className='field'>
-              <label htmlFor='assetId' className='font-bold'>
-                SL No.
-              </label>
-              <InputText
-                id='assetId'
-                value={updatedProduct.slNo}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    slNo: e.target.value,
-                  })
-                }
-              />
-            </div>
 
             <div className='field'>
-              <label htmlFor='vehicleClass' className='font-bold'>
-                Vehicle Class
+              <label htmlFor='taxTokenReport' className='font-bold'>
+                Tax & Token Report
               </label>
               <InputText
-                id='vehicleClass'
-                value={updatedProduct.vehicleClass}
+                id='taxTokenReport'
+                value={updatedProduct.taxTokenReport}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    vehicleClass: e.target.value,
+                    taxTokenReport: e.target.value,
                   })
                 }
               />
@@ -927,102 +934,121 @@ export default function AssetManagementTable() {
                 }
               />
             </div>
-
-            {/* <div className='field'>
-              <label htmlFor='quantity' className='font-bold'>
-                Quantity
+             <div className='field'>
+              <label htmlFor='vehicleClass' className='font-bold'>
+                Vehicle Class
               </label>
               <InputText
-                id='quantity'
-                value={updatedProduct.quantity}
+                id='vehicleName'
+                value={updatedProduct.vehicleClass}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    quantity: e.target.value,
-                  })
-                }
-              />
-            </div> */}
-
-            <div className='field'>
-              <label htmlFor='taxToken' className='font-bold'>
-                Tax and Token Report
-              </label>
-              <InputText
-                id='taxToken'
-                value={updatedProduct.taxAndTokenReport}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    taxAndTokenReport: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className='field'>
-              <label htmlFor='vehicleName' className='font-bold'>
-                Vehicle Name
-              </label>
-              <InputText
-                id='vahicleName'
-                value={updatedProduct.vehicleName}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    vehicleName: e.target.value,
+                    vehicleClass: e.target.value,
                   })
                 }
               />
             </div>
 
+
             <div className='field'>
-              <label htmlFor='chalanNo' className='font-bold'>
+              <label htmlFor='remarks' className='font-bold'>
+                Remarks
+              </label>
+              <InputText
+                id='remarks'
+                value={updatedProduct.remarks}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    remarks: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='regNo' className='font-bold'>
                 Registration Number
               </label>
               <InputText
-                id='chalanNo'
-                value={updatedProduct.registrationNumber}
+                id='regNo'
+                value={updatedProduct.regNo}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    registrationNumber: e.target.value,
+                    regNo: e.target.value,
                   })
                 }
               />
             </div>
-
             <div className='field'>
               <label htmlFor='status' className='font-bold'>
                 Status
               </label>
-              <InputText
+              <Dropdown
                 id='status'
                 value={updatedProduct.status}
                 onChange={(e) =>
-                  setStatus({
+                  setUpdatedProduct({
                     ...updatedProduct,
-                    status: e.target.value,
+                    status: e.value,
                   })
                 }
+                options={statusType}
+                itemTemplate={itemTemplate}
+                optionLabel='name'
+                placeholder='Status'
+                className='w-full'
               />
             </div>
             <div className='field'>
-              <label htmlFor='date' className='font-bold'>
+              <label htmlFor='taxExpiryDate' className='font-bold'>
                 Road Tax Expiry Date
               </label>
               <Calendar
-                id='date'
+                id='taxExpiryDate'
                 value={
-                  new Date(updatedProduct.date.split('-').reverse().join('-'))
+                  new Date(updatedProduct.taxExpiryDate.split('-').reverse().join('-'))
                 }
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    date: e.value ? formatDate(e.value) : '',
+                    taxExpiryDate: e.value ? formatDate(e.value) : '',
                   })
                 }
                 dateFormat='dd/mm/yy'
               />
+
+            </div>
+            <div className='field'>
+              <label htmlFor='fitnessDuration' className='font-bold'>
+                Fitness Duration
+              </label>
+              <Calendar
+                id='fitnessDuration'
+                value={
+                  updatedProduct.fitnessDurartion.start && updatedProduct.fitnessDurartion.end
+                    ? [
+                      new Date(updatedProduct.fitnessDurartion.start),
+                      new Date(updatedProduct.fitnessDurartion.end)
+                    ]
+                    : null
+                }
+                selectionMode="range"
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    fitnessDurartion: e.value && Array.isArray(e.value)
+                      ? {
+                        start: e.value[0] ? e.value[0].toISOString() : '',
+                        end: e.value[1] ? e.value[1].toISOString() : ''
+                      }
+                      : { start: '', end: '' },
+                  })
+                }
+                dateFormat='dd/mm/yy'
+              />
+
             </div>
             <div className='col-span-2'>
               <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1133,32 +1159,38 @@ export default function AssetManagementTable() {
                 <p className='break-all'>{selectedProduct.slNo}</p>
               </div>
               <div>
+                <h3 className='font-bold'>Road Tax Expiry Date</h3>
+                <p>{selectedProduct.taxExpiryDate}</p>
+              </div>
+              <div>
                 <h3 className='font-bold'>Vehicle Name</h3>
-                <p>{selectedProduct.vehicleName}</p>
+                <p className='break-all'>{selectedProduct.vehicleName}</p>
               </div>
-              <div>
-                <h3 className='font-bold'>Registration Number</h3>
-                <p className='break-all'>{selectedProduct.registrationNumber}</p>
-              </div>
-              <div>
-                <h3 className='font-bold'>Vehicle Class.</h3>
+                  <div>
+                <h3 className='font-bold'>Vehicle Class</h3>
                 <p className='break-all'>{selectedProduct.vehicleClass}</p>
               </div>
+
+
               <div>
-                <h3 className='font-bold'>Status</h3>
+                <h3 className='font-bold'>Status </h3>
                 <p className='break-all'>{selectedProduct.status}</p>
               </div>
               <div>
+                <h3 className='font-bold'>Registration Number</h3>
+                <p className='break-all'>{selectedProduct.regNo}</p>
+              </div>
+              <div>
                 <h3 className='font-bold'>Fitness Duration</h3>
-                <p className='break-all'>{selectedProduct.fitnessDuration}</p>
+                <p className='break-all'>
+                  {selectedProduct.fitnessDurartion?.start && selectedProduct.fitnessDurartion?.end
+                    ? `${selectedProduct.fitnessDurartion.start} - ${selectedProduct.fitnessDurartion.end}`
+                    : 'N/A'}
+                </p>
               </div>
               <div>
-                <h3 className='font-bold'>Tax and Token Report</h3>
-                <p className='break-all'>{selectedProduct.taxAndTokenReport}</p>
-              </div>
-              <div>
-                <h3 className='font-bold'>Road Tax Expiry Date</h3>
-                <p className='break-all'>{selectedProduct.roadTaxExpiry.toISOString()}</p>
+                <h3 className='font-bold'>Remarks</h3>
+                <p className='break-all'>{selectedProduct.remarks}</p>
               </div>
 
               {hasEditAccess && (
@@ -1194,45 +1226,7 @@ export default function AssetManagementTable() {
       >
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
-            <div className='field'>
-              <label htmlFor='fitnessDuration' className='font-bold'>
-                Fitness Duration
-              </label>
-              <div className='border rounded-md'>
-                <Calendar
-                  id='date'
-                  // @ts-ignore
-                  selectionMode='range'
-                  value={formDates}
-                  onChange={(e) => setFormDates(e.value ?? null)}
-                  dateFormat='dd/mm/yy'
-                  inputClassName='border-0 focus:ring-0 cursor-pointer'
-                  className='focus:ring-0'
-                  placeholder='Select Date'
-                />
-              </div>
-              {submitted && !fitnessDuration && (
-                <small className='p-error'>Fitness Duration is required.</small>
-              )}
-            </div>
 
-            <div className='field'>
-              <label htmlFor='vehicleClass' className='font-bold'>
-                Vehicle Class
-              </label>
-              <InputText
-                id='vehicleClass'
-                onChange={(e) => setvehicleClass(e.target.value)}
-                required
-                autoFocus
-                className={classNames({
-                  'p-invalid': submitted && !itemName,
-                })}
-              />
-              {submitted && !itemName && (
-                <small className='p-error'>Vehicle Class is required.</small>
-              )}
-            </div>
             <div className='field'>
               <label htmlFor='vehicleName' className='font-bold'>
                 Vehicle Name
@@ -1243,55 +1237,78 @@ export default function AssetManagementTable() {
                 required
                 autoFocus
                 className={classNames({
-                  'p-invalid': submitted && !itemName,
+                  'p-invalid': submitted && !vehicleName,
                 })}
               />
-              {submitted && !itemName && (
+              {submitted && !vehicleName && (
                 <small className='p-error'>Vehicle Name is required.</small>
               )}
             </div>
             <div className='field'>
-              <label htmlFor='chalanNo' className='font-bold'>
-                Registration Number
+              <label htmlFor='taxTokenReport' className='font-bold'>
+                Tax & Token Report
               </label>
               <InputText
-                id='chalanNo'
-                onChange={(e) => setRegistrationNumber(e.target.value)}
+                id='taxTokenReport'
+                onChange={(e) => setTaxTokenReport(e.target.value)}
                 required
               />
             </div>
-
-            {/* <div className='field'>
-              <label htmlFor='quantity' className='font-bold'>
-                Quantity
+            <div className='field'>
+              <label htmlFor='vehicleClass' className='font-bold'>
+               Vehicle Class
               </label>
               <InputText
-                id='quantity'
-                onChange={(e) => setQuantity(e.target.value)}
+                id='vehicleClass'
+                onChange={(e) => setVehicleClass(e.target.value)}
                 required
               />
-            </div> */}
-
+            </div>
             <div className='field'>
-              <label htmlFor='taxToken' className='font-bold'>
-                Tax and Token Report
+              <label htmlFor='regNo' className='font-bold'>
+                Registration Number
               </label>
               <InputText
-                id='taxToken'
-                onChange={(e) => setTaxToken(e.target.value)}
+                id='regNo'
+                onChange={(e) => setRegNo(e.target.value)}
+                required
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="status" className="font-bold">
+                Status
+              </label>
+              <Dropdown
+                id="status"
+                value={status}
+                onChange={(e) => setStatus(e.value)}
+                options={statusType}
+                optionLabel='name'
+                placeholder="Status"
+                itemTemplate={itemTemplate}
+                className="w-full"
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='remarks' className='font-bold'>
+                Remarks
+              </label>
+              <InputText
+                id='remarks'
+                onChange={(e) => setRemarks(e.target.value)}
                 required
               />
             </div>
 
             <div>
-              <label htmlFor='date' className='font-bold'>
+              <label htmlFor='taxExpiryDate' className='font-bold'>
                 Road Tax Expiry Date
               </label>
               <div className='border rounded-md'>
                 <Calendar
-                  id='date'
+                  id='taxExpiryDate'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  onChange={(e) => setTaxExpiryDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -1299,23 +1316,28 @@ export default function AssetManagementTable() {
                 />
               </div>
             </div>
-
-            <div className='field'>
-              <label htmlFor='status' className='font-bold'>
-                Status
+            <div>
+              <label htmlFor='fitnessDuration' className='font-bold'>
+                Fitness Duration
               </label>
-              <InputText
-                id='status'
-                onChange={(e) => setStatus(e.target.value)}
-                required
-              />
+              <div className='border rounded-md'>
+                <Calendar
+                  id='fitnessDuration'
+                  selectionMode="range"
+                  // @ts-ignore
+                  onChange={(e) => setFitnessDuration(e.value as [Date, Date] | null)}
+                  dateFormat='dd/mm/yy'
+                  inputClassName='border-0 focus:ring-0 cursor-pointer'
+                  className='focus:ring-0'
+                  placeholder='Select Date'
+                />
+              </div>
             </div>
           </div>
-
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              <span className='text-red-500 ml-1'>*</span>
+              <span className='text-red-500'>*</span>
             </label>
 
             <div>
@@ -1343,6 +1365,26 @@ export default function AssetManagementTable() {
             <span>
               Are you sure you want to delete <b>{product.name}</b>?
             </span>
+          )}
+        </div>
+      </Dialog>
+
+      <Dialog
+        visible={deleteProductsDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Confirm'
+        modal
+        footer={deleteProductsDialogFooter}
+        onHide={hideDeleteProductsDialog}
+      >
+        <div className='confirmation-content'>
+          <i
+            className='pi pi-exclamation-triangle mr-3'
+            style={{ fontSize: '3rem' }}
+          />
+          {product && (
+            <span>Are you sure you want to delete the selected products?</span>
           )}
         </div>
       </Dialog>
