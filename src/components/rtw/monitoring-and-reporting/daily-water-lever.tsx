@@ -17,13 +17,14 @@ import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
-import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
-
+import { Chart } from "primereact/chart";
+import WaterLevelMiniChart from './month-graph'
+import YearlyWaterLevelChart from './year-graph'
 interface Attachment {
     url: string
     _id: string
@@ -31,28 +32,42 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    materialName: string
-    sender: string
-  
+    eightAM: string
+    twelvePM: string
+    twoPM: string
+    sixPM: string
+    types: string;
+    refNo: string
     patientType: string
     date: string
-    remarks: string
+    maximumWaterLevel: string
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
     updater?: string
     updatingTimestamp?: string
 }
-
+type WaterRow = {
+  date: string;        
+  eightAM: number;
+  twelvePM: number;
+  twoPM: number;
+  sixPM: number;
+  maximumWaterLevel: number;
+};
 export default function MonthlyReport() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        materialName: '',
-        sender: '',
+        eightAM: '',
+        twelvePM: '',
+        twoPM: '',
+        sixPM: '',
+        refNo: '',
+        types: '',
         patientType: '',
         date: '',
-        remarks: '',
+        maximumWaterLevel: '',
         attachments: [],
     }
 
@@ -71,8 +86,7 @@ export default function MonthlyReport() {
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
-    const [deleteProductsDialog, setDeleteProductsDialog] =
-        useState<boolean>(false)
+    const [deleteProductsDialog, setDeleteProductsDialog] = useState<boolean>(false)
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
@@ -82,21 +96,58 @@ export default function MonthlyReport() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [materialName, setMaterialName] = useState('')
-    const [sender, setSender] = useState('')
-    const [docNo, setDocNo] = useState('')
-    const [remarks, setRemarks] = useState('')
+    const [eightAM, setEightAM] = useState('')
+    const [twelvePM, setTwelvePM] = useState('')
+    const [twoPM, setTwoPM] = useState('')
+    const [sixPM, setSixPM] = useState('')
+    const [refNo, setRefNo] = useState('')
+    const [maximumWaterLevel, setMaximumWaterLevel] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    // const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<any>(null);
+    const [chartMode, setChartMode] = useState<'monthly' | 'maximum' | null>(null);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
+    const [types, setTypes] = useState<string>("");
+
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
+
+
+    const months = [
+        { name: 'January', code: 'January' },
+        { name: 'February', code: 'February' },
+        { name: 'March', code: 'March' },
+        { name: 'April', code: 'April' },
+        { name: 'May', code: 'May' },
+        { name: 'June', code: 'June' },
+        { name: 'July', code: 'July' },
+        { name: 'August', code: 'August' },
+        { name: 'September', code: 'September' },
+        { name: 'October', code: 'October' },
+        { name: 'November', code: 'November' },
+        { name: 'December', code: 'December' }
+    ];
+    const location = [
+
+        { name: 'Mawa', code: 'Mawa' },
+        { name: 'Jinjira', code: 'Jinjira' }
+
+    ]
+    const itemTemplate = (option: { name: string; code: string }) => {
+        return (
+            <div className="flex items-center gap-2">
+                <FileIcon />
+                <span>{option.name}</span>
+            </div>
+        );
+    };
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -117,13 +168,15 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-        
-            formData.append('materialName', updatedProduct.materialName)
-            formData.append('sender', updatedProduct.sender)
-            formData.append('docNo', updatedProduct.docNo)
-            formData.append('remarks', updatedProduct.remarks)
+            formData.append('patientType', updatedProduct.patientType)
+            formData.append('eightAM', updatedProduct.eightAM)
+            formData.append('twelvePM', updatedProduct.twelvePM)
+            formData.append('twoPM', updatedProduct.twoPM)
+            formData.append('sixPM', updatedProduct.sixPM)
+            formData.append('refNo', updatedProduct.refNo)
+            formData.append('maximumWaterLevel', updatedProduct.maximumWaterLevel)
             formData.append('date', updatedProduct.date)
-   
+            formData.append('types', updatedProduct.types);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -230,11 +283,13 @@ export default function MonthlyReport() {
             setLoading2(true)
             const formData = new FormData()
 
-            formData.append('materialName', materialName)
-            formData.append('sender', sender)
-            formData.append('problem', docNo)
-            formData.append('remarks', remarks)
-    
+            formData.append('eightAM', eightAM)
+            formData.append('twelvePM', twelvePM)
+            formData.append('twoPM', twoPM)
+            formData.append('sixPM', sixPM)
+            formData.append('refNo', refNo)
+            formData.append('maximumWaterLevel', maximumWaterLevel)
+            formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -393,39 +448,10 @@ export default function MonthlyReport() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
 
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+                <ButtonGroup onChange={setChartMode} />
+
+
             </div>
         )
     }
@@ -441,39 +467,70 @@ export default function MonthlyReport() {
                         confirmDeleteSelected={confirmDeleteSelected}
                         handleReset={handleReset}
                     />
-                    // <div className='space-x-2'>
-                    //     <button
-                    //         className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-                    //         onClick={openNew}
-                    //     >
-                    //         Upload Document
-                    //     </button>
-                    //     <button
-                    //         className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-                    //         onClick={exportCSV}
-                    //     >
-                    //         Download Files{' '}
-                    //         {selectedProducts?.length === 0
-                    //             ? '(All)'
-                    //             : `(${selectedProducts?.length})`}
-                    //     </button>
-                    //     <button
-                    //         onClick={confirmDeleteSelected}
-                    //         disabled={!selectedProducts || selectedProducts.length === 0}
-                    //         className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
-                    //             ? 'bg-red-500 hover:bg-red-600'
-                    //             : 'bg-gray-400 cursor-not-allowed'
-                    //             }`}
-                    //     >
-                    //         Delete Selected ({selectedProducts?.length || 0})
-                    //     </button>
-                    // </div>
+
                 )}
 
 
             </>
         )
     }
+    // const ButtonGroup = () => {
+    //     const [activeButton, setActiveButton] = useState('Pictures')
+
+    //     const buttons = [
+    //         { label: 'Monthly Water Level Graph', value: 'Monthly Water Level Graph' },
+    //         { label: 'Maximum Water Level Graph', value: 'Maximum Water Level Graph' },
+
+    //     ]
+
+    //     const handleButtonClick = (buttonValue: string) => {
+    //         setActiveButton(buttonValue)
+    //         //api is not ready yet
+    //         console.log(`Button clicked: ${buttonValue}`)
+    //     }
+
+    //     return (
+    //         <>
+    //             <div className='flex items-center space-x-2 py-2 rounded-lg'>
+    //                 {buttons.map((button) => (
+    //                     <button
+    //                         key={button.value}
+    //                         onClick={() => handleButtonClick(button.value)}
+    //                         className={`
+    //         px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
+    //         ${activeButton === button.value
+    //                                 ? 'bg-[#6F90AE] text-base font-semibold text-white'
+    //                                 : ' bg-main text-base font-semibold text-white'
+    //                             }
+
+    //       `}
+    //                     >
+    //                         {button.label}
+    //                     </button>
+    //                 ))}
+    //             </div>
+    //         </>
+
+    //     )
+    // }
+    const ButtonGroup = ({ onChange }: { onChange: (v: 'monthly' | 'maximum') => void }) => {
+        return (
+            <div className="flex items-center space-x-2 py-2 rounded-lg">
+                <button
+                    onClick={() => onChange('monthly')}
+                    className="px-6 py-3 bg-main text-white rounded-lg"
+                >
+                    Monthly Water Level Graph
+                </button>
+                <button
+                    onClick={() => onChange('maximum')}
+                    className="px-6 py-3 bg-main text-white rounded-lg"
+                >
+                    Maximum Water Level Graph
+                </button>
+            </div>
+        );
+    };
 
     const hideViewDialog = () => {
         setViewProductDialog(false)
@@ -495,9 +552,9 @@ export default function MonthlyReport() {
             try {
                 const response = await fetch(attachment.url)
                 const blob = await response.blob()
-                const materialName = attachment.url.split('/').pop()
+                const eightAM = attachment.url.split('/').pop()
                 //@ts-ignore
-                folder.file(materialName, blob)
+                folder.file(eightAM, blob)
             } catch (error) {
                 console.error(`Failed to fetch ${attachment.url}:`, error)
             }
@@ -612,77 +669,133 @@ export default function MonthlyReport() {
     }
 
     const filterSearchForm = (
-        <div className='flex items-center justify-center'>
-            <div
-                role='search'
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    handleSearch()
-                }}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+        <div>
+            <div className='flex items-center justify-center'>
+                <div
+                    role='search'
+                    onSubmit={(e) => {
                         e.preventDefault()
                         handleSearch()
-                    }
-                }}
-                className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
-            >
-                <Calendar
-                    // @ts-ignore
-                    value={date}
-                    // @ts-ignore
-                    onChange={(e) => setDate(e.value)}
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault()
+                            handleSearch()
+                        }
+                    }}
+                    className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
+                >
+                    {chartMode === null &&
+                        <div>
+                            <Calendar
+                                // @ts-ignore
+                                value={date}
+                                // @ts-ignore
+                                onChange={(e) => setDate(e.value)}
 
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-                    placeholder='Start Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-                <Calendar
-                    // @ts-ignore
-                    value={date2}
-                    // @ts-ignore
-                    onChange={(e) => setDate2(e.value)}
-
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-                    placeholder='End Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-                
-                <IconField iconPosition='left' className='relative'>
-                    <InputIcon className='pi pi-search' />
-                    <InputText
-                        type='search'
-                        placeholder='Search'
-                        className='border-none ml-4 focus:ring-0'
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        value={searchKey}
-                    />
-
-                    <button
-                        onClick={() => handleSearch()}
-                        className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
-                        type='submit'
-                    >
-                        <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 24 24'
-                            fill='white'
-                            className='size-6'
-                        >
-                            <path
-                                fillRule='evenodd'
-                                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-                                clipRule='evenodd'
+                                dateFormat="dd/mm/yy"
+                                inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+                                placeholder='Start Date'
+                                showIcon
+                                icon={() => <i className='pi pi-angle-down' />}
                             />
-                        </svg>
+                            <Calendar
+                                // @ts-ignore
+                                value={date2}
+                                // @ts-ignore
+                                onChange={(e) => setDate2(e.value)}
+
+                                dateFormat="dd/mm/yy"
+                                inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                                placeholder='End Date'
+                                showIcon
+                                icon={() => <i className='pi pi-angle-down' />}
+                            />
+                        </div>
+
+                    }
+                    <div>
+                        <Dropdown
+                            value={selectedCode}
+                            onChange={(e) => setSelectedCode(e.value)}
+                            options={location}
+                            itemTemplate={itemTemplate}
+
+                            optionLabel='name'
+                            placeholder='Location'
+                            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                        />
+                    </div>
+                    {chartMode === 'monthly' &&
+                        <div>
+                            <Dropdown
+                                value={selectedCode}
+                                onChange={(e) => setSelectedCode(e.value)}
+                                options={months}
+                                itemTemplate={itemTemplate}
+                                optionLabel='name'
+                                placeholder='Select Month'
+                                className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                            />
+                        </div>
+                    }
+                    {chartMode === 'maximum' &&
+                        <div>
+                            <Dropdown
+                                value={selectedCode}
+                                onChange={(e) => setSelectedCode(e.value)}
+                                options={location}
+                                itemTemplate={itemTemplate}
+                                optionLabel='name'
+                                placeholder='Year'
+                                className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                            />
+                        </div>
+                    }
+                    <IconField iconPosition='left' className='relative'>
+                        <InputIcon className='pi pi-search' />
+                        <InputText
+                            type='search'
+                            placeholder='Search'
+                            className='border-none ml-4 focus:ring-0'
+                            onChange={(e) => setSearchKey(e.target.value)}
+                            value={searchKey}
+                        />
+
+                        <button
+                            onClick={() => handleSearch()}
+                            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+                            type='submit'
+                        >
+                            <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                viewBox='0 0 24 24'
+                                fill='white'
+                                className='size-6'
+                            >
+                                <path
+                                    fillRule='evenodd'
+                                    d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                                    clipRule='evenodd'
+                                />
+                            </svg>
+                        </button>
+                    </IconField>
+                </div>
+
+            </div>
+            <div className='max-w-[200px] mx-auto'>
+                {selectedCode && (
+                    <button
+                        type="button"
+                        className="mt-2 px-4 py-2 bg-[#0B1F8F]  text-white rounded-md shadow"
+                    >
+                        Location: {selectedCode?.name || selectedCode}
                     </button>
-                </IconField>
+                )}
             </div>
         </div>
+
     )
 
     const productDialogFooter = (
@@ -764,37 +877,51 @@ export default function MonthlyReport() {
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
+                {chartMode === 'monthly' && (
+                    <div className="mt-6 px-10 ">
+                        {filterSearchForm}
+                       <WaterLevelMiniChart  />
 
-                <TabView
-                    activeIndex={activeIndex}
-                    onTabChange={(e) => setActiveIndex(e.index)}
-                >
-                    {/* 1st tab  */}
-                    <TabPanel>
-                        <DataTable
-                            ref={dt}
-                            value={products}
-                            selection={selectedProducts}
-                            onSelectionChange={(e: any) => {
-                                if (Array.isArray(e.value)) {
-                                    setSelectedProducts(e.value)
-                                }
-                            }}
-                            dataKey='_id'
-                            paginator
-                            rows={10}
-                            rowsPerPageOptions={[5, 10, 25]}
-                            paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
-                            currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
-                            header={filterSearchForm}
-                            selectionMode='multiple'
-                            showGridlines
-                            cellSelection
-                            emptyMessage='No data found!'
-                            loading={loading}
-                            scrollable
-                        >
-                            {hasEditAccess && (
+                    </div>
+                )}
+
+                {chartMode === 'maximum' && (
+                    <div className="mt-6 ">
+                        {filterSearchForm}
+                       <YearlyWaterLevelChart />
+                    </div>
+                )}
+                {chartMode === null && (
+                    <TabView
+                        activeIndex={activeIndex}
+                        onTabChange={(e) => setActiveIndex(e.index)}
+                    >
+                        {/* 1st tab  */}
+                        <TabPanel>
+                            <DataTable
+                                ref={dt}
+                                value={products}
+                                selection={selectedProducts}
+                                onSelectionChange={(e: any) => {
+                                    if (Array.isArray(e.value)) {
+                                        setSelectedProducts(e.value)
+                                    }
+                                }}
+                                dataKey='_id'
+                                paginator
+                                rows={10}
+                                rowsPerPageOptions={[5, 10, 25]}
+                                paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
+                                currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
+                                header={filterSearchForm}
+                                selectionMode='multiple'
+                                showGridlines
+                                cellSelection
+                                emptyMessage='No data found!'
+                                loading={loading}
+                                scrollable
+                            >
+                                {/* {hasEditAccess && (
                                 <Column
                                     selectionMode='multiple'
                                     headerStyle={{ width: '3rem' }}
@@ -802,76 +929,91 @@ export default function MonthlyReport() {
                                     headerClassName='bg-[#ffc2c2] text-sm'
                                     bodyClassName='text-sm truncate max-w-xs'
                                 ></Column>
-                            )}
+                            )} */}
 
-                            <Column
+                                {/* <Column
                                 field='slNo'
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 className='min-w-[10rem]'
 
-                            ></Column>
+                            ></Column> */}
 
 
-                            <Column
-                                field='date'
+                                <Column
+                                    field='date'
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+
+                                    className='min-w-[12rem]'
+                                    header='Date'
+                                ></Column>
+                                {/* <Column
+                                field='refNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
                                 className='min-w-[12rem]'
-                                header='Date Of Upload'
-                            ></Column>
-                             
-                            <Column
-                                field='materialName'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                header='Ref No.'
+                            ></Column> */}
 
-                                className='min-w-[8rem]'
-                                header='Material & Equipment Name'
-                            ></Column>
+                                <Column
+                                    field='eightAM'
+                                    headerClassName='bg-[#A5F3FC91] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
 
-                            <Column
-                                field='sender'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                    className='min-w-[8rem]'
+                                    header='8:00 AM Water Level (PWD)'
+                                ></Column>
+                                <Column
+                                    field='twelvePM'
+                                    headerClassName='bg-[#A5E2FC] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
-                                header='Sender'
-                            ></Column>
+                                    className='min-w-[8rem]'
+                                    header='12:00 PM Water Level (PWD)'
+                                ></Column>
+                                <Column
+                                    field='twoPM'
+                                    headerClassName='bg-[#A5F3FC91] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
 
-                         
+                                    className='min-w-[8rem]'
+                                    header='2:00 PM Water Level (PWD)'
+                                ></Column>
+                                <Column
+                                    field='sixPM'
+                                    headerClassName='bg-[#A5E2FC] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
 
-                            <Column
-                                body={attachmentBodyTemplate}
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                className='min-w-[12rem]'
-                                header='Attachment'
-                            ></Column>
+                                    className='min-w-[8rem]'
+                                    header='6:00 PM Water Level (PWD)'
+                                ></Column>
 
-                            <Column
-                                field='remarks'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[12rem]'
-                                header='Remarks'
-                            ></Column>
+                                <Column
+                                    field='maximumWaterLevel'
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+
+                                    className='min-w-[12rem]'
+                                    header='Maximum Water Level'
+                                ></Column>
 
 
-                            <Column
-                                body={actionBodyTemplate}
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                header='Actions'
-                                headerStyle={{ width: '3rem' }}
-                                exportable={false}
-                            ></Column>
-                        </DataTable>
-                    </TabPanel>
-                </TabView>
+                                <Column
+                                    body={actionBodyTemplate}
+                                    headerClassName='bg-[#ffc2c2] text-sm'
+                                    bodyClassName='text-sm truncate max-w-xs'
+                                    header='Actions'
+                                    headerStyle={{ width: '3rem' }}
+                                    exportable={false}
+                                ></Column>
+                            </DataTable>
+                        </TabPanel>
+                    </TabView>
+                )}
+
             </div>
 
             {/* update data dialog  */}
@@ -886,56 +1028,119 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                       
-                        <div className='field'>
-                            <label htmlFor='sender' className='font-bold'>
-                                Sender
-                            </label>
-                            <InputText
-                                id='sender'
-                                value={updatedProduct.sender}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        sender: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='materialName' className='font-bold'>
-                                Material & Equipment Name/ Subject
-                            </label>
-                            <InputText
-                                id='materialName'
-                                value={updatedProduct.materialName}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        materialName: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                    
 
                         <div className='field'>
-                            <label htmlFor='remarks' className='font-bold'>
-                                Remarks
+                            <label htmlFor='twelvePM' className='font-bold'>
+                                Description
                             </label>
                             <InputText
-                                id='remarks'
-                                value={updatedProduct.remarks}
+                                id='twelvePM'
+                                value={updatedProduct.twelvePM}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        remarks: e.target.value,
+                                        twelvePM: e.target.value,
                                     })
                                 }
                             />
                         </div>
-                      
-                       
+                        <div className='field'>
+                            <label htmlFor='eightAM' className='font-bold'>
+                                8:00 AM Water Level (PWD)
+                            </label>
+                            <InputText
+                                id='eightAM'
+                                value={updatedProduct.eightAM}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        eightAM: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='twelvePM' className='font-bold'>
+                                12:00 PM Water Level (PWD)
+                            </label>
+                            <InputText
+                                id='twelvePM'
+                                value={updatedProduct.twelvePM}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        twelvePM: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='twoPM' className='font-bold'>
+                                2:00 PM Water Level (PWD)
+                            </label>
+                            <InputText
+                                id='twoPM'
+                                value={updatedProduct.twoPM}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        twoPM: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='sixAM' className='font-bold'>
+                                12:00 PM Water Level (PWD)
+                            </label>
+                            <InputText
+                                id='sixPM'
+                                value={updatedProduct.sixPM}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        sixPM: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <div className='field'>
+                            <label htmlFor='maximumWaterLevel' className='font-bold'>
+                                Maximum Water Level
+                            </label>
+                            <InputText
+                                id='maximumWaterLevel'
+                                value={updatedProduct.maximumWaterLevel}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        maximumWaterLevel: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <div className='field'>
+                            <label htmlFor='types' className='font-bold'>
+                                Type
+                            </label>
+                            <Dropdown
+                                id='types'
+                                value={updatedProduct.types}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        types: e.value,
+                                    })
+                                }
+                                options={location}
+                                itemTemplate={itemTemplate}
+                                optionLabel='name'
+                                placeholder='Select Type'
+                                className='w-full'
+                            />
+                        </div>
                         <div className='field'>
                             <label htmlFor='date' className='font-bold'>
                                 Date
@@ -953,7 +1158,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1068,15 +1273,30 @@ export default function MonthlyReport() {
                                 <p>{selectedProduct.date}</p>
                             </div>
                             <div>
-                                <h3 className='font-bold'>Material & Equipment Name</h3>
-                                <p className='break-all'>{selectedProduct.materialName}</p>
+                                <h3 className='font-bold'>8:00 AM Water Level (PWD)</h3>
+                                <p className='break-all'>{selectedProduct.eightAM}</p>
+                            </div>
+                            <div>
+                                <h3 className='font-bold'>12:00 PM Water Level (PWD)</h3>
+                                <p className='break-all'>{selectedProduct.twelvePM}</p>
+                            </div>
+                            <div>
+                                <h3 className='font-bold'>2:00 PM Water Level (PWD)</h3>
+                                <p className='break-all'>{selectedProduct.twoPM}</p>
+                            </div>
+                            <div>
+                                <h3 className='font-bold'>6:00 PM Water Level (PWD)</h3>
+                                <p className='break-all'>{selectedProduct.sixPM}</p>
                             </div>
 
-                            
-                         
                             <div>
-                                <h3 className='font-bold'>Remarks</h3>
-                                <p className='break-all'>{selectedProduct.remarks}</p>
+                                <h3 className='font-bold'>Type</h3>
+                                <p className='break-all'>{selectedProduct.types}</p>
+                            </div>
+
+                            <div>
+                                <h3 className='font-bold'>Maximum Water Level</h3>
+                                <p className='break-all'>{selectedProduct.maximumWaterLevel}</p>
                             </div>
 
                             {hasEditAccess && (
@@ -1114,41 +1334,106 @@ export default function MonthlyReport() {
                     <div className='grid grid-cols-2 items-center gap-6'>
 
                         <div className='field'>
-                            <label htmlFor='materialName' className='font-bold'>
-                                Material & Equipment Name
+                            <label htmlFor='eightAM' className='font-bold'>
+                                8:00 AM Water Level (PWD)
                             </label>
                             <InputText
-                                id='materialName'
-                                onChange={(e) => setMaterialName(e.target.value)}
+                                id='eightAM'
+                                onChange={(e) => setEightAM(e.target.value)}
                                 required
                                 autoFocus
                                 className={classNames({
-                                    'p-invalid': submitted && !materialName,
+                                    'p-invalid': submitted && !eightAM,
                                 })}
                             />
-                            {submitted && !materialName && (
-                                <small className='p-error'>Material & Equipment Name is required.</small>
+                            {submitted && !eightAM && (
+                                <small className='p-error'>8:00 AM Water Level (PWD) is required.</small>
                             )}
                         </div>
                         <div className='field'>
-                            <label htmlFor='sender' className='font-bold'>
-                                Sender
+                            <label htmlFor='twelvePM' className='font-bold'>
+                                12:00 PM Water Level (PWD)
                             </label>
                             <InputText
-                                id='problem'
-                                onChange={(e) => setSender(e.target.value)}
+                                id='twelvePM'
+                                onChange={(e) => setTwelvePM(e.target.value)}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !twelvePM,
+                                })}
+                            />
+                            {submitted && !twelvePM && (
+                                <small className='p-error'>12:00 PM Water Level (PWD) is required.</small>
+                            )}
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='twoPM' className='font-bold'>
+                                2:00 PM Water Level (PWD)
+                            </label>
+                            <InputText
+                                id='twoPM'
+                                onChange={(e) => setTwoPM(e.target.value)}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !twoPM,
+                                })}
+                            />
+                            {submitted && !twoPM && (
+                                <small className='p-error'>2:00 PM Water Level (PWD) is required.</small>
+                            )}
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='sixPM' className='font-bold'>
+                                6:00 PM Water Level (PWD)
+                            </label>
+                            <InputText
+                                id='sixPM'
+                                onChange={(e) => setSixPM(e.target.value)}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !sixPM,
+                                })}
+                            />
+                            {submitted && !sixPM && (
+                                <small className='p-error'>6:00 PM Water Level (PWD) is required.</small>
+                            )}
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='description' className='font-bold'>
+                                Description
+                            </label>
+                            <InputText
+                                id='description'
+                                onChange={(e) => setTwelvePM(e.target.value)}
                                 required
                             />
                         </div>
-                       
-                        
+
+                        <div className="field">
+                            <label htmlFor="types" className="font-bold">
+                                Type
+                            </label>
+                            <Dropdown
+                                id="types"
+                                value={types}
+                                onChange={(e) => setTypes(e.value)}
+                                options={location}
+                                optionLabel='name'
+                                placeholder="Select Type"
+                                itemTemplate={itemTemplate}
+                                className="w-full"
+                            />
+                        </div>
                         <div className='field'>
-                            <label htmlFor='remarks' className='font-bold'>
-                                Remarks
+                            <label htmlFor='maximumWaterLevel' className='font-bold'>
+                                maximumWaterLevel
                             </label>
                             <InputText
-                                id='remarks'
-                                onChange={(e) => setRemarks(e.target.value)}
+                                id='maximumWaterLevel'
+                                onChange={(e) => setMaximumWaterLevel(e.target.value)}
                                 required
                             />
                         </div>

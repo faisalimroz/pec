@@ -1308,6 +1308,7 @@ Tax & Token Report'
                 <Calendar
                   id='taxExpiryDate'
                   // @ts-ignore
+                  
                   onChange={(e) => setTaxExpiryDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1325,8 +1326,10 @@ Tax & Token Report'
                   id='fitnessDuration'
                   selectionMode="range"
                   // @ts-ignore
-                  onChange={(e) => setFitnessDuration(e.value as [Date, Date] | null)}
+                    onChange={(e) => setFitnessDuration(e.value as [Date, Date] | null)} 
                   dateFormat='dd/mm/yy'
+                  readOnlyInput 
+                  hideOnRangeSelection 
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
                   placeholder='Select Date'

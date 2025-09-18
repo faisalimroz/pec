@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { rtwLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rtwTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/rtw/visual-records'
+import DemoTable from '@/components/rtw/monitoring-and-reporting/daily-water-lever'
 import { useAuth } from '@/provider/authProvider'
 
 export default function MonthlyReport() {

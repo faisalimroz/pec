@@ -413,7 +413,7 @@ export default function MedicineInOutRecord() {
     const leftToolbarTemplate = () => {
         return (
             <div className='flex items-center gap-3'>
-                <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
+                <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
                     Document List
                 </div>
 

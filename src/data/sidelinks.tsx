@@ -1123,13 +1123,13 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'Daily Water Level Records',
         label: '',
-        href: '/rtw/daily-water-level-records',
+        href: '/rtw/monitoring-and-reporting/daily-water-level-records',
         icon: '',
       },  
        {
         title: 'RTW Monthly Reports',
         label: '',
-        href: '/rtw/monthly-reports',
+        href: '/rtw/monitoring-and-reporting/monthly-reports',
         icon: '',
       }
     ],

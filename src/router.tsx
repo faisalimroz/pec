@@ -1777,13 +1777,13 @@ const router = createBrowserRouter([
             }),
   },
    {
-     path: '/rtw/monthly-reports',
+     path: '/rtw/monitoring-and-reporting/monthly-reports',
             lazy: async () => ({
               Component: (await import('@/pages/rtw/monitoring-and-reporting/monthly-report')).default,
             }),
   },
    {
-     path: '/rtw/daily-water-level-records',
+     path: '/rtw/monitoring-and-reporting/daily-water-level-records',
             lazy: async () => ({
               Component: (await import('@/pages/rtw/monitoring-and-reporting/daily-water-level-records')).default,
             }),

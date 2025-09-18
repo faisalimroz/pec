@@ -5,15 +5,13 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { rtwLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rtwTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/rtw/visual-records'
+import DemoTable from '@/components/rtw/monitoring-and-reporting/rtw-monthly-reports'
 import { useAuth } from '@/provider/authProvider'
 
 export default function MonthlyReport() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
-
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-
   const selectedNav = rtwTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
