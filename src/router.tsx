@@ -1910,10 +1910,25 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/mb-pis/additional-notes/document-revision')).default,
             }),
   },
-  
-  
-  
-  
+  //extra edms
+   {
+     path: 'edms/administrative',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin-edms/index')).default,
+            }),
+  },
+    {
+     path: 'edms/its',
+            lazy: async () => ({
+              Component: (await import('@/pages/its - Copy/AboutUs')).default,
+            }),
+  },
+  {
+     path: 'edms/overview',
+            lazy: async () => ({
+              Component: (await import('@/pages/its - Copy/AboutUs')).default,
+            }),
+  },
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },

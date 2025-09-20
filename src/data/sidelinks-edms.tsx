@@ -71,52 +71,7 @@ export const administrationLinks: SideLink[] = [
       
     ],
   },
-  
-  // {
-  //   title: 'HR',
-  //   label: '',
-  //   href: '',
-  //   uName: 'hr',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Status Of Personnel',
-  //       label: '',
-  //       href: '/administrative/status-of-personnel',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Employee Personal Profile',
-  //       label: '',
-  //       href: '/administrative/employee-personal-profile',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Attendance Management',
-  //       label: '',
-  //       href: '/administrative/attendance-management',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Insurance Management',
-  //       label: '',
-  //       href: '/administrative/insurance-management',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Insurance Claiming',
-  //       label: '',
-  //       href: '/administrative/insurance-claiming',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Leave Management',
-  //       label: '',
-  //       href: '/administrative/leave-management',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
+
     {
     title: 'Health Center',
     label: '',
@@ -242,7 +197,6 @@ export const administrationLinks: SideLink[] = [
   },
  
 
-  // start of finance links
   {
     title: 'Finance & Accounts',
     label: '',
@@ -262,51 +216,6 @@ export const administrationLinks: SideLink[] = [
     label: '',
     href: '/finance/ipc-records',
     uName: 'finance-procurement',
-    icon: <FileIcon />,
-  },
-]
-
-export const genInfoLinks: SideLink[] = [
-  {
-    title: 'General Status',
-    label: '',
-    href: '/general-information/general-status',
-    uName: 'general-status',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Organization Chart',
-    label: '',
-    href: '/general-information/organization-chart',
-    uName: 'organization-chart',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Location Chart',
-    label: '',
-    href: '/general-information/location-chart',
-    uName: 'location-chart',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Aerial Photography',
-    label: '',
-    href: '/general-information/aerial-photography',
-    uName: 'aerial-photography',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Staff Chart',
-    label: '',
-    href: '/general-information/staff-summary',
-    uName: 'staff-chart',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Reference',
-    label: '',
-    href: '/general-information/reference',
-    uName: 'reference',
     icon: <FileIcon />,
   },
 ]
@@ -526,13 +435,13 @@ export const itsLinks: SideLink[] = [
    {
         title: 'About ITS',
         label: '',
-        href: '/its/overview',
+        href: '/edms/overview',
         icon: <AboutIcon/>,
       },
        {
         title: 'Organization',
         label: '',
-        href: '/its/organization',
+        href: '/organization',
         icon: <FileIcon/>,
       },
         {
@@ -684,29 +593,7 @@ export const tollLinks: SideLink[] = [
   },
 ]
 
-export const edmsLinks: SideLink[] = [
-  {
-    title: 'Dispatched',
-    label: '',
-    href: '/edms/dispatched',
-    uName: 'dispatched',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Received',
-    label: '',
-    href: '/edms/received',
-    uName: 'received',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Others',
-    label: '',
-    href: '/edms/others',
-    uName: 'others',
-    icon: <FileIcon />,
-  },
-]
+
 export const rtwLinks: SideLink[] = [
  {
     title: 'Project Overview',

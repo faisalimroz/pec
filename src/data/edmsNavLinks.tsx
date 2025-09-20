@@ -3,64 +3,11 @@ const hasRole = (userRoles: string[], requiredRoles: string[]) => {
   return userRoles.some((role) => requiredRoles.includes(role))
 }
 
-// [all] is a special role that allows access to all sections
-
-// Modified navigation arrays with role restrictions
-export const genInfoTopNav = [
-  {
-    title: 'General Information',
-    href: '/general-information/general-status',
-    isActive: true,
-    logo: GiIcon,
-    roles: ['general-information', 'superadmin'],
-    uName: 'general-information',
-  },
-  {
-    title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
-    isActive: false,
-    logo: RntIcon,
-    roles: ['superadmin', 'r&t-manager'],
-    uName: 'road-&-traffic',
-  },
-  {
-    title: 'ITS',
-    href: '/its/overview',
-    isActive: false,
-    logo: ItsIcon,
-    roles: ['superadmin', 'its-manager'],
-    uName: 'its',
-  },
-  {
-    title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
-    isActive: false,
-    logo: tollIcon,
-    roles: ['superadmin', 'toll-manager'],
-    uName: 'toll',
-  },
-  {
-    title: 'Administration',
-    href: '/administrative',
-    isActive: false,
-    logo: AdminIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'administration',
-  },
-  {
-    title: 'EDMS',
-    href: '/edms/dispatched',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['edms', 'superadmin'],
-    uName: 'edms',
-  },
-]
 
 export const adminTopNav = [
   {
     title: 'Administration',
-    href: '/administrative',
+    href: 'edms/administrative',
     isActive: true,
     logo: AdminIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -100,20 +47,13 @@ export const adminTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its/about',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
     uName: 'its',
   },
-  {
-    title: 'EDMS',
-    href: '/edms/dispatched',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['edms', 'superadmin'],
-    uName: 'edms',
-  },
+ 
 ]
 
 export const clinicTopNav = [
@@ -322,20 +262,13 @@ export const itsTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its/about',
     isActive: true,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
     uName: 'its',
   },
-  {
-    title: 'EDMS',
-    href: '/edms/dispatched',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['edms', 'superadmin'],
-    uName: 'edms',
-  },
+  
 ]
 
 export const rntTopNav = [
@@ -559,7 +492,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'ITS',
-    href: 'its/about',
+    href: 'its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
