@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks, tollLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/toll/daily-report'
+import DemoTable from '@/components/toll/report'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {
@@ -42,7 +42,7 @@ export default function AssetManagement() {
             <LayoutBody className='space-y-4 '>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                Daily Toll & Traffic Data
+                Daily Report
                 </h1>
                  
                 <DemoTable />

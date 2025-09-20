@@ -17,12 +17,11 @@ import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
-import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import FileIcon from '../icons/FileIcon'
 
 interface Attachment {
     url: string
@@ -31,10 +30,10 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    medicineName: string
-    refNo: string
-    problem: string
-    inoutType: string
+    subjectName: string
+    description: string
+    monthName: string;
+    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -44,14 +43,14 @@ interface Product {
     updatingTimestamp?: string
 }
 
-export default function MedicineInOutRecord() {
+export default function MonthlyReport() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        medicineName: '',
-        refNo: '',
-        problem: '',
-        inoutType: '',
+        subjectName: '',
+        description: '',
+        monthName: '',
+        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -83,23 +82,24 @@ export default function MedicineInOutRecord() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [medicineName, setMedicineName] = useState('')
-    const [refNo, setRefNo] = useState('')
-    const [problem, setproblem] = useState('')
+    const [subjectName, setSubjectName] = useState('')
+    const [description, setDescription] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [inoutType, setInOutType] = useState<string>('')
+    const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
+    const [monthName, setMonthName] = useState<{ name: string; code: string } | null>(null);
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
+
+
+
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -120,13 +120,13 @@ export default function MedicineInOutRecord() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('inoutType', updatedProduct.inoutType)
-            formData.append('medicineName', updatedProduct.medicineName)
-            formData.append('refNo', updatedProduct.refNo)
-            formData.append('problem', updatedProduct.problem)
+       
+            formData.append('subjectName', updatedProduct.subjectName)
+            formData.append('description', updatedProduct.description)
+          
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-
+            formData.append('monthName', updatedProduct.monthName);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -175,14 +175,6 @@ export default function MedicineInOutRecord() {
             }
         })
     }
-  const itemTemplate = (option: { name: string; code: string }) => {
-  return (
-    <div className="flex items-center gap-2">
-     <FileIcon/>      
-      <span>{option.name}</span> 
-    </div>
-  );
-};
 
     const updateProductDialogFooter = (
         <>
@@ -202,12 +194,50 @@ export default function MedicineInOutRecord() {
     )
 
     // ending all update dialog funcs
+    const monthOptionTemplate = (option: any) => {
+        return (
+            <div className="flex items-center gap-2">
+                {/* Example SVG (calendar icon) */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M10.5 1.5H4.5C4.10218 1.5 3.72064 1.65804 3.43934 1.93934C3.15804 2.22064 3 2.60218 3 3V15C3 15.3978 3.15804 15.7794 3.43934 16.0607C3.72064 16.342 4.10218 16.5 4.5 16.5H13.5C13.8978 16.5 14.2794 16.342 14.5607 16.0607C14.842 15.7794 15 15.3978 15 15V6L10.5 1.5Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10.5 1.5V6H15" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12 9.75H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12 12.75H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7.5 6.75H6.75H6" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span className='text-black'>{option.name}</span>
+            </div>
+        );
+    };
+    const months = [
+        { name: "January", code: "JAN" },
+        { name: "February", code: "FEB" },
+        { name: "March", code: "MAR" },
+        { name: "April", code: "APR" },
+        { name: "May", code: "MAY" },
+        { name: "June", code: "JUN" },
+        { name: "July", code: "JUL" },
+        { name: "August", code: "AUG" },
+        { name: "September", code: "SEP" },
+        { name: "October", code: "OCT" },
+        { name: "November", code: "NOV" },
+        { name: "December", code: "DEC" },
+    ];
 
-    const codes = [
-        { name: 'IN', code: 'IN' },
-        { name: 'OUT', code: 'OUT' },
-    ]
+    const itemTemplate = (option: { name: string; code: string }) => (
+        <div className="flex items-center gap-2">
+            <FileIcon />
+            <span>{option.name}</span>
+        </div>
+    );
 
+   
+    // const locationTemplate = (option: { name: string; code: string }) => (
+    //     <div className="flex items-center gap-2">
+    //         <FileIcon />
+    //         <span>{option.name}</span>
+    //     </div>
+    // );
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
     }
@@ -247,11 +277,11 @@ export default function MedicineInOutRecord() {
             setLoading2(true)
             const formData = new FormData()
 
-            formData.append('medicineName', medicineName)
-            formData.append('refNo', refNo)
-            formData.append('problem', problem)
+            formData.append('subjectName', subjectName)
+            formData.append('description', description)
+      
             formData.append('remarks', remarks)
-            formData.append('inoutType', inoutType)
+            formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -269,6 +299,7 @@ export default function MedicineInOutRecord() {
 
             const response = res
             console.log(response)
+
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -409,7 +440,7 @@ export default function MedicineInOutRecord() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-
+              
             </div>
         )
     }
@@ -427,7 +458,7 @@ export default function MedicineInOutRecord() {
                     />
                 )}
 
-                <RefreshButton className='text-base ml-2' onClick={handleReset} />
+                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
             </>
         )
     }
@@ -452,9 +483,9 @@ export default function MedicineInOutRecord() {
             try {
                 const response = await fetch(attachment.url)
                 const blob = await response.blob()
-                const filename = attachment.url.split('/').pop()
+                const subjectName = attachment.url.split('/').pop()
                 //@ts-ignore
-                folder.file(filename, blob)
+                folder.file(subjectName, blob)
             } catch (error) {
                 console.error(`Failed to fetch ${attachment.url}:`, error)
             }
@@ -540,7 +571,7 @@ export default function MedicineInOutRecord() {
             year: date2 ? getYear(date2) : '',
             searchQuery: searchKey,
             // @ts-ignore
-            inoutType: selectedCode?.code || '',
+            patientType: selectedCode?.code || '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
@@ -554,7 +585,7 @@ export default function MedicineInOutRecord() {
             year: '',
             searchQuery: '',
             month: '',
-            inoutType: '',
+            patientType: '',
         }
 
         setDate('')
@@ -589,7 +620,9 @@ export default function MedicineInOutRecord() {
                     value={date}
                     // @ts-ignore
                     onChange={(e) => setDate(e.value)}
+
                     dateFormat="dd/mm/yy"
+                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
                     placeholder='Start Date'
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
@@ -606,18 +639,19 @@ export default function MedicineInOutRecord() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                <div>
-                    <Dropdown
-                        value={selectedCode}
-                        onChange={(e) => setSelectedCode(e.value)}
-                        options={codes}
-                        optionLabel='name'
-                        placeholder='IN/OUT'
-                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
-                        itemTemplate={itemTemplate}
 
-                    />
-                </div>
+                <Dropdown
+                    id="monthName"
+                    value={monthName}
+                    onChange={(e) => setMonthName(e.value)}
+                    options={months}
+                    optionLabel="name"
+                    placeholder="Select a Month"
+                    className="border-none ml-4 focus:ring-0"
+                    itemTemplate={itemTemplate}
+                />
+               
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -701,11 +735,12 @@ export default function MedicineInOutRecord() {
             month: '',
             year: '',
             searchQuery: '',
-            inoutType: '',
+            patientType: '',
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
             setProducts(result?.Treatments)
+            console.log(result, "ress")
             setLoading(false)
         })
     }
@@ -775,34 +810,7 @@ export default function MedicineInOutRecord() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 className='min-w-[10rem]'
-                                sortable
-                            ></Column>
 
-                            <Column
-                                field='refNo'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[8rem]'
-                                header='Ref No'
-                            ></Column>
-
-                            <Column
-                                field='medicineName'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-
-                                className='min-w-[8rem]'
-                                header='Medicine Name'
-                            ></Column>
-
-                            <Column
-                                field='IN/OUT'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[8rem]'
-                                header='Type'
                             ></Column>
 
 
@@ -810,16 +818,42 @@ export default function MedicineInOutRecord() {
                                 field='date'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
+
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
 
                             <Column
-                                body={attachmentBodyTemplate}
+                                field='subject'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+
+                                className='min-w-[8rem]'
+                                header='File Name/Subject'
+                            ></Column>
+                            <Column
+                                field='monthName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 sortable
+                                className='min-w-[12rem]'
+                                header='Month Name'
+                            ></Column>
+                            <Column
+                                field='description'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+
+                                className='min-w-[8rem]'
+                                header='Description'
+                            ></Column>
+
+
+
+                            <Column
+                                body={attachmentBodyTemplate}
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -832,6 +866,7 @@ export default function MedicineInOutRecord() {
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
+
 
                             <Column
                                 body={actionBodyTemplate}
@@ -858,54 +893,54 @@ export default function MedicineInOutRecord() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
+                        {/* <div className='field'>
+              <label htmlFor='patientType' className='font-bold'>
+                Patient Type
+              </label>
+              <Dropdown
+                id='patientType'
+                value={updatedProduct.patientType}
+                options={['Internal', 'Outside']}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    patientType: e.target.value,
+                  })
+                }
+                placeholder='Select Patient Type'
+              />
+            </div> */}
                         <div className='field'>
-                            <label htmlFor='inoutType' className='font-bold'>
-                                IN/OUT
-                            </label>
-                            <Dropdown
-                                id='inoutType'
-                                value={updatedProduct.inoutType}
-                                options={['In', 'Out']}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        inoutType: e.target.value,
-                                    })
-                                }
-                                placeholder='Select IN/OUT'
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
-                                Ref No
-                            </label>
-                            <InputText
-                                id='refNo'
-                                value={updatedProduct.refNo}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        refNo: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='medicineName' className='font-bold'>
-                                Medicine Name
+                            <label htmlFor='description' className='font-bold'>
+                                Description
                             </label>
                             <InputText
-                                id='medicineName'
-                                value={updatedProduct.medicineName}
+                                id='description'
+                                value={updatedProduct.description}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        medicineName: e.target.value,
+                                        description: e.target.value,
                                     })
                                 }
                             />
                         </div>
-
+                        <div className='field'>
+                            <label htmlFor='subjectName' className='font-bold'>
+                                File Name/ Subject
+                            </label>
+                            <InputText
+                                id='subjectName'
+                                value={updatedProduct.subjectName}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        subjectName: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                        
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -939,6 +974,26 @@ export default function MedicineInOutRecord() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
+                            <div className='field'>
+                                <label htmlFor='monthName' className='font-bold'>
+                                    Month Name
+                                </label>
+                                <Dropdown
+                                    id='monthName'
+                                    value={updatedProduct.monthName}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            monthName: e.value,
+                                        })
+                                    }
+                                    options={months}
+                                    optionLabel="name"
+                                    placeholder='Select a Month'
+                                    className='w-full'
+                                     itemTemplate={itemTemplate}
+                                />
+                            </div>
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1053,18 +1108,15 @@ export default function MedicineInOutRecord() {
                                 <p>{selectedProduct.date}</p>
                             </div>
                             <div>
-                                <h3 className='font-bold'>Medicine Name</h3>
-                                <p className='break-all'>{selectedProduct.medicineName}</p>
-                            </div>
-                            <div>
-                                <h3 className='font-bold'>IN/OUT</h3>
-                                <p className='break-all'>{selectedProduct.inoutType}</p>
-                            </div>
-                            <div>
-                                <h3 className='font-bold'>Ref No.</h3>
-                                <p className='break-all'>{selectedProduct.refNo}</p>
+                                <h3 className='font-bold'>File Name/Subject</h3>
+                                <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
+                            <div>
+                                <h3 className='font-bold'>Month Name</h3>
+                                <p className='break-all'>{selectedProduct.monthName}</p>
+                            </div>
+                            
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1103,48 +1155,50 @@ export default function MedicineInOutRecord() {
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
+
                         <div className='field'>
-                            <label htmlFor='inoutType' className='font-bold'>
-                                IN/OUT
-                            </label>
-                            <Dropdown
-                                id='inoutType'
-                                value={inoutType}
-                                options={['In', 'Out']}
-                                onChange={(e) => setInOutType(e.value)}
-                                placeholder='Select Type'
-                                optionLabel='inoutType'
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='refNo' className='font-bold'>
-                                Ref No
+                            <label htmlFor='subjectName' className='font-bold'>
+                                File Name/Subject
                             </label>
                             <InputText
-                                id='refNo'
-                                onChange={(e) => setRefNo(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='medicineName' className='font-bold'>
-                                Medicine Name
-                            </label>
-                            <InputText
-                                id='medicineName'
-                                onChange={(e) => setMedicineName(e.target.value)}
+                                id='subjectName'
+                                onChange={(e) => setSubjectName(e.target.value)}
                                 required
                                 autoFocus
                                 className={classNames({
-                                    'p-invalid': submitted && !medicineName,
+                                    'p-invalid': submitted && !subjectName,
                                 })}
                             />
-                            {submitted && !medicineName && (
-                                <small className='p-error'>Medicine Name is required.</small>
+                            {submitted && !subjectName && (
+                                <small className='p-error'>File Name/Subject is required.</small>
                             )}
                         </div>
-
-
+                        <div className='field'>
+                            <label htmlFor='description' className='font-bold'>
+                                Description
+                            </label>
+                            <InputText
+                                id='description'
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="monthName" className="font-bold">
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id="monthName"
+                                value={monthName}
+                                onChange={(e) => setMonthName(e.value)}
+                                options={months}
+                                optionLabel="name"
+                                placeholder="Select a Month"
+                                className="w-full"
+                                 itemTemplate={itemTemplate}
+                            />
+                        </div>
+                        
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

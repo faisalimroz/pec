@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks, tollLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/toll//shiftwise-toll-traffic-data'
+import DemoTable from '@/components/toll/shiftwise-toll-traffic-data'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {

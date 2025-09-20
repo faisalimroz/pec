@@ -6,6 +6,7 @@ type TollButtonIconsProps = {
     exportCSV: () => void;
     exportPDF: () => void;
     handlePrint: () => void;
+    isGraphVisible: boolean;
 };
 
 const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
@@ -13,7 +14,8 @@ const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
     openNew,
     exportCSV,
     exportPDF,
-    handlePrint
+    handlePrint,
+    isGraphVisible
 }) => {
     // SVGs for buttons
     const VireGrahpIcon = () => (
@@ -48,7 +50,7 @@ const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
                 onClick={openNew}
             >
                 <VireGrahpIcon />
-                View Graph
+                 {isGraphVisible ? "Hide Graph" : "View Graph"}
             </button>
 
             <button
@@ -56,7 +58,7 @@ const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
                 onClick={exportPDF}
             >
                 <Export />
-                Export PDF {selectedProducts?.length === 0 ? "(All)" : `(${selectedProducts?.length})`}
+                Export PDF 
             </button>
 
             <button
@@ -66,7 +68,7 @@ const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
                
             >
                 <Export />
-                Export Excel {selectedProducts?.length === 0 ? "(All)" : `(${selectedProducts?.length})`}
+                Export Excel 
             </button>
 
             <button

@@ -853,12 +853,13 @@ export const tollLinks: SideLink[] = [
         href: '/toll/shift/shift-wise-toll-traffic-data',
         icon: '',
       },
-      {
-        title: 'Daily Toll & Traffic Data Comparisons',
+       {
+        title: 'Shift Wise Toll & Traffic',
         label: '',
-        href: '/toll/shift/shift-wise-data-comparisons',
+        href: '/toll/shift/shift-wise-toll-traffic-comparison',
         icon: '',
       },
+
       
     ],
   },
@@ -892,13 +893,13 @@ export const tollLinks: SideLink[] = [
     uName:  'special-audit',
     icon: <FileIcon />,
   },
-    {
-    title: 'WIM Data',
-    label: '',
-    href: '/toll/daily-report',
-    uName:  'special-audit',
-    icon: <FileIcon />,
-  },
+  //   {
+  //   title: 'WIM Data',
+  //   label: '',
+  //   href: '/toll/daily-report',
+  //   uName:  'special-audit',
+  //   icon: <FileIcon />,
+  // },
   {
     title: 'Monthly Roster',
     label: '',

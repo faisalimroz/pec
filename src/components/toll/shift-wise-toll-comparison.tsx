@@ -6,7 +6,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import FileIcon from '../icons/FileIcon';
 import TollButtonIcons from '../ui/comparison-button';
-// PDF helpers
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -293,17 +294,17 @@ export default function PeriodFiltersSection() {
         <div>
           <h4 className="text-sm font-medium text-[#0A2472] mb-2">First Time Period</h4>
           <div className="flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white">
+           
             <Calendar
               value={p1.start || null}
               onChange={(e) => setP1({ ...p1, start: e.value as Date })}
               placeholder="Start Date"
-              inputClassName="border-none rounded-none cursor-pointer focus:ring-0 "
+              inputClassName="border-none rounded-none cursor-pointer focus:ring-0 bg-transparent"
               dateFormat="dd/mm/yy"
-              showIcon
-              icon={() => (
+                showIcon
+                 icon={() => (
                     <i className="pi pi-calendar  " />
                 )}
-              
             />
             <Calendar
               value={p1.end || null}
@@ -311,11 +312,10 @@ export default function PeriodFiltersSection() {
               placeholder="End Date"
               inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
               dateFormat="dd/mm/yy"
-              showIcon
+               showIcon
                  icon={() => (
                     <i className="pi pi-calendar  " />
                 )}
-              
             />
           </div>
           <div className="flex gap-2 mt-3">
@@ -341,7 +341,7 @@ export default function PeriodFiltersSection() {
               placeholder="Start Date"
               dateFormat="dd/mm/yy"
               inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
-              showIcon
+                showIcon
                  icon={() => (
                     <i className="pi pi-calendar  " />
                 )}
@@ -352,7 +352,7 @@ export default function PeriodFiltersSection() {
               placeholder="End Date"
               dateFormat="dd/mm/yy"
               inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
-              showIcon
+                showIcon
                  icon={() => (
                     <i className="pi pi-calendar  " />
                 )}

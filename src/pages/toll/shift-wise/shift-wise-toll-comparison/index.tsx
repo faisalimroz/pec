@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks, tollLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/toll/daily-report'
+import DemoTable from '@/components/toll/shift-wise-toll-comparison'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {
@@ -40,9 +40,9 @@ export default function AssetManagement() {
 
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
-              <div className='space-y-2'>
+              <div className='space-y-2 space-x-4'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                 Monthly Report
+              Shift Wise Toll & Traffic Data Comparison
                 </h1>
                  
                 <DemoTable />

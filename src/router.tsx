@@ -1395,16 +1395,18 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-           {
-            path: 'toll/shift/shift-wise-data-comparisons',
+            {
+            path: 'toll/shift/shift-wise-toll-traffic-comparison',
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                  '@/pages/toll/shift-wise/shift-wise-toll-comparison'
                 )
               ).default,
             }),
           },
+          
+           
            {
             path: 'toll/daily-toll-traffic-data',
             lazy: async () => ({
@@ -1783,7 +1785,7 @@ const router = createBrowserRouter([
             }),
   },
    {
-     path: '/rtw/monitoring-and-reporting/daily-water-level-records',
+     path: '/rtw/daily-water-level-records',
             lazy: async () => ({
               Component: (await import('@/pages/rtw/monitoring-and-reporting/daily-water-level-records')).default,
             }),
