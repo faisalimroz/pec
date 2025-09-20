@@ -85,7 +85,7 @@ export const adminTopNav = [
   {
     title: 'Main Bridge',
     href: '/mb-pmis/project-overview',
-    isActive: true,
+    isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
     uName: 'toll',

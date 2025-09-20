@@ -8,7 +8,7 @@ type ButtonGroupWithIconsProps = {
   handleReset: () => void; 
 };
 
-const ButtonGroupWithIcons: React.FC<ButtonGroupWithIconsProps> = ({
+const ButtonGroupWithIcon: React.FC<ButtonGroupWithIconsProps> = ({
   selectedProducts,
   openNew,
   exportCSV,
@@ -70,7 +70,7 @@ const ButtonGroupWithIcons: React.FC<ButtonGroupWithIconsProps> = ({
         onClick={exportCSV}
       >
         <BulkUpload />
-        Bulk Upload {selectedProducts?.length === 0 ? "" : `(${selectedProducts?.length})`}
+        Bulk Upload {selectedProducts?.length === 0 ? "(All)" : `(${selectedProducts?.length})`}
       </button>
 
       <button
@@ -99,4 +99,4 @@ const ButtonGroupWithIcons: React.FC<ButtonGroupWithIconsProps> = ({
   );
 };
 
-export default ButtonGroupWithIcons;
+export default ButtonGroupWithIcon;

@@ -27,99 +27,97 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
-  
-  {
-    title: 'HR',
-    label: '',
-    href: '',
-    uName: 'hr',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Status Of Personnel',
-        label: '',
-        href: '/administrative/status-of-personnel',
-        icon: '',
-      },
-      {
+   {
         title: 'Employee Personal Profile',
         label: '',
         href: '/administrative/employee-personal-profile',
-        icon: '',
+         uName: 'hr',
+          icon: <FileIcon />,
       },
-      {
-        title: 'Attendance Management',
-        label: '',
-        href: '/administrative/attendance-management',
-        icon: '',
-      },
-      {
-        title: 'Insurance Management',
-        label: '',
-        href: '/administrative/insurance-management',
-        icon: '',
-      },
-      {
-        title: 'Insurance Claiming',
-        label: '',
-        href: '/administrative/insurance-claiming',
-        icon: '',
-      },
-      {
-        title: 'Leave Management',
-        label: '',
-        href: '/administrative/leave-management',
-        icon: '',
-      },
-    ],
+  {
+    title: 'Vehicle Mgt. Record',
+    label: '',
+    href: '/administrative/vehicle-mgt-record',
+    uName: 'hr',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Asset Management',
+    label: '',
+    href: '/administrative/asset-management',
+    uName: 'hr',
+    icon: <FileIcon />,
   },
     {
-    title: 'Gardening Mgt.',
+    title: 'Building Maintenance',
     label: '',
     href: '',
     uName: 'hr',
     icon: <FileIcon />,
     sub: [
        {
-        title: 'Monthly Activity',
+        title: 'Monthly Maintenance Report',
         label: '',
-        href: '/administrative/gardening-monthly-activity',
+        href: '/administrative/building-maintenance-report',
         icon: '',
       },
       {
-        title: 'Gardening Tools',
+        title: 'Tools',
         label: '',
-        href: '/administrative/gardening-tools',
+        href: '/administrative/building-maintenance-tools',
         icon: '',
-      },
+      }
      
       
     ],
   },
-   {
-    title: 'Fire Mgt.',
-    label: '',
-    href: '',
-    uName: 'hr',
-    icon: <FileIcon />,
-    sub: [
-       {
-        title: 'Monthly Activity',
-        label: '',
-        href: '/administrative/fire-mgt-monthly-report',
-        icon: '',
-      },
-      {
-        title: ' Tools',
-        label: '',
-        href: '/administrative/fire-mgt-tools',
-        icon: '',
-      },
-     
-      
-    ],
-  },
-   {
+  
+  // {
+  //   title: 'HR',
+  //   label: '',
+  //   href: '',
+  //   uName: 'hr',
+  //   icon: <FileIcon />,
+  //   sub: [
+  //     {
+  //       title: 'Status Of Personnel',
+  //       label: '',
+  //       href: '/administrative/status-of-personnel',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Employee Personal Profile',
+  //       label: '',
+  //       href: '/administrative/employee-personal-profile',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Attendance Management',
+  //       label: '',
+  //       href: '/administrative/attendance-management',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Insurance Management',
+  //       label: '',
+  //       href: '/administrative/insurance-management',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Insurance Claiming',
+  //       label: '',
+  //       href: '/administrative/insurance-claiming',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Leave Management',
+  //       label: '',
+  //       href: '/administrative/leave-management',
+  //       icon: '',
+  //     },
+  //   ],
+  // },
+    {
     title: 'Health Center',
     label: '',
     href: '',
@@ -148,52 +146,53 @@ export const administrationLinks: SideLink[] = [
       
     ],
   },
-   {
-    title: 'Building Maintenance',
+    {
+    title: 'Gardening Mgt.',
     label: '',
     href: '',
     uName: 'hr',
     icon: <FileIcon />,
     sub: [
        {
-        title: 'Monthly Maintenance Report',
+        title: 'Monthly Activity',
         label: '',
-        href: '/administrative/building-maintenance-report',
+        href: '/administrative/gardening-monthly-activity',
         icon: '',
       },
       {
-        title: 'Tools',
+        title: 'Gardening Tools',
         label: '',
-        href: '/administrative/building-maintenance-tools',
+        href: '/administrative/gardening-tools',
         icon: '',
-      }
+      },
      
       
     ],
   },
-  {
-    title: 'Security Mgt.',
+    {
+    title: 'Fire Mgt.',
     label: '',
     href: '',
     uName: 'hr',
     icon: <FileIcon />,
     sub: [
        {
-        title: 'Monthly Report',
+        title: 'Monthly Activity',
         label: '',
-        href: '/administrative/security-mgt-monthly-report',
+        href: '/administrative/fire-mgt-monthly-report',
         icon: '',
       },
       {
-        title: 'Tools',
+        title: ' Tools',
         label: '',
-        href: '/administrative/security-mgt-tools',
+        href: '/administrative/fire-mgt-tools',
         icon: '',
-      }
+      },
      
       
     ],
   },
+ 
   {
     title: 'IT Electronics',
     label: '',
@@ -217,42 +216,46 @@ export const administrationLinks: SideLink[] = [
       
     ],
   },
+ 
   {
-    title: 'Monthly Roster',
+    title: 'Security Mgt.',
     label: '',
-    href: '/administrative/monthly-roster',
-    uName: 'admin-monthly-roster',
-    icon: <FileIcon />,
-  },
-   
-  {
-    title: 'Asset Management',
-    label: '',
-    href: '/administrative/asset-management',
+    href: '',
     uName: 'hr',
     icon: <FileIcon />,
+    sub: [
+       {
+        title: 'Monthly Report',
+        label: '',
+        href: '/administrative/security-mgt-monthly-report',
+        icon: '',
+      },
+      {
+        title: 'Tools',
+        label: '',
+        href: '/administrative/security-mgt-tools',
+        icon: '',
+      }
+     
+      
+    ],
   },
-  {
-    title: 'Notice',
-    label: '',
-    href: '/administrative/notice',
-    uName: 'admin-notice',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Vehicle Mgt. Record',
-    label: '',
-    href: '/administrative/vehicle-mgt-record',
-    uName: 'hr',
-    icon: <FileIcon />,
-  },
-    {
-    title: 'Monthly Report',
-    label: '',
-    href: '/administrative/gardening-monthly-activity',
-    uName: 'hr',
-    icon: <FileIcon />,
-  },
+ 
+  // {
+  //   title: 'Monthly Roster',
+  //   label: '',
+  //   href: '/administrative/monthly-roster',
+  //   uName: 'admin-monthly-roster',
+  //   icon: <FileIcon />,
+  // },
+ 
+  //   {
+  //   title: 'Monthly Report',
+  //   label: '',
+  //   href: '/administrative/gardening-monthly-activity',
+  //   uName: 'hr',
+  //   icon: <FileIcon />,
+  // },
 
   // start of finance links
   {
@@ -262,70 +265,6 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'finance-&-accounts',
   },
-
-  // {
-  //   title: 'RHD Bill Details',
-  //   label: '',
-  //   href: '/finance/rhd-bill-details',
-  //   uName: 'rhd-bill-details',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'Maintain IPC PDF',
-  //   label: '',
-  //   href: '/finance/maintain-ipc-pdf',
-  //   uName: 'maintain-ipc-pdf',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'Monthly IPC PS Data',
-  //   label: '',
-  //   href: '/finance/monthly-ipc-ps',
-  //   uName: 'maintain-ipc-ps-data',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'Monthly Invoice Record',
-  //   label: '',
-  //   href: '/finance/monthly-invoice-record',
-  //   uName: 'monthly-invoice-record',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'Monthly Salary Sheet',
-  //   label: '',
-  //   href: '/finance/monthly-salary-sheet',
-  //   uName: 'monthly-salary-sheet',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'Monthly PIT Sheet',
-  //   label: '',
-  //   href: '/finance/monthly-pit-sheet',
-  //   uName: 'monthly-pit-sheet',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'Toll Money',
-  //   label: '',
-  //   href: '',
-  //   uName: 'toll-money',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Toll Money Management For Cash',
-  //       label: '',
-  //       href: '/finance/toll-money-management-for-cash',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Toll Money Management For RFID',
-  //       label: '',
-  //       href: '/finance/toll-money-management-for-rfid',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
   {
     title: 'Monthly IPC Updates',
     label: '',
@@ -338,30 +277,6 @@ export const administrationLinks: SideLink[] = [
     label: '',
     href: '/finance/ipc-records',
     uName: 'finance-procurement',
-    icon: <FileIcon />,
-  },
-
-  // start of clinic center links
-  {
-    title: 'Clinic Center',
-    label: '',
-    href: '',
-    icon: '',
-    uName: 'clinic-center',
-  },
-
-  {
-    title: 'Medicine Record',
-    label: '',
-    href: '/clinic-center/medicine-record',
-    uName: 'medicine-record',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Treatment Record',
-    label: '',
-    href: '/clinic-center/treatment-record',
-    uName: 'treatment-record',
     icon: <FileIcon />,
   },
 ]
@@ -412,154 +327,7 @@ export const genInfoLinks: SideLink[] = [
 ]
 
 export const rntLinks: SideLink[] = [
-  // {
-  //   title: 'Procurement',
-  //   label: '',
-  //   href: '/road-and-traffic/procurement',
-  //   uName: 'r&t-procurement',
-  //   icon: <FileIcon />,
-  // },
-  // {
-  //   title: 'Maint, Safety & Traffic',
-  //   label: '',
-  //   href: '',
-  //   uName: 'maint-safety-traffic',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Daily Work Report',
-  //       label: '',
-  //       href: '/road-and-traffic/maintenance/daily-work-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Inspection Report',
-  //       label: '',
-  //       href: '/road-and-traffic/maintenance/inspection-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'One Page Report',
-  //       label: '',
-  //       href: '/road-and-traffic/maintenance/one-page-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Work Completion Report',
-  //       label: '',
-  //       href: '/road-and-traffic/maintenance/work-completion-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Miscellaneous',
-  //       label: '',
-  //       href: '/road-and-traffic/maintenance/miscellaneous',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'Patrol & Security',
-  //   label: '',
-  //   href: '',
-  //   uName: 'patrol-security',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Daily Work Report',
-  //       label: '',
-  //       href: '/road-and-traffic/road-safety/work-completion-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'One Page Report',
-  //       label: '',
-  //       href: '/road-and-traffic/road-safety/inspection-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Accident Report',
-  //       label: '',
-  //       href: '/road-and-traffic/road-safety/accident-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Police Records',
-  //       label: '',
-  //       href: '/road-and-traffic/road-safety/police-record',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Accident Analysis',
-  //       label: '',
-  //       href: '/road-and-traffic/road-safety/analysis',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: 'Mech/Elec',
-  //   label: '',
-  //   href: '',
-  //   uName: 'mech-elec',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Daily Report',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/daily-work-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Daily Vehicle Inspection Report',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/daily-vehicle-inspection-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Periodic Maintenance',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/periodic-maintenance',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Inspection Report',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/inspection-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Repair Work',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/repairing-work',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Inventory Report',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/inventory-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Fuel Consumption Report',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/fuel-consumption-report',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Vehicle Insurance',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/vehicle-insurance',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Vehicle Documents',
-  //       label: '',
-  //       href: '/road-and-traffic/mechanical-electrical/vehicle-documents',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
+
     {
     title: 'Organization/ Organogram',
     label: '',
@@ -589,7 +357,7 @@ export const rntLinks: SideLink[] = [
     icon: <KecIcon />,
   },
    {
-    title: 'Road Main ',
+    title: 'Road Maintenance Part',
     label: '',
     href: '',
     uName: 'drawing',
@@ -646,7 +414,7 @@ export const rntLinks: SideLink[] = [
     ],
   },
    {
-    title: 'Road and ',
+    title: 'Road Safety & Patrol Part',
     label: '',
     href: '',
     uName: 'drawing',
@@ -710,7 +478,7 @@ export const rntLinks: SideLink[] = [
   },
   
   {
-    title: 'Workshop ',
+    title: 'Workshop Maintenance Part',
     label: '',
     href: '',
     uName: 'drawing',
@@ -776,18 +544,6 @@ export const itsLinks: SideLink[] = [
         href: '/its/overview',
         icon: <AboutIcon/>,
       },
-  {
-        title: 'System configure',
-        label: '',
-        href: '/its/system-configure',
-        icon: <FileIcon/>,
-      },
-       {
-        title: 'Notice',
-        label: '',
-        href: '/its/notice',
-        icon: <FileIcon/>,
-      },
        {
         title: 'Organization',
         label: '',
@@ -795,9 +551,22 @@ export const itsLinks: SideLink[] = [
         icon: <FileIcon/>,
       },
         {
-        title: 'Monthly Report',
+        title: 'Work Plan',
         label: '',
-        href: '/its/monthly-report',
+        href: '/its/work-plan',
+        icon: <FileIcon/>,
+      },
+     
+       {
+        title: 'Notice',
+        label: '',
+        href: '/its/notice',
+        icon: <FileIcon/>,
+      },
+        {
+        title: 'System configure',
+        label: '',
+        href: '/its/system-configure',
         icon: <FileIcon/>,
       },
        {
@@ -806,13 +575,15 @@ export const itsLinks: SideLink[] = [
         href: '/its/operation-manual',
         icon: <FileIcon/>,
       },
-       {
-        title: 'Work Plan',
+      
+        {
+        title: 'Monthly Report',
         label: '',
-        href: '/its/work-plan',
+        href: '/its/monthly-report',
         icon: <FileIcon/>,
       },
-     
+      
+      
  
 ]
 
@@ -893,13 +664,7 @@ export const tollLinks: SideLink[] = [
     uName:  'special-audit',
     icon: <FileIcon />,
   },
-  //   {
-  //   title: 'WIM Data',
-  //   label: '',
-  //   href: '/toll/daily-report',
-  //   uName:  'special-audit',
-  //   icon: <FileIcon />,
-  // },
+
   {
     title: 'Monthly Roster',
     label: '',
@@ -932,122 +697,123 @@ export const tollLinks: SideLink[] = [
     uName: 'toll-monthly-roster',
     icon: <FileIcon />,
   },
-   {
-    title: 'Toll Collect & Traffic',
-    label: '',
-    href: '',
-    uName: 'toll-collect-traffic',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Toll Collect & Traffic',
-        label: '',
-        href: '/toll/toll-collect-traffic',
-        icon: '',
-      },
-      {
-        title: 'Graph (Toll/Cash)',
-        label: '',
-        href: '/toll/graph',
-        icon: '',
-      },
-      {
-        title: 'ETC/Card',
-        label: '',
-        href: '/toll/etc',
-        icon: '',
-      },
-      {
-        title: 'Monthly Traffic Report',
-        label: '',
-        href: '/toll/monthly-traffic-report',
-        icon: '',
-      },
-      {
-        title: 'Manual Monthly Traffic Report',
-        label: '',
-        href: '/toll/manual-monthly-traffic-report',
-        icon: '',
-      },
-    ],
-  },
-  {
-    title: 'Special Audit',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Exemption Report',
-        label: '',
-        href: '/toll/exemption-report',
-        icon: '',
-      },
-      {
-        title: 'Exemption Rank',
-        label: '',
-        href: '/toll/top-ten-report',
-        icon: '',
-      },
-      {
-        title: 'Others',
-        label: '',
-        href: '/toll/others',
-        icon: '',
-      },
-    ],
-  },
-  {
-    title: 'Monthly Toll Revenue',
-    label: '',
-    href: '/toll/monthly-toll-revenue',
-    uName: 'monthly-toll-revenue',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Vehicle Detect & Toll',
-    label: '',
-    href: '/toll/vehicle-detect-and-toll',
-    uName: 'vehicle-detect-toll',
-    icon: <FileIcon />,
-  },
+  //  {
+  //   title: 'Toll Collect & Traffic',
+  //   label: '',
+  //   href: '',
+  //   uName: 'toll-collect-traffic',
+  //   icon: <FileIcon />,
+  //   sub: [
+  //     {
+  //       title: 'Toll Collect & Traffic',
+  //       label: '',
+  //       href: '/toll/toll-collect-traffic',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Graph (Toll/Cash)',
+  //       label: '',
+  //       href: '/toll/graph',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'ETC/Card',
+  //       label: '',
+  //       href: '/toll/etc',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Monthly Traffic Report',
+  //       label: '',
+  //       href: '/toll/monthly-traffic-report',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Manual Monthly Traffic Report',
+  //       label: '',
+  //       href: '/toll/manual-monthly-traffic-report',
+  //       icon: '',
+  //     },
+  //   ],
+  // },
+  //  {
+  //   title: 'Hierarchy',
+  //   label: '',
+  //   href: '/toll/hierarchy',
+  //   uName: 'toll-traffic-ver',
+  //   icon: <FileIcon />,
+  // },
+  // {
+  //   title: 'Special Audit',
+  //   label: '',
+  //   href: '',
+  //   uName: 'special-audit',
+  //   icon: <FileIcon />,
+  //   sub: [
+  //     {
+  //       title: 'Exemption Report',
+  //       label: '',
+  //       href: '/toll/exemption-report',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Exemption Rank',
+  //       label: '',
+  //       href: '/toll/top-ten-report',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Others',
+  //       label: '',
+  //       href: '/toll/others',
+  //       icon: '',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'Monthly Toll Revenue',
+  //   label: '',
+  //   href: '/toll/monthly-toll-revenue',
+  //   uName: 'monthly-toll-revenue',
+  //   icon: <FileIcon />,
+  // },
+  // {
+  //   title: 'Vehicle Detect & Toll',
+  //   label: '',
+  //   href: '/toll/vehicle-detect-and-toll',
+  //   uName: 'vehicle-detect-toll',
+  //   icon: <FileIcon />,
+  // },
  
-  {
-    title: 'Comparison',
-    label: '',
-    href: '/toll/comparison',
-    uName: 'comparison',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'KEC Manual Data',
-    label: '',
-    href: '/toll/kec-manual-data',
-    uName: 'kec-manual-data',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'KEC Manual Data Graph',
-    label: '',
-    href: '/toll/kec-manual-graph',
-    uName: 'kec-manual-data-graph',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Toll & Traffic (Ver)',
-    label: '',
-    href: '/toll/toll-traffic-ver',
-    uName: 'toll-traffic-ver',
-    icon: <FileIcon />,
-  },
-   {
-    title: 'Hierarchy',
-    label: '',
-    href: '/toll/hierarchy',
-    uName: 'toll-traffic-ver',
-    icon: <FileIcon />,
-  },
+  // {
+  //   title: 'Comparison',
+  //   label: '',
+  //   href: '/toll/comparison',
+  //   uName: 'comparison',
+  //   icon: <FileIcon />,
+  // },
+  // {
+  //   title: 'KEC Manual Data',
+  //   label: '',
+  //   href: '/toll/kec-manual-data',
+  //   uName: 'kec-manual-data',
+  //   icon: <FileIcon />,
+  // },
+  // {
+  //   title: 'KEC Manual Data Graph',
+  //   label: '',
+  //   href: '/toll/kec-manual-graph',
+  //   uName: 'kec-manual-data-graph',
+  //   icon: <FileIcon />,
+  // },
+  // {
+  //   title: 'Toll & Traffic (Ver)',
+  //   label: '',
+  //   href: '/toll/toll-traffic-ver',
+  //   uName: 'toll-traffic-ver',
+  //   icon: <FileIcon />,
+  // },
+  
 ]
 
 export const edmsLinks: SideLink[] = [
