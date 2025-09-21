@@ -1405,8 +1405,6 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-          
-           
            {
             path: 'toll/daily-toll-traffic-data',
             lazy: async () => ({
@@ -1432,7 +1430,7 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/toll/daily-report'
+                  '@/pages/toll/report'
                 )
               ).default,
             }),
@@ -1785,7 +1783,7 @@ const router = createBrowserRouter([
             }),
   },
    {
-     path: '/rtw/daily-water-level-records',
+     path: '/rtw/monitoring-and-reporting/daily-water-level-records',
             lazy: async () => ({
               Component: (await import('@/pages/rtw/monitoring-and-reporting/daily-water-level-records')).default,
             }),

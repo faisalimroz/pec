@@ -32,7 +32,7 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-   
+
     problem: string
     patientType: string
     date: string
@@ -51,7 +51,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         problem: '',
-        
+
         patientType: '',
         date: '',
         remarks: '',
@@ -92,7 +92,7 @@ export default function MonthlyReport() {
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
+
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -128,7 +128,7 @@ export default function MonthlyReport() {
             formData.append('problem', updatedProduct.problem)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -243,7 +243,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-           
+
             formData.append('remarks', remarks)
             formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
@@ -404,7 +404,7 @@ export default function MonthlyReport() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -418,14 +418,15 @@ export default function MonthlyReport() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
+
                     />
                 )}
-
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
+
+    
 
     const hideViewDialog = () => {
         setViewProductDialog(false)
@@ -603,7 +604,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-              
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -783,7 +784,7 @@ export default function MonthlyReport() {
                                 className='min-w-[8rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -838,7 +839,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -869,7 +870,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -903,7 +904,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1022,7 +1023,7 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1089,7 +1090,7 @@ export default function MonthlyReport() {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

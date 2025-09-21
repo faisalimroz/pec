@@ -24,9 +24,9 @@ const ButtonGroup: React.FC<ButtonGroupWithIconsProps> = ({
 
   const BulkUpload = () => (
    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-  <path d="M3.5 9L3.5 5C3.5 4.46957 3.71071 3.96086 4.08579 3.58579C4.46086 3.21071 4.96957 3 5.5 3L19.5 3C20.0304 3 20.5391 3.21071 20.9142 3.58579C21.2893 3.96086 21.5 4.46957 21.5 5L21.5 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M17.5 14L12.5 9L7.5 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M12.5 9L12.5 21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21.5 15V19C21.5 19.5304 21.2893 20.0391 20.9142 20.4142C20.5391 20.7893 20.0304 21 19.5 21H5.5C4.96957 21 4.46086 20.7893 4.08579 20.4142C3.71071 20.0391 3.5 19.5304 3.5 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M17.5 8L12.5 3L7.5 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12.5 3V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
   );
 
@@ -50,7 +50,7 @@ const ButtonGroup: React.FC<ButtonGroupWithIconsProps> = ({
         onClick={exportCSV}
       >
         <BulkUpload />
-        Bulk Upload {selectedProducts?.length === 0 ? "" : `(${selectedProducts?.length})`}
+       Download Document {selectedProducts?.length === 0 ? "" : `(${selectedProducts?.length})`}
       </button>
 
       

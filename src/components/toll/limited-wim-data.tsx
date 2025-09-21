@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from '@radix-ui/react-icons';
+import FileIcon from '../icons/FileIcon';
 
 // Interface for the data that will populate each shift card
 interface ShiftData {
@@ -11,7 +14,7 @@ interface ShiftData {
   violation: number;
   pass: number;
   location: string;
-  
+
 }
 
 // Demo data for the four shifts shown in the design
@@ -69,13 +72,13 @@ const ShiftCard: React.FC<ShiftData> = ({ name, timeframe, total, violation, pas
         {/* Violation Metric */}
         <div className="bg-[#FF4141] rounded-md p-5 text-white ">
           <h1 className="font-semibold text-base text-center">Violation</h1>
-           <hr className="border-gray-300 h-[1px] my-2" />
+          <hr className="border-gray-300 h-[1px] my-2" />
           <h1 className="font-bold text-xl text-center">{violation.toLocaleString()}</h1>
         </div>
         {/* Pass Metric */}
         <div className="bg-[#476888] rounded-md p-5 text-white ">
           <h1 className="font-semibold text-base text-center">Pass</h1>
-           <hr className="border-gray-300 h-[1px] my-2" />
+          <hr className="border-gray-300 h-[1px] my-2" />
           <h1 className="font-bold text-xl text-center">{pass.toLocaleString()}</h1>
         </div>
       </div>
@@ -96,7 +99,14 @@ const Wim: React.FC = () => {
     { name: 'Chittagong', code: 'Chittagong' },
     { name: 'Rajshahi', code: 'Rajshahi' },
   ];
-
+  const itemTemplate = (option: { name: string; code: string }) => {
+    return (
+      <div className="flex items-center gap-2">
+        <FileIcon />
+        <span>{option.name}</span>
+      </div>
+    );
+  };
   const getMonthName = (date: Date): string => date.toLocaleString('en-US', { month: 'long' });
   const getYear = (date: Date): string => date.getFullYear().toString();
 
@@ -133,8 +143,65 @@ const Wim: React.FC = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
-      {/* Header with dropdowns and a search button */}
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+      <form
+        className='flex mx-auto w-fit gap-4 divide-x-2 border p-2 rounded-md bg-white mb-2'
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSearch()
+        }}
+      >
+        <Calendar
+          // @ts-ignore
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.value as Date)}
+
+          dateFormat="dd/mm/yy"
+          inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+          placeholder='Start Date'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
+        />
+
+        <Dropdown
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.value)}
+
+          options={locations}
+          optionLabel="name"
+          placeholder="Location"
+          itemTemplate={itemTemplate}
+
+          className='border-none rounded-none ml-4 cursor-pointer ring-0'
+        />
+
+
+        <IconField iconPosition='left' className='relative'>
+
+
+
+        </IconField>
+
+        <div>
+          <button
+            type='submit'
+            className='ml-6 border bg-green-500 px-4 py-2.5 rounded-lg'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='white'
+              className='size-6'
+            >
+              <path
+                fillRule='evenodd'
+                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </div>
+      </form>
+      {/* <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
         <div className="w-full sm:w-auto">
           <Calendar
             value={selectedDate}
@@ -151,7 +218,7 @@ const Wim: React.FC = () => {
           <Dropdown
             value={selectedLocation}
             onChange={(e) => setSelectedLocation(e.value)}
-            inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+           
             options={locations}
             optionLabel="name"
             placeholder="Location"
@@ -159,7 +226,7 @@ const Wim: React.FC = () => {
           />
         </div>
         <Button label="Search" onClick={handleSearch} loading={loading} />
-      </div>
+      </div> */}
 
       {/* Grid of Shift Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">

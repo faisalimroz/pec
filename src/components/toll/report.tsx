@@ -12,6 +12,7 @@ import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
 import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
+import RefreshButton from '@/components/refresh-button'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
@@ -449,16 +450,20 @@ export default function MonthlyReport() {
         return (
             <>
                 {hasEditAccess && (
-                    <ButtonGroupWithIcons
-                        selectedProducts={selectedProducts}
-                        openNew={openNew}
-                        exportCSV={exportCSV}
-                        confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
-                    />
+                    <button
+        className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold px-4 py-3 rounded-md"
+        onClick={exportCSV}
+      >
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M7 10L12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+       Download Files{selectedProducts?.length === 0 ? "" : `(${selectedProducts?.length})`}
+      </button>
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+               <RefreshButton handleReset={handleReset} />
             </>
         )
     }

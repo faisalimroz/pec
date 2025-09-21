@@ -465,7 +465,7 @@ export default function MonthlyReport() {
             openNew={openNew}
             exportCSV={exportCSV}
             confirmDeleteSelected={confirmDeleteSelected}
-            handleReset={handleReset}
+            
           />
           // <div className='space-x-2'>
           //     <button
@@ -496,7 +496,7 @@ export default function MonthlyReport() {
           // </div>
         )}
 
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }

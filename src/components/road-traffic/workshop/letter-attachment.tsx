@@ -418,11 +418,11 @@ export default function MonthlyReport() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
+                        
                     />
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+                 <RefreshButton handleReset={handleReset} />
             </>
         )
     }

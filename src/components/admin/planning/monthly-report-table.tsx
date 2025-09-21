@@ -177,7 +177,7 @@ export default function MonthlyReportTable() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/plan/monthly/bulk-upload`,
         formData,
         {
           headers: {
@@ -473,12 +473,12 @@ export default function MonthlyReportTable() {
             >
               Upload Document
             </button>
-            {/* <button
+            <button
           className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
           onClick={openNew2}
         >
           Bulk Upload
-        </button> */}
+        </button>
             <button
               className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
               onClick={exportCSV}
@@ -498,7 +498,7 @@ export default function MonthlyReportTable() {
             </button>
           </div>
         )}
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }

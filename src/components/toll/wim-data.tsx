@@ -448,7 +448,7 @@ export default function AssetManagementTable() {
                     </button>
                     <button
                         className={`py-3 px-4 rounded-md font-semibold ${activeTab === 'wim'
-                            ? 'bg-[#0B1F8F] text-white'
+                            ? 'bg-[#0B1F8F] text-white border border-gray-200'
                             : 'bg-white text-black'
                             }`}
                         onClick={() => setActiveTab('wim')}
@@ -469,10 +469,14 @@ export default function AssetManagementTable() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
+                       
                     />
+                    
                 )}
-                {activeTab === 'wim' && (
+               
+<RefreshButton handleReset={handleReset} />
+             
+                {/* {activeTab === 'wim' && (
                     <button
                         className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] px-4 py-3 rounded-md font-bold"
                         onClick={handleReset}
@@ -489,7 +493,7 @@ export default function AssetManagementTable() {
                         </svg>
                         Refresh
                     </button>
-                )}
+                )} */}
             </>
         )
     }

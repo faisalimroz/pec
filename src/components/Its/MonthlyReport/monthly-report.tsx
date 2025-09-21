@@ -465,11 +465,11 @@ export default function MonthlyReport() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
+                
                     />
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+               <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -843,7 +843,7 @@ export default function MonthlyReport() {
                                 field='monthName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
+                             
                                 className='min-w-[12rem]'
                                 header='Month Name'
                             ></Column>
@@ -870,7 +870,7 @@ export default function MonthlyReport() {
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
+                             
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>

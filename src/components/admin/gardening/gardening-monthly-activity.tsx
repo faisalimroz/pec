@@ -22,6 +22,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 
 interface Attachment {
     url: string
@@ -33,8 +34,7 @@ interface Product {
     subjectName: string
     description: string
     monthName: string;
-    problem: string
-    patientType: string
+
     date: string
     remarks: string
     attachments: Attachment[]
@@ -50,9 +50,9 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-        problem: '',
+        
         monthName: '',
-        patientType: '',
+     
         date: '',
         remarks: '',
         attachments: [],
@@ -102,7 +102,10 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+       const [bulkDialog, setBulkDialog] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
 
     const months = [
         'January',
@@ -211,6 +214,81 @@ export default function MonthlyReport() {
     )
 
     // ending all update dialog funcs
+  const uploadFile = async () => {
+    if (!file) {
+      setUploadStatus('Please select a file first.')
+      return
+    }
+
+    setUploading(true)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      toast.success('File uploaded successfully!')
+      setFile(null)
+      refetch()
+      hideDialog2()
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      toast.error('An error occurred while uploading. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const hideDialog2 = () => {
+    setBulkDialog(false)
+    setFile(null)
+    setUploadStatus('')
+  }
+
+  const openNew2 = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setBulkDialog(true)
+  }
+
+  const productDialogFooter2 = (
+    <>
+      <Button
+        label='Cancel'
+        icon='pi pi-times'
+        className='p-button-text'
+        onClick={hideDialog2}
+      />
+      <Button
+        label='Save'
+        icon='pi pi-upload'
+        className='p-button-text'
+        onClick={uploadFile}
+        disabled={!file || uploading}
+      />
+    </>
+  )
+
+  const handleFileChange2 = (e: { target: { files: any[] } }) => {
+    const selectedFile = e.target.files[0]
+    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+      setFile(selectedFile)
+      setUploadStatus('')
+    } else {
+      setFile(null)
+      setUploadStatus('Please select a valid .xlsx file.')
+    }
+  }
 
     const codes = [
         { name: 'Internal Patient', code: 'Internal' },
@@ -459,44 +537,18 @@ export default function MonthlyReport() {
     const rightToolbarTemplate = () => {
         return (
             <>
-                {hasEditAccess && (
-                    <ButtonGroupWithIcons
-                                          selectedProducts={selectedProducts}
-                                          openNew={openNew}
-                                          exportCSV={exportCSV}
-                                          confirmDeleteSelected={confirmDeleteSelected}
-                                          handleReset={handleReset}
-                                      />
-                    // <div className='space-x-2'>
-                    //     <button
-                    //         className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-                    //         onClick={openNew}
-                    //     >
-                    //         Upload Document
-                    //     </button>
-                    //     <button
-                    //         className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-                    //         onClick={exportCSV}
-                    //     >
-                    //         Download Files{' '}
-                    //         {selectedProducts?.length === 0
-                    //             ? '(All)'
-                    //             : `(${selectedProducts?.length})`}
-                    //     </button>
-                    //     <button
-                    //         onClick={confirmDeleteSelected}
-                    //         disabled={!selectedProducts || selectedProducts.length === 0}
-                    //         className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${selectedProducts && selectedProducts.length > 0
-                    //             ? 'bg-red-500 hover:bg-red-600'
-                    //             : 'bg-gray-400 cursor-not-allowed'
-                    //             }`}
-                    //     >
-                    //         Delete Selected ({selectedProducts?.length || 0})
-                    //     </button>
-                    // </div>
+              {hasEditAccess && (
+                    <ButtonGroupWithIcon
+                        selectedProducts={selectedProducts}
+                        openNew={openNew}
+                        openNew2={openNew2}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
+                       
+                    />
                 )}
 
-                <RefreshButton className='text-base ml-2' onClick={handleReset} />
+             <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -915,7 +967,46 @@ export default function MonthlyReport() {
                     </TabPanel>
                 </TabView>
             </div>
-
+ <Dialog
+        visible={bulkDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Upload Bulk Data'
+        modal
+        className='p-fluid'
+        footer={productDialogFooter2}
+        onHide={hideDialog2}
+      >
+        <div className='grid grid-cols-2 items-center gap-6'>
+          <div className='field col-span-2'>
+            <label htmlFor='bulkUpload' className='font-bold'>
+              Select File (.xlsx Only):
+            </label>
+            <br />
+            <input
+              type='file'
+              id='bulkUpload'
+              accept='.xlsx'
+              // @ts-ignore
+              onChange={handleFileChange2}
+              disabled={uploading}
+              className='mt-3'
+            />
+            {/* {file && <p>Selected file: {file?.name}</p>} */}
+            {uploadStatus && (
+              <p
+                className={
+                  uploadStatus.includes('success')
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }
+              >
+                {uploadStatus}
+              </p>
+            )}
+          </div>
+        </div>
+      </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}

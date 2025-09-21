@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { pmisLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, pmisTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/mb-pmis/communication-correspondence/letters-official-correspondence'
+import DemoTable from '@/components/mb-pmis/communication-correspondence/meeting-minutes'
 import { useAuth } from '@/provider/authProvider'
 
 export default function MonthlyReport() {

@@ -372,7 +372,7 @@ export default function KecLetter() {
                                 <path d="M7 10L12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                 <path d="M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                            Upload Document
+                          Picture Upload
                         </button>
 
                     </div>

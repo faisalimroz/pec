@@ -31,6 +31,9 @@ import { useAuth } from '@/provider/authProvider'
 import { Bike } from 'lucide-react'
 import TollGroupWithIcons from '../ui/tollbuttons'
 import { set } from 'date-fns'
+import { IconField } from 'primereact/iconfield'
+import { InputIcon } from '@radix-ui/react-icons'
+import { InputText } from 'primereact/inputtext'
 interface Product {
     lane: number;
     totaltrailer5xl: number;
@@ -66,7 +69,7 @@ export default function VehicleDetectTollTable() {
     const [selectedTraffic, setTraffic] = useState(null)
     const [selectedPeriod, setSelectedPeriod] = useState(null)
     const [allData, setAllData] = useState<any>([])
-    
+    const [searchKey, setSearchKey] = useState<string>('')
     const [bulkDialog, setBulkDialog] = useState(false)
     const [file, setFile] = useState<any>(null)
     const [uploading, setUploading] = useState(false)
@@ -92,7 +95,7 @@ export default function VehicleDetectTollTable() {
     const isToll = roles.some((role) =>
         ['superadmin', 'toll-manager'].includes(role.title)
     )
-      const itemTemplate = (option: { label: string; value: string }) => {
+    const itemTemplate = (option: { label: string; value: string }) => {
         return (
             <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
@@ -109,8 +112,8 @@ export default function VehicleDetectTollTable() {
     const location = [
         { label: 'All', value: 'All' },
         { label: 'Mawa', value: 'Mawa' },
-        { label: 'Jinjira', value:'Jinjira' },
-        
+        { label: 'Jinjira', value: 'Jinjira' },
+
     ]
 
     const period = [
@@ -162,24 +165,24 @@ export default function VehicleDetectTollTable() {
         }
     }
 
-//   const handleReset = () => {
-//     const initialPayload = {
-//       year: '',
-//       searchQuery: '',
-//       month: '',
-//     }
+    //   const handleReset = () => {
+    //     const initialPayload = {
+    //       year: '',
+    //       searchQuery: '',
+    //       month: '',
+    //     }
 
-//     setDate('')
-//     setDate2('')
-//    setTraffic(null)
-//    setSelectedPeriod(null)
-//    setSelectedLocation(null)
-//    setSearchKey('')
-//     searchAssetManagement(initialPayload).then((result) => {
-//       setProducts(result?.Assets)
-//       setLoading(false)
-//     })
-//   }
+    //     setDate('')
+    //     setDate2('')
+    //    setTraffic(null)
+    //    setSelectedPeriod(null)
+    //    setSelectedLocation(null)
+    //    setSearchKey('')
+    //     searchAssetManagement(initialPayload).then((result) => {
+    //       setProducts(result?.Assets)
+    //       setLoading(false)
+    //     })
+    //   }
     const hideDialog2 = () => {
         setBulkDialog(false)
         setFile(null)
@@ -296,12 +299,12 @@ export default function VehicleDetectTollTable() {
         return (
             <>
                 {hasEditAccess && (
-                   
-                       <TollGroupWithIcons
+
+                    <TollGroupWithIcons
                         selectedProducts={selectedProducts}
                         openNew={openNew2}
-                        bulkUpload={openNew3}
-                    
+                        bulkUpload={openNew2}
+
                         handleReset={handleReset}
                     />
                 )}
@@ -387,7 +390,7 @@ export default function VehicleDetectTollTable() {
                         value={date}
                         // @ts-ignore
                         onChange={(e) => setDate(e.value)}
-                        
+
                         dateFormat="dd/mm/yy"
                         inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
                         placeholder='Start Date'
@@ -399,7 +402,7 @@ export default function VehicleDetectTollTable() {
                         value={date2}
                         // @ts-ignore
                         onChange={(e) => setDate2(e.value)}
-                     
+
                         dateFormat="dd/mm/yy"
                         inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
                         placeholder='End Date'
@@ -414,7 +417,7 @@ export default function VehicleDetectTollTable() {
                         onChange={(e) => setSelectedLocation(e.value)}
                         options={location}
                         placeholder='Location'
-                          itemTemplate={itemTemplate}
+                        itemTemplate={itemTemplate}
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
                 </div>
@@ -441,23 +444,36 @@ export default function VehicleDetectTollTable() {
                     />
                 </div>
 
-                <button
-                    onClick={() => handleSearch()}
-                    className='border bg-green-500 px-4 py-2.5 rounded-lg ml-2'
-                >
-                    <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 24 24'
-                        fill='white'
-                        className='size-6'
+
+                <IconField iconPosition='left' className='relative'>
+                   
+                    <InputText
+                        type='search'
+                        placeholder='Search'
+                        className='border-none ml-4 focus:ring-0'
+                        onChange={(e) => setSearchKey(e.target.value)}
+                        value={searchKey}
+                    />
+
+                    <button
+                        onClick={() => handleSearch()}
+                        className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+                        type='submit'
                     >
-                        <path
-                            fillRule='evenodd'
-                            d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-                            clipRule='evenodd'
-                        />
-                    </svg>
-                </button>
+                        <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 24 24'
+                            fill='white'
+                            className='size-6'
+                        >
+                            <path
+                                fillRule='evenodd'
+                                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                                clipRule='evenodd'
+                            />
+                        </svg>
+                    </button>
+                </IconField>
             </div>
             <h1 className='text-center pt-10 text-xl font-bold text-[#000000]'>Traffic Report</h1>
         </div>
@@ -550,7 +566,7 @@ export default function VehicleDetectTollTable() {
         <ColumnGroup>
             <Row>
                 <Column
-                    header='Lane No.'
+                    header='Payment Method'
                     headerClassName='min-w-[10rem]'
                     rowSpan={2}
                     frozen

@@ -430,10 +430,10 @@ export default function AssetManagementTable() {
                                  openNew={openNew}
                                  exportCSV={exportCSV}
                                  confirmDeleteSelected={confirmDeleteSelected}
-                                 handleReset={handleReset}
+                            
                              />
         )}
-        {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+       <RefreshButton handleReset={handleReset} />
       </>
     )
   }
@@ -758,7 +758,7 @@ export default function AssetManagementTable() {
           right={rightToolbarTemplate}
         ></Toolbar>
         <div className='mt-2'>
-          {/* <ButtonGroup></ButtonGroup> */}
+    
         </div>
         <DataTable
           ref={dt}

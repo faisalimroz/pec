@@ -216,7 +216,31 @@ export default function NoticeCalender(): JSX.Element {
       </div>
 
       <div className='col-span-3'>
-        <Card className='flex-1 flex flex-col my-0 shadow-md'>
+
+        <Card className='flex-1 flex flex-col h-[350px] my-0 overflow-hidden shadow-md'>
+         
+         
+          <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
+            <div className='flex items-center'>
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                <path d="M19.9688 4.46289H5.96875C4.86418 4.46289 3.96875 5.35832 3.96875 6.46289V20.4629C3.96875 21.5675 4.86418 22.4629 5.96875 22.4629H19.9688C21.0733 22.4629 21.9688 21.5675 21.9688 20.4629V6.46289C21.9688 5.35832 21.0733 4.46289 19.9688 4.46289Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M16.9688 2.46289V6.46289" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M8.96875 2.46289V6.46289" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M3.96875 10.4629H21.9688" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span className='font-bold text-[20px]'>Calendar</span>
+            </div>
+            {hasEditAccess && (
+              <Link to='/admin-panel/notice-board'>
+                <Button
+                  variant='secondary'
+                  className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+                >
+                  This Month
+                </Button>
+              </Link>
+            )}
+          </div>
           <Calendar
             value={date}
             // @ts-ignore

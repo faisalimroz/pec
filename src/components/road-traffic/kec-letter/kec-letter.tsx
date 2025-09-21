@@ -451,11 +451,11 @@ export default function KecLetter() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
+                       
                     />
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }

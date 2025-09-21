@@ -137,7 +137,7 @@ export const administrationLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Medicine Equipment Record',
+        title: 'Medical Equipment Record',
         label: '',
         href: '/administrative/health-center-monthly-equipment-record',
         icon: '',
@@ -610,7 +610,7 @@ export const tollLinks: SideLink[] = [
         icon: '',
       },
        {
-        title: 'Shift Wise Toll & Traffic',
+        title: 'Shift Wise Toll & Traffic Comparison',
         label: '',
         href: '/toll/shift/shift-wise-toll-traffic-comparison',
         icon: '',

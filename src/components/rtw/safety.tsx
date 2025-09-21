@@ -22,6 +22,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import ButtonGroupWithIcon from '../ui/common-all-buttons'
 
 interface Attachment {
     url: string
@@ -31,9 +32,8 @@ interface Product {
     _id: string | null
     slNo: string
     subjectName: string
-    materialType: string  
-    problem: string
-    patientType: string
+    materialType: string
+
     date: string
     remarks: string
     attachments: Attachment[]
@@ -49,9 +49,7 @@ export default function KecLetter() {
         slNo: '',
         subjectName: '',
         materialType: '',
-        problem: '',
-        
-        patientType: '',
+
         date: '',
         remarks: '',
         attachments: [],
@@ -92,7 +90,7 @@ export default function KecLetter() {
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
+
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -101,7 +99,10 @@ export default function KecLetter() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -122,13 +123,13 @@ export default function KecLetter() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('materialType', updatedProduct.materialType)
-            formData.append('problem', updatedProduct.problem)
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -194,13 +195,85 @@ export default function KecLetter() {
             />
         </>
     )
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
+        }
+
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
+    }
+
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
+    }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     // ending all update dialog funcs
 
-    const codes = [
-        { name: 'Internal Patient', code: 'Internal' },
-        { name: 'Outside Patient', code: 'Outside' },
-    ]
+
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -445,16 +518,17 @@ export default function KecLetter() {
         return (
             <>
                 {hasEditAccess && (
-                    <ButtonGroupWithIcons
+                    <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
+                        openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
+
                     />
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -824,7 +898,7 @@ export default function KecLetter() {
                                 className='min-w-[8rem]'
                                 header='File Name'
                             ></Column>
-                           
+
                             <Column
                                 field='materialType'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -866,7 +940,46 @@ export default function KecLetter() {
                     </TabPanel>
                 </TabView>
             </div>
-
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -879,7 +992,7 @@ export default function KecLetter() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='materialType' className='font-bold'>
                                 Material Type
@@ -895,7 +1008,7 @@ export default function KecLetter() {
                                 }
                             />
                         </div>
-                                                            {/* <div className="field">
+                        {/* <div className="field">
                                                                 <label htmlFor="location" className="font-bold">
                                                                     Location
                                                                 </label>
@@ -930,7 +1043,7 @@ export default function KecLetter() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -964,7 +1077,7 @@ export default function KecLetter() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1078,7 +1191,7 @@ export default function KecLetter() {
                                 <h3 className='font-bold'>Date</h3>
                                 <p>{selectedProduct.date}</p>
                             </div>
-                            
+
                             <div>
                                 <h3 className='font-bold'>File Name</h3>
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
@@ -1087,7 +1200,7 @@ export default function KecLetter() {
                                 <h3 className='font-bold'>Material Type</h3>
                                 <p className='break-all'>{selectedProduct.materialType}</p>
                             </div>
-                           {/* <div className="field">
+                            {/* <div className="field">
                                         <label htmlFor="shiftName" className="font-bold">
                                             Shift Name
                                         </label>
@@ -1176,7 +1289,7 @@ export default function KecLetter() {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

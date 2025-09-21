@@ -4,7 +4,7 @@ import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
-import { clinicTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
+import { adminTopNav, clinicTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
 import DemoTable from '@/components/admin/ipc/ipc-monthly-updates'
 import { useAuth } from '@/provider/authProvider'
 
@@ -14,7 +14,7 @@ export default function TreatmentRecord() {
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = clinicTopNav
+  const selectedNav = adminTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>

@@ -56,56 +56,6 @@ export const adminTopNav = [
  
 ]
 
-export const clinicTopNav = [
-  {
-    title: 'General Information',
-    href: '/general-information/general-status',
-    isActive: false,
-    logo: GiIcon,
-    roles: ['general-information', 'superadmin'],
-    uName: 'general-information',
-  },
-  {
-    title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
-    isActive: false,
-    logo: RntIcon,
-    roles: ['superadmin', 'r&t-manager'],
-    uName: 'road-&-traffic',
-  },
-  {
-    title: 'ITS',
-    href: '/its/overview',
-    isActive: false,
-    logo: ItsIcon,
-    roles: ['superadmin', 'its-manager'],
-    uName: 'its',
-  },
-  {
-    title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
-    isActive: false,
-    logo: tollIcon,
-    roles: ['superadmin', 'toll-manager'],
-    uName: 'toll',
-  },
-  {
-    title: 'Administration',
-    href: '/administrative',
-    isActive: true,
-    logo: AdminIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'administration',
-  },
-  {
-    title: 'EDMS',
-    href: '/edms/dispatched',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['edms', 'superadmin'],
-    uName: 'edms',
-  },
-]
 
 export const tollTopNav = [
  

@@ -592,7 +592,7 @@ export default function AccidentReportTable() {
             </button>
           </div>
         )}
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }
