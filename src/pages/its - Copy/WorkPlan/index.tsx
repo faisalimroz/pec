@@ -3,10 +3,12 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { itsLinks, rntLinks } from '@/data/sidelinks'
-import { getFilteredNavLinks, itsTopNav, rntTopNav } from '@/data/topNavLinks'
+import { itsLinks, rntLinks } from '@/data/sidelinks-edms'
+import { getFilteredNavLinks, itsTopNav, rntTopNav } from '@/data/edmsNavLinks'
 import DemoTable from '@/components/Its/WorkPlan/work-plan'
 import { useAuth } from '@/provider/authProvider'
+import NewNavbar from '@/components/edms/new-nav'
+import { edmsSecondNav } from '@/data/topNavLinks'
 
 export default function AccidentReport() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
@@ -37,7 +39,9 @@ export default function AccidentReport() {
                 <UserNav />
               </div>
             </LayoutHeader>
-
+              <div>
+                <NewNavbar links={edmsSecondNav} />
+              </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>

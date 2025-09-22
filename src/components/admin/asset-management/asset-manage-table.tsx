@@ -53,9 +53,7 @@ export default function AssetManagementTable() {
   const { roles, permissions } = useAuth()
   const checkRole = permissions.find((p) => p.name === 'admin')
   const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
   const hasEditAccess = checkPermission?.edit_authority || false
-
   const isAdmin = roles.some((role) =>
     ['superadmin', 'admin'].includes(role.title)
   )
@@ -68,8 +66,8 @@ export default function AssetManagementTable() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
   const dt = useRef<DataTable<Product[]>>(null)
-  const [date, setDate] = useState<string>('')
-  const [date2, setDate2] = useState<string>('')
+  const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
@@ -89,7 +87,7 @@ export default function AssetManagementTable() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
-
+  const [selectedType, setSelectedType] = useState<string | null>(null)
   // all update dialog func here
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
@@ -123,7 +121,7 @@ export default function AssetManagementTable() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/update/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -162,7 +160,7 @@ export default function AssetManagementTable() {
       }
     })
   }
-const uploadFile = async () => {
+  const uploadFile = async () => {
     if (!file) {
       setUploadStatus('Please select a file first.')
       return
@@ -175,7 +173,7 @@ const uploadFile = async () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/bulk-upload`,
         formData,
         {
           headers: {
@@ -304,7 +302,7 @@ const uploadFile = async () => {
         formData.append('attachments', file)
       })
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/create`,
         formData,
         {
           headers: {
@@ -344,7 +342,7 @@ const uploadFile = async () => {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/delete/by/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -405,7 +403,7 @@ const uploadFile = async () => {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/delete-multiple`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -496,14 +494,14 @@ const uploadFile = async () => {
     return (
       <>
         {hasEditAccess && (
-           <ButtonGroupWithIcon
-                        selectedProducts={selectedProducts}
-                        openNew={openNew}
-                        openNew2={openNew2}
-                        exportCSV={exportCSV}
-                        confirmDeleteSelected={confirmDeleteSelected}
-                       
-                    />
+          <ButtonGroupWithIcon
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            openNew2={openNew2}
+            exportCSV={exportCSV}
+            confirmDeleteSelected={confirmDeleteSelected}
+
+          />
         )}
         <RefreshButton handleReset={handleReset} />
       </>
@@ -513,22 +511,35 @@ const uploadFile = async () => {
 
   const ButtonGroup = () => {
     const [activeButton, setActiveButton] = useState('All')
-
+    
     const buttons = [
       { label: 'All', value: 'All' },
       { label: 'Service Area 1', value: 'Service Area 1' },
       { label: 'Service Area 2', value: 'Service Area 2' },
       { label: 'Service Area 3', value: 'Service Area 3' },
       { label: 'Mawa', value: 'Mawa' },
-      { label: 'Janjira', value: 'Janjira' },
+      { label: 'Jinjira', value: 'Jinjira' },
     ]
 
-    const handleButtonClick = (buttonValue: string) => {
-      setActiveButton(buttonValue)
-      //api is not ready yet
-      console.log(`Button clicked: ${buttonValue}`)
-    }
+   const handleButtonClick = (buttonValue: string) => {
+    
+    setActiveButton(buttonValue);
+    setSelectedType(buttonValue);
 
+    setLoading(true);
+    const payload = {
+        type: buttonValue || "All", 
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+        searchQuery: searchKey || '',
+    };
+
+    searchAssetManagement(payload).then((result) => {
+        setProducts(result?.data);
+        setLoading(false);
+    });
+
+    console.log(`Button clicked: ${activeButton}`);
+};
     return (
       <>
         <div className='flex items-center space-x-2 py-2 rounded-lg'>
@@ -540,7 +551,7 @@ const uploadFile = async () => {
             px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
             ${activeButton === button.value
                   ? 'bg-[#6F90AE] text-base font-semibold text-white'
-                  : ' bg-main text-base font-semibold text-white'
+                  : ' bg-[#0B1F8F] text-base font-semibold text-white'
                 }
             
           `}
@@ -656,31 +667,31 @@ const uploadFile = async () => {
 
   const handleSearch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: date ? getMonthName(date) : '',
-      year: date2 ? getYear(date2) : '',
+    const payload = {
+         type: selectedType|| 'All',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
-
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
 
   const handleReset = () => {
-    const initialPayload = {
-      year: '',
-      searchQuery: '',
-      month: '',
-    }
-
-    setDate('')
-    setDate2('')
+    setDate(null)
+    setDate2(null)
     setSearchKey('')
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+
+    const payload = {
+      type:'',
+      date_range: '',
+      searchQuery: '',
+    }
+    setLoading(true)
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
@@ -803,14 +814,14 @@ const uploadFile = async () => {
 
   const refetch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: '',
-      year: '',
+    const payload = {
+       type:'',
+      date_range: '',
       searchQuery: '',
     }
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
@@ -1039,7 +1050,7 @@ const uploadFile = async () => {
           </div>
         )}
       </Dialog>
-            <Dialog
+      <Dialog
         visible={bulkDialog}
         style={{ width: '42rem' }}
         breakpoints={{ '960px': '75vw', '641px': '90vw' }}

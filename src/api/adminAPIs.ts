@@ -4,6 +4,78 @@ const BASE_URL = import.meta.env.VITE_BASE_URL
 
 const token = localStorage.getItem('token')
 
+
+//vehicle apis
+export async function searchVehicleMgtRecord(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/admin/vehicle-mgt-record/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+
+//building report
+export async function searchBuildingMonthlyReport(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/admin/building/monthly-maintenance/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchBuildingToolsReport(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/admin/building/tools/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
+//asset management
+export async function searchAssetManagement(param: unknown) {
+  console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/admin/asset-management/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+
+
 // planning apis
 
 export async function searchBusinessReport(param: unknown) {
@@ -22,6 +94,9 @@ export async function searchBusinessReport(param: unknown) {
 
   return response.data
 }
+
+
+//vehicle apis
 
 export async function searchMeetingReport(param: unknown) {
   // console.log('param', param)
@@ -282,6 +357,7 @@ export async function searchTreatmentRecord(param: unknown) {
   return response.data
 }
 
+
 // greetings apis
 
 export async function searchGreetings(param: unknown) {
@@ -483,22 +559,7 @@ export async function searchOfficialLetter(param: unknown) {
 
 // asset management apis
 
-export async function searchAssetManagement(param: unknown) {
-  // console.log('param', param)
 
-  const response = await axios.post(
-    `${BASE_URL}/api/v1/admin/asset-manage/search/data`,
-    param,
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-
-  return response.data
-}
 
 // Admin Panel Apis
 

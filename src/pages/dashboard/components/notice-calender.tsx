@@ -14,6 +14,14 @@ import { FileText, Info } from 'lucide-react'
 import '../styles/style.css'
 import { EDMSLettersList } from '@/components/charts/edms-chart'
 import { useAuth } from '@/provider/authProvider'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { ChevronDown } from 'lucide-react'
 
 interface Attachment {
   url: string
@@ -34,6 +42,20 @@ interface Notice {
 interface ApiResponse {
   Notices: Notice[]
 }
+const monthOptions = [
+  { value: '0', label: 'January' },
+  { value: '1', label: 'February' },
+  { value: '2', label: 'March' },
+  { value: '3', label: 'April' },
+  { value: '4', label: 'May' },
+  { value: '5', label: 'June' },
+  { value: '6', label: 'July' },
+  { value: '7', label: 'August' },
+  { value: '8', label: 'September' },
+  { value: '9', label: 'October' },
+  { value: '10', label: 'November' },
+  { value: '11', label: 'December' },
+];
 
 export default function NoticeCalender(): JSX.Element {
   const [date, setDate] = React.useState<Date | null>(null)
@@ -162,7 +184,7 @@ export default function NoticeCalender(): JSX.Element {
         </div>
         <div className='w-[50%]'
         >
-          <Card className='flex-1 flex flex-col h-[350px] my-0 overflow-hidden shadow-md'>
+          <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[350px] my-0 overflow-hidden shadow-md'>
             <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
               <div className='flex items-center'>
                 <svg
@@ -217,9 +239,9 @@ export default function NoticeCalender(): JSX.Element {
 
       <div className='col-span-3'>
 
-        <Card className='flex-1 flex flex-col h-[350px] my-0 overflow-hidden shadow-md'>
-         
-         
+        <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[350px] my-0 overflow-hidden shadow-md'>
+
+
           <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
             <div className='flex items-center'>
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
@@ -228,18 +250,46 @@ export default function NoticeCalender(): JSX.Element {
                 <path d="M8.96875 2.46289V6.46289" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 <path d="M3.96875 10.4629H21.9688" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
-              <span className='font-bold text-[20px]'>Calendar</span>
+              <span className='font-bold text-[20px] ml-2'>Calendar</span>
             </div>
             {hasEditAccess && (
-              <Link to='/admin-panel/notice-board'>
-                <Button
-                  variant='secondary'
-                  className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+              <div className="flex items-center gap-2">
+
+                <Select
+
+                  value={String((date ?? new Date()).getMonth())}
+                  onValueChange={(m) => {
+                    const current = date ?? new Date();
+                    const next = new Date(current);
+                    next.setMonth(parseInt(m, 10), 1);
+                    next.setHours(0, 0, 0, 0);
+                    setDate(next);
+                  }}
                 >
-                  This Month
-                </Button>
-              </Link>
+                  <SelectTrigger className="w-[140px] h-[31px] bg-white text-gray-800">
+                    <SelectValue placeholder="Select month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {monthOptions.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* (Optional) keep the original link if you still want it next to the dropdown */}
+                {/* <Link to='/admin-panel/notice-board'>
+      <Button
+        variant='secondary'
+        className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+      >
+        View More
+      </Button>
+    </Link> */}
+              </div>
             )}
+
           </div>
           <Calendar
             value={date}

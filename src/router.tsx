@@ -1910,19 +1910,25 @@ const router = createBrowserRouter([
   },
   //extra edms
    {
-     path: 'edms/administrative',
+     path: '/edms/administrative',
             lazy: async () => ({
               Component: (await import('@/pages/admin-edms/index')).default,
             }),
   },
     {
-     path: 'edms/its',
+     path: '/edms/its',
             lazy: async () => ({
               Component: (await import('@/pages/its - Copy/AboutUs')).default,
             }),
   },
   {
-     path: 'edms/overview',
+     path: '/edms/overview',
+            lazy: async () => ({
+              Component: (await import('@/pages/its - Copy/AboutUs')).default,
+            }),
+  },
+  {
+     path: '/edms/its/workplan',
             lazy: async () => ({
               Component: (await import('@/pages/its - Copy/AboutUs')).default,
             }),

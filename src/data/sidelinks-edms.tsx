@@ -447,7 +447,7 @@ export const itsLinks: SideLink[] = [
         {
         title: 'Work Plan',
         label: '',
-        href: '/its/work-plan',
+        href: '/edms/its/workplan',
         icon: <FileIcon/>,
       },
      

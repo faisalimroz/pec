@@ -518,7 +518,7 @@ export const pmisTopNav = [
 export const edmsSecondNav=[
    {
     title: 'Administration',
-    href: 'administrative',
+    href: '/edms/administrative',
     isActive: false,
     logo: AdminIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -526,7 +526,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/edms/road-and-traffic/procurement',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -534,7 +534,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/edms/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -542,7 +542,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/edms/rtw/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -551,7 +551,7 @@ export const edmsSecondNav=[
 
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/edms/toll/monthly-toll-revenue',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -559,7 +559,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'ITS',
-    href: 'its/about',
+    href: '/edms/its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
