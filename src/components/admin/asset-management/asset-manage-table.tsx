@@ -21,6 +21,8 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import FileIcon from '@/components/icons/FileIcon'
+import { Dropdown } from 'primereact/dropdown'
 
 interface Attachment {
   url: string
@@ -33,6 +35,7 @@ interface Product {
   date: string
   description: string
   remarks: string
+  type: string
   attachments: Attachment[]
   creator?: string
   creationTimestamp?: string
@@ -45,6 +48,7 @@ export default function AssetManagementTable() {
     _id: '',
     slNo: '',
     fileName: '',
+    type: '',
     date: '',
     description: '',
     remarks: '',
@@ -88,7 +92,23 @@ export default function AssetManagementTable() {
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [type, setType] = useState<string>("");
   // all update dialog func here
+  const alltypes = [
+    { name: "All", value: "All" },
+    { name: "Service Area 1", value: "Service Area 1" },
+    { name: "Service Area 2", value: "Service Area 2" },
+    { name: "Service Area 3", value: "Service Area 3" },
+    { name: "Mawa", value: "Mawa" },
+    { name: "Jinjira", value: "Jinjira" },
+
+  ];
+  const itemTemplate = (option: { name: string; value: string }) => (
+    <div className="flex items-center gap-2">
+      <FileIcon />
+      <span>{option.name}</span>
+    </div>
+  )
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
@@ -111,7 +131,7 @@ export default function AssetManagementTable() {
       formData.append('description', updatedProduct.description)
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
-
+      formData.append('type', updatedProduct.type);
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
       })
@@ -121,7 +141,7 @@ export default function AssetManagementTable() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/update/by/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -298,6 +318,7 @@ export default function AssetManagementTable() {
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
+      formData.append('type', type)
       filesInput.forEach((file) => {
         formData.append('attachments', file)
       })
@@ -509,61 +530,58 @@ export default function AssetManagementTable() {
   }
 
 
-  const ButtonGroup = () => {
-    const [activeButton, setActiveButton] = useState('All')
-    
-    const buttons = [
-      { label: 'All', value: 'All' },
-      { label: 'Service Area 1', value: 'Service Area 1' },
-      { label: 'Service Area 2', value: 'Service Area 2' },
-      { label: 'Service Area 3', value: 'Service Area 3' },
-      { label: 'Mawa', value: 'Mawa' },
-      { label: 'Jinjira', value: 'Jinjira' },
-    ]
+const ButtonGroup = () => {
+  const [activeButton, setActiveButton] = useState("All"); // ✅ default
 
-   const handleButtonClick = (buttonValue: string) => {
-    
-    setActiveButton(buttonValue);
+  const buttons = [
+    { label: "All", value: "All" },
+    { label: "Service Area 1", value: "Service Area 1" },
+    { label: "Service Area 2", value: "Service Area 2" },
+    { label: "Service Area 3", value: "Service Area 3" },
+    { label: "Mawa", value: "Mawa" },
+    { label: "Jinjira", value: "Jinjira" },
+  ];
+
+  const handleButtonClick = (buttonValue: string) => {
+    setActiveButton(buttonValue); // ✅ update correctly
     setSelectedType(buttonValue);
 
     setLoading(true);
     const payload = {
-        type: buttonValue || "All", 
-        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-        searchQuery: searchKey || '',
+      type: buttonValue || "All",
+      date_range:
+        date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+      searchQuery: searchKey || "",
     };
 
     searchAssetManagement(payload).then((result) => {
-        setProducts(result?.data);
-        setLoading(false);
+      setProducts(result?.data);
+      setLoading(false);
     });
 
-    console.log(`Button clicked: ${activeButton}`);
-};
-    return (
-      <>
-        <div className='flex items-center space-x-2 py-2 rounded-lg'>
-          {buttons.map((button) => (
-            <button
-              key={button.value}
-              onClick={() => handleButtonClick(button.value)}
-              className={`
-            px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-            ${activeButton === button.value
-                  ? 'bg-[#6F90AE] text-base font-semibold text-white'
-                  : ' bg-[#0B1F8F] text-base font-semibold text-white'
-                }
-            
-          `}
-            >
-              {button.label}
-            </button>
-          ))}
-        </div>
-      </>
+    // ⚠️ shows stale state, so log the incoming value instead
+    console.log(`Button clicked: ${buttonValue}`);
+  };
 
-    )
-  }
+  return (
+    <div className="flex items-center space-x-2 py-2 rounded-lg">
+      {buttons.map((button) => (
+        <button
+          key={button.value}
+          onClick={() => handleButtonClick(button.value)}
+          className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
+            ${activeButton === button.value
+              ? "bg-[#6F90AE] text-base text-white"
+              : "bg-[#0B1F8F] text-base text-white"
+            }`}
+        >
+          {button.label} {/* ✅ show label for clarity */}
+        </button>
+      ))}
+    </div>
+  );
+};
+
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
@@ -668,7 +686,7 @@ export default function AssetManagementTable() {
   const handleSearch = () => {
     setLoading(true)
     const payload = {
-         type: selectedType|| 'All',
+      type: selectedType || 'All',
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
@@ -685,7 +703,7 @@ export default function AssetManagementTable() {
 
 
     const payload = {
-      type:'',
+      type: '',
       date_range: '',
       searchQuery: '',
     }
@@ -815,7 +833,7 @@ export default function AssetManagementTable() {
   const refetch = () => {
     setLoading(true)
     const payload = {
-       type:'',
+      type: '',
       date_range: '',
       searchQuery: '',
     }
@@ -1001,6 +1019,27 @@ export default function AssetManagementTable() {
               />
             </div>
             <div className='field'>
+              <label htmlFor='type' className='font-bold'>
+                Type
+              </label>
+              <Dropdown
+                id='type'
+                value={updatedProduct.type}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    type: e.target.value,
+                  })
+                }
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                placeholder='Select type'
+                className='w-full'
+                itemTemplate={itemTemplate}
+              />
+            </div>
+            <div className='field'>
               <label htmlFor='date' className='font-bold'>
                 Date
               </label>
@@ -1169,7 +1208,11 @@ export default function AssetManagementTable() {
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
-
+              
+                            <div>
+                                <h3 className='font-bold'>Type</h3>
+                                <p className='break-all'>{selectedProduct.type}</p>
+                            </div>
 
               <div>
                 <h3 className='font-bold'>File Name/Subject</h3>
@@ -1238,7 +1281,22 @@ export default function AssetManagementTable() {
               )}
             </div>
 
-
+            <div className="field">
+                                        <label htmlFor="type" className="font-bold">
+                                           Type
+                                        </label>
+                                        <Dropdown
+                                            id="type"
+                                            value={type}
+                                            onChange={(e) => setType(e.target.value)}
+                                            options={alltypes}
+                                            optionLabel='name'
+                                            optionValue='name'
+                                            itemTemplate={itemTemplate}
+                                            placeholder="Select type"
+                                            className="w-full"
+                                        />
+                                    </div>
 
 
 

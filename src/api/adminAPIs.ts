@@ -71,10 +71,27 @@ export async function searchAssetManagement(param: unknown) {
       },
     }
   )
-console.log(response.data)
+
   return response.data
 }
 
+//medicine inout record
+export async function searchMedicineInOutRecord(param: unknown) {
+  console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/admin/healthcare/medicine-in-out/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
 
 // planning apis
 

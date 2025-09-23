@@ -32,10 +32,8 @@ interface Product {
   slNo: string
   subjectName: string
   description: string
-
-  problem: string
-  patientType: string
   date: string
+  type:string
   remarks: string
   attachments: Attachment[]
   creator?: string
@@ -50,9 +48,7 @@ export default function MonthlyReport() {
     slNo: '',
     subjectName: '',
     description: '',
-    problem: '',
-
-    patientType: '',
+    type:'',
     date: '',
     remarks: '',
     attachments: [],
@@ -86,14 +82,14 @@ export default function MonthlyReport() {
   const [loading2, setLoading2] = useState<boolean>(false)
   const [subjectName, setSubjectName] = useState('')
   const [description, setDescription] = useState('')
-  const [problem, setproblem] = useState('')
+  
   const [remarks, setRemarks] = useState('')
-  const [department, setDepartment] = useState<string>('')
+ 
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [selectedCode, setSelectedCode] = useState(null)
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
+    const [type, setType] = useState<string>("");
 
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -123,10 +119,9 @@ export default function MonthlyReport() {
     try {
       setLoading2(true)
       const formData = new FormData()
-      formData.append('patientType', updatedProduct.patientType)
       formData.append('subjectName', updatedProduct.subjectName)
       formData.append('description', updatedProduct.description)
-      formData.append('problem', updatedProduct.problem)
+      formData.append('type', updatedProduct.type)
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
 
@@ -244,9 +239,8 @@ export default function MonthlyReport() {
 
       formData.append('subjectName', subjectName)
       formData.append('description', description)
-      formData.append('problem', problem)
+      formData.append('type', type)
       formData.append('remarks', remarks)
-      formData.append('patientType', department)
       formData.append('date', formatDate(formDate))
       filesInput.forEach((file) => {
         formData.append('attachments', file)
@@ -1128,7 +1122,7 @@ export default function MonthlyReport() {
                 Description
               </label>
               <InputText
-                id='problem'
+                id='description'
                 onChange={(e) => setDescription(e.target.value)}
                 required
               />

@@ -792,6 +792,7 @@ const formatDate = (d?: Date | null) => {
                 options={statusType}
                 itemTemplate={itemTemplate}
                 optionLabel='name'
+                 optionValue='code'
                 placeholder='Status'
                 className='w-full'
               />

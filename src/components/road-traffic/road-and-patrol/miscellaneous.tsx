@@ -32,9 +32,6 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-   
-    problem: string
-    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -50,9 +47,6 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-        problem: '',
-        
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -87,7 +81,7 @@ export default function MonthlyReport() {
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+   
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
@@ -122,10 +116,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+            
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('problem', updatedProduct.problem)
+           
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
            
@@ -245,7 +239,7 @@ export default function MonthlyReport() {
             formData.append('description', description)
            
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+         
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -1084,7 +1078,7 @@ export default function MonthlyReport() {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />

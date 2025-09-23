@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchMedicineInOutRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -22,7 +22,6 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import FileIcon from '@/components/icons/FileIcon'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 
 interface Attachment {
@@ -34,7 +33,6 @@ interface Product {
     slNo: string
     medicineName: string
     refNo: string
-    problem: string
     inoutType: string
     date: string
     remarks: string
@@ -51,7 +49,6 @@ export default function MedicineInOutRecord() {
         slNo: '',
         medicineName: '',
         refNo: '',
-        problem: '',
         inoutType: '',
         date: '',
         remarks: '',
@@ -79,32 +76,29 @@ export default function MedicineInOutRecord() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [medicineName, setMedicineName] = useState('')
     const [refNo, setRefNo] = useState('')
-    const [problem, setproblem] = useState('')
     const [remarks, setRemarks] = useState('')
     const [inoutType, setInOutType] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-      const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -127,7 +121,7 @@ export default function MedicineInOutRecord() {
             formData.append('inoutType', updatedProduct.inoutType)
             formData.append('medicineName', updatedProduct.medicineName)
             formData.append('refNo', updatedProduct.refNo)
-            formData.append('problem', updatedProduct.problem)
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
 
@@ -140,7 +134,7 @@ export default function MedicineInOutRecord() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -179,14 +173,7 @@ export default function MedicineInOutRecord() {
             }
         })
     }
-  const itemTemplate = (option: { name: string; code: string }) => {
-  return (
-    <div className="flex items-center gap-2">
-     <FileIcon/>      
-      <span>{option.name}</span> 
-    </div>
-  );
-};
+    
 
     const updateProductDialogFooter = (
         <>
@@ -206,86 +193,93 @@ export default function MedicineInOutRecord() {
     )
 
     // ending all update dialog funcs
-const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     const codes = [
         { name: 'IN', code: 'IN' },
         { name: 'OUT', code: 'OUT' },
     ]
+      const itemTemplate = (option: { name: string; code: string }) => (
+        <div className="flex items-center gap-2">
+          <FileIcon />
+          <span>{option.name}</span>
+        </div>
+      )
+    
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -328,7 +322,7 @@ const uploadFile = async () => {
 
             formData.append('medicineName', medicineName)
             formData.append('refNo', refNo)
-            formData.append('problem', problem)
+
             formData.append('remarks', remarks)
             formData.append('inoutType', inoutType)
             formData.append('date', formatDate(formDate))
@@ -336,7 +330,7 @@ const uploadFile = async () => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/create`,
                 formData,
                 {
                     headers: {
@@ -348,6 +342,7 @@ const uploadFile = async () => {
 
             const response = res
             console.log(response)
+            console.log(response.data,'abc')
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -381,7 +376,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -431,7 +426,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -496,18 +491,18 @@ const uploadFile = async () => {
     const rightToolbarTemplate = () => {
         return (
             <>
-               {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -615,35 +610,27 @@ const uploadFile = async () => {
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
+        const payload = {
             inoutType: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMedicineInOutRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            inoutType: '',
+        setLoading(true)
+        const payload = {
+            inoutType: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
         }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMedicineInOutRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
@@ -693,6 +680,7 @@ const uploadFile = async () => {
                         onChange={(e) => setSelectedCode(e.value)}
                         options={codes}
                         optionLabel='name'
+                        optionValue="code"  
                         placeholder='IN/OUT'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                         itemTemplate={itemTemplate}
@@ -778,15 +766,15 @@ const uploadFile = async () => {
 
     const refetch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
+        setLoading(true)
+        const payload = {
             inoutType: '',
+            date_range: '',
+            searchQuery: '',
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMedicineInOutRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
@@ -878,7 +866,7 @@ const uploadFile = async () => {
                             ></Column>
 
                             <Column
-                                field='IN/OUT'
+                                field='inoutType'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 sortable
@@ -926,46 +914,46 @@ const uploadFile = async () => {
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -985,14 +973,16 @@ const uploadFile = async () => {
                             <Dropdown
                                 id='inoutType'
                                 value={updatedProduct.inoutType}
-                                options={['In', 'Out']}
+                                options={codes}
+                                optionLabel='name'
+                                 optionValue='code'
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        inoutType: e.target.value,
+                                        inoutType: e.value,
                                     })
                                 }
-                                placeholder='Select IN/OUT'
+                             
                             />
                         </div>
                         <div className='field'>
@@ -1230,10 +1220,12 @@ const uploadFile = async () => {
                             <Dropdown
                                 id='inoutType'
                                 value={inoutType}
-                                options={['In', 'Out']}
+                                options={codes}
+                                optionValue="code"  
+                                itemTemplate={itemTemplate}
                                 onChange={(e) => setInOutType(e.value)}
                                 placeholder='Select Type'
-                                optionLabel='inoutType'
+                                optionLabel='name'
                             />
                         </div>
                         <div className='field'>

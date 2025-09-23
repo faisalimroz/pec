@@ -30,13 +30,6 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    subjectName: string
-    description: string
-
-    problem: string
-    patientType: string
-    date: string
-    remarks: string
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -48,13 +41,6 @@ export default function KecLetter() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        subjectName: '',
-        description: '',
-        problem: '',
-
-        patientType: '',
-        date: '',
-        remarks: '',
         attachments: [],
     }
 
@@ -123,12 +109,7 @@ export default function KecLetter() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
-            formData.append('subjectName', updatedProduct.subjectName)
-            formData.append('description', updatedProduct.description)
-            formData.append('problem', updatedProduct.problem)
-            formData.append('remarks', updatedProduct.remarks)
-            formData.append('date', updatedProduct.date)
+         
 
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
@@ -198,10 +179,6 @@ export default function KecLetter() {
 
     // ending all update dialog funcs
 
-    const codes = [
-        { name: 'Internal Patient', code: 'Internal' },
-        { name: 'Outside Patient', code: 'Outside' },
-    ]
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -242,12 +219,7 @@ export default function KecLetter() {
             setLoading2(true)
             const formData = new FormData()
 
-            formData.append('subjectName', subjectName)
-            formData.append('description', description)
-            formData.append('problem', problem)
-            formData.append('remarks', remarks)
-            formData.append('patientType', department)
-            formData.append('date', formatDate(formDate))
+            
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -382,14 +354,6 @@ export default function KecLetter() {
             </>
         )
     }
-
-  
-
- 
-
-
-   
-
     function getMonthName(dateString: string) {
         const date = new Date(dateString)
         return date.toLocaleString('en-US', { month: 'long' })
@@ -472,7 +436,7 @@ export default function KecLetter() {
     }, [])
 
 
-    // console.log(products)
+    console.log(products)
 
     return (
         <div className=''>
