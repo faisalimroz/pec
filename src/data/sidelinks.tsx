@@ -526,7 +526,7 @@ export const itsLinks: SideLink[] = [
    {
         title: 'About ITS',
         label: '',
-        href: '/its/overview',
+        href: '/its/about-its',
         icon: <AboutIcon/>,
       },
        {

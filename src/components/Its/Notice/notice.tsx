@@ -32,9 +32,6 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-   
-    problem: string
-    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -50,9 +47,6 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-        problem: '',
-        
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -79,21 +73,21 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+     const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [problem, setproblem] = useState('')
+    
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
+     
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -123,10 +117,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+          
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('problem', updatedProduct.problem)
+           
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
            
@@ -241,12 +235,9 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
             formData.append('subjectName', subjectName)
-            formData.append('description', description)
-            formData.append('problem', problem)
-            formData.append('remarks', remarks)
-            formData.append('patientType', department)
+            formData.append('description', description)        
+            formData.append('remarks', remarks)           
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -531,39 +522,36 @@ export default function MonthlyReport() {
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
+      setLoading(true)
+    const payload = {
+   
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+      searchQuery: searchKey,
+    }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
+          setDate(null)
+    setDate2(null)
+    setSearchKey('')
 
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+    const payload = {
+      
+      date_range: '',
+      searchQuery: '',
+    }
+
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
-
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -682,17 +670,17 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
+   const refetch = () => {
+    setDate(null)
+    setDate2(null)
+    setSearchKey('')
+    const payload = {
+      date_range: '',
+      searchQuery: '',
+    }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data)
             console.log(result, "ress")
             setLoading(false)
         })
@@ -1085,7 +1073,7 @@ export default function MonthlyReport() {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />

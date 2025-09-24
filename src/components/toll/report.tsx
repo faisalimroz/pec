@@ -34,7 +34,6 @@ interface Product {
     subjectName: string
     description: string
     monthName: string;
-    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -51,7 +50,6 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         monthName: '',
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -86,7 +84,7 @@ export default function MonthlyReport() {
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+   
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
@@ -282,7 +280,7 @@ export default function MonthlyReport() {
             formData.append('description', description)
       
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+         
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)

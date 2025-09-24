@@ -85,15 +85,15 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [location, setlocation] = useState('')
+    const [location, setlocation] = useState<{ name: string; code: string } | null>(null);
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [monthName, setMonthName] = useState<{ name: string; code: string } | null>(null);
-    const [locationName, setLocationName] = useState<{ name: string; code: string } | null>(null);
+  
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -303,12 +303,7 @@ const uploadFile = async () => {
         { name: 'Mawa', code: 'Mawa' },
         { name: 'Jinjira', code: 'Jinjira' },
     ]
-    // const locationTemplate = (option: { name: string; code: string }) => (
-    //     <div className="flex items-center gap-2">
-    //         <FileIcon />
-    //         <span>{option.name}</span>
-    //     </div>
-    // );
+  
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
     }
@@ -350,7 +345,7 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('location', location)
+            formData.append('location', location?.name || '')
             formData.append('remarks', remarks)
             formData.append('monthName', monthName?.name || '')       
             formData.append('date', formatDate(formDate))  
@@ -724,7 +719,7 @@ const uploadFile = async () => {
                 />
                 <Dropdown
                     id="location"
-                    value={locationName}
+                    value={location}
                     onChange={(e) => setlocation(e.value)}
                     options={locations}
                     optionLabel="name"
@@ -1077,6 +1072,7 @@ const uploadFile = async () => {
                                 optionLabel="name"
                                 placeholder='Select Location'
                                 className='w-full'
+                                itemTemplate={itemTemplate}
                             />
                         </div>
 
@@ -1319,7 +1315,7 @@ const uploadFile = async () => {
                                 Description
                             </label>
                             <InputText
-                                id='location'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
@@ -1349,6 +1345,7 @@ const uploadFile = async () => {
                                 options={locations}
                                 optionLabel="name"
                                 placeholder="Select Location"
+                                itemTemplate={itemTemplate}
                                 className="w-full"
                             />
                         </div>

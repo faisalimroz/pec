@@ -93,6 +93,7 @@ export default function AssetManagementTable() {
   const [uploadStatus, setUploadStatus] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [type, setType] = useState<string>("");
+  const [buttonType, setButtonType] = useState("All");
   // all update dialog func here
   const alltypes = [
     { name: "All", value: "All" },
@@ -529,9 +530,13 @@ export default function AssetManagementTable() {
     )
   }
 
-
-const ButtonGroup = () => {
-  const [activeButton, setActiveButton] = useState("All"); // ✅ default
+interface ButtonGroupProps {
+  activeButton: string;
+  onButtonClick: (value: string) => void;
+ 
+}
+const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
+ 
 
   const buttons = [
     { label: "All", value: "All" },
@@ -543,14 +548,13 @@ const ButtonGroup = () => {
   ];
 
   const handleButtonClick = (buttonValue: string) => {
-    setActiveButton(buttonValue); // ✅ update correctly
+    
     setSelectedType(buttonValue);
-
+onButtonClick(buttonValue)
     setLoading(true);
     const payload = {
       type: buttonValue || "All",
-      date_range:
-        date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
       searchQuery: searchKey || "",
     };
 
@@ -558,9 +562,7 @@ const ButtonGroup = () => {
       setProducts(result?.data);
       setLoading(false);
     });
-
-    // ⚠️ shows stale state, so log the incoming value instead
-    console.log(`Button clicked: ${buttonValue}`);
+    
   };
 
   return (
@@ -571,11 +573,11 @@ const ButtonGroup = () => {
           onClick={() => handleButtonClick(button.value)}
           className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
             ${activeButton === button.value
-              ? "bg-[#6F90AE] text-base text-white"
-              : "bg-[#0B1F8F] text-base text-white"
+              ? "bg-[#6F90AE] text-white" 
+              : "bg-[#0B1F8F] text-white  " 
             }`}
         >
-          {button.label} {/* ✅ show label for clarity */}
+          {button.label}
         </button>
       ))}
     </div>
@@ -860,7 +862,8 @@ const ButtonGroup = () => {
           right={rightToolbarTemplate}
         ></Toolbar>
         <div className='mt-2'>
-          <ButtonGroup></ButtonGroup>
+          <ButtonGroup activeButton={buttonType}
+        onButtonClick={setButtonType} ></ButtonGroup>
         </div>
         <DataTable
           ref={dt}

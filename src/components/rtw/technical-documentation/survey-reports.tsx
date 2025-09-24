@@ -21,7 +21,6 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 
@@ -34,9 +33,8 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    typesofDrawings: string;
+    typesofSurvey: string;
     refNo: string
-    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -53,8 +51,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         refNo: '',
-        typesofDrawings: '',
-        patientType: '',
+        typesofSurvey: '', 
         date: '',
         remarks: '',
         attachments: [],
@@ -81,8 +78,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -90,12 +87,12 @@ export default function MonthlyReport() {
     const [description, setDescription] = useState('')
     const [refNo, setRefNo] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [typesofDrawings, setTypesofDrawings] = useState<string>("");
+    const [typesofSurvey, setTypesofDrawings] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -147,13 +144,13 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+           
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('refNo', updatedProduct.refNo)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-            formData.append('typesofDrawings', updatedProduct.typesofDrawings);
+            formData.append('typesofSurvey', updatedProduct.typesofSurvey);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -339,7 +336,8 @@ const uploadFile = async () => {
             formData.append('description', description)
             formData.append('problem', refNo)
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+            formData.append('typeofsurveyType', typesofSurvey)
+           
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -656,41 +654,36 @@ const uploadFile = async () => {
         return date.getFullYear()
     }
 
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
+   const handleSearch = () => {
+    setLoading(true)
+    const payload = {
+      type: selectedCode,
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+      searchQuery: searchKey,
     }
+    searchTreatmentRecord(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
 
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
+  const handleReset = () => {
+    setDate(null)
+    setDate2(null)
+    setSearchKey('')
+    setSelectedCode(null)
+ 
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
     }
-
+    setLoading(true)
+    searchTreatmentRecord(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -819,23 +812,19 @@ const uploadFile = async () => {
             />
         </>
     )
-
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
+ const refetch = () => {
+    setLoading(true)
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
     }
 
+    searchTreatmentRecord(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
     // initial data load - Internal
     useEffect(() => {
         refetch()
@@ -941,7 +930,7 @@ const uploadFile = async () => {
                             ></Column>
 
                             <Column
-                                field='typesofDrawings'
+                                field='typesofSurvey'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -1096,16 +1085,16 @@ const uploadFile = async () => {
                             />
                         </div>
                         <div className='field'>
-                                <label htmlFor='typesofDrawings' className='font-bold'>
+                                <label htmlFor='typesofSurvey' className='font-bold'>
                                    Survey Type
                                 </label>
                                 <Dropdown
-                                    id='typesofDrawings'
-                                    value={updatedProduct.typesofDrawings}
+                                    id='typesofSurvey'
+                                    value={updatedProduct.typesofSurvey}
                                     onChange={(e) =>
                                         setUpdatedProduct({
                                             ...updatedProduct,
-                                            typesofDrawings: e.value,
+                                            typesofSurvey: e.value,
                                         })
                                     }
                                     options={drawingTypes}
@@ -1253,7 +1242,7 @@ const uploadFile = async () => {
 
                             <div>
                                 <h3 className='font-bold'>Survey Type</h3>
-                                <p className='break-all'>{selectedProduct.typesofDrawings}</p>
+                                <p className='break-all'>{selectedProduct.typesofSurvey}</p>
                             </div>
                             <div>
                                 <h3 className='font-bold'>Ref No.</h3>
@@ -1336,12 +1325,12 @@ const uploadFile = async () => {
                             />
                         </div>
                         <div className="field">
-                            <label htmlFor="typesofDrawings" className="font-bold">
+                            <label htmlFor="typesofSurvey" className="font-bold">
                               Survey Type
                             </label>
                             <Dropdown
-                                id="typesofDrawings"
-                                value={typesofDrawings}
+                                id="typesofSurvey"
+                                value={typesofSurvey}
                                 onChange={(e) => setTypesofDrawings(e.value)}
                                 options={drawingTypes}
                                 optionLabel='name'

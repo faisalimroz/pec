@@ -19,10 +19,10 @@ interface Attachment {
 interface Product {
     _id: string | null
     slNo: string
-    fileName: string
+    name: string
     date: string
-    description: string
-    remarks: string
+    positon: string
+    mobile: string
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -34,10 +34,10 @@ export default function AssetManagementTable() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
-        fileName: '',
+        name: '',
         date: '',
-        description: '',
-        remarks: '',
+        positon: '',
+        mobile: '',
         attachments: [],
     }
     const { roles, permissions } = useAuth()
@@ -56,10 +56,10 @@ export default function AssetManagementTable() {
     const dt = useRef<DataTable<Product[]>>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [fileName, setfileName] = useState('')
+    const [name, setName] = useState('')
     const [formDate, setFormDate] = useState<string>('')
-    const [description, setDescription] = useState('')
-    const [remarks, setRemarks] = useState('')
+    const [positon, setPositon] = useState('')
+    const [mobile, setMobile] = useState('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     function formatDate(dateTime?: any) {
         if (!dateTime) return ''
@@ -88,11 +88,11 @@ export default function AssetManagementTable() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('fileName', fileName)
+            formData.append('name', name)
 
 
-            formData.append('description', description)
-            formData.append('remarks', remarks)
+            formData.append('positon', positon)
+            formData.append('mobile', mobile)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -196,21 +196,21 @@ export default function AssetManagementTable() {
                     <div className="flex items-start justify-center">
                         {/* Left box */}
                         <div className="w-[300px] h-[150px] bg-gray-300 py-4 px-3">
-                            <img src={products[0]?.attachments[0].url} alt="none" />
+                            {/* <img src={products[0]?.attachments[0].url} alt="none" /> */}
                         </div>
 
                         {/* Right box */}
                         <div className="w-[300px]  h-[150px]  bg-gray-300 py-4 px-3">
                             <h1></h1>
                             <h1></h1>
-                            <h1>Joining Date: {products[9]?.date}</h1>
+                            {/* <h1>Joining Date: {products[9]?.date}</h1> */}
                             <h1>Mobile: </h1>
                         </div>
                     </div>
 
               <div>
-                  <img src={products[0]?.attachments[0].url} alt="none" />
-                <img src={products[0]?.attachments[0].url} alt="none" />
+                  {/* <img src={products[0]?.attachments[0].url} alt="none" />
+                <img src={products[0]?.attachments[0].url} alt="none" /> */}
               </div>
                 </div>
 
@@ -232,26 +232,26 @@ export default function AssetManagementTable() {
 
 
                         <div className='field'>
-                            <label htmlFor='fileName' className='font-bold'>
+                            <label htmlFor='name' className='font-bold'>
                                 File Name/Subject
                             </label>
                             <InputText
-                                id='fileName'
-                                onChange={(e) => setfileName(e.target.value)}
+                                id='name'
+                                onChange={(e) => setName(e.target.value)}
                                 required
 
                             />
-                            {submitted && !fileName && (
+                            {submitted && !name && (
                                 <small className='p-error'>File Name/ Subject is required.</small>
                             )}
                         </div>
                         <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
+                            <label htmlFor='positon' className='font-bold'>
+                                Positon
                             </label>
                             <InputText
-                                id='description'
-                                onChange={(e) => setDescription(e.target.value)}
+                                id='positon'
+                                onChange={(e) => setPositon(e.target.value)}
                                 required
                             />
                         </div>
@@ -274,12 +274,12 @@ export default function AssetManagementTable() {
                         </div>
 
                         <div className='field'>
-                            <label htmlFor='remarks' className='font-bold'>
-                                Remarks
+                            <label htmlFor='mobile' className='font-bold'>
+                                Mobile
                             </label>
                             <InputText
-                                id='remarks'
-                                onChange={(e) => setRemarks(e.target.value)}
+                                id='mobile'
+                                onChange={(e) => setMobile(e.target.value)}
                                 required
                             />
                         </div>

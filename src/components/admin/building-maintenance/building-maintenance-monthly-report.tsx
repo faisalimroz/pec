@@ -999,23 +999,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+                        
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description

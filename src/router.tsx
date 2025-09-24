@@ -1156,12 +1156,7 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/its')).default,
             }),
           },
-          {
-            path: 'its/overview',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/AboutUs')).default,
-            }),
-          },
+         
            {
             path: 'its/about-its',
             lazy: async () => ({
@@ -1360,7 +1355,7 @@ const router = createBrowserRouter([
             }),
           },
            {
-            path: 'toll/hierarchy',
+            path: '/toll/hierarchy',
             lazy: async () => ({
               Component: (await import('@/pages/toll/hierarchy')).default,
             }),

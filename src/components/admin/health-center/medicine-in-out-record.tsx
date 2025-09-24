@@ -766,7 +766,7 @@ export default function MedicineInOutRecord() {
 
     const refetch = () => {
         setLoading(true)
-        setLoading(true)
+     
         const payload = {
             inoutType: '',
             date_range: '',

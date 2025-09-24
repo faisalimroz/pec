@@ -370,7 +370,7 @@ export default function EmPersonalProfileTable() {
   )
 
   // multi delete func end
-
+ 
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
@@ -407,54 +407,20 @@ export default function EmPersonalProfileTable() {
             </button> */}
             <button
               className="flex items-center gap-2 bg-[#0B1F8F] text-white border border-[#E2E8F0]  px-4 py-3 rounded-md font-bold"
-              onClick={openNew}
+              onClick={exportCSV}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 <path d="M17 8L12 3L7 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 <path d="M12 3V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
-              Upload Document
+             Download Document
             </button>
-            <button
-              className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] px-4 py-3 rounded-md font-bold"
-              onClick={handleReset}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2V6" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M12 18V22" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M4.92969 4.92969L7.75969 7.75969" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M16.2383 16.2402L19.0683 19.0702" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M2 12H6" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M18 12H22" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M4.92969 19.0702L7.75969 16.2402" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M16.2383 7.75969L19.0683 4.92969" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              Refresh
-            </button>
-            {/* <button
-              className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-              onClick={exportCSV}
-            >
-              Download Documents */}
-            {/* {selectedProducts?.length === 0
-                ? '(All)'
-                : `(${selectedProducts?.length})`} */}
-            {/* </button> */}
-            {/* <button
-              onClick={confirmDeleteSelected}
-              disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
-                selectedProducts && selectedProducts.length > 0
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-gray-400 cursor-not-allowed'
-              }`}
-            >
-              Delete Selected ({selectedProducts?.length || 0})
-            </button> */}
+            
+           
           </div>
         )}
-        {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }
@@ -557,6 +523,7 @@ export default function EmPersonalProfileTable() {
           inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           placeholder='Start Date'
           showIcon
+           icon={() => <i className='pi pi-angle-down' />}
         />
       </div>
       <div>
@@ -567,19 +534,11 @@ export default function EmPersonalProfileTable() {
           inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           placeholder='End Date'
           showIcon
+           icon={() => <i className='pi pi-angle-down' />}
         />
       </div>
 
-      {/* <div>
-        <Dropdown
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.value)}
-          options={types}
-          optionLabel='name'
-          placeholder='Select Type'
-          className='border-none rounded-none ml-4 cursor-pointer ring-0'
-        />
-      </div> */}
+    
 
       <IconField iconPosition='left' className='relative w-fit'>
         <InputIcon className='pi pi-search' />

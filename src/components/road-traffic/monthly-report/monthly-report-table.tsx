@@ -138,7 +138,6 @@ export default function MonthlyReport() {
 
       formData.append('subjectName', updatedProduct.subjectName)
       formData.append('description', updatedProduct.description)
-
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
       formData.append('monthName', updatedProduct.monthName);
@@ -997,6 +996,7 @@ export default function MonthlyReport() {
                   options={months}
                   optionLabel='name'
                   optionValue='name'
+                  
                   itemTemplate={itemTemplate}
                   placeholder='Select a Month'
                   className='w-full'

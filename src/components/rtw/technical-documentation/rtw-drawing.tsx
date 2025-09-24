@@ -36,7 +36,6 @@ interface Product {
     sender: string
     typesofDrawings: string;
     docNo: string
-    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -54,7 +53,6 @@ export default function MonthlyReport() {
         sender: '',
         docNo: '',
         typesofDrawings: '',
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -81,8 +79,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -90,7 +88,7 @@ export default function MonthlyReport() {
     const [sender, setSender] = useState('')
     const [docNo, setDocNo] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+ 
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
@@ -147,7 +145,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+         
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('sender', updatedProduct.sender)
             formData.append('docNo', updatedProduct.docNo)
@@ -337,9 +335,9 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('sender', sender)
-            formData.append('problem', docNo)
+            formData.append('docNo', docNo)
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+         
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -656,39 +654,36 @@ const uploadFile = async () => {
     }
 
     const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
+       setLoading(true)
+       const payload = {
+         typesofDrawings: selectedCode,
+         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+         searchQuery: searchKey,
+       }
+       console.log(payload)
+       searchTreatmentRecord(payload).then((result) => {
+         setProducts(result?.data)
+         setLoading(false)
+       })
+     }
+    
+     const handleReset = () => {
+       setDate(null)
+       setDate2(null)
+       setSearchKey('')
+   
+   
+       const payload = {
+         typesofDrawings: '',
+         date_range: '',
+         searchQuery: '',
+       }
+       setLoading(true)
+       searchTreatmentRecord(payload).then((result) => {
+         setProducts(result?.data)
+         setLoading(false)
+       })
+     }
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -736,8 +731,8 @@ const uploadFile = async () => {
                         onChange={(e) => setSelectedCode(e.value)}
                         options={drawingTypes}
                         itemTemplate={itemTemplate}
-
                         optionLabel='name'
+                        optionValue='name'
                         placeholder='Type Of Drawings'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
@@ -820,20 +815,18 @@ const uploadFile = async () => {
     )
 
     const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
+       setLoading(true)
+       const payload = {
+         typesofDrawings: '',
+         date_range: '',
+         searchQuery: '',
+       }
+   
+       searchTreatmentRecord(payload).then((result) => {
+         setProducts(result?.data)
+         setLoading(false)
+       })
+     }
 
     // initial data load - Internal
     useEffect(() => {
@@ -1110,6 +1103,7 @@ const uploadFile = async () => {
                                     options={drawingTypes}
                                     itemTemplate={itemTemplate}
                                      optionLabel='name'
+                                     optionValue='name'
                                     placeholder='Select Type'
                                     className='w-full'
                                 />
@@ -1319,7 +1313,7 @@ const uploadFile = async () => {
                                 Sender
                             </label>
                             <InputText
-                                id='problem'
+                                id='sender'
                                 onChange={(e) => setSender(e.target.value)}
                                 required
                             />
@@ -1344,6 +1338,7 @@ const uploadFile = async () => {
                                 onChange={(e) => setTypesofDrawings(e.value)}
                                 options={drawingTypes}
                                 optionLabel='name'
+                                optionValue='name'
                                 placeholder="Select Type"
                                 itemTemplate={itemTemplate}
                                 className="w-full"

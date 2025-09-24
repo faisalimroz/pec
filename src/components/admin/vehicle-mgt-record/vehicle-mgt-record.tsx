@@ -83,8 +83,8 @@ export default function MonthlyReport() {
   const dt = useRef<DataTable<Product[]>>(null)
 
   // ✅ Use Date | null for calendars
-  const [date, setDate] = useState<Date | null>(null)   // start date for search
-  const [date2, setDate2] = useState<Date | null>(null) // end date for search
+  const [date, setDate] = useState<Date | null>(null)  
+  const [date2, setDate2] = useState<Date | null>(null) 
   const [taxExpiryDate, setTaxExpiryDate] = useState<Date | null>(null)
 
   const [searchKey, setSearchKey] = useState('')
@@ -511,7 +511,7 @@ const formatDate = (d?: Date | null) => {
     setLoading(true)
     const payload = {
       status: selectedCode?.code || '',
-      date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
     searchVehicleMgtRecord(payload).then((result) => {

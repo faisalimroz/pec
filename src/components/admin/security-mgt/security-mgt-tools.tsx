@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchSecurityTools } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -75,14 +75,14 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [problem, setproblem] = useState('')
+    
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
@@ -122,10 +122,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+           
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('problem', updatedProduct.problem)
+          
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
            
@@ -138,7 +138,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/security/tools/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -209,7 +209,7 @@ const uploadFile = async () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/security/tools/bulk-upload`,
         formData,
         {
           headers: {
@@ -318,7 +318,7 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', problem)
+           
             formData.append('remarks', remarks)
             formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
@@ -326,7 +326,7 @@ const uploadFile = async () => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/security/tools/create`,
                 formData,
                 {
                     headers: {
@@ -372,7 +372,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/security/tools/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -422,7 +422,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/security/tools/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -638,39 +638,36 @@ const uploadFile = async () => {
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
+      setLoading(true)
+    const payload = {
+   
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+      searchQuery: searchKey,
+    }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchSecurityTools(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
+          setDate(null)
+    setDate2(null)
+    setSearchKey('')
 
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+    const payload = {
+      
+      date_range: '',
+      searchQuery: '',
+    }
+
+        searchSecurityTools(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
-
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -807,8 +804,8 @@ const uploadFile = async () => {
             patientType: '',
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchSecurityTools(initialPayload).then((result) => {
+            setProducts(result?.data)
             console.log(result, "ress")
             setLoading(false)
         })
@@ -1240,7 +1237,7 @@ const uploadFile = async () => {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />

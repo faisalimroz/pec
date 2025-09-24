@@ -35,8 +35,7 @@ interface Product {
     subjectName: string
     description: string
     typesofDrawings: string;
-    refNo: string
-    patientType: string
+    refNo: string 
     date: string
     remarks: string
     attachments: Attachment[]
@@ -54,7 +53,6 @@ export default function MonthlyReport() {
         description: '',
         refNo: '',
         typesofDrawings: '',
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -81,8 +79,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -147,7 +145,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+           
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('refNo', updatedProduct.refNo)
@@ -339,7 +337,7 @@ const uploadFile = async () => {
             formData.append('description', description)
             formData.append('problem', refNo)
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+           
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -647,50 +645,38 @@ const uploadFile = async () => {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
+ 
+
+     const handleSearch = () => {
+    setLoading(true)
+    const payload = {
+      type: selectedCode,
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+      searchQuery: searchKey,
     }
+    searchTreatmentRecord(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
+  const handleReset = () => {
+    setDate(null)
+    setDate2(null)
+    setSearchKey('')
+
+
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
     }
-
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
+    setLoading(true)
+    searchTreatmentRecord(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -821,21 +807,19 @@ const uploadFile = async () => {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
+     const refetch = () => {
+    setLoading(true)
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
     }
+
+    searchTreatmentRecord(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
 
     // initial data load - Internal
     useEffect(() => {
@@ -963,7 +947,7 @@ const uploadFile = async () => {
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
+                             
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
@@ -1112,6 +1096,7 @@ const uploadFile = async () => {
                                     options={drawingTypes}
                                     itemTemplate={itemTemplate}
                                      optionLabel='name'
+                                     optionValue='name'
                                     placeholder='Select Type'
                                     className='w-full'
                                 />

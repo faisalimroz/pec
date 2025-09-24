@@ -22,7 +22,6 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import FileIcon from '@/components/icons/FileIcon'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 
 interface Attachment {

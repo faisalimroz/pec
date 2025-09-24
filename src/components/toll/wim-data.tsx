@@ -916,6 +916,7 @@ export default function AssetManagementTable() {
                                             optionLabel="label"
                                             placeholder="Select a Location"
                                             className="w-full"
+                                             itemTemplate={itemTemplate}
                                         />
                                     </div>
                                     <div className="field">
@@ -936,6 +937,7 @@ export default function AssetManagementTable() {
                                             optionLabel="label"
                                             placeholder="Select a Shift"
                                             className="w-full"
+                                            itemTemplate={itemTemplate}
                                         />
                                     </div>
 
@@ -1206,6 +1208,7 @@ export default function AssetManagementTable() {
                                             className={classNames({
                                                 'p-invalid': submitted && !location,
                                             })}
+                                             itemTemplate={itemTemplate}
                                         />
 
                                         {submitted && !location && (
@@ -1229,6 +1232,7 @@ export default function AssetManagementTable() {
                                             className={classNames({
                                                 'p-invalid': submitted && !shiftName,
                                             })}
+                                             itemTemplate={itemTemplate}
                                         />
 
                                         {submitted && !shiftName && (
