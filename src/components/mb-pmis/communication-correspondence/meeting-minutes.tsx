@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchHealthcenterMonthlyReport, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -32,11 +32,7 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-   
-    problem: string
-    patientType: string
     date: string
-   
     remarks: string
     attachments: Attachment[]
     creator?: string
@@ -51,9 +47,6 @@ export default function KecLetter() {
         slNo: '',
         subjectName: '',
         description: '',
-        problem: '',
-       
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -80,8 +73,8 @@ export default function KecLetter() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+     const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -125,10 +118,10 @@ export default function KecLetter() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+    
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('problem', updatedProduct.problem)
+       
             formData.append('remarks', updatedProduct.remarks)
             
             formData.append('date', updatedProduct.date)
@@ -454,11 +447,11 @@ export default function KecLetter() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                        handleReset={handleReset}
+                     
                     />
                 )}
 
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -564,41 +557,35 @@ export default function KecLetter() {
         return date.getFullYear()
     }
 
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
+     const handleSearch = () => {
+           setLoading(true)
+           const payload = {
+   
+               date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+               searchQuery: searchKey,
+           }
+           searchHealthcenterMonthlyReport(payload).then((result) => {
+               setProducts(result?.data)
+               setLoading(false)
+           })
+       }
+   
+       const handleReset = () => {
+             setDate(null)
+               setDate2(null)
+               setSearchKey('')
+               
+           
+               const payload = {
+               
+                 date_range: '',
+                 searchQuery: '',
+               }
+               searchTreatmentRecord(payload).then((result) => {
+                   setProducts(result?.data)
+                   setLoading(false)
+               })
+           }
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -727,15 +714,14 @@ export default function KecLetter() {
     )
 
     const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
+         setLoading(true)
+        const payload = {
+
+            date_range: '',
             searchQuery: '',
-            patientType: '',
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
+        searchTreatmentRecord([payload]).then((result) => {
             setProducts(result?.Treatments)
             console.log(result, "ress")
             setLoading(false)
@@ -822,7 +808,7 @@ export default function KecLetter() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 

@@ -21,7 +21,6 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 
 interface Attachment {
@@ -33,8 +32,6 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-   
-   
     date: string
     remarks: string
     attachments: Attachment[]
@@ -50,7 +47,6 @@ export default function KecLetter() {
         slNo: '',
         subjectName: '',
         description: '',
-       
         date: '',
         remarks: '',
         attachments: [],
@@ -320,9 +316,9 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', problem)
+  
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+          
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -895,7 +891,7 @@ const uploadFile = async () => {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 

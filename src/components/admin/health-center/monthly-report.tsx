@@ -656,7 +656,7 @@ export default function MonthlyReport() {
         setLoading(true)
         const payload = {
 
-            date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
         searchHealthcenterMonthlyReport(payload).then((result) => {
@@ -801,11 +801,11 @@ export default function MonthlyReport() {
     )
 
     const refetch = () => {
-        setLoading(true)
+         setLoading(true)
         const payload = {
 
-            date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
+            date_range: '',
+            searchQuery: '',
         }
         searchHealthcenterMonthlyReport(payload).then((result) => {
             setProducts(result?.data)

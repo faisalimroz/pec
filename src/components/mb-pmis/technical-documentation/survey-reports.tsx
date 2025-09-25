@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchAssetManagement, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -34,10 +34,9 @@ interface Product {
     slNo: string
     subjectName: string
     sender: string
-
     refNo: string
-
     date: string
+    type: string
     remarks: string
     attachments: Attachment[]
     creator?: string
@@ -53,8 +52,7 @@ export default function MonthlyReport() {
         subjectName: '',
         sender: '',
         refNo: '',
-
-      
+        type: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -71,18 +69,20 @@ export default function MonthlyReport() {
     const isClinic = roles.some((role) =>
         ['superadmin', 'clinic'].includes(role.title)
     )
+    const [buttonType, setButtonType] = useState("");
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
     const [deleteProductsDialog, setDeleteProductsDialog] =
         useState<boolean>(false)
+    const [type, setType] = useState<string>("");
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+   const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -90,12 +90,12 @@ export default function MonthlyReport() {
     const [sender, setSender] = useState('')
     const [refNo, setRefNo] = useState('')
     const [remarks, setRemarks] = useState('')
-   
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
+const [selectedType, setSelectedType] = useState<string | null>(null)
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -104,89 +104,101 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-  const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
 
 
 
     // all update dialog func here
+    const alltypes = [
+        { name: "Pier Settlement Survey", value: "Pier Settlement Survey" },
+        { name: "Other Survey", value: "Other Survey" },
+
+
+    ];
+    const itemTemplate = (option: { name: string; value: string }) => (
+        <div className="flex items-center gap-2">
+            <FileIcon />
+            <span>{option.name}</span>
+        </div>
+    )
     const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -212,6 +224,7 @@ export default function MonthlyReport() {
             formData.append('refNo', updatedProduct.refNo)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
+            formData.append('type', updatedProduct.type);
 
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
@@ -323,7 +336,7 @@ export default function MonthlyReport() {
             formData.append('sender', sender)
             formData.append('refNo', refNo)
             formData.append('remarks', remarks)
-
+             formData.append('type', type)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -490,62 +503,73 @@ export default function MonthlyReport() {
     const rightToolbarTemplate = () => {
         return (
             <>
-               {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
 
 
             </>
         )
     }
-    const ButtonGroup = () => {
-        const [activeButton, setActiveButton] = useState('Pier Settlement Survey')
+     interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
 
-        const buttons = [
-            { label: 'Pier Settlement Survey', value: 'Pier Settlement Survey' },
-            { label: 'Other Survey', value: 'Other Survey' },
+  }
+   const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
+  
+  
+      const buttons = [
+       { name: "Pier Settlement Survey", value: "Pier Settlement Survey" },
+        { name: "Other Survey", value: "Other Survey" },
 
-        ]
-
-        const handleButtonClick = (buttonValue: string) => {
-            setActiveButton(buttonValue)
-            //api is not ready yet
-            console.log(`Button clicked: ${buttonValue}`)
-        }
-
-        return (
-            <>
-                <div className='flex items-center space-x-2 py-2 rounded-lg'>
-                    {buttons.map((button) => (
-                        <button
-                            key={button.value}
-                            onClick={() => handleButtonClick(button.value)}
-                            className={`
-            px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-            ${activeButton === button.value
-                                    ? 'bg-[#6F90AE] text-base font-semibold text-white'
-                                    : ' bg-main text-base font-semibold text-white'
-                                }
-            
-          `}
-                        >
-                            {button.label}
-                        </button>
-                    ))}
-                </div>
-            </>
-
-        )
-    }
+      ];
+  
+      const handleButtonClick = (buttonValue: string) => {
+  
+        setSelectedType(buttonValue);
+        onButtonClick(buttonValue)
+        setLoading(true);
+        const payload = {
+          type: buttonValue || "",
+          date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+          searchQuery: searchKey || "",
+        };
+  
+        searchAssetManagement(payload).then((result) => {
+          setProducts(result?.data);
+          setLoading(false);
+        });
+  
+      };
+  
+      return (
+        <div className="flex items-center space-x-2 py-2 rounded-lg">
+          {buttons.map((button) => (
+            <button
+              key={button.value}
+              onClick={() => handleButtonClick(button.value)}
+              className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
+              ${activeButton === button.value
+                  ? "bg-[#6F90AE] text-white"
+                  : "bg-[#0B1F8F] text-white  "
+                }`}
+            >
+              {button.name}
+            </button>
+          ))}
+        </div>
+      );
+    };
     const hideViewDialog = () => {
         setViewProductDialog(false)
         setSelectedProduct(null)
@@ -647,40 +671,36 @@ export default function MonthlyReport() {
         return date.getFullYear()
     }
 
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-          
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
+  const handleSearch = () => {
+    setLoading(true)
+    const payload = {
+      type: selectedType || 'All',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+      searchQuery: searchKey,
     }
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
 
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-          
-        }
+  const handleReset = () => {
+    setDate(null)
+    setDate2(null)
+    setSearchKey('')
 
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
     }
+    setLoading(true)
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -806,7 +826,7 @@ export default function MonthlyReport() {
             month: '',
             year: '',
             searchQuery: '',
-            
+
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
@@ -836,7 +856,8 @@ export default function MonthlyReport() {
                     right={rightToolbarTemplate}
                 ></Toolbar>
                 <div className='mt-2'>
-                    <ButtonGroup></ButtonGroup>
+                   <ButtonGroup activeButton={buttonType}
+            onButtonClick={setButtonType} ></ButtonGroup>
                 </div>
                 <TabView
                     activeIndex={activeIndex}
@@ -955,46 +976,46 @@ export default function MonthlyReport() {
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1038,7 +1059,27 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-
+                        <div className='field'>
+                            <label htmlFor='type' className='font-bold'>
+                                Type
+                            </label>
+                            <Dropdown
+                                id='type'
+                                value={updatedProduct.type}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        type: e.target.value,
+                                    })
+                                }
+                                options={alltypes}
+                                optionLabel='name'
+                                optionValue='name'
+                                placeholder='Select type'
+                                className='w-full'
+                                itemTemplate={itemTemplate}
+                            />
+                        </div>
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1276,6 +1317,23 @@ export default function MonthlyReport() {
                                 id='refNo'
                                 onChange={(e) => setSender(e.target.value)}
                                 required
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="type" className="font-bold">
+                                Type
+                            </label>
+                            <Dropdown
+                                id="type"
+                                value={type}
+                                onChange={(e) => setType(e.target.value)}
+                                options={alltypes}
+                                optionLabel='name'
+                                optionValue='name'
+                                itemTemplate={itemTemplate}
+                                placeholder="Select type"
+                                className="w-full"
                             />
                         </div>
                         <div className='field'>

@@ -76,8 +76,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+     const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -316,7 +316,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', problem)
+            
             formData.append('remarks', remarks)
             formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
@@ -636,35 +636,32 @@ export default function MonthlyReport() {
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
-        setSelectedCode(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+        setLoading(true)
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
@@ -796,21 +793,19 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
+       const refetch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
+        const payload = {
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
+            date_range: '',
+            searchQuery: '',
+        }
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
+
 
     // initial data load - Internal
     useEffect(() => {
@@ -891,7 +886,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -1255,7 +1250,7 @@ export default function MonthlyReport() {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />

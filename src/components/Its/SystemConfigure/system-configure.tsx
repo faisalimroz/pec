@@ -73,21 +73,21 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-     const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    
+
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
+
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -117,13 +117,13 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-        
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -238,9 +238,9 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-           
+
             formData.append('remarks', remarks)
-           
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -399,7 +399,7 @@ export default function MonthlyReport() {
                 <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -413,11 +413,11 @@ export default function MonthlyReport() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-                 <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -523,14 +523,14 @@ export default function MonthlyReport() {
         return date.getFullYear()
     }
 
-     const handleSearch = () => {
+    const handleSearch = () => {
         setLoading(true)
-      setLoading(true)
-    const payload = {
-   
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
 
         searchTreatmentRecord(payload).then((result) => {
             setProducts(result?.data)
@@ -539,16 +539,16 @@ export default function MonthlyReport() {
     }
 
     const handleReset = () => {
-          setDate(null)
-    setDate2(null)
-    setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
 
 
-    const payload = {
-      
-      date_range: '',
-      searchQuery: '',
-    }
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
 
         searchTreatmentRecord(payload).then((result) => {
             setProducts(result?.data)
@@ -596,7 +596,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-              
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -674,20 +674,24 @@ export default function MonthlyReport() {
         </>
     )
 
-     const refetch = () => {
+    const refetch = () => {
         setLoading(true)
         const payload = {
 
-            date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
+            date_range: '',
+            searchQuery: '',
         }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
         searchTreatmentRecord(payload).then((result) => {
             setProducts(result?.data)
             console.log(result, "ress")
             setLoading(false)
         })
     }
-    
+
     // initial data load - Internal
     useEffect(() => {
         refetch()
@@ -774,7 +778,7 @@ export default function MonthlyReport() {
                                 className='min-w-[8rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -829,7 +833,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -860,7 +864,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -894,7 +898,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1013,7 +1017,7 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1080,7 +1084,7 @@ export default function MonthlyReport() {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks

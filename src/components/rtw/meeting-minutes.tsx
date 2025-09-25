@@ -33,8 +33,6 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-
-
     date: string
     remarks: string
     attachments: Attachment[]
@@ -84,18 +82,13 @@ export default function KecLetter() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [problem, setproblem] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
-
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
@@ -317,9 +310,9 @@ export default function KecLetter() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', problem)
+          
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+          
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -892,7 +885,7 @@ export default function KecLetter() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -1239,7 +1232,7 @@ export default function KecLetter() {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />

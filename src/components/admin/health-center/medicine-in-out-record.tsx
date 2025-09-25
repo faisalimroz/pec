@@ -612,7 +612,7 @@ export default function MedicineInOutRecord() {
         setLoading(true)
         const payload = {
             inoutType: selectedCode?.code || '',
-            date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
 
@@ -626,7 +626,7 @@ export default function MedicineInOutRecord() {
         setLoading(true)
         const payload = {
             inoutType: selectedCode?.code || '',
-            date_range: date && date2 ? `${formatDate(date)} - ${formatDate(date2)}` : '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
         searchMedicineInOutRecord(payload).then((result) => {

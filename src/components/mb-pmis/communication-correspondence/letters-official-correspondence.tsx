@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchMedicineInOutRecord, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -95,7 +95,7 @@ export default function MedicineInOutRecord() {
     const [statusType, setInOutType] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+       const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
@@ -620,41 +620,33 @@ const uploadFile = async () => {
         return date.getFullYear()
     }
 
-    const handleSearch = () => {
+   
+   const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+            type: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-            statusType: selectedCode?.code || '',
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMedicineInOutRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            statusType: '',
+        setLoading(true)
+        const payload = {
+            type: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
         }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMedicineInOutRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
-
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -783,21 +775,21 @@ const uploadFile = async () => {
             />
         </>
     )
+  const refetch = () => {
+           setLoading(true)
+        
+           const payload = {
+               type: '',
+               date_range: '',
+               searchQuery: '',
+           }
+   
+           searchMedicineInOutRecord(payload).then((result) => {
+               setProducts(result?.data)
+               setLoading(false)
+           })
+       }
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            statusType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
 
     // initial data load - Internal
     useEffect(() => {

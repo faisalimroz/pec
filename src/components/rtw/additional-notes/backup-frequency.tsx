@@ -21,8 +21,7 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
-import FileIcon from '@/components/icons/FileIcon'
+
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 
 interface Attachment {
@@ -34,8 +33,6 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    monthName: string;
-   
     date: string
     remarks: string
     attachments: Attachment[]
@@ -51,8 +48,7 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-       
-        monthName: '',
+  
        
         date: '',
         remarks: '',
@@ -87,14 +83,14 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [problem, setproblem] = useState('')
+   
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+   
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [monthName, setMonthName] = useState<string>("");
+
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -135,7 +131,7 @@ export default function MonthlyReport() {
           
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-            formData.append('monthName', updatedProduct.monthName);
+           
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -325,9 +321,9 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', problem)
+          
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+        
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -900,7 +896,7 @@ const uploadFile = async () => {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -1001,23 +997,7 @@ const uploadFile = async () => {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+                     
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1048,21 +1028,7 @@ const uploadFile = async () => {
                                 }
                             />
                         </div>
-                        {/* <div className='field'>
-              <label htmlFor='problem' className='font-bold'>
-                Problem
-              </label>
-              <InputText
-                id='problem'
-                value={updatedProduct.problem}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    problem: e.target.value,
-                  })
-                }
-              />
-            </div> */}
+                       
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1216,10 +1182,7 @@ const uploadFile = async () => {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
                             
-                            <div>
-                                <h3 className='font-bold'>Month Name</h3>
-                                <p className='break-all'>{selectedProduct.monthName}</p>
-                            </div>
+                        
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1281,7 +1244,7 @@ const uploadFile = async () => {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />

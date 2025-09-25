@@ -10,8 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import RefreshButton from '@/components/refresh-button'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchBuildingMonthlyReport, searchHealthcenterMonthlyReport, searchMedicineInOutRecord, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -21,7 +20,7 @@ import { Menu } from 'primereact/menu'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import RefreshButton from '@/components/refresh-button'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 
@@ -34,8 +33,8 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    types: string;
-    refNo: string
+    types: string
+    contentType:string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -50,8 +49,8 @@ export default function MonthlyReport() {
         _id: '',
         slNo: '',
         subjectName: '',
+        contentType:'',
         description: '',
-        refNo: '',
         types: '',
         date: '',
         remarks: '',
@@ -79,21 +78,22 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [refNo, setRefNo] = useState('')
+ 
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+    
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+      const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [types, setTypes] = useState<string>("");
+    const [contentType, setContentType] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -102,17 +102,25 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
       const [bulkDialog, setBulkDialog] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
 
+
     const recordTypes = [
 
         { name: 'During Survey', code: 'During Survey' },
         { name: 'Construction', code: 'Construction' },
-        { name: 'Operation', code: 'Operation' }
+        { name: 'Operation', code: 'Operation' },
+        { name: 'Maintenance', code: 'Maintenance' }
+
+    ]
+    
+    const contentTypes  = [
+
+        { name: 'Pictures', code: 'Pictures' },
+        { name: 'Videos', code: 'Videos' },
         
 
     ]
@@ -124,6 +132,82 @@ export default function MonthlyReport() {
             </div>
         );
     };
+
+    // all update dialog func here
+    const openUpdateDialog = (product: Product) => {
+        setUpdatedProduct({ ...product })
+        setUpdateProductDialog(true)
+    }
+
+    const hideUpdateDialog = () => {
+        setUpdateProductDialog(false)
+        setUpdatedProduct(null)
+        setNewAttachments([])
+        setRemovedAttachments([])
+    }
+
+    const handleUpdateProduct = async () => {
+        if (!updatedProduct) return
+
+        try {
+            setLoading2(true)
+            const formData = new FormData()
+          
+            formData.append('subjectName', updatedProduct.subjectName)
+            formData.append('description', updatedProduct.description)
+            
+            formData.append('remarks', updatedProduct.remarks)
+            formData.append('date', updatedProduct.date)
+            formData.append('types', updatedProduct.types);
+            formData.append('contentType', updatedProduct.contentType);
+            newAttachments.forEach((file) => {
+                formData.append('attachments', file)
+            })
+
+            removedAttachments.forEach((attachmentId) => {
+                formData.append('removedAttachments', attachmentId)
+            })
+
+            const res = await axios.put(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                }
+            )
+
+            refetch()
+            hideUpdateDialog()
+            toast.success('Data updated successfully')
+        } catch (error: any) {
+            if (error.response) {
+                const { message } = error.response.data
+                toast.error(message)
+            } else {
+                console.log(error)
+            }
+        } finally {
+            setLoading2(false)
+        }
+    }
+
+    const handleNewAttachments = (files: File[]) => {
+        setNewAttachments(files)
+    }
+
+    const handleRemoveAttachment = (attachmentId: string) => {
+        setRemovedAttachments((prev) => [...prev, attachmentId])
+        setUpdatedProduct((prev) => {
+            if (!prev) return null
+            return {
+                ...prev,
+                attachments: prev.attachments.filter((a) => a._id !== attachmentId),
+            }
+        })
+    }
 const uploadFile = async () => {
     if (!file) {
       setUploadStatus('Please select a file first.')
@@ -200,81 +284,6 @@ const uploadFile = async () => {
     }
   }
 
-    // all update dialog func here
-    const openUpdateDialog = (product: Product) => {
-        setUpdatedProduct({ ...product })
-        setUpdateProductDialog(true)
-    }
-
-    const hideUpdateDialog = () => {
-        setUpdateProductDialog(false)
-        setUpdatedProduct(null)
-        setNewAttachments([])
-        setRemovedAttachments([])
-    }
-
-    const handleUpdateProduct = async () => {
-        if (!updatedProduct) return
-
-        try {
-            setLoading2(true)
-            const formData = new FormData()
-       
-            formData.append('subjectName', updatedProduct.subjectName)
-            formData.append('description', updatedProduct.description)
-            formData.append('refNo', updatedProduct.refNo)
-            formData.append('remarks', updatedProduct.remarks)
-            formData.append('date', updatedProduct.date)
-            formData.append('types', updatedProduct.types);
-            newAttachments.forEach((file) => {
-                formData.append('attachments', file)
-            })
-
-            removedAttachments.forEach((attachmentId) => {
-                formData.append('removedAttachments', attachmentId)
-            })
-
-            const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                }
-            )
-
-            refetch()
-            hideUpdateDialog()
-            toast.success('Data updated successfully')
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
-        }
-    }
-
-    const handleNewAttachments = (files: File[]) => {
-        setNewAttachments(files)
-    }
-
-    const handleRemoveAttachment = (attachmentId: string) => {
-        setRemovedAttachments((prev) => [...prev, attachmentId])
-        setUpdatedProduct((prev) => {
-            if (!prev) return null
-            return {
-                ...prev,
-                attachments: prev.attachments.filter((a) => a._id !== attachmentId),
-            }
-        })
-    }
-
     const updateProductDialogFooter = (
         <>
             <Button
@@ -334,9 +343,10 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', refNo)
+            formData.append('types', types)
+            formData.append('contentType', contentType)
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+            
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -535,7 +545,7 @@ const uploadFile = async () => {
     const rightToolbarTemplate = () => {
         return (
             <>
-                {hasEditAccess && (
+               {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
@@ -547,8 +557,6 @@ const uploadFile = async () => {
                 )}
 
              <RefreshButton handleReset={handleReset} />
-
-
             </>
         )
     }
@@ -692,41 +700,32 @@ const uploadFile = async () => {
         return date.getFullYear()
     }
 
-    const handleSearch = () => {
+   const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+            type: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMedicineInOutRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
+        setLoading(true)
+        const payload = {
+            type: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
         }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMedicineInOutRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
-
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -773,7 +772,6 @@ const uploadFile = async () => {
                         onChange={(e) => setSelectedCode(e.value)}
                         options={recordTypes}
                         itemTemplate={itemTemplate}
-
                         optionLabel='name'
                         placeholder='Type'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
@@ -856,22 +854,19 @@ const uploadFile = async () => {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
+   const refetch = () => {
+            setLoading(true)
+        const payload = {
+            type:'',
+            date_range: '',
             searchQuery: '',
-            patientType: '',
         }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
+           searchHealthcenterMonthlyReport(payload).then((result) => {
+               setProducts(result?.data)
+               console.log(result, "ress")
+               setLoading(false)
+           })
+       }
     // initial data load - Internal
     useEffect(() => {
         refetch()
@@ -951,7 +946,14 @@ const uploadFile = async () => {
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
-                           
+                            {/* <Column
+                                field='refNo'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+
+                                className='min-w-[12rem]'
+                                header='Ref No.'
+                            ></Column> */}
 
                             <Column
                                 field='subjectName'
@@ -1124,6 +1126,28 @@ const uploadFile = async () => {
                                 options={recordTypes}
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
+                                optionValue='name'
+                                placeholder='Select Type'
+                                className='w-full'
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='contentType' className='font-bold'>
+                               Content Type
+                            </label>
+                            <Dropdown
+                                id='contentType'
+                                value={updatedProduct.contentType}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        contentType: e.value,
+                                    })
+                                }
+                                options={contentTypes}
+                                itemTemplate={itemTemplate}
+                                optionLabel='name'
+                                optionValue='name'
                                 placeholder='Select Type'
                                 className='w-full'
                             />
@@ -1330,7 +1354,7 @@ const uploadFile = async () => {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
@@ -1346,7 +1370,24 @@ const uploadFile = async () => {
                                 onChange={(e) => setTypes(e.value)}
                                 options={recordTypes}
                                 optionLabel='name'
+                                optionValue='name'
                                 placeholder="Select Type"
+                                itemTemplate={itemTemplate}
+                                className="w-full"
+                            />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="contentType" className="font-bold">
+                               Content Type
+                            </label>
+                            <Dropdown
+                                id="contentType"
+                                value={contentType}
+                                onChange={(e) => setContentType(e.value)}
+                                options={contentTypes}
+                                optionLabel='name'
+                                 optionValue='name'
+                                placeholder="Select Content Type"
                                 itemTemplate={itemTemplate}
                                 className="w-full"
                             />

@@ -33,9 +33,8 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    types: string;
-    refNo: string
- 
+    types: string
+    contentType:string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -50,10 +49,9 @@ export default function MonthlyReport() {
         _id: '',
         slNo: '',
         subjectName: '',
+        contentType:'',
         description: '',
-        refNo: '',
         types: '',
-     
         date: '',
         remarks: '',
         attachments: [],
@@ -87,14 +85,15 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [refNo, setRefNo] = useState('')
+ 
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+    
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [types, setTypes] = useState<string>("");
+    const [contentType, setContentType] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -115,6 +114,14 @@ export default function MonthlyReport() {
         { name: 'Construction', code: 'Construction' },
         { name: 'Operation', code: 'Operation' },
         { name: 'Maintenance', code: 'Maintenance' }
+
+    ]
+    
+    const contentTypes  = [
+
+        { name: 'Pictures', code: 'Pictures' },
+        { name: 'Videos', code: 'Videos' },
+        
 
     ]
     const itemTemplate = (option: { name: string; code: string }) => {
@@ -148,10 +155,11 @@ export default function MonthlyReport() {
           
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('refNo', updatedProduct.refNo)
+            
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('types', updatedProduct.types);
+            formData.append('contentType', updatedProduct.contentType);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -335,9 +343,10 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', refNo)
+            formData.append('types', types)
+            formData.append('contentType', contentType)
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+            
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -772,7 +781,6 @@ const uploadFile = async () => {
                         onChange={(e) => setSelectedCode(e.value)}
                         options={recordTypes}
                         itemTemplate={itemTemplate}
-
                         optionLabel='name'
                         placeholder='Type'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
@@ -1130,6 +1138,28 @@ const uploadFile = async () => {
                                 options={recordTypes}
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
+                                optionValue='name'
+                                placeholder='Select Type'
+                                className='w-full'
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='contentType' className='font-bold'>
+                               Content Type
+                            </label>
+                            <Dropdown
+                                id='contentType'
+                                value={updatedProduct.contentType}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        contentType: e.value,
+                                    })
+                                }
+                                options={contentTypes}
+                                itemTemplate={itemTemplate}
+                                optionLabel='name'
+                                optionValue='name'
                                 placeholder='Select Type'
                                 className='w-full'
                             />
@@ -1336,7 +1366,7 @@ const uploadFile = async () => {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
@@ -1352,7 +1382,24 @@ const uploadFile = async () => {
                                 onChange={(e) => setTypes(e.value)}
                                 options={recordTypes}
                                 optionLabel='name'
+                                optionValue='name'
                                 placeholder="Select Type"
+                                itemTemplate={itemTemplate}
+                                className="w-full"
+                            />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="contentType" className="font-bold">
+                               Content Type
+                            </label>
+                            <Dropdown
+                                id="contentType"
+                                value={contentType}
+                                onChange={(e) => setContentType(e.value)}
+                                options={contentTypes}
+                                optionLabel='name'
+                                 optionValue='name'
+                                placeholder="Select Content Type"
                                 itemTemplate={itemTemplate}
                                 className="w-full"
                             />

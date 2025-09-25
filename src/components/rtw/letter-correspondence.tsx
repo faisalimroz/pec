@@ -700,6 +700,7 @@ const uploadFile = async () => {
                         onChange={(e) => setSelectedCode(e.value)}
                         options={codes}
                         optionLabel='name'
+                        optionValue='name'
                         placeholder='Status'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                         itemTemplate={itemTemplate}
@@ -1010,6 +1011,7 @@ const uploadFile = async () => {
                                     })
                                 }
                                   optionLabel="name"
+                                  optionValue='name'
                                  itemTemplate={itemTemplate}
                                 placeholder='Select status'
                             />

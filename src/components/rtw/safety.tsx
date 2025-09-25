@@ -32,8 +32,7 @@ interface Product {
     _id: string | null
     slNo: string
     subjectName: string
-    materialType: string
-
+    description: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -48,7 +47,7 @@ export default function KecLetter() {
         _id: '',
         slNo: '',
         subjectName: '',
-        materialType: '',
+        description: '',
 
         date: '',
         remarks: '',
@@ -82,7 +81,7 @@ export default function KecLetter() {
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
-    const [materialType, setMaterialType] = useState('')
+    const [description, setDescription] = useState('')
     const [problem, setproblem] = useState('')
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
@@ -125,7 +124,7 @@ export default function KecLetter() {
             const formData = new FormData()
 
             formData.append('subjectName', updatedProduct.subjectName)
-            formData.append('materialType', updatedProduct.materialType)
+            formData.append('description', updatedProduct.description)
 
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
@@ -315,10 +314,10 @@ export default function KecLetter() {
             const formData = new FormData()
 
             formData.append('subjectName', subjectName)
-            formData.append('materialType', materialType)
-            formData.append('problem', problem)
+            formData.append('description', description)
+         
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+      
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -900,12 +899,12 @@ export default function KecLetter() {
                             ></Column>
 
                             <Column
-                                field='materialType'
+                                field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
                                 className='min-w-[8rem]'
-                                header='Material Type'
+                                header='Description'
                             ></Column>
 
 
@@ -994,16 +993,16 @@ export default function KecLetter() {
                     <div className='grid grid-cols-2 gap-4'>
 
                         <div className='field'>
-                            <label htmlFor='materialType' className='font-bold'>
-                                Material Type
+                            <label htmlFor='description' className='font-bold'>
+                                Description
                             </label>
                             <InputText
-                                id='materialType'
-                                value={updatedProduct.materialType}
+                                id='description'
+                                value={updatedProduct.description}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        materialType: e.target.value,
+                                        description: e.target.value,
                                     })
                                 }
                             />
@@ -1197,8 +1196,8 @@ export default function KecLetter() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
                             <div>
-                                <h3 className='font-bold'>Material Type</h3>
-                                <p className='break-all'>{selectedProduct.materialType}</p>
+                                <h3 className='font-bold'>Description</h3>
+                                <p className='break-all'>{selectedProduct.description}</p>
                             </div>
                             {/* <div className="field">
                                         <label htmlFor="shiftName" className="font-bold">
@@ -1280,12 +1279,12 @@ export default function KecLetter() {
                             )}
                         </div>
                         <div className='field'>
-                            <label htmlFor='materialType' className='font-bold'>
-                                Material Type
+                            <label htmlFor='description' className='font-bold'>
+                                Description
                             </label>
                             <InputText
-                                id='problem'
-                                onChange={(e) => setMaterialType(e.target.value)}
+                                id='description'
+                                onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
                         </div>

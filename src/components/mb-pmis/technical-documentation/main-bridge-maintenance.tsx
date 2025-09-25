@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchHealthcenterMonthlyReport, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -34,9 +34,7 @@ interface Product {
     slNo: string
     subjectName: string
     sender: string
-   
     docNo: string
-    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -53,8 +51,6 @@ export default function MonthlyReport() {
         subjectName: '',
         sender: '',
         docNo: '',
-        
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -81,8 +77,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+   const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -607,42 +603,35 @@ const uploadFile = async () => {
         const date = new Date(dateString)
         return date.getFullYear()
     }
-
-    const handleSearch = () => {
+const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
+        const payload = {
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
+        searchHealthcenterMonthlyReport(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
+          setDate(null)
+            setDate2(null)
+            setSearchKey('')
+            
+        
+            const payload = {
+            
+              date_range: '',
+              searchQuery: '',
+            }
+            searchTreatmentRecord(payload).then((result) => {
+                setProducts(result?.data)
+                setLoading(false)
+            })
         }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -762,20 +751,18 @@ const uploadFile = async () => {
     )
 
     const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
+           setLoading(true)
+          const payload = {
+  
+              date_range: '',
+              searchQuery: '',
+          }
+          searchHealthcenterMonthlyReport(payload).then((result) => {
+              setProducts(result?.data)
+              console.log(result, "ress")
+              setLoading(false)
+          })
+      }
 
     // initial data load - Internal
     useEffect(() => {
@@ -881,7 +868,14 @@ const uploadFile = async () => {
                                 header='Sender'
                             ></Column>
 
-                           
+                           <Column
+                                field='remarks'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+                                sortable
+                                className='min-w-[12rem]'
+                                header='Remarks'
+                            ></Column>
 
 
                             <Column
@@ -892,14 +886,7 @@ const uploadFile = async () => {
                                 header='Attachment'
                             ></Column>
 
-                            <Column
-                                field='remarks'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[12rem]'
-                                header='Remarks'
-                            ></Column>
+                            
 
 
                             <Column

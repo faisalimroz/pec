@@ -37,9 +37,9 @@ interface Product {
     twelvePM: string
     twoPM: string
     sixPM: string
-    types: string;
-    refNo: string
-    patientType: string
+   
+    location:string
+   
     date: string
     maximumWaterLevel: string
     attachments: Attachment[]
@@ -63,10 +63,9 @@ export default function MonthlyReport() {
         eightAM: '',
         twelvePM: '',
         twoPM: '',
+        location:'',
         sixPM: '',
-        refNo: '',
-        types: '',
-        patientType: '',
+        
         date: '',
         maximumWaterLevel: '',
         attachments: [],
@@ -101,16 +100,16 @@ export default function MonthlyReport() {
     const [twelvePM, setTwelvePM] = useState('')
     const [twoPM, setTwoPM] = useState('')
     const [sixPM, setSixPM] = useState('')
-    const [refNo, setRefNo] = useState('')
+   
     const [maximumWaterLevel, setMaximumWaterLevel] = useState('')
-    const [department, setDepartment] = useState<string>('')
+   
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     // const [selectedCode, setSelectedCode] = useState(null)
     const [selectedCode, setSelectedCode] = useState<any>(null);
     const [chartMode, setChartMode] = useState<'monthly' | 'maximum' | null>(null);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [types, setTypes] = useState<string>("");
+    const [location, setLocation] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -138,10 +137,17 @@ export default function MonthlyReport() {
         { name: 'November', code: 'November' },
         { name: 'December', code: 'December' }
     ];
-    const location = [
+    const locations = [
 
         { name: 'Mawa', code: 'Mawa' },
         { name: 'Jinjira', code: 'Jinjira' }
+
+    ]
+      const year = [
+
+        { name: '2026', code: '2026' },
+        { name: '2025', code: '2025' },
+        { name: '2024', code: '2024' }
 
     ]
     const itemTemplate = (option: { name: string; code: string }) => {
@@ -247,15 +253,15 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+            
             formData.append('eightAM', updatedProduct.eightAM)
             formData.append('twelvePM', updatedProduct.twelvePM)
             formData.append('twoPM', updatedProduct.twoPM)
             formData.append('sixPM', updatedProduct.sixPM)
-            formData.append('refNo', updatedProduct.refNo)
-            formData.append('maximumWaterLevel', updatedProduct.maximumWaterLevel)
+          
+            // formData.append('maximumWaterLevel', updatedProduct.maximumWaterLevel)
             formData.append('date', updatedProduct.date)
-            formData.append('types', updatedProduct.types);
+            formData.append('location', updatedProduct.location);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -366,9 +372,9 @@ const uploadFile = async () => {
             formData.append('twelvePM', twelvePM)
             formData.append('twoPM', twoPM)
             formData.append('sixPM', sixPM)
-            formData.append('refNo', refNo)
-            formData.append('maximumWaterLevel', maximumWaterLevel)
-            formData.append('patientType', department)
+           
+            formData.append('location', location)
+           
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -721,7 +727,7 @@ const uploadFile = async () => {
             year: date2 ? getYear(date2) : '',
             searchQuery: searchKey,
             // @ts-ignore
-            patientType: selectedCode?.code || '',
+        
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
@@ -735,7 +741,7 @@ const uploadFile = async () => {
             year: '',
             searchQuery: '',
             month: '',
-            patientType: '',
+          
         }
 
         setDate('')
@@ -799,7 +805,7 @@ const uploadFile = async () => {
                         <Dropdown
                             value={selectedCode}
                             onChange={(e) => setSelectedCode(e.value)}
-                            options={location}
+                            options={locations}
                             itemTemplate={itemTemplate}
 
                             optionLabel='name'
@@ -825,7 +831,7 @@ const uploadFile = async () => {
                             <Dropdown
                                 value={selectedCode}
                                 onChange={(e) => setSelectedCode(e.value)}
-                                options={location}
+                                options={year}
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
                                 placeholder='Year'
@@ -929,7 +935,7 @@ const uploadFile = async () => {
             month: '',
             year: '',
             searchQuery: '',
-            patientType: '',
+          
         }
 
         searchTreatmentRecord(initialPayload).then((result) => {
@@ -1030,14 +1036,7 @@ const uploadFile = async () => {
                                     className='min-w-[12rem]'
                                     header='Date'
                                 ></Column>
-                                {/* <Column
-                                field='refNo'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-
-                                className='min-w-[12rem]'
-                                header='Ref No.'
-                            ></Column> */}
+                               
 
                                 <Column
                                     field='eightAM'
@@ -1242,19 +1241,19 @@ const uploadFile = async () => {
                         </div>
 
                         <div className='field'>
-                            <label htmlFor='types' className='font-bold'>
+                            <label htmlFor='location' className='font-bold'>
                                 Type
                             </label>
                             <Dropdown
-                                id='types'
-                                value={updatedProduct.types}
+                                id='location'
+                                value={updatedProduct.location}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        types: e.value,
+                                        location: e.value,
                                     })
                                 }
-                                options={location}
+                                options={locations}
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
                                 placeholder='Select Type'
@@ -1411,7 +1410,7 @@ const uploadFile = async () => {
 
                             <div>
                                 <h3 className='font-bold'>Type</h3>
-                                <p className='break-all'>{selectedProduct.types}</p>
+                                <p className='break-all'>{selectedProduct.location}</p>
                             </div>
 
                             <div>
@@ -1533,30 +1532,30 @@ const uploadFile = async () => {
                         </div>
 
                         <div className="field">
-                            <label htmlFor="types" className="font-bold">
-                                Type
+                            <label htmlFor="location" className="font-bold">
+                               Location
                             </label>
                             <Dropdown
-                                id="types"
-                                value={types}
-                                onChange={(e) => setTypes(e.value)}
-                                options={location}
+                                id="location"
+                                value={location}
+                                onChange={(e) => setLocation(e.value)}
+                                options={locations}
                                 optionLabel='name'
                                 placeholder="Select Type"
                                 itemTemplate={itemTemplate}
                                 className="w-full"
                             />
                         </div>
-                        <div className='field'>
+                        {/* <div className='field'>
                             <label htmlFor='maximumWaterLevel' className='font-bold'>
-                                maximumWaterLevel
+                                Maximum Water Level
                             </label>
                             <InputText
                                 id='maximumWaterLevel'
                                 onChange={(e) => setMaximumWaterLevel(e.target.value)}
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         <div>
                             <label htmlFor='date' className='font-bold'>

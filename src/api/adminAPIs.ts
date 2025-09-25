@@ -299,6 +299,42 @@ export async function searchSecurityTools(param: unknown) {
       },
     }
   )
+console.log(response.data)
+  return response.data
+}
+
+//finance monthly ipc
+export async function searchIpcMonthlyUpdates(param: unknown) {
+  console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/finance/monthly-ipc/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data,'ipc')
+  return response.data
+}
+
+//finance ipc records
+export async function searchIpcRecords(param: unknown) {
+  console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/finance/ipc-record/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
 
   return response.data
 }

@@ -36,7 +36,6 @@ interface Product {
     sender: string
     typesofDrawings: string;
     docNo: string
-
     date: string
     remarks: string
     attachments: Attachment[]
@@ -54,7 +53,6 @@ export default function MonthlyReport() {
         sender: '',
         docNo: '',
         typesofDrawings: '',
-
         date: '',
         remarks: '',
         attachments: [],
@@ -336,9 +334,9 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('sender', sender)
-            formData.append('problem', docNo)
+            formData.append('docNo', docNo)
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+            formData.append('typesofDrawings', typesofDrawings)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -1320,7 +1318,7 @@ export default function MonthlyReport() {
                                 Sender
                             </label>
                             <InputText
-                                id='problem'
+                                id='sender'
                                 onChange={(e) => setSender(e.target.value)}
                                 required
                             />

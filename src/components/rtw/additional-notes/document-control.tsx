@@ -21,7 +21,6 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 
 interface Attachment {
@@ -33,8 +32,6 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    monthName: string;
-  
     date: string
     remarks: string
     attachments: Attachment[]
@@ -50,9 +47,6 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-      
-        monthName: '',
-       
         date: '',
         remarks: '',
         attachments: [],
@@ -86,14 +80,14 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [problem, setproblem] = useState('')
+    
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [monthName, setMonthName] = useState<string>("");
+ 
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -131,7 +125,7 @@ export default function MonthlyReport() {
           
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-            formData.append('monthName', updatedProduct.monthName);
+      
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -318,7 +312,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', problem)
+           
             formData.append('remarks', remarks)
             formData.append('patientType', department)
             formData.append('date', formatDate(formDate))
@@ -1041,22 +1035,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        {/* <div className='field'>
-              <label htmlFor='problem' className='font-bold'>
-                Problem
-              </label>
-              <InputText
-                id='problem'
-                value={updatedProduct.problem}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    problem: e.target.value,
-                  })
-                }
-              />
-            </div> */}
-
+                       
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1209,10 +1188,7 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
                             
-                            <div>
-                                <h3 className='font-bold'>Month Name</h3>
-                                <p className='break-all'>{selectedProduct.monthName}</p>
-                            </div>
+                           
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1274,7 +1250,7 @@ export default function MonthlyReport() {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />

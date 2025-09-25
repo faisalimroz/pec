@@ -148,15 +148,21 @@ const formatDate = (d?: Date | null) => {
   };
 
 
-  const stringifyRange = (val: any): string => {
-  if (Array.isArray(val) && val[0] && val[1]) {
+//   const stringifyRange = (val: any): string => {
+//   if (Array.isArray(val) && val[0] && val[1]) {
    
+//     return `${formatDate(val[0])} - ${formatDate(val[1])}`;
+//   }
+//   return '';
+// };
+
+ const stringifyRange = (val: any): string => {
+  // Check if val is an array with two valid Date objects
+  if (Array.isArray(val) && val[0] instanceof Date && val[1] instanceof Date) {
     return `${formatDate(val[0])} - ${formatDate(val[1])}`;
   }
   return '';
 };
-
- 
   const openUpdateDialog = (p: Product) => {
     setUpdatedProduct({ ...p })
     setUpdateProductDialog(true)
@@ -831,8 +837,14 @@ const formatDate = (d?: Date | null) => {
                 readOnlyInput
                 hideOnRangeSelection
               />
-         
-              
+   
+              {/* onChange={(e) => {
+                    const val = e.value as Date[] | null;
+                    setFitnessRange(val);
+                    if (Array.isArray(val) && val[0] && val[1]) {
+                      setFitnessDuration(`${formatDate(val[0])} - ${formatDate(val[1])}`);
+                    }
+                  }} */}
             </div>
 
             <div className='col-span-2'>

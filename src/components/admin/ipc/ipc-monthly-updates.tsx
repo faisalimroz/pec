@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchIpcMonthlyUpdates } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -21,8 +21,9 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+
+import FileIcon from '@/components/icons/FileIcon'
 
 interface Attachment {
     url: string
@@ -35,7 +36,7 @@ interface Product {
     description: string
     monthName: string;
     ipcNo: string
-    patientType: string
+   
     date: string
     remarks: string
     attachments: Attachment[]
@@ -53,7 +54,6 @@ export default function MonthlyReport() {
         description: '',
         ipcNo: '',
         monthName: '',
-        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -88,7 +88,6 @@ export default function MonthlyReport() {
     const [description, setDescription] = useState('')
     const [ipcNo, setIpcNo] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
@@ -105,19 +104,25 @@ export default function MonthlyReport() {
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
     const months = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
+        { name: 'January', code: 'January' },
+        { name: 'February', code: 'February' },
+        { name: 'March', code: 'March' },
+        { name: 'April', code: 'April' },
+        { name: 'May', code: 'May' },
+        { name: 'June', code: 'June' },
+        { name: 'July', code: 'July' },
+        { name: 'August', code: 'August' },
+        { name: 'September', code: 'September' },
+        { name: 'October', code: 'October' },
+        { name: 'November', code: 'November' },
+        { name: 'December', code: 'December' }
     ];
+    const itemTemplate = (option: { name: string; code: string }) => (
+        <div className="flex items-center gap-2">
+            <FileIcon />
+            <span>{option.name}</span>
+        </div>
+    )
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -137,7 +142,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+         
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('ipcNo', updatedProduct.ipcNo)
@@ -153,7 +158,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/finance/monthly-ipc/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -225,7 +230,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/finance/monthly-ipc/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -332,13 +337,13 @@ export default function MonthlyReport() {
             formData.append('description', description)
             formData.append('ipcNo', ipcNo)
             formData.append('remarks', remarks)
-           
+            formData.append('monthName', monthName)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/finance/monthly-ipc/create`,
                 formData,
                 {
                     headers: {
@@ -349,7 +354,7 @@ export default function MonthlyReport() {
             )
 
             const response = res
-            console.log(response)
+            console.log(response.data)
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -384,7 +389,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/finance/monthly-ipc/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -434,7 +439,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/finance/monthly-ipc/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -606,44 +611,34 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
    const handleSearch = () => {
-        setLoading(true)
-      setLoading(true)
-    const payload = {
-   
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
+       setLoading(true)
+        const payload = {
+        
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
 
-        searchTreatmentRecord(payload).then((result) => {
+        searchIpcMonthlyUpdates(payload).then((result) => {
             setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-          setDate(null)
-    setDate2(null)
-    setSearchKey('')
+         setLoading(true)
+        const payload = {
+       
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
 
+                  setDate(null)
+            setDate2(null)
+            setSearchKey('')
+        setSelectedCode(null)
 
-    const payload = {
-      
-      date_range: '',
-      searchQuery: '',
-    }
-
-        searchTreatmentRecord(payload).then((result) => {
+        searchIpcMonthlyUpdates(payload).then((result) => {
             setProducts(result?.data)
             setLoading(false)
         })
@@ -777,20 +772,21 @@ export default function MonthlyReport() {
     )
 
       const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.data)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
+             setLoading(true)
+          
+             const payload = {
+             
+                 date_range: '',
+                 searchQuery: '',
+             }
+     
+             searchIpcMonthlyUpdates(payload).then((result) => {
+                 setProducts(result?.data)
+                 console.log(result, "ress")
+                 setLoading(false)
+             })
+         }
+     
 
     // initial data load - Internal
     useEffect(() => {
@@ -871,7 +867,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -882,7 +878,7 @@ export default function MonthlyReport() {
                                 field='monthName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
+                               
                                 className='min-w-[12rem]'
                                 header='Month Name'
                             ></Column>
@@ -890,7 +886,7 @@ export default function MonthlyReport() {
                                 field='ipcNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
+                                
                                 className='min-w-[12rem]'
                                 header='IPC No.'
                             ></Column>
@@ -1081,7 +1077,10 @@ export default function MonthlyReport() {
                                     }
                                     options={months}
                                     placeholder='Select a Month'
+                                    optionValue='name'
+                                    optionLabel='name'
                                     className='w-full'
+                                    itemTemplate={itemTemplate}
                                 />
                             </div>
                         </div>
@@ -1292,11 +1291,14 @@ export default function MonthlyReport() {
                             </label>
                             <Dropdown
                                 id="monthName"
-                                value={monthName} // must be one of the strings from months
+                                value={monthName}
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 placeholder="Select a Month"
-                                className="w-full"
+                               optionValue='name'
+                            optionLabel='name'
+                             className='w-full'
+                             itemTemplate={itemTemplate}
                             />
                         </div>
                         <div className='field'>

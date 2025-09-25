@@ -46,7 +46,7 @@ const ButtonGroupWithIcon: React.FC<ButtonGroupWithIconsProps> = ({
 
  //{selectedProducts?.length === 0 ? "(All)" : `(${selectedProducts?.length})`}
   return (
-    <div className="flex space-x-2">
+    <div className="flex space-x-2 mb-1">
       <button
         className="flex items-center gap-2 bg-[#6F90AE] text-white border border-[#E2E8F0]  px-4 py-3 rounded-md font-bold"
         onClick={openNew}
@@ -64,7 +64,7 @@ const ButtonGroupWithIcon: React.FC<ButtonGroupWithIconsProps> = ({
       </button>
 
       <button
-        className={`flex items-center gap-2 py-3 px-4 text-[#FF4141] border border-[#F39A9C] font-semibold rounded-t-md ${
+        className={`flex items-center gap-2 py-3 px-4 text-[#FF4141] border border-[#F39A9C] font-semibold rounded-md ${
           selectedProducts && selectedProducts.length > 0
             ? "bg-[#FFDBDC]"
             : "bg-[#FFDBDC] cursor-not-allowed"

@@ -33,7 +33,6 @@ interface Product {
     slNo: string
     subjectName: string
     materialType: string  
-
     date: string
     remarks: string
     attachments: Attachment[]
@@ -49,7 +48,6 @@ export default function KecLetter() {
         slNo: '',
         subjectName: '',
         materialType: '',
-       
         date: '',
         remarks: '',
         attachments: [],
@@ -83,24 +81,20 @@ export default function KecLetter() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [materialType, setMaterialType] = useState('')
-    const [problem, setproblem] = useState('')
+   
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+   
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
-
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
-     const [bulkDialog, setBulkDialog] = useState(false);
+  const [bulkDialog, setBulkDialog] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
@@ -894,7 +888,7 @@ const uploadFile = async () => {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 

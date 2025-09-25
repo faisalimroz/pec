@@ -93,7 +93,7 @@ export default function AssetManagementTable() {
   const [uploadStatus, setUploadStatus] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [type, setType] = useState<string>("");
-  const [buttonType, setButtonType] = useState("All");
+  const [buttonType, setButtonType] = useState("");
   // all update dialog func here
   const alltypes = [
     { name: "All", value: "All" },
@@ -530,59 +530,59 @@ export default function AssetManagementTable() {
     )
   }
 
-interface ButtonGroupProps {
-  activeButton: string;
-  onButtonClick: (value: string) => void;
- 
-}
-const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
- 
+  interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
 
-  const buttons = [
-    { label: "All", value: "All" },
-    { label: "Service Area 1", value: "Service Area 1" },
-    { label: "Service Area 2", value: "Service Area 2" },
-    { label: "Service Area 3", value: "Service Area 3" },
-    { label: "Mawa", value: "Mawa" },
-    { label: "Jinjira", value: "Jinjira" },
-  ];
+  }
+  const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
 
-  const handleButtonClick = (buttonValue: string) => {
-    
-    setSelectedType(buttonValue);
-onButtonClick(buttonValue)
-    setLoading(true);
-    const payload = {
-      type: buttonValue || "All",
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
-      searchQuery: searchKey || "",
+
+    const buttons = [
+      { label: "All", value: "" },
+      { label: "Service Area 1", value: "Service Area 1" },
+      { label: "Service Area 2", value: "Service Area 2" },
+      { label: "Service Area 3", value: "Service Area 3" },
+      { label: "Mawa", value: "Mawa" },
+      { label: "Jinjira", value: "Jinjira" },
+    ];
+
+    const handleButtonClick = (buttonValue: string) => {
+
+      setSelectedType(buttonValue);
+      onButtonClick(buttonValue)
+      setLoading(true);
+      const payload = {
+        type: buttonValue || "",
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+        searchQuery: searchKey || "",
+      };
+
+      searchAssetManagement(payload).then((result) => {
+        setProducts(result?.data);
+        setLoading(false);
+      });
+
     };
 
-    searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data);
-      setLoading(false);
-    });
-    
-  };
-
-  return (
-    <div className="flex items-center space-x-2 py-2 rounded-lg">
-      {buttons.map((button) => (
-        <button
-          key={button.value}
-          onClick={() => handleButtonClick(button.value)}
-          className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
+    return (
+      <div className="flex items-center space-x-2 py-2 rounded-lg">
+        {buttons.map((button) => (
+          <button
+            key={button.value}
+            onClick={() => handleButtonClick(button.value)}
+            className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
             ${activeButton === button.value
-              ? "bg-[#6F90AE] text-white" 
-              : "bg-[#0B1F8F] text-white  " 
-            }`}
-        >
-          {button.label}
-        </button>
-      ))}
-    </div>
-  );
-};
+                ? "bg-[#6F90AE] text-white"
+                : "bg-[#0B1F8F] text-white  "
+              }`}
+          >
+            {button.label}
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   const hideViewDialog = () => {
     setViewProductDialog(false)
@@ -863,7 +863,7 @@ onButtonClick(buttonValue)
         ></Toolbar>
         <div className='mt-2'>
           <ButtonGroup activeButton={buttonType}
-        onButtonClick={setButtonType} ></ButtonGroup>
+            onButtonClick={setButtonType} ></ButtonGroup>
         </div>
         <DataTable
           ref={dt}
@@ -1211,11 +1211,11 @@ onButtonClick(buttonValue)
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
-              
-                            <div>
-                                <h3 className='font-bold'>Type</h3>
-                                <p className='break-all'>{selectedProduct.type}</p>
-                            </div>
+
+              <div>
+                <h3 className='font-bold'>Type</h3>
+                <p className='break-all'>{selectedProduct.type}</p>
+              </div>
 
               <div>
                 <h3 className='font-bold'>File Name/Subject</h3>
@@ -1285,21 +1285,21 @@ onButtonClick(buttonValue)
             </div>
 
             <div className="field">
-                                        <label htmlFor="type" className="font-bold">
-                                           Type
-                                        </label>
-                                        <Dropdown
-                                            id="type"
-                                            value={type}
-                                            onChange={(e) => setType(e.target.value)}
-                                            options={alltypes}
-                                            optionLabel='name'
-                                            optionValue='name'
-                                            itemTemplate={itemTemplate}
-                                            placeholder="Select type"
-                                            className="w-full"
-                                        />
-                                    </div>
+              <label htmlFor="type" className="font-bold">
+                Type
+              </label>
+              <Dropdown
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                itemTemplate={itemTemplate}
+                placeholder="Select type"
+                className="w-full"
+              />
+            </div>
 
 
 

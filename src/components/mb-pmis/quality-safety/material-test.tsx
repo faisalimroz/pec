@@ -22,7 +22,6 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
-import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 
 interface Attachment {
@@ -33,9 +32,7 @@ interface Product {
     _id: string | null
     slNo: string
     subjectName: string
-    description: string
-    materialType: string;
-    
+    materialType: string  
     date: string
     remarks: string
     attachments: Attachment[]
@@ -45,12 +42,11 @@ interface Product {
     updatingTimestamp?: string
 }
 
-export default function MonthlyReport() {
+export default function KecLetter() {
     let emptyProduct: Product = {
         _id: '',
         slNo: '',
         subjectName: '',
-        description: '',
         materialType: '',
         date: '',
         remarks: '',
@@ -78,50 +74,105 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+   const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
-    const [description, setDescription] = useState('')
-    const [problem, setproblem] = useState('')
+    const [materialType, setMaterialType] = useState('')
+   
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+   
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [materialType, setMaterialType] = useState<string>("");
-
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-    const [bulkDialog, setBulkDialog] = useState(false);
+  const [bulkDialog, setBulkDialog] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
-
-   const material = [
-           { name: "Wooden", code: "Wooden" },
-           { name: "Steel", code: "Steel" },
-           { name: "Fresh", code: "Fresh" },
-           { name: "Soft", code: "Soft" },
-           { name: "Concrete", code: "Concrete" }
-       ];
-   
-    const itemTemplate = (option: { name: string; code: string }) => (
-            <div className="flex items-center gap-2">
-                <FileIcon />
-                <span>{option.name}</span>
-            </div>
-        );
     // all update dialog func here
-    const uploadFile = async () => {
+    const openUpdateDialog = (product: Product) => {
+        setUpdatedProduct({ ...product })
+        setUpdateProductDialog(true)
+    }
+
+    const hideUpdateDialog = () => {
+        setUpdateProductDialog(false)
+        setUpdatedProduct(null)
+        setNewAttachments([])
+        setRemovedAttachments([])
+    }
+
+    const handleUpdateProduct = async () => {
+        if (!updatedProduct) return
+
+        try {
+            setLoading2(true)
+            const formData = new FormData()
+     
+            formData.append('subjectName', updatedProduct.subjectName)
+            formData.append('materialType', updatedProduct.materialType)
+     
+            formData.append('remarks', updatedProduct.remarks)
+            formData.append('date', updatedProduct.date)
+           
+            newAttachments.forEach((file) => {
+                formData.append('attachments', file)
+            })
+
+            removedAttachments.forEach((attachmentId) => {
+                formData.append('removedAttachments', attachmentId)
+            })
+
+            const res = await axios.put(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                }
+            )
+
+            refetch()
+            hideUpdateDialog()
+            toast.success('Data updated successfully')
+        } catch (error: any) {
+            if (error.response) {
+                const { message } = error.response.data
+                toast.error(message)
+            } else {
+                console.log(error)
+            }
+        } finally {
+            setLoading2(false)
+        }
+    }
+
+    const handleNewAttachments = (files: File[]) => {
+        setNewAttachments(files)
+    }
+
+    const handleRemoveAttachment = (attachmentId: string) => {
+        setRemovedAttachments((prev) => [...prev, attachmentId])
+        setUpdatedProduct((prev) => {
+            if (!prev) return null
+            return {
+                ...prev,
+                attachments: prev.attachments.filter((a) => a._id !== attachmentId),
+            }
+        })
+    }
+const uploadFile = async () => {
     if (!file) {
       setUploadStatus('Please select a file first.')
       return
@@ -197,80 +248,6 @@ export default function MonthlyReport() {
     }
   }
 
-    const openUpdateDialog = (product: Product) => {
-        setUpdatedProduct({ ...product })
-        setUpdateProductDialog(true)
-    }
-
-    const hideUpdateDialog = () => {
-        setUpdateProductDialog(false)
-        setUpdatedProduct(null)
-        setNewAttachments([])
-        setRemovedAttachments([])
-    }
-
-    const handleUpdateProduct = async () => {
-        if (!updatedProduct) return
-
-        try {
-            setLoading2(true)
-            const formData = new FormData()
-          
-            formData.append('subjectName', updatedProduct.subjectName)
-            formData.append('description', updatedProduct.description)
-        
-            formData.append('remarks', updatedProduct.remarks)
-            formData.append('date', updatedProduct.date)
-            formData.append('materialType', updatedProduct.materialType);
-            newAttachments.forEach((file) => {
-                formData.append('attachments', file)
-            })
-
-            removedAttachments.forEach((attachmentId) => {
-                formData.append('removedAttachments', attachmentId)
-            })
-
-            const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                }
-            )
-
-            refetch()
-            hideUpdateDialog()
-            toast.success('Data updated successfully')
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
-        }
-    }
-
-    const handleNewAttachments = (files: File[]) => {
-        setNewAttachments(files)
-    }
-
-    const handleRemoveAttachment = (attachmentId: string) => {
-        setRemovedAttachments((prev) => [...prev, attachmentId])
-        setUpdatedProduct((prev) => {
-            if (!prev) return null
-            return {
-                ...prev,
-                attachments: prev.attachments.filter((a) => a._id !== attachmentId),
-            }
-        })
-    }
-
     const updateProductDialogFooter = (
         <>
             <Button
@@ -335,10 +312,10 @@ export default function MonthlyReport() {
             const formData = new FormData()
 
             formData.append('subjectName', subjectName)
-            formData.append('description', description)
-            formData.append('problem', problem)
+            formData.append('materialType', materialType)
+          
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+            
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -644,7 +621,7 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getmaterialType(dateString: string) {
+    function getMonthName(dateString: string) {
         const date = new Date(dateString)
         return date.toLocaleString('en-US', { month: 'long' })
     }
@@ -653,42 +630,34 @@ export default function MonthlyReport() {
         const date = new Date(dateString)
         return date.getFullYear()
     }
-
-    const handleSearch = () => {
+ const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getmaterialType(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
         }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        const payload = {
+            date_range: '',
+            searchQuery: '',
+        }
+        setLoading(true)
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
-
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -816,26 +785,19 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
+       const refetch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
+        const payload = {
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
+            date_range: '',
+            searchQuery: '',
+        }
+        searchTreatmentRecord(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
 
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -911,7 +873,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -920,12 +882,12 @@ export default function MonthlyReport() {
                             ></Column>
                            
                             <Column
-                                field='description'
+                                field='materialType'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
                                 className='min-w-[8rem]'
-                                header='Description'
+                                header='Material Type'
                             ></Column>
 
 
@@ -1004,7 +966,7 @@ export default function MonthlyReport() {
             <Dialog
                 visible={updateProductDialog}
                 style={{ width: '60rem' }}
-                header='Update Document'
+                header='Update Record'
                 modal
                 className='p-fluid'
                 footer={updateProductDialogFooter}
@@ -1012,41 +974,45 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+                     
                         <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
+                            <label htmlFor='materialType' className='font-bold'>
+                                Material Type
                             </label>
                             <InputText
-                                id='description'
-                                value={updatedProduct.description}
+                                id='materialType'
+                                value={updatedProduct.materialType}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        description: e.target.value,
+                                        materialType: e.target.value,
                                     })
                                 }
                             />
                         </div>
+                                                            {/* <div className="field">
+                                                                <label htmlFor="location" className="font-bold">
+                                                                    Location
+                                                                </label>
+                        
+                                                                <Dropdown
+                                                                    id="location"
+                                                                    value={updatedProduct.location}
+                                                                    onChange={(e) =>
+                                                                        setUpdatedProduct({
+                                                                            ...updatedProduct,
+                                                                            location: e.value,
+                                                                        })
+                                                                    }
+                                                                    options={shifts}
+                                                                    optionLabel="label"
+                                                                    placeholder="Select a Location"
+                                                                    className="w-full"
+                                                                />
+                                                            </div> */}
                         <div className='field'>
                             <label htmlFor='subjectName' className='font-bold'>
-                                File Name/ Subject
+                                File Name/Subject
                             </label>
                             <InputText
                                 id='subjectName'
@@ -1059,21 +1025,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        {/* <div className='field'>
-              <label htmlFor='problem' className='font-bold'>
-                Problem
-              </label>
-              <InputText
-                id='problem'
-                value={updatedProduct.problem}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    problem: e.target.value,
-                  })
-                }
-              />
-            </div> */}
+                        
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1107,26 +1059,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            <div className='field'>
-                                <label htmlFor='materialType' className='font-bold'>
-                                    Material Type
-                                </label>
-                                <Dropdown
-                                    id='materialType'
-                                    value={updatedProduct.materialType}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            materialType: e.value,
-                                        })
-                                    }
-                                    options={material}
-                                    optionLabel='name'
-                                       itemTemplate={itemTemplate}
-                                    placeholder='Select Material Type'
-                                    className='w-full'
-                                />
-                            </div>
+                           
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1240,15 +1173,38 @@ export default function MonthlyReport() {
                                 <h3 className='font-bold'>Date</h3>
                                 <p>{selectedProduct.date}</p>
                             </div>
+                            
                             <div>
                                 <h3 className='font-bold'>File Name/Subject</h3>
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
-
                             <div>
                                 <h3 className='font-bold'>Material Type</h3>
                                 <p className='break-all'>{selectedProduct.materialType}</p>
                             </div>
+                           {/* <div className="field">
+                                        <label htmlFor="shiftName" className="font-bold">
+                                            Shift Name
+                                        </label>
+
+                                        <Dropdown
+                                            id="shiftName"
+                                            value={shiftName}
+                                            onChange={(e) => setShiftName(e.value)}
+                                            options={shifts}
+                                            optionLabel="label"
+                                            placeholder="Select a Shift"
+                                            required
+                                            className={classNames({
+                                                'p-invalid': submitted && !shiftName,
+                                            })}
+                                        />
+
+                                        {submitted && !shiftName && (
+                                            <small className="p-error">Shift name is required.</small>
+                                        )}
+                                    </div>
+                             */}
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1290,7 +1246,7 @@ export default function MonthlyReport() {
 
                         <div className='field'>
                             <label htmlFor='subjectName' className='font-bold'>
-                                File Name/Subject
+                          File Name/Subject
                             </label>
                             <InputText
                                 id='subjectName'
@@ -1302,34 +1258,20 @@ export default function MonthlyReport() {
                                 })}
                             />
                             {submitted && !subjectName && (
-                                <small className='p-error'>File Name/Subject is required.</small>
+                                <small className='p-error'>File Name/Subject required.</small>
                             )}
                         </div>
                         <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
+                            <label htmlFor='materialType' className='font-bold'>
+                                Material Type
                             </label>
                             <InputText
                                 id='problem'
-                                onChange={(e) => setDescription(e.target.value)}
+                                onChange={(e) => setMaterialType(e.target.value)}
                                 required
                             />
                         </div>
-                        <div className="field">
-                            <label htmlFor="materialType" className="font-bold">
-                                Material Type
-                            </label>
-                            <Dropdown
-                                id="materialType"
-                                value={materialType}
-                                onChange={(e) => setMaterialType(e.value)}
-                                options={material}
-                                itemTemplate={itemTemplate}
-                                optionLabel='name'
-                                placeholder="Select Material Type"
-                                className="w-full"
-                            />
-                        </div>
+                        
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
