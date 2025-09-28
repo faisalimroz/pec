@@ -6,7 +6,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Menu, UserCircleIcon } from 'lucide-react'
-import logo from '@/assets/rhd.png'
+// import logo from '@/assets/rhd.png'
+import logo from '@/assets/rhd-logo.png'
 import kecLogo from '@/assets/ex-pic.png'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
