@@ -171,6 +171,23 @@ export async function searchMonthlyRoaster(param: unknown) {
 
   return response.data
 }
+//kec letters
+export async function searchKecLetters(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/monthly-roaster/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 
 // drawing apis
 
@@ -209,7 +226,134 @@ export async function searchElectrical(param: unknown) {
 }
 
 // maintenance apis
+export async function searchMiscellaneousRM(param: unknown) {
+  // console.log('param', param)
 
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchDrawingsRM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchAccidentRM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchLetterRM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchInspectionRM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchCompletionFormRM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchRecivingMaterialsRM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchRequisitionFormRM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 export async function searchDailyWorkReport(param: unknown) {
   // console.log('param', param)
 
@@ -312,26 +456,10 @@ export async function searchWorkCompletion(param: unknown) {
   return response.data
 }
 
-export async function searchMiscellaneousR(param: unknown) {
-  // console.log('param', param)
-
-  const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
-    param,
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-
-  return response.data
-}
 
 // road safety & traffic apis
 
-export async function searchInspectionReport(param: unknown) {
+export async function searchAccidentReportRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
@@ -347,59 +475,7 @@ export async function searchInspectionReport(param: unknown) {
 
   return response.data
 }
-
-export async function searchOnePageReport(param: unknown) {
-  // console.log('param', param)
-
-  const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/onepage/search/data`,
-    param,
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-
-  return response.data
-}
-
-export async function accidentList(param: unknown) {
-  // console.log('param', param)
-
-  const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/accident/accident/data/all/search`,
-    param,
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-
-  return response.data
-}
-
-export async function searchOneWorkCompletion(param: unknown) {
-  // console.log('param', param)
-
-  const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/workcompletion/search/data`,
-    param,
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-
-  return response.data
-}
-
-export async function searchMiscellaneous(param: unknown) {
+export async function searchMiscellaneousRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
@@ -415,6 +491,255 @@ export async function searchMiscellaneous(param: unknown) {
 
   return response.data
 }
+export async function searchRequisitonFormRS(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchCompletionFormRS(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchRecivingFromRS(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchInspectionRS(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchControllersReportRS(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchLetterAttachmentRS(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchDrawingRS(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
+
+// worshop maintenance apis
+export async function searchAccidentReportWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/inspection/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchMiscellaneousWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchRequisitonFormWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchCompletionFormWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchRecivingFromWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchInspectionWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
+export async function searchLetterAttachmentWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchDrawingWM(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
+
+
+
+
 
 export async function searchAccidentReport(param: unknown) {
   // console.log('param', param)
@@ -432,7 +757,6 @@ export async function searchAccidentReport(param: unknown) {
 
   return response.data
 }
-
 // safety & patrol apis
 
 export async function searchPatrolTeam(param: unknown) {

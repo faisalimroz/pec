@@ -209,35 +209,32 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin')).default,
             }),
           },
+         
+        
+        
+         
           {
-            path: 'administrative/business-report',
+            path: 'administrative/vehicle-mgt-record',
             lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/planning/business-report')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/meeting-report',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/planning/meeting-report'))
+              Component: (await import('@/pages/admin/vehicle-mgt-record'))
                 .default,
             }),
           },
           {
-            path: 'administrative/monthly-report',
+            path: 'administrative/gardening-monthly-activity',
             lazy: async () => ({
-              Component: (await import('@/pages/admin/planning/monthly-report'))
+              Component: (await import('@/pages/admin/gardening/gardening-monthly-activity'))
                 .default,
             }),
           },
           {
-            path: 'administrative/monthly-roster',
+            path: 'administrative/gardening-tools',
             lazy: async () => ({
-              Component: (await import('@/pages/admin/planning/monthly-roster'))
+              Component: (await import('@/pages/admin/gardening/gardening-tools'))
                 .default,
             }),
           },
+         
           {
             path: 'administrative/mobilization',
             lazy: async () => ({
@@ -256,17 +253,17 @@ const router = createBrowserRouter([
             path: 'administrative/employee-personal-profile',
             lazy: async () => ({
               Component: (
-                await import('@/pages/admin/hr/employee-personal-profile')
+                await import('@/pages/admin/employee-personal-profile')
               ).default,
             }),
           },
-          {
-            path: 'administrative/employee-personal-profile/:id',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/em-personal-detail'))
-                .default,
-            }),
-          },
+          // {
+          //   path: 'administrative/employee-personal-profile/:id',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/em-personal-detail'))
+          //       .default,
+          //   }),
+          // },
           {
             path: 'administrative/attendance-management',
             lazy: async () => ({
@@ -317,98 +314,7 @@ const router = createBrowserRouter([
             }),
           },
 
-          {
-            path: 'administrative/status-personnel',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/greetings/status-personnel')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/greetings',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/greetings/greetings'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/recruitment',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/greetings/recruitment'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/recruitment/:id',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/greetings/recruitment-detail')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/application-of-employees',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/greetings/application-employees')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/commodity-management',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/general-management/commodity-management'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/utility-consumption-info',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/general-management/utility-consumption'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/labor-management',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/labor-management'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/all-salary',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/salary')).default,
-            }),
-          },
-          {
-            path: 'administrative/accommodation-facilities',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/other-facilities/accommodation-facility'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/restaurant-management',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/other-facilities/restaurant-management'
-                )
-              ).default,
-            }),
-          },
-
+          
           {
             path: 'administrative/asset-management',
             lazy: async () => ({
@@ -416,12 +322,86 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
+         
           {
-            path: 'administrative/notice',
+            path: 'administrative/it-electronics-communication-report',
             lazy: async () => ({
-              Component: (await import('@/pages/admin/notice')).default,
+              Component: (await import('@/pages/admin/it-electronics-communication/it-electronics-monthly-report')).default,
             }),
           },
+          {
+            path: 'administrative/it-electronics-communication-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/it-electronics-communication/it-electronics-tools')).default,
+            }),
+          },
+          {
+            path: 'administrative/security-mgt-monthly-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/security-mgt/security-monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/security-mgt-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/security-mgt/security-tools')).default,
+            }),
+          },
+          {
+            path: 'administrative/fire-mgt-monthly-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/fire-mgt/fire-monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/fire-mgt-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/fire-mgt/fire-tools')).default,
+            }),
+          },
+          {
+            path: '/finance/ipc-monthly-updates',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/ipc/ipc-monthly-updates')).default,
+            }),
+          },
+          {
+            path: '/finance/ipc-records',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/ipc/ipc-records')).default,
+            }),
+          },
+          {
+            path: 'administrative/building-maintenance-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/building-maintenance/monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/building-maintenance-tools',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/building-maintenance/tools')).default,
+            }),
+          },
+          {
+            path: 'administrative/health-center-monthly-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/health-center/monthly-report')).default,
+            }),
+          },
+          {
+            path: 'administrative/health-center-medicine-record',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/health-center/medicine-in-out-record')).default,
+            }),
+          },
+          {
+            path: 'administrative/health-center-monthly-equipment-record',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/health-center/medical-equipment-record')).default,
+            }),
+          },
+
 
           {
             path: 'clinic-center/medicine-record',
@@ -817,186 +797,393 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'road-and-traffic/building-maintenance',
+            path: 'road-and-traffic/kec-letter',
             lazy: async () => ({
               Component: (
-                await import('@/pages/road-and-traffic/building-maintenance')
+                await import('@/pages/road-and-traffic/kec-letter')
               ).default,
             }),
           },
           {
-            path: 'road-and-traffic/monthly-roaster',
+            path: 'road-and-traffic/organization-organogram',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/orgaorganization-organogram')
+              ).default,
+            }),
+          },
+          {
+            path: '/road-and-traffic/monthly-roaster',
             lazy: async () => ({
               Component: (
                 await import('@/pages/road-and-traffic/monthly-roaster')
               ).default,
             }),
           },
-
+            {
+            path: 'road-and-traffic/road-and-patrol/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/accident')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-patrol/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/drawing')
+              ).default,
+            }),
+          },
+            {
+            path: 'road-and-traffic/road-and-patrol/controllers-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/controllers-report')
+              ).default,
+            }),
+          },
+         
+         
+          {
+            path: 'road-and-traffic/road-and-patrol/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-patrol/miscellaneous')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/accident')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/drawing')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/workshop/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/workshop/miscellaneous')
+              ).default,
+            }),
+          },
+          
+          {
+            path: 'road-and-traffic/road-and-maintanance/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/accident')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/drawing')
+              ).default,
+            }),
+          },
+          {
+            path: 'road-and-traffic/road-and-maintanance/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/road-and-maintenance/miscellaneous')
+              ).default,
+            }),
+          },
           {
             path: 'its',
             lazy: async () => ({
               Component: (await import('@/pages/its')).default,
             }),
           },
-          {
-            path: 'its/overview',
+         
+           {
+            path: 'its/about-its',
             lazy: async () => ({
-              Component: (await import('@/pages/its/Staff/overview')).default,
+              Component: (await import('@/pages/its/AboutUs')).default,
             }),
           },
-          {
-            path: 'its/staff-summary',
+           {
+            path: 'its/system-configure',
             lazy: async () => ({
-              Component: (await import('@/pages/its/Staff/staff-summary'))
-                .default,
+              Component: (await import('@/pages/its/SystemConfigure')).default,
             }),
           },
-          {
-            path: 'its/duty-roster',
+            {
+            path: 'its/notice',
             lazy: async () => ({
-              Component: (await import('@/pages/its/Staff/duty-roster'))
-                .default,
+              Component: (await import('@/pages/its/Notice')).default,
             }),
           },
-          {
-            path: 'its/report/monitoring',
+            {
+            path: 'its/operation-manual',
             lazy: async () => ({
-              Component: (await import('@/pages/its/Report/Monitoring'))
-                .default,
+              Component: (await import('@/pages/its/OperationManual')).default,
             }),
           },
-          {
-            path: 'its/report/to-rhd',
+            {
+            path: 'its/work-plan',
             lazy: async () => ({
-              Component: (await import('@/pages/its/Report/ToRhd')).default,
+              Component: (await import('@/pages/its/WorkPlan')).default,
             }),
           },
-          {
-            path: 'its/internal-letter/announce',
+           {
+            path: 'its/monthly-report',
             lazy: async () => ({
-              Component: (await import('@/pages/its/OfficialLetter/rhd'))
-                .default,
+              Component: (await import('@/pages/its/MonthlyReport')).default,
             }),
           },
-          {
-            path: 'its/official-letter/miscellaneous',
+        
+           {
+            path: 'its/organization',
             lazy: async () => ({
-              Component: (
-                await import('@/pages/its/OfficialLetter/Miscellaneous')
-              ).default,
+              Component: (await import('@/pages/its/Organization')).default,
             }),
           },
-          {
-            path: 'its/procurement/quotation',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/Quotation')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/invoice',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/Invoice')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/working-order',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/WorkingOrder')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/requisition',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/Requisition')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/paid-service',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/PaidService')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/training/manual',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Training')).default,
-            }),
-          },
-          {
-            path: 'its/om-activities/its',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/OMActivity/Its')).default,
-            }),
-          },
-          {
-            path: 'its/om-activities/electricity',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/OMActivity/Electricity'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/inventory/its',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Inventory/Its')).default,
-            }),
-          },
-          {
-            path: 'its/inventory/electricity',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Inventory/Electricity'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/diagram/its',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Diagram/Its')).default,
-            }),
-          },
-          {
-            path: 'its/diagram/electricity',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Diagram/Electricity'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/warranty/product-list',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Warranty/ProductList'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/warranty/claim-report',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Warranty/ClaimReport'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/vehicle-detect',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/VehicleDetect')).default,
-            }),
-          },
-
+        
           {
             path: 'toll',
             lazy: async () => ({
               Component: (await import('@/pages/toll')).default,
+            }),
+          },
+           {
+            path: '/toll/hierarchy',
+            lazy: async () => ({
+              Component: (await import('@/pages/toll/hierarchy')).default,
+            }),
+          },
+           {
+            path: 'toll/wim-data/wim-data-comparisons',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/wim-data/represent-wim-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/wim-data'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/shift/shift-wise-toll-traffic-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/shift-wise/shift-wise-toll-traffic-data'
+                )
+              ).default,
+            }),
+          },
+            {
+            path: 'toll/shift/shift-wise-toll-traffic-comparison',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/shift-wise/shift-wise-toll-comparison'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/daily-toll-traffic-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/daily-report'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/daily-data-comparisons',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/daily-toll-trafic-comparison'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: 'toll/daily-report',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/report'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/monthly-roster/main-bridge-bills',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/main-bridge/index'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/employee-personal-report',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/employee-personal-report'
+                )
+              ).default,
+            }),
+          },
+           {
+            path: 'toll/hierarchy',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                )
+              ).default,
             }),
           },
           {
@@ -1237,7 +1424,236 @@ const router = createBrowserRouter([
       // },
     ],
   },
+  //rtw
+  {
+     path: 'rtw/project-overview',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/project-overview')).default,
+            }),
+  },
+   {
+     path: 'rtw/material-test-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/quality-safety/material-test-report')).default,
+            }),
+  },
+  {
+     path: 'rtw/safety',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/quality-safety/safety')).default,
+            }),
+  },
+  {
+     path: 'rtw/meeting-minutes',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/communication-correspondence/meeting-minutes')).default,
+            }),
+  },
+  {
+     path: 'rtw/letter-and-official-correspondence',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/communication-correspondence/letter-official-correspondence')).default,
+            }),
+  },
+  {
+     path: '/rtw/rtw-bills',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/financial-documentation/rtw-bills')).default,
+            }),
+  },
+   {
+     path: '/rtw/rtw-drawings',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/rtw-drawings')).default,
+            }),
+  },
+  {
+     path: '/rtw/rtw-drawings',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/rtw-drawings')).default,
+            }),
+  },
+    {
+     path: '/rtw/material-and-equipment',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/materials-and-equipment')).default,
+            }),
+  },
+  {
+     path: '/rtw/rtw-maintenance-manual',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/rtw-maintenance-manual')).default,
+            }),
+  },
+  {
+     path: '/rtw/survey-reports',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/technical-documentation/survey-reports')).default,
+            }),
+  },
+   {
+     path: '/rtw/picture-and-videos',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/visual-records/pictures-and-videos')).default,
+            }),
+  },
+   {
+     path: '/rtw/monitoring-and-reporting/monthly-reports',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/monitoring-and-reporting/monthly-report')).default,
+            }),
+  },
+   {
+     path: '/rtw/monitoring-and-reporting/daily-water-level-records',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/monitoring-and-reporting/daily-water-level-records')).default,
+            }),
+  },
+   {
+     path: '/rtw/additional-notes/backup-frequency',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/additional-notes/backup-frequency')).default,
+            }),
+  },
+   {
+     path: '/rtw/additional-notes/document-control-manager',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/additional-notes/document-control')).default,
+            }),
+  },
+   {
+     path: '/rtw/additional-notes/document-revision-log',
+            lazy: async () => ({
+              Component: (await import('@/pages/rtw/additional-notes/document-revision-log')).default,
+            }),
+  },
 
+
+
+  //main bridge pmis
+  {
+     path: '/mb-pmis/project-overview',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/project-overview')).default,
+            }),
+  },
+   
+   {
+     path: '/mb-pmis/technical-documentation/main-bridge-drawings',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/main-bridge-drawings')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/survey-reports',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/survery-reports')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/materials-and-equipment',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/materials-and-equipment')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/other',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/others')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/technical-documentation/maintenance-manual',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/technical-documentation/main-bridge-maintenace')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/monitoring-and-reporting',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/monitoring-reporting')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/quality-and-safety/safety',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/quality-safety/safety')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/quality-and-safety/material-test-report',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/quality-safety/material-test-report')).default,
+            }),
+  },
+   {
+     path: '/mb-pmis/main-bridge-bills',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/financial-documentation/main-bridge-bills')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/picture-and-videos',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/visual-records')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/letter-and-official-correspondence',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/communication-correspondence/letter-and-correspondence')).default,
+            }),
+  },
+  
+  {
+     path: '/mb-pmis/meeting-minutes',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/communication-correspondence/meeting-minutes')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/additional-notes/backup-frequency',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/additional-notes/backup-frequency')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/additional-notes/document-control-manager',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/additional-notes/document-control')).default,
+            }),
+  },
+  {
+     path: '/mb-pmis/additional-notes/document-revision-log',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/additional-notes/document-revision')).default,
+            }),
+  },
+  //extra edms
+   {
+     path: '/edms/administrative',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin-edms/index')).default,
+            }),
+  },
+    {
+     path: '/edms/its',
+            lazy: async () => ({
+              Component: (await import('@/pages/its - Copy/AboutUs')).default,
+            }),
+  },
+  {
+     path: '/edms/overview',
+            lazy: async () => ({
+              Component: (await import('@/pages/its - Copy/AboutUs')).default,
+            }),
+  },
+  {
+     path: '/edms/its/workplan',
+            lazy: async () => ({
+              Component: (await import('@/pages/its - Copy/AboutUs')).default,
+            }),
+  },
   // Error routes
   { path: '/500', Component: GeneralError },
   { path: '/404', Component: NotFoundError },

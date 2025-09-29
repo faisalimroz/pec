@@ -19,6 +19,10 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
+import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import FileIcon from '@/components/icons/FileIcon'
+import { Dropdown } from 'primereact/dropdown'
 
 interface Attachment {
   url: string
@@ -27,13 +31,11 @@ interface Attachment {
 interface Product {
   _id: string | null
   slNo: string
-  assetId: string
-  chalanNo: string
-  itemName: string
+  fileName: string
   date: string
-  quantity: string
-  usingLocation: string
+  description: string
   remarks: string
+  type: string
   attachments: Attachment[]
   creator?: string
   creationTimestamp?: string
@@ -45,21 +47,17 @@ export default function AssetManagementTable() {
   let emptyProduct: Product = {
     _id: '',
     slNo: '',
-    assetId: '',
-    chalanNo: '',
-    itemName: '',
+    fileName: '',
+    type: '',
     date: '',
-    quantity: '',
-    usingLocation: '',
+    description: '',
     remarks: '',
     attachments: [],
   }
   const { roles, permissions } = useAuth()
   const checkRole = permissions.find((p) => p.name === 'admin')
   const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
   const hasEditAccess = checkPermission?.edit_authority || false
-
   const isAdmin = roles.some((role) =>
     ['superadmin', 'admin'].includes(role.title)
   )
@@ -72,30 +70,46 @@ export default function AssetManagementTable() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
   const dt = useRef<DataTable<Product[]>>(null)
-  const [date, setDate] = useState<string>('')
-  const [date2, setDate2] = useState<string>('')
+  const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
-  const [itemName, setItemName] = useState('')
-  const [assetId, setAssetId] = useState('')
-  const [chalanNo, setChalanNo] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [usingLocation, setUsingLoaction] = useState('')
+  const [fileName, setfileName] = useState('')
+  const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [formDate, setFormDate] = useState<string>('')
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
   const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
   const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+  const [bulkDialog, setBulkDialog] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [type, setType] = useState<string>("");
+  const [buttonType, setButtonType] = useState("");
   // all update dialog func here
+  const alltypes = [
+    { name: "All", value: "All" },
+    { name: "Service Area 1", value: "Service Area 1" },
+    { name: "Service Area 2", value: "Service Area 2" },
+    { name: "Service Area 3", value: "Service Area 3" },
+    { name: "Mawa", value: "Mawa" },
+    { name: "Jinjira", value: "Jinjira" },
+
+  ];
+  const itemTemplate = (option: { name: string; value: string }) => (
+    <div className="flex items-center gap-2">
+      <FileIcon />
+      <span>{option.name}</span>
+    </div>
+  )
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
@@ -114,14 +128,11 @@ export default function AssetManagementTable() {
     try {
       setLoading2(true)
       const formData = new FormData()
-      formData.append('assetId', updatedProduct.assetId)
-      formData.append('itemName', updatedProduct.itemName)
-      formData.append('chalanNo', updatedProduct.chalanNo)
-      formData.append('quantity', updatedProduct.quantity)
-      formData.append('usingLocation', updatedProduct.usingLocation)
+      formData.append('fileName', updatedProduct.fileName)
+      formData.append('description', updatedProduct.description)
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
-
+      formData.append('type', updatedProduct.type);
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
       })
@@ -131,7 +142,7 @@ export default function AssetManagementTable() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/update/by/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -169,6 +180,81 @@ export default function AssetManagementTable() {
         attachments: prev.attachments.filter((a) => a._id !== attachmentId),
       }
     })
+  }
+  const uploadFile = async () => {
+    if (!file) {
+      setUploadStatus('Please select a file first.')
+      return
+    }
+
+    setUploading(true)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/bulk-upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      toast.success('File uploaded successfully!')
+      setFile(null)
+      refetch()
+      hideDialog2()
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      toast.error('An error occurred while uploading. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const hideDialog2 = () => {
+    setBulkDialog(false)
+    setFile(null)
+    setUploadStatus('')
+  }
+
+  const openNew2 = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setBulkDialog(true)
+  }
+
+  const productDialogFooter2 = (
+    <>
+      <Button
+        label='Cancel'
+        icon='pi pi-times'
+        className='p-button-text'
+        onClick={hideDialog2}
+      />
+      <Button
+        label='Save'
+        icon='pi pi-upload'
+        className='p-button-text'
+        onClick={uploadFile}
+        disabled={!file || uploading}
+      />
+    </>
+  )
+
+  const handleFileChange2 = (e: { target: { files: any[] } }) => {
+    const selectedFile = e.target.files[0]
+    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+      setFile(selectedFile)
+      setUploadStatus('')
+    } else {
+      setFile(null)
+      setUploadStatus('Please select a valid .xlsx file.')
+    }
   }
 
   const updateProductDialogFooter = (
@@ -229,18 +315,16 @@ export default function AssetManagementTable() {
       setLoading2(true)
       const formData = new FormData()
 
-      formData.append('itemName', itemName)
-      formData.append('assetId', assetId)
-      formData.append('chalanNo', chalanNo)
-      formData.append('quantity', quantity)
-      formData.append('usingLocation', usingLocation)
+      formData.append('fileName', fileName)
+      formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
+      formData.append('type', type)
       filesInput.forEach((file) => {
         formData.append('attachments', file)
       })
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/create`,
         formData,
         {
           headers: {
@@ -280,7 +364,7 @@ export default function AssetManagementTable() {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/delete/by/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -341,7 +425,7 @@ export default function AssetManagementTable() {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/delete-multiple`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -395,7 +479,7 @@ export default function AssetManagementTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
+        <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
           Document List
         </div>
         {/* {isAdmin && (
@@ -432,39 +516,73 @@ export default function AssetManagementTable() {
     return (
       <>
         {hasEditAccess && (
-          <div className='space-x-2'>
-            <button
-              className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-              onClick={openNew}
-            >
-              Upload Document
-            </button>
-            <button
-              className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-              onClick={exportCSV}
-            >
-              Download Files{' '}
-              {selectedProducts?.length === 0
-                ? '(All)'
-                : `(${selectedProducts?.length})`}
-            </button>
-            <button
-              onClick={confirmDeleteSelected}
-              disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
-                selectedProducts && selectedProducts.length > 0
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-gray-400 cursor-not-allowed'
-              }`}
-            >
-              Delete Selected ({selectedProducts?.length || 0})
-            </button>
-          </div>
+          <ButtonGroupWithIcon
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            openNew2={openNew2}
+            exportCSV={exportCSV}
+            confirmDeleteSelected={confirmDeleteSelected}
+
+          />
         )}
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }
+
+  interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
+
+  }
+  const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
+
+
+    const buttons = [
+      { label: "All", value: "" },
+      { label: "Service Area 1", value: "Service Area 1" },
+      { label: "Service Area 2", value: "Service Area 2" },
+      { label: "Service Area 3", value: "Service Area 3" },
+      { label: "Mawa", value: "Mawa" },
+      { label: "Jinjira", value: "Jinjira" },
+    ];
+
+    const handleButtonClick = (buttonValue: string) => {
+
+      setSelectedType(buttonValue);
+      onButtonClick(buttonValue)
+      setLoading(true);
+      const payload = {
+        type: buttonValue || "",
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+        searchQuery: searchKey || "",
+      };
+
+      searchAssetManagement(payload).then((result) => {
+        setProducts(result?.data);
+        setLoading(false);
+      });
+
+    };
+
+    return (
+      <div className="flex items-center space-x-2 py-2 rounded-lg">
+        {buttons.map((button) => (
+          <button
+            key={button.value}
+            onClick={() => handleButtonClick(button.value)}
+            className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
+            ${activeButton === button.value
+                ? "bg-[#6F90AE] text-white"
+                : "bg-[#0B1F8F] text-white  "
+              }`}
+          >
+            {button.label}
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   const hideViewDialog = () => {
     setViewProductDialog(false)
@@ -569,31 +687,31 @@ export default function AssetManagementTable() {
 
   const handleSearch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: date ? getMonthName(date) : '',
-      year: date2 ? getYear(date2) : '',
+    const payload = {
+      type: selectedType || 'All',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
-
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
 
   const handleReset = () => {
-    const initialPayload = {
-      year: '',
-      searchQuery: '',
-      month: '',
-    }
-
-    setDate('')
-    setDate2('')
+    setDate(null)
+    setDate2(null)
     setSearchKey('')
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
+    }
+    setLoading(true)
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
@@ -611,10 +729,10 @@ export default function AssetManagementTable() {
         value={date}
         // @ts-ignore
         onChange={(e) => setDate(e.value)}
-        view='month'
-        dateFormat='MM'
+
+        dateFormat="dd/mm/yy"
         inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-        placeholder='By Month'
+        placeholder='Start Date'
         showIcon
         icon={() => <i className='pi pi-angle-down' />}
       />
@@ -623,10 +741,10 @@ export default function AssetManagementTable() {
         value={date2}
         // @ts-ignore
         onChange={(e) => setDate2(e.value)}
-        view='year'
-        dateFormat='yy'
+
+        dateFormat="dd/mm/yy"
         inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-        placeholder='By Year'
+        placeholder='End Date'
         showIcon
         icon={() => <i className='pi pi-angle-down' />}
       />
@@ -716,14 +834,14 @@ export default function AssetManagementTable() {
 
   const refetch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: '',
-      year: '',
+    const payload = {
+      type: '',
+      date_range: '',
       searchQuery: '',
     }
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    searchAssetManagement(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
@@ -743,7 +861,10 @@ export default function AssetManagementTable() {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-
+        <div className='mt-2'>
+          <ButtonGroup activeButton={buttonType}
+            onButtonClick={setButtonType} ></ButtonGroup>
+        </div>
         <DataTable
           ref={dt}
           value={products}
@@ -782,28 +903,14 @@ export default function AssetManagementTable() {
             sortable
           ></Column>
 
-          <Column
-            field='assetId'
-            header='Asset ID'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-          ></Column>
+
 
           <Column
-            field='chalanNo'
-            header='Chalan No.'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            // sortable
-          ></Column>
-
-          <Column
-            field='itemName'
+            field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             sortable
-            header='Item Name'
+            header='File Name/Subject'
           ></Column>
 
           <Column
@@ -815,19 +922,11 @@ export default function AssetManagementTable() {
           ></Column>
 
           <Column
-            field='quantity'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Quantity'
-          ></Column>
-
-          <Column
-            field='usingLocation'
+            field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             // sortable
-            header='Using Location'
+            header='Description'
           ></Column>
 
           <Column
@@ -843,7 +942,7 @@ export default function AssetManagementTable() {
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+          // sortable
           ></Column>
 
           <Column
@@ -869,85 +968,43 @@ export default function AssetManagementTable() {
       >
         {updatedProduct && (
           <div className='grid grid-cols-2 gap-4'>
+
+
             <div className='field'>
-              <label htmlFor='assetId' className='font-bold'>
-                Asset ID
+              <label htmlFor='fileName' className='font-bold'>
+                File Name/Subject
               </label>
               <InputText
-                id='assetId'
-                value={updatedProduct.assetId}
+                id='fileName'
+                value={updatedProduct.fileName}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    assetId: e.target.value,
+                    fileName: e.target.value,
                   })
                 }
               />
             </div>
 
+
+
             <div className='field'>
-              <label htmlFor='itemName' className='font-bold'>
-                Item Name
+              <label htmlFor='description' className='font-bold'>
+                Description
               </label>
               <InputText
-                id='itemName'
-                value={updatedProduct.itemName}
+                id='description'
+                value={updatedProduct.description}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    itemName: e.target.value,
+                    description: e.target.value,
                   })
                 }
               />
             </div>
 
-            <div className='field'>
-              <label htmlFor='quantity' className='font-bold'>
-                Quantity
-              </label>
-              <InputText
-                id='quantity'
-                value={updatedProduct.quantity}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    quantity: e.target.value,
-                  })
-                }
-              />
-            </div>
 
-            <div className='field'>
-              <label htmlFor='usingLocation' className='font-bold'>
-                Using Location
-              </label>
-              <InputText
-                id='usingLocation'
-                value={updatedProduct.usingLocation}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    usingLocation: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className='field'>
-              <label htmlFor='chalanNo' className='font-bold'>
-                Chalan No
-              </label>
-              <InputText
-                id='chalanNo'
-                value={updatedProduct.chalanNo}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    chalanNo: e.target.value,
-                  })
-                }
-              />
-            </div>
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -962,6 +1019,27 @@ export default function AssetManagementTable() {
                     remarks: e.target.value,
                   })
                 }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='type' className='font-bold'>
+                Type
+              </label>
+              <Dropdown
+                id='type'
+                value={updatedProduct.type}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    type: e.target.value,
+                  })
+                }
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                placeholder='Select type'
+                className='w-full'
+                itemTemplate={itemTemplate}
               />
             </div>
             <div className='field'>
@@ -1014,7 +1092,46 @@ export default function AssetManagementTable() {
           </div>
         )}
       </Dialog>
-
+      <Dialog
+        visible={bulkDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Upload Bulk Data'
+        modal
+        className='p-fluid'
+        footer={productDialogFooter2}
+        onHide={hideDialog2}
+      >
+        <div className='grid grid-cols-2 items-center gap-6'>
+          <div className='field col-span-2'>
+            <label htmlFor='bulkUpload' className='font-bold'>
+              Select File (.xlsx Only):
+            </label>
+            <br />
+            <input
+              type='file'
+              id='bulkUpload'
+              accept='.xlsx'
+              // @ts-ignore
+              onChange={handleFileChange2}
+              disabled={uploading}
+              className='mt-3'
+            />
+            {/* {file && <p>Selected file: {file?.name}</p>} */}
+            {uploadStatus && (
+              <p
+                className={
+                  uploadStatus.includes('success')
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }
+              >
+                {uploadStatus}
+              </p>
+            )}
+          </div>
+        </div>
+      </Dialog>
       <Dialog
         visible={viewProductDialog}
         style={{ width: '50rem' }}
@@ -1094,26 +1211,21 @@ export default function AssetManagementTable() {
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
+
               <div>
-                <h3 className='font-bold'>Asset ID</h3>
-                <p className='break-all'>{selectedProduct.assetId}</p>
+                <h3 className='font-bold'>Type</h3>
+                <p className='break-all'>{selectedProduct.type}</p>
+              </div>
+
+              <div>
+                <h3 className='font-bold'>File Name/Subject</h3>
+                <p className='break-all'>{selectedProduct.fileName}</p>
               </div>
               <div>
-                <h3 className='font-bold'>Chalan No.</h3>
-                <p className='break-all'>{selectedProduct.chalanNo}</p>
+                <h3 className='font-bold'>Description</h3>
+                <p className='break-all'>{selectedProduct.description}</p>
               </div>
-              <div>
-                <h3 className='font-bold'>Item Name</h3>
-                <p className='break-all'>{selectedProduct.itemName}</p>
-              </div>
-              <div>
-                <h3 className='font-bold'>Using Location</h3>
-                <p className='break-all'>{selectedProduct.usingLocation}</p>
-              </div>
-              <div>
-                <h3 className='font-bold'>Quantity</h3>
-                <p className='break-all'>{selectedProduct.quantity}</p>
-              </div>
+
               <div>
                 <h3 className='font-bold'>Remarks</h3>
                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1152,71 +1264,52 @@ export default function AssetManagementTable() {
       >
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
+
+
             <div className='field'>
-              <label htmlFor='assetId' className='font-bold'>
-                AssetID
+              <label htmlFor='fileName' className='font-bold'>
+                File Name/Subject
               </label>
               <InputText
-                id='assetId'
-                onChange={(e) => setAssetId(e.target.value)}
+                id='fileName'
+                onChange={(e) => setfileName(e.target.value)}
                 required
                 autoFocus
                 className={classNames({
-                  'p-invalid': submitted && !assetId,
+                  'p-invalid': submitted && !fileName,
                 })}
               />
-              {submitted && !assetId && (
-                <small className='p-error'>AssetId is required.</small>
+              {submitted && !fileName && (
+                <small className='p-error'>File Name/ Subject is required.</small>
               )}
             </div>
 
-            <div className='field'>
-              <label htmlFor='itemName' className='font-bold'>
-                Item Name
+            <div className="field">
+              <label htmlFor="type" className="font-bold">
+                Type
               </label>
-              <InputText
-                id='itemName'
-                onChange={(e) => setItemName(e.target.value)}
-                required
-                autoFocus
-                className={classNames({
-                  'p-invalid': submitted && !itemName,
-                })}
-              />
-              {submitted && !itemName && (
-                <small className='p-error'>Item Name is required.</small>
-              )}
-            </div>
-
-            <div className='field'>
-              <label htmlFor='chalanNo' className='font-bold'>
-                Chalan No.
-              </label>
-              <InputText
-                id='chalanNo'
-                onChange={(e) => setChalanNo(e.target.value)}
-                required
+              <Dropdown
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                itemTemplate={itemTemplate}
+                placeholder="Select type"
+                className="w-full"
               />
             </div>
 
-            <div className='field'>
-              <label htmlFor='quantity' className='font-bold'>
-                Quantity
-              </label>
-              <InputText
-                id='quantity'
-                onChange={(e) => setQuantity(e.target.value)}
-                required
-              />
-            </div>
+
 
             <div className='field'>
-              <label htmlFor='usingLocation' className='font-bold'>
-                Using Location
+              <label htmlFor='description' className='font-bold'>
+                Description
               </label>
               <InputText
-                id='usingLocation'
-                onChange={(e) => setUsingLoaction(e.target.value)}
+                id='description'
+                onChange={(e) => setDescription(e.target.value)}
                 required
               />
             </div>

@@ -14,6 +14,14 @@ import { FileText, Info } from 'lucide-react'
 import '../styles/style.css'
 import { EDMSLettersList } from '@/components/charts/edms-chart'
 import { useAuth } from '@/provider/authProvider'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { ChevronDown } from 'lucide-react'
 
 interface Attachment {
   url: string
@@ -34,6 +42,20 @@ interface Notice {
 interface ApiResponse {
   Notices: Notice[]
 }
+const monthOptions = [
+  { value: '0', label: 'January' },
+  { value: '1', label: 'February' },
+  { value: '2', label: 'March' },
+  { value: '3', label: 'April' },
+  { value: '4', label: 'May' },
+  { value: '5', label: 'June' },
+  { value: '6', label: 'July' },
+  { value: '7', label: 'August' },
+  { value: '8', label: 'September' },
+  { value: '9', label: 'October' },
+  { value: '10', label: 'November' },
+  { value: '11', label: 'December' },
+];
 
 export default function NoticeCalender(): JSX.Element {
   const [date, setDate] = React.useState<Date | null>(null)
@@ -155,69 +177,126 @@ export default function NoticeCalender(): JSX.Element {
 
   return (
     <div className='grid grid-cols-12 gap-2 max-w-full mx-auto bg-none'>
-      <div className='col-span-3'>
-        <EDMSLettersList />
+
+      <div className='col-span-9 flex gap-2 my-0'>
+        <div className='w-[50%] '>
+          <EDMSLettersList />
+        </div>
+        <div className='w-[50%]'
+        >
+          <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[400px] my-0 overflow-hidden shadow-md'>
+            <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
+              <div className='flex items-center'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='19'
+                  height='20'
+                  viewBox='0 0 19 20'
+                  fill='none'
+                  className='mr-2'
+                >
+                  <g clip-path='url(#clip0_177_448)'>
+                    <path
+                      d='M5.54159 10H13.4583V11.5833H5.54159V10ZM5.54159 14.75H11.0833V13.1667H5.54159V14.75ZM17.4166 6.50558V19.5H1.58325V2.875C1.58325 2.24511 1.83347 1.64102 2.27887 1.19562C2.72427 0.750222 3.32836 0.5 3.95825 0.5L11.411 0.5L17.4166 6.50558ZM11.8749 6.04167H14.7138L11.8749 3.20275V6.04167ZM15.8333 17.9167V7.625H10.2916V2.08333H3.95825C3.74829 2.08333 3.54693 2.16674 3.39846 2.31521C3.24999 2.46367 3.16659 2.66504 3.16659 2.875V17.9167H15.8333Z'
+                      fill='white'
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id='clip0_177_448'>
+                      <rect
+                        width='19'
+                        height='19'
+                        fill='white'
+                        transform='translate(0 0.5)'
+                      />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span className='font-bold text-[20px]'>NOTICE BOARD</span>
+              </div>
+              {hasEditAccess && (
+                <Link to='/admin-panel/notice-board'>
+                  <Button
+                    variant='secondary'
+                    className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+                  >
+                    View More
+                  </Button>
+                </Link>
+              )}
+            </div>
+            <div className='flex-grow overflow-auto p-4'>{renderContent()}</div>
+            {date !== null && (
+              <div className='p-2 border-t'>
+                <Button variant='outline' size='sm' onClick={handleReset}>
+                  Reset Date Filter
+                </Button>
+              </div>
+            )}
+          </Card>
+        </div>
       </div>
-      <div className='col-span-6'>
-        <Card className='flex-1 flex flex-col h-[350px] my-0 overflow-hidden shadow-md'>
+
+      <div className='col-span-3'>
+
+        <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[400px] my-0 overflow-hidden shadow-md'>
+
+
           <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
             <div className='flex items-center'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='19'
-                height='20'
-                viewBox='0 0 19 20'
-                fill='none'
-                className='mr-2'
-              >
-                <g clip-path='url(#clip0_177_448)'>
-                  <path
-                    d='M5.54159 10H13.4583V11.5833H5.54159V10ZM5.54159 14.75H11.0833V13.1667H5.54159V14.75ZM17.4166 6.50558V19.5H1.58325V2.875C1.58325 2.24511 1.83347 1.64102 2.27887 1.19562C2.72427 0.750222 3.32836 0.5 3.95825 0.5L11.411 0.5L17.4166 6.50558ZM11.8749 6.04167H14.7138L11.8749 3.20275V6.04167ZM15.8333 17.9167V7.625H10.2916V2.08333H3.95825C3.74829 2.08333 3.54693 2.16674 3.39846 2.31521C3.24999 2.46367 3.16659 2.66504 3.16659 2.875V17.9167H15.8333Z'
-                    fill='white'
-                  />
-                </g>
-                <defs>
-                  <clipPath id='clip0_177_448'>
-                    <rect
-                      width='19'
-                      height='19'
-                      fill='white'
-                      transform='translate(0 0.5)'
-                    />
-                  </clipPath>
-                </defs>
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                <path d="M19.9688 4.46289H5.96875C4.86418 4.46289 3.96875 5.35832 3.96875 6.46289V20.4629C3.96875 21.5675 4.86418 22.4629 5.96875 22.4629H19.9688C21.0733 22.4629 21.9688 21.5675 21.9688 20.4629V6.46289C21.9688 5.35832 21.0733 4.46289 19.9688 4.46289Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M16.9688 2.46289V6.46289" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M8.96875 2.46289V6.46289" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M3.96875 10.4629H21.9688" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
-              <span className='font-bold text-[20px]'>NOTICE BOARD</span>
+              <span className='font-bold text-[20px] ml-2'>Calendar</span>
             </div>
             {hasEditAccess && (
-              <Link to='/admin-panel/notice-board'>
-                <Button
-                  variant='secondary'
-                  className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+              <div className="flex items-center gap-2">
+
+                <Select
+
+                  value={String((date ?? new Date()).getMonth())}
+                  onValueChange={(m) => {
+                    const current = date ?? new Date();
+                    const next = new Date(current);
+                    next.setMonth(parseInt(m, 10), 1);
+                    next.setHours(0, 0, 0, 0);
+                    setDate(next);
+                  }}
                 >
-                  View More
-                </Button>
-              </Link>
+                  <SelectTrigger className="w-[140px] h-[31px] bg-white text-gray-800">
+                    <SelectValue placeholder="Select month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {monthOptions.map((m) => (
+                      <SelectItem key={m.value} value={m.value}>
+                        {m.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* (Optional) keep the original link if you still want it next to the dropdown */}
+                {/* <Link to='/admin-panel/notice-board'>
+      <Button
+        variant='secondary'
+        className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+      >
+        View More
+      </Button>
+    </Link> */}
+              </div>
             )}
+
           </div>
-          <div className='flex-grow overflow-auto p-4'>{renderContent()}</div>
-          {date !== null && (
-            <div className='p-2 border-t'>
-              <Button variant='outline' size='sm' onClick={handleReset}>
-                Reset Date Filter
-              </Button>
-            </div>
-          )}
-        </Card>
-      </div>
-      <div className='col-span-3'>
-        <Card className='flex-1 flex flex-col my-0 shadow-md'>
           <Calendar
             value={date}
             // @ts-ignore
             onChange={handleDateChange}
             inline
-            className='custom-calendar h-[350px]'
+            className='custom-calendar h-[400px]'
           />
         </Card>
       </div>

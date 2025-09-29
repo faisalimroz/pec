@@ -10,10 +10,8 @@ import { useAuth } from '@/provider/authProvider'
 
 export default function RoadAndTraffic() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
-
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-
   const selectedNav = rntTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (

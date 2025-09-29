@@ -10,7 +10,7 @@ import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
-
+  
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
@@ -44,7 +44,7 @@ export default function AssetManagement() {
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
                   Asset Management
                 </h1>
-
+                 
                 <DemoTable />
               </div>
             </LayoutBody>

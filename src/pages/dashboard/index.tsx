@@ -8,12 +8,12 @@ import AccidentWindy from './components/accident-windy'
 
 const topNav = [
   {
-    title: 'General Information',
-    href: '/general-information/general-status',
+    title: 'Administration',
+    href: '/administrative',
     isActive: false,
-    logo: GiIcon,
-    roles: ['general-information', 'superadmin'],
-    uName: 'general-information',
+    logo: AdminIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'administration',
   },
   {
     title: 'Road & Traffic',
@@ -23,40 +23,8 @@ const topNav = [
     roles: ['r&t-manager', 'superadmin'],
     uName: 'road-&-traffic',
   },
-  {
-    title: 'ITS',
-    href: '/its/overview',
-    isActive: false,
-    logo: ItsIcon,
-    roles: ['its-manager', 'superadmin'],
-    uName: 'its',
-  },
-  {
-    title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
-    isActive: false,
-    logo: EdmsIcon,
-    roles: ['toll-manager', 'superadmin'],
-    uName: 'toll',
-  },
-  {
-    title: 'Administration',
-    href: '/administrative',
-    isActive: false,
-    logo: AdminIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'administration',
-  },
-  {
-    title: 'RTW',
-    href: '/rtw',
-    isActive: false,
-    logo: documentSearchIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'rtw',
-  },
-  {
-    title: 'MB PMIS',
+   {
+    title: 'Main Bridge',
     href: '/mb-pmis',
     isActive: false,
     logo: documentSearchIcon,
@@ -64,12 +32,28 @@ const topNav = [
     uName: 'mb-pmis',
   },
   {
+    title: 'RTW',
+    href: '/rtw/project-overview',
+    isActive: false,
+    logo: documentSearchIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'rtw',
+  },
+   {
     title: 'Toll Operation',
     href: '/toll-operation',
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
     uName: 'toll-operation',
+  },
+  {
+    title: 'ITS',
+    href: '/its/overview',
+    isActive: false,
+    logo: ItsIcon,
+    roles: ['its-manager', 'superadmin'],
+    uName: 'its',
   },
   {
     title: 'EDMS',
@@ -99,8 +83,9 @@ export default function Dashboard() {
       {/* ===== Main ===== */}
       <LayoutBody className='space-y-4'>
         <div className='space-y-2 bg-none'>
+           <AccidentWindy />
           <NoticeCalender />
-          <AccidentWindy />
+         
           <TrafficWeather />
         </div>
 

@@ -35,25 +35,20 @@ interface TopNavProps extends React.HTMLAttributes<HTMLElement> {
   }[]
 }
 
-// We've removed the unused NavItem interface and navItems array
 
 export function TopNav({ className, links, ...props }: TopNavProps) {
   const location = useLocation()
   const showLogo = location.pathname === '/dashboard'
   const { permissions } = useAuth()
-
+  
   const processedLinks = React.useMemo(() => {
     if (!links || !permissions || permissions.length === 0) return links
-
     const extendedPermissions = permissions as unknown as ExtendedPermission[]
 
     return links.map((link) => {
       const departmentName = link.uName
 
-      // If no uName or it's not a department we're tracking, return link as is
       if (!departmentName) return link
-
-      // List of departments to exclude from dynamic href logic
       const excludedDepartments = [
         'general-information',
         'edms',
@@ -64,20 +59,16 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         'notice',
       ]
 
-      // If the department is in the excluded list, return link as is
+
       if (excludedDepartments.includes(departmentName)) {
         return link
       }
-
-      // Get the base href (department root)
       const baseHref = `/${departmentName}`
-
-      // Find the department in permissions array
-      const department = extendedPermissions.find(
+  const department = extendedPermissions.find(
         (dept) => dept.displayName === departmentName
       )
 
-      // If department not found or no children, return with baseHref
+      
       if (
         !department ||
         !department.children ||
@@ -102,9 +93,10 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
       }
     })
   }, [links, permissions])
-
+ const isEdmsActive = processedLinks.some(link => link.isActive && link.title === 'EDMS');
   return (
     <div className='flex items-center justify-between w-full'>
+      
       <div className='lg:hidden'>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -126,10 +118,12 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
                 </Link>
               </DropdownMenuItem>
             ))}
+            
           </DropdownMenuContent>
         </DropdownMenu>
+        
       </div>
-
+      
       <nav
         className={cn(
           'hidden lg:flex items-center space-x-1 xl:space-x-2 text-white',
@@ -155,65 +149,18 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             )}
           >
             {Logo && <Logo className='h-4 w-4' />} {title}
+            
           </Link>
+          
         ))}
-
-        {/* {authorizedNavItems.length > 0 && (
-          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-            <DropdownMenuTrigger
-              asChild
-              className='bg-transparent text-white font-roboto text-xs xl:text-sm font-medium flex items-center gap-1 xl:gap-2 px-2 py-1 rounded-md transition-colors hover:bg-white/10 ml-8'
-            >
-              <Button
-                variant='ghost'
-                className={cn(
-                  'h-auto font-roboto text-xs xl:text-sm font-medium flex items-center gap-1 xl:gap-2 px-2 py-1 rounded-md transition-colors hover:bg-white/10 ml-8 hover:text-white',
-                  isActive &&
-                    'font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5'
-                )}
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='icon icon-tabler icon-tabler-user-shield h-5 w-5'
-                  viewBox='0 0 24 24'
-                  strokeWidth='2'
-                  stroke='white'
-                  fill='none'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                  <path d='M6 21v-2a4 4 0 0 1 4 -4h2' />
-                  <path d='M22 16c0 4 -2.5 6 -3.5 6s-3.5 -2 -3.5 -6c1 0 2.5 -.5 3.5 -1.5c1 1 2.5 1.5 3.5 1.5z' />
-                  <path d='M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0' />
-                </svg>
-                Administration & Finance
-                <ChevronDown className='h-4 w-4' />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='start' className='w-[200px]'>
-              {authorizedNavItems.map((item) => (
-                <DropdownMenuItem key={item.href} asChild disabled={isPending}>
-                  <Link
-                    to={item.href}
-                    className={cn(
-                      'w-full cursor-pointer',
-                      location.pathname.startsWith(item.href) && 'font-bold',
-                      isPending && 'opacity-50 cursor-not-allowed'
-                    )}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleItemClick(item.href)
-                    }}
-                  >
-                    {item.label}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )} */}
+       
       </nav>
+     
+      {isEdmsActive && (
+        <div className="hidden lg:flex flex-grow justify-center items-center">
+          <h2 className="text-xl font-bold text-white">Electronic Document Management System (EDMS)</h2>
+        </div>
+      )}
     </div>
   )
 }
