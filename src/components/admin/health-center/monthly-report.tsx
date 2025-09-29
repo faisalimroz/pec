@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchHealthcenterMonthlyReport, searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchHealthcenterMonthlyReport } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -676,7 +676,7 @@ export default function MonthlyReport() {
               date_range: '',
               searchQuery: '',
             }
-            searchTreatmentRecord(payload).then((result) => {
+            searchHealthcenterMonthlyReport(payload).then((result) => {
                 setProducts(result?.data)
                 setLoading(false)
             })

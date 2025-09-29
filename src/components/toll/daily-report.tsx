@@ -288,7 +288,7 @@ export default function VehicleDetectTollTable() {
     const leftToolbarTemplate = () => {
         return (
             <div className=''>
-                <div className='p-3 bg-main text-lg font-semibold text-white rounded-t'>
+                <div className='p-3 bg-main text-lg font-semibold text-white rounded-lg'>
                     Document List
                 </div>
             </div>

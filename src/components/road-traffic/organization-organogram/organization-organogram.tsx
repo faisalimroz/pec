@@ -23,7 +23,6 @@ interface ProjectLayout {
   updater?: string
   updatingTimestamp?: string
 }
-
 interface ApiResponse {
   data: ProjectLayout
 }

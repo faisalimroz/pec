@@ -15,7 +15,7 @@ export const adminTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -23,7 +23,7 @@ export const adminTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis/project-overview/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -69,7 +69,7 @@ export const tollTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -77,7 +77,7 @@ export const tollTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/mb-pmis/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -101,7 +101,7 @@ export const tollTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
@@ -128,7 +128,7 @@ export const financeTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -136,7 +136,7 @@ export const financeTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
@@ -179,7 +179,7 @@ export const itsTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -187,7 +187,7 @@ export const itsTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/mb-pmis/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -233,7 +233,7 @@ export const rntTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: true,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -241,7 +241,7 @@ export const rntTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/mb-pmis/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -265,7 +265,7 @@ export const rntTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
@@ -291,7 +291,7 @@ export const rtwTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -299,7 +299,7 @@ export const rtwTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/mb-pmis/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -323,7 +323,7 @@ export const rtwTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
@@ -350,7 +350,7 @@ export const pmisTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -358,7 +358,7 @@ export const pmisTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/mb-pmis/project-overview',
     isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -383,7 +383,7 @@ export const pmisTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
@@ -409,7 +409,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -417,7 +417,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/mb-pmis/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],

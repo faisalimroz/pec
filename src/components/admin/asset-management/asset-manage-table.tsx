@@ -479,7 +479,7 @@ export default function AssetManagementTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
+        <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
           Document List
         </div>
         {/* {isAdmin && (

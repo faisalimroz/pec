@@ -120,7 +120,7 @@ export function EDMSLettersList() {
   }, [])
 
   return (
-    <div className='w-full rounded-xl overflow-hidden border shadow-md h-auto md:h-[300px] xl:h-[350px] '>
+    <div className='w-full rounded-xl overflow-hidden border shadow-md h-auto md:h-[300px] xl:h-[400px] '>
       <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center gap-2 '>
         <div className='flex justify-between items-center w-full'>
           <div className='flex gap-3'>

@@ -184,7 +184,7 @@ export default function NoticeCalender(): JSX.Element {
         </div>
         <div className='w-[50%]'
         >
-          <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[350px] my-0 overflow-hidden shadow-md'>
+          <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[400px] my-0 overflow-hidden shadow-md'>
             <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
               <div className='flex items-center'>
                 <svg
@@ -239,7 +239,7 @@ export default function NoticeCalender(): JSX.Element {
 
       <div className='col-span-3'>
 
-        <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[350px] my-0 overflow-hidden shadow-md'>
+        <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[400px] my-0 overflow-hidden shadow-md'>
 
 
           <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
@@ -296,7 +296,7 @@ export default function NoticeCalender(): JSX.Element {
             // @ts-ignore
             onChange={handleDateChange}
             inline
-            className='custom-calendar h-[350px]'
+            className='custom-calendar h-[400px]'
           />
         </Card>
       </div>

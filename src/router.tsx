@@ -209,35 +209,10 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin')).default,
             }),
           },
-          {
-            path: 'administrative/business-report',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/planning/business-report')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/meeting-report',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/planning/meeting-report'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/monthly-report',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/planning/monthly-report'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/monthly-roster',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/planning/monthly-roster'))
-                .default,
-            }),
-          },
+         
+        
+        
+         
           {
             path: 'administrative/vehicle-mgt-record',
             lazy: async () => ({
@@ -259,13 +234,7 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
-          {
-            path: 'administrative/monthly-roaster',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/planning/monthly-roster'))
-                .default,
-            }),
-          },
+         
           {
             path: 'administrative/mobilization',
             lazy: async () => ({
@@ -284,17 +253,17 @@ const router = createBrowserRouter([
             path: 'administrative/employee-personal-profile',
             lazy: async () => ({
               Component: (
-                await import('@/pages/admin/hr/employee-personal-profile')
+                await import('@/pages/admin/employee-personal-profile')
               ).default,
             }),
           },
-          {
-            path: 'administrative/employee-personal-profile/:id',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/em-personal-detail'))
-                .default,
-            }),
-          },
+          // {
+          //   path: 'administrative/employee-personal-profile/:id',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/em-personal-detail'))
+          //       .default,
+          //   }),
+          // },
           {
             path: 'administrative/attendance-management',
             lazy: async () => ({
@@ -345,98 +314,7 @@ const router = createBrowserRouter([
             }),
           },
 
-          {
-            path: 'administrative/status-personnel',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/greetings/status-personnel')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/greetings',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/greetings/greetings'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/recruitment',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/greetings/recruitment'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/recruitment/:id',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/greetings/recruitment-detail')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/application-of-employees',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/greetings/application-employees')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/commodity-management',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/general-management/commodity-management'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/utility-consumption-info',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/general-management/utility-consumption'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/labor-management',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/labor-management'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/all-salary',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/salary')).default,
-            }),
-          },
-          {
-            path: 'administrative/accommodation-facilities',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/other-facilities/accommodation-facility'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/restaurant-management',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/admin/other-facilities/restaurant-management'
-                )
-              ).default,
-            }),
-          },
-
+          
           {
             path: 'administrative/asset-management',
             lazy: async () => ({
@@ -444,12 +322,7 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
-          {
-            path: 'administrative/notice',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/notice')).default,
-            }),
-          },
+         
           {
             path: 'administrative/it-electronics-communication-report',
             lazy: async () => ({
@@ -940,7 +813,7 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'road-and-traffic/monthly-roaster',
+            path: '/road-and-traffic/monthly-roaster',
             lazy: async () => ({
               Component: (
                 await import('@/pages/road-and-traffic/monthly-roaster')
@@ -1200,154 +1073,7 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/its/Organization')).default,
             }),
           },
-          {
-            path: 'its/staff-summary',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Staff/staff-summary'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/duty-roster',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Staff/duty-roster'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/report/monitoring',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Report/Monitoring'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/report/to-rhd',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Report/ToRhd')).default,
-            }),
-          },
-          {
-            path: 'its/internal-letter/announce',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/OfficialLetter/rhd'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/official-letter/miscellaneous',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/OfficialLetter/Miscellaneous')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/quotation',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/Quotation')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/invoice',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/Invoice')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/working-order',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/WorkingOrder')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/requisition',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/Requisition')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/procurement/paid-service',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/its/ProcurementDetails/PaidService')
-              ).default,
-            }),
-          },
-          {
-            path: 'its/training/manual',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Training')).default,
-            }),
-          },
-          {
-            path: 'its/om-activities/its',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/OMActivity/Its')).default,
-            }),
-          },
-          {
-            path: 'its/om-activities/electricity',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/OMActivity/Electricity'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/inventory/its',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Inventory/Its')).default,
-            }),
-          },
-          {
-            path: 'its/inventory/electricity',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Inventory/Electricity'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/diagram/its',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Diagram/Its')).default,
-            }),
-          },
-          {
-            path: 'its/diagram/electricity',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Diagram/Electricity'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/warranty/product-list',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Warranty/ProductList'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/warranty/claim-report',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/Warranty/ClaimReport'))
-                .default,
-            }),
-          },
-          {
-            path: 'its/vehicle-detect',
-            lazy: async () => ({
-              Component: (await import('@/pages/its/VehicleDetect')).default,
-            }),
-          },
-
+        
           {
             path: 'toll',
             lazy: async () => ({

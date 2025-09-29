@@ -36,10 +36,10 @@ interface Product {
   taxTokenReport: string
   status: string
   regNo: string
-  taxExpiryDate: string        
+  taxExpiryDate: string
   vehicleClass: string
   remarks: string
-  fitnessDuration: string       
+  fitnessDuration: string
   attachments: Attachment[]
   creator?: string
   creationTimestamp?: string
@@ -82,9 +82,9 @@ export default function MonthlyReport() {
   const [submitted, setSubmitted] = useState(false)
   const dt = useRef<DataTable<Product[]>>(null)
 
-  // ✅ Use Date | null for calendars
-  const [date, setDate] = useState<Date | null>(null)  
-  const [date2, setDate2] = useState<Date | null>(null) 
+  // filters
+  const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
   const [taxExpiryDate, setTaxExpiryDate] = useState<Date | null>(null)
 
   const [searchKey, setSearchKey] = useState('')
@@ -95,11 +95,15 @@ export default function MonthlyReport() {
   const [regNo, setRegNo] = useState('')
   const [remarks, setRemarks] = useState('')
   const [vehicleClass, setVehicleClass] = useState('')
-  const [fitnessDuration, setFitnessDuration] = useState<Date | null>(null) 
+  const [status, setStatus] = useState<string>('')
+
+  // CREATE dialog: keep both raw Date[] and the string payload
+  const [fitnessRange, setFitnessRange] = useState<Date[] | null>(null)
+  const [fitnessDuration, setFitnessDuration] = useState<string>('')
+
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-  const [status, setStatus] = useState<string>('')
 
   const [viewProductDialog, setViewProductDialog] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -112,7 +116,9 @@ export default function MonthlyReport() {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState('')
-  const [fitnessRange, setFitnessRange] = useState<Date[] | null>(null);
+
+  // UPDATE dialog: local Date[] range state for the calendar
+  const [fitnessRangeEdit, setFitnessRangeEdit] = useState<Date[] | null>(null)
 
   const statusType = [
     { name: 'Exemption', code: 'Exemption' },
@@ -125,57 +131,62 @@ export default function MonthlyReport() {
     </div>
   )
 
-const formatDate = (d?: Date | null) => {
-  if (!d) return '';
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
-};
- const parseDDMMYYYY = (s: string) => {
-  const [dd, mm, yy] = s.split('/').map((x) => parseInt(x, 10));
-  if (!dd || !mm || !yy) return null;
-  const fullYear = yy < 100 ? 2000 + yy : yy;
-  return new Date(fullYear, mm - 1, dd);
-};
-  const parseFitnessStringToRange = (s: string): Date[] | null => {
-    if (!s) return null;
-    const parts = s.split(' - ');
-    if (parts.length !== 2) return null;
-    const d1 = parseDDMMYYYY(parts[0]);
-    const d2 = parseDDMMYYYY(parts[1]);
-    return d1 && d2 ? [d1, d2] : null;
-  };
-
-
-//   const stringifyRange = (val: any): string => {
-//   if (Array.isArray(val) && val[0] && val[1]) {
-   
-//     return `${formatDate(val[0])} - ${formatDate(val[1])}`;
-//   }
-//   return '';
-// };
-
- const stringifyRange = (val: any): string => {
-  // Check if val is an array with two valid Date objects
-  if (Array.isArray(val) && val[0] instanceof Date && val[1] instanceof Date) {
-    return `${formatDate(val[0])} - ${formatDate(val[1])}`;
+  // helpers
+  const formatDate = (d?: Date | null) => {
+    if (!d) return ''
+    const day = String(d.getDate()).padStart(2, '0')
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const year = d.getFullYear()
+    return `${day}/${month}/${year}`
   }
-  return '';
-};
+
+  const parseDDMMYYYY = (s: string) => {
+    if (!s) return null
+    const [dd, mm, yyraw] = s.split('/').map((x) => parseInt(x, 10))
+    if (!dd || !mm || !yyraw) return null
+    const fullYear = yyraw < 100 ? 2000 + yyraw : yyraw
+    return new Date(fullYear, mm - 1, dd)
+  }
+
+  const parseFitnessStringToRange = (s: string): Date[] | null => {
+    if (!s) return null
+    const parts = s.split(' - ')
+    if (parts.length !== 2) return null
+    const d1 = parseDDMMYYYY(parts[0])
+    const d2 = parseDDMMYYYY(parts[1])
+    return d1 && d2 ? [d1, d2] : null
+  }
+
+  const stringifyRange = (val: any): string => {
+    if (Array.isArray(val) && val[0] instanceof Date && val[1] instanceof Date) {
+      return `${formatDate(val[0])} - ${formatDate(val[1])}`
+    }
+    return ''
+  }
+
+  // update dialog open/close
   const openUpdateDialog = (p: Product) => {
     setUpdatedProduct({ ...p })
+    setFitnessRangeEdit(parseFitnessStringToRange(p.fitnessDuration))
     setUpdateProductDialog(true)
   }
   const hideUpdateDialog = () => {
     setUpdateProductDialog(false)
     setUpdatedProduct(null)
+    setFitnessRangeEdit(null)
     setNewAttachments([])
     setRemovedAttachments([])
   }
 
   const handleUpdateProduct = async () => {
     if (!updatedProduct) return
+
+    // guard: require a proper range string if your backend expects it
+    if (!updatedProduct.fitnessDuration || !updatedProduct.fitnessDuration.includes(' - ')) {
+      toast.error('Please select a valid Fitness Duration range.')
+      return
+    }
+
     try {
       setLoading2(true)
       const formData = new FormData()
@@ -183,20 +194,20 @@ const formatDate = (d?: Date | null) => {
       formData.append('taxTokenReport', updatedProduct.taxTokenReport)
       formData.append('regNo', updatedProduct.regNo)
       formData.append('remarks', updatedProduct.remarks)
-      formData.append('taxExpiryDate', updatedProduct.taxExpiryDate) 
+      formData.append('taxExpiryDate', updatedProduct.taxExpiryDate)
       formData.append('status', updatedProduct.status)
       formData.append('vehicleClass', updatedProduct.vehicleClass)
-      formData.append('fitnessDuration', updatedProduct.fitnessDuration )
+      formData.append('fitnessDuration', updatedProduct.fitnessDuration)
 
       newAttachments.forEach((f) => formData.append('attachments', f))
       removedAttachments.forEach((id) => formData.append('removedAttachments', id))
 
+      // IMPORTANT: let Axios set Content-Type with proper boundary
       await axios.put(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/update/by/${updatedProduct._id}`,
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
@@ -229,6 +240,7 @@ const formatDate = (d?: Date | null) => {
     })
   }
 
+  // bulk upload
   const uploadFile = async () => {
     if (!file) {
       setUploadStatus('Please select a file first.')
@@ -244,7 +256,6 @@ const formatDate = (d?: Date | null) => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
           },
         }
       )
@@ -297,6 +308,7 @@ const formatDate = (d?: Date | null) => {
     </>
   )
 
+  // create dialog
   const handleFileChange = (newFiles: File[]) => setFilesInput(newFiles)
   const openNew = () => {
     setProduct(emptyProduct)
@@ -309,6 +321,12 @@ const formatDate = (d?: Date | null) => {
   }
 
   const saveProduct = async () => {
+    // guard: ensure proper range string before posting
+    if (!fitnessDuration || !fitnessDuration.includes(' - ')) {
+      toast.error('Please select a valid Fitness Duration range.')
+      return
+    }
+
     try {
       setLoading2(true)
       const formData = new FormData()
@@ -316,18 +334,19 @@ const formatDate = (d?: Date | null) => {
       formData.append('taxTokenReport', taxTokenReport)
       formData.append('regNo', regNo)
       formData.append('remarks', remarks)
-      formData.append('fitnessDuration', fitnessDuration)
-      formData.append('vehicleClass', vehicleClass) 
+      formData.append('vehicleClass', vehicleClass)
+      formData.append('status', status) // string like "Exemption"
       formData.append('taxExpiryDate', formatDate(taxExpiryDate))
+      formData.append('fitnessDuration', fitnessDuration)
       filesInput.forEach((file) => formData.append('attachments', file))
-        console.log(formData)
+
+      // IMPORTANT: no manual Content-Type here
       await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/create`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
           },
         }
       )
@@ -347,7 +366,7 @@ const formatDate = (d?: Date | null) => {
     }
   }
 
-  // ---- delete(s) ----
+  // deletes
   const confirmDeleteProduct = (p: Product) => {
     setProduct(p)
     setDeleteProductDialog(true)
@@ -431,10 +450,10 @@ const formatDate = (d?: Date | null) => {
     </div>
   )
 
-  // ---- toolbar ----
+  // toolbar
   const leftToolbarTemplate = () => (
     <div className='flex items-center gap-3'>
-      <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
+      <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
         Document List
       </div>
     </div>
@@ -458,7 +477,7 @@ const formatDate = (d?: Date | null) => {
     </>
   )
 
-  // ---- view dialog ----
+  // view dialog
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
@@ -512,7 +531,7 @@ const formatDate = (d?: Date | null) => {
     )
   }
 
-  
+  // search/reset/refetch
   const handleSearch = () => {
     setLoading(true)
     const payload = {
@@ -557,7 +576,6 @@ const formatDate = (d?: Date | null) => {
     })
   }
 
-  // initial data load
   useEffect(() => {
     refetch()
   }, [])
@@ -642,7 +660,6 @@ const formatDate = (d?: Date | null) => {
     </div>
   )
 
-
   const productDialogFooter = (
     <>
       <Button label='Cancel' icon='pi pi-times' outlined onClick={hideDialog} />
@@ -671,10 +688,7 @@ const formatDate = (d?: Date | null) => {
           right={rightToolbarTemplate}
         />
 
-        <TabView
-          activeIndex={activeIndex}
-          onTabChange={(e) => setActiveIndex(e.index)}
-        >
+        <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
           <TabPanel>
             <DataTable
               ref={dt}
@@ -718,7 +732,7 @@ const formatDate = (d?: Date | null) => {
               <Column field='status' header='Status' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[8rem]' />
               <Column field='taxExpiryDate' header='Road Tax Expiry Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
               <Column body={attachmentBodyTemplate} header='Attachment' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
-              <Column field='remarks' header='Remarks' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' sortable className='min-w-[12rem]' />
+              <Column field='remarks' header='Remarks' headerClassName='bg-[#ffc2c2] text sm' bodyClassName='text-sm truncate max-w-xs' sortable className='min-w-[12rem]' />
               <Column body={actionBodyTemplate} header='Actions' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' headerStyle={{ width: '3rem' }} exportable={false} />
             </DataTable>
           </TabPanel>
@@ -798,7 +812,7 @@ const formatDate = (d?: Date | null) => {
                 options={statusType}
                 itemTemplate={itemTemplate}
                 optionLabel='name'
-                 optionValue='code'
+                optionValue='code'
                 placeholder='Status'
                 className='w-full'
               />
@@ -820,31 +834,31 @@ const formatDate = (d?: Date | null) => {
               />
             </div>
 
-           
             <div className='field'>
               <label htmlFor='fitnessDuration' className='font-bold'>Fitness Duration</label>
               <Calendar
                 id='fitnessDuration'
-                value={parseFitnessStringToRange(updatedProduct.fitnessDuration)}
                 selectionMode='range'
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    fitnessDuration: stringifyRange(e.value),
-                  })
-                }
+                value={fitnessRangeEdit}
+                onChange={(e) => {
+                  const val = e.value as Date[] | null
+                  setFitnessRangeEdit(val)
+                  if (Array.isArray(val) && val[0] && val[1]) {
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      fitnessDuration: stringifyRange(val),
+                    })
+                  } else {
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      fitnessDuration: '',
+                    })
+                  }
+                }}
                 dateFormat='dd/mm/yy'
                 readOnlyInput
                 hideOnRangeSelection
               />
-   
-              {/* onChange={(e) => {
-                    const val = e.value as Date[] | null;
-                    setFitnessRange(val);
-                    if (Array.isArray(val) && val[0] && val[1]) {
-                      setFitnessDuration(`${formatDate(val[0])} - ${formatDate(val[1])}`);
-                    }
-                  }} */}
             </div>
 
             <div className='col-span-2'>
@@ -1001,12 +1015,7 @@ const formatDate = (d?: Date | null) => {
         header='Upload Document'
         modal
         className='p-fluid'
-        footer={
-          <>
-            <Button label='Cancel' icon='pi pi-times' outlined onClick={hideDialog} />
-            <Button label='Save' loading={loading2} icon='pi pi-check' onClick={saveProduct} />
-          </>
-        }
+        footer={productDialogFooter}
         onHide={hideDialog}
       >
         <>
@@ -1044,6 +1053,7 @@ const formatDate = (d?: Date | null) => {
                 onChange={(e) => setStatus(e.value)}
                 options={statusType}
                 optionLabel='name'
+                optionValue='code'   // store plain string
                 placeholder='Status'
                 itemTemplate={itemTemplate}
                 className='w-full'
@@ -1077,10 +1087,12 @@ const formatDate = (d?: Date | null) => {
                   selectionMode='range'
                   value={fitnessRange}
                   onChange={(e) => {
-                    const val = e.value as Date[] | null;
-                    setFitnessRange(val);
+                    const val = e.value as Date[] | null
+                    setFitnessRange(val)
                     if (Array.isArray(val) && val[0] && val[1]) {
-                      setFitnessDuration(`${formatDate(val[0])} - ${formatDate(val[1])}`);
+                      setFitnessDuration(`${formatDate(val[0])} - ${formatDate(val[1])}`)
+                    } else {
+                      setFitnessDuration('')
                     }
                   }}
                   dateFormat='dd/mm/yy'
@@ -1091,7 +1103,6 @@ const formatDate = (d?: Date | null) => {
                   placeholder='Select Date Range'
                 />
               </div>
-              
             </div>
 
           </div>
@@ -1101,7 +1112,7 @@ const formatDate = (d?: Date | null) => {
               Upload Document <span className='text-red-500'>*</span>
             </label>
             <div>
-              <MultiFileInput onFilesChange={handleFileChange} />
+              <MultiFileInput onFilesChange={setFilesInput} />
             </div>
           </div>
         </>
@@ -1166,9 +1177,13 @@ const formatDate = (d?: Date | null) => {
         onHide={hideDeleteMultipleDialog}
       >
         <div className='flex flex-col justify-center'>
-          <i className='pi pi-exclamation-triangle mr-3 text-center my-2' style={{ fontSize: '2rem' }} />
+          <i
+            className='pi pi-exclamation-triangle mr-3 text-center my-2'
+            style={{ fontSize: '2rem' }}
+          />
           <span className='text-center'>
-            Are you sure you want to delete {selectedProducts.length} selected {selectedProducts.length === 1 ? 'Document' : 'Documents'}?
+            Are you sure you want to delete {selectedProducts.length} selected{' '}
+            {selectedProducts.length === 1 ? 'Document' : 'Documents'}?
           </span>
         </div>
       </Dialog>

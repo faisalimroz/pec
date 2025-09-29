@@ -376,7 +376,7 @@ export default function EmPersonalProfileTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
+        <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
           Document List
         </div>
         {/* {isAdmin && (
@@ -400,7 +400,7 @@ export default function EmPersonalProfileTable() {
     return (
       <>
         {hasEditAccess && (
-          <div className='space-x-2'>
+          <div className='space-x-2 mb-2'>
            <ButtonGroup
             selectedProducts={selectedProducts}
             openNew={openNew}
