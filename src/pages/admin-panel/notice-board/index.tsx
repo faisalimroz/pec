@@ -22,6 +22,7 @@ import { useAuth } from '@/provider/authProvider'
 import RefreshButton from '@/components/refresh-button'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
+import AdminButton from '@/components/ui/admin-panel-buttons'
 
 interface Attachment {
   url: string
@@ -402,33 +403,15 @@ export default function NoticeBoard() {
     return (
       <>
         {hasEditAccess && (
-          <div className='space-x-2'>
-            <button
-              className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-              onClick={openNew}
-            >
-              Upload Notice
-            </button>
-            <button
-              className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-              onClick={exportCSV}
-            >
-              Download Files
-            </button>
-            <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-          </div>
+          <AdminButton
+                        selectedProducts={selectedProducts}
+                        openNew={openNew}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
+                       
+                    />
         )}
-        <RefreshButton onClick={handleReset} className='ml-2' />
+        <RefreshButton handleReset={handleReset}/>
       </>
     )
   }

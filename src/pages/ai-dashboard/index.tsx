@@ -16,30 +16,27 @@ export default function AiDashboard() {
       <div className='py-2 px-6 flex justify-between items-center bg-main'>
         <Link to='/dashboard' className='mr-4'>
           <div className='flex gap-4 items-center font-medium'>
-            <img src={logo} alt='Logo' className='h-12 w-auto' />
-            <h3>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+            <img src={logo} alt='Logo' className='h-10 w-auto' />
+            <h3 className='text-white text-xs'>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
           </div>
         </Link>
 
         <div className='flex items-center gap-4'>
           <Link
             to='/dashboard'
-            className='text-blue-700 bg-blue-50  font-semibold py-2 px-4 rounded-full inline-flex items-center hover:bg-blue-400 hover:text-white text-sm'
+            className='text-blue-700 bg-blue-50  font-semibold py-1 px-4 rounded-full inline-flex items-center hover:bg-blue-400 hover:text-white text-sm'
           >
             <i className='pi pi-arrow-left mr-2' /> Home
           </Link>
 
-          <Button
-            variant='secondary'
-            className='rounded-full border text-blue-800'
+
+          <Link
+            to='/ai-dashboard/view-first-six-frames'
+            className='text-blue-700 bg-blue-50  font-semibold py-1 px-4 rounded-full inline-flex items-center hover:bg-blue-400 hover:text-white text-sm'
           >
-            <Link
-              to='/ai-dashboard/view-first-six-frames'
-              className='flex items-center'
-            >
-              <Video className='mr-2 h-4 w-4' /> View All Camera
-            </Link>
-          </Button>
+            <i className='pi pi-video mr-2' />  View All Camera
+          </Link>
+
 
           <div>
             <img className='w-full h-10' src={kecLogo} alt='' />

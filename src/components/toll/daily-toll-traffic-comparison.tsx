@@ -404,7 +404,7 @@ export default function PeriodFiltersSection() {
       </div>
 
       <div className="flex justify-center">
-        <button onClick={onCompare} className="px-6 bg-[#0B1F8F] rounded-md py-3 text-white">
+        <button onClick={onCompare} className="px-3 bg-[#0B1F8F] rounded-md py-2 text-white">
           Compare Data
         </button>
       </div>

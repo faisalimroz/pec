@@ -34,6 +34,7 @@ import { set } from 'date-fns'
 import { IconField } from 'primereact/iconfield'
 import { InputIcon } from '@radix-ui/react-icons'
 import { InputText } from 'primereact/inputtext'
+
 interface Product {
     lane: number;
     totaltrailer5xl: number;
@@ -288,7 +289,7 @@ export default function VehicleDetectTollTable() {
     const leftToolbarTemplate = () => {
         return (
             <div className=''>
-                <div className='p-3 bg-main text-lg font-semibold text-white rounded-lg'>
+                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
             </div>
@@ -304,10 +305,12 @@ export default function VehicleDetectTollTable() {
                         selectedProducts={selectedProducts}
                         openNew={openNew2}
                         bulkUpload={openNew2}
-                        handleReset={handleReset}
+                        
                     />
                 )}
-                {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
+            <div className='mb-1'>
+                    <RefreshButton handleReset={handleReset} />
+            </div>
             </>
         )
     }

@@ -503,7 +503,7 @@ const uploadFile = async () => {
     const leftToolbarTemplate = () => {
         return (
             <div className='flex items-center gap-3'>
-                <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
+                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
               
@@ -713,7 +713,7 @@ const uploadFile = async () => {
                     onChange={(e) => setMonthName(e.value)}
                     options={months}
                     optionLabel="name"
-                    placeholder="Select a Month"
+                    placeholder="Month"
                     className="border-none ml-4 focus:ring-0"
                     itemTemplate={itemTemplate}
                 />
@@ -723,7 +723,7 @@ const uploadFile = async () => {
                     onChange={(e) => setlocation(e.value)}
                     options={locations}
                     optionLabel="name"
-                    placeholder="Select Location"
+                    placeholder="Location"
                     className="border-none ml-4 focus:ring-0"
                      itemTemplate={itemTemplate}
                 />
