@@ -91,7 +91,7 @@ export default function Sidebar2({
         {/* Navigation links */}
         <Nav
           id='sidebar-menu'
-          className={`h-full font-roboto flex-1 overflow-auto ${navOpened ? 'max-h-screen' : 'max-h-0 py-0 md:max-h-screen md:py-2'}`}
+          className={`h-full font-roboto bg-gray flex-1 overflow-auto ${navOpened ? 'max-h-screen' : 'max-h-0 py-0 md:max-h-screen md:py-2'}`}
           closeNav={() => setNavOpened(false)}
           isCollapsed={isCollapsed}
           // @ts-ignore

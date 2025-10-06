@@ -388,6 +388,199 @@ export async function searchEmployeePersonalProfile(param: unknown) {
   return response.data
 }
 
+//road and traffic
+//monthly report 
+
+export async function searchRTMonthlyReport(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//monthly roster
+export async function searchRTMonthlyRoaster(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/monthly-roaster/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//kec letter
+export async function searchRTKec(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/kecletters/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+
+//road and maintenance
+//requisition form
+
+export async function searchRTMRequisitionForm(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/requisition-forms/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+
+//accident
+export async function searchRTMAccident(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/accidentreport/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//completion from
+export async function searchRTMCompletionForm(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/completion-forms/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//reciving materials
+export async function searchRTMRecivingMaterials(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/reciving-materials/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//inspection report
+export async function searchRTMInspectionReport(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/inspectionreport/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//letter attachment
+export async function searchRTMLetterAttachment(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/letterattachment/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//drawing
+export async function searchRTMDrawing(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/drawings/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data)
+  return response.data
+}
+//miscellaneous
+export async function searchRTMMiscellaneous(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/road-traffic/miscellaneous/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 
 
 
@@ -415,6 +608,6 @@ export async function searchTreatmentRecord(param: unknown) {
       },
     }
   )
-
+console.log(response.data)
   return response.data
 }

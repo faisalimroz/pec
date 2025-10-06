@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchRTMonthlyRoaster, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -22,6 +22,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import FileIcon from '@/components/icons/FileIcon'
 
 interface Attachment {
   url: string
@@ -75,8 +76,8 @@ export default function MonthlyReport() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
   const dt = useRef<DataTable<Product[]>>(null)
-  const [date, setDate] = useState<string>('')
-  const [date2, setDate2] = useState<string>('')
+ const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
@@ -89,7 +90,7 @@ export default function MonthlyReport() {
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [selectedCode, setSelectedCode] = useState(null)
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [type, setType] = useState<string>("");
+ 
 
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -99,8 +100,21 @@ export default function MonthlyReport() {
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
-
+ const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [type, setType] = useState<string>("");
+   const [buttonType, setButtonType] = useState("");
   // all update dialog func here
+   const alltypes = [
+    { name: "Plan", value: "Plan" },
+    { name: "Actual", value: "Actual" },
+
+  ];
+   const itemTemplate = (option: { name: string; value: string }) => (
+      <div className="flex items-center gap-2">
+        <FileIcon />
+        <span>{option.name}</span>
+      </div>
+    )
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
@@ -134,7 +148,7 @@ export default function MonthlyReport() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/update/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -246,7 +260,7 @@ export default function MonthlyReport() {
         formData.append('attachments', file)
       })
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/upload`,
         formData,
         {
           headers: {
@@ -292,7 +306,7 @@ export default function MonthlyReport() {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/delete/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -342,7 +356,7 @@ export default function MonthlyReport() {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/delete/multiple/data`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -453,8 +467,12 @@ export default function MonthlyReport() {
       </>
     )
   }
-  const ButtonGroup = () => {
-    const [activeButton, setActiveButton] = useState('Plan')
+   interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
+
+  }
+const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
 
     const buttons = [
       { label: 'Plan', value: 'Plan' },
@@ -462,11 +480,23 @@ export default function MonthlyReport() {
       
     ]
 
-    const handleButtonClick = (buttonValue: string) => {
-      setActiveButton(buttonValue)
-      //api is not ready yet
-      console.log(`Button clicked: ${buttonValue}`)
-    }
+      const handleButtonClick = (buttonValue: string) => {
+    
+          setSelectedType(buttonValue);
+          onButtonClick(buttonValue)
+          setLoading(true);
+          const payload = {
+            type: buttonValue || "",
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+            searchQuery: searchKey || "",
+          };
+    
+          searchRTMonthlyRoaster(payload).then((result) => {
+            setProducts(result?.data);
+            setLoading(false);
+          });
+    
+        };
 
     return (
       <>
@@ -583,50 +613,57 @@ export default function MonthlyReport() {
     </>
   )
 
-  function getMonthName(dateString: string) {
-    const date = new Date(dateString)
-    return date.toLocaleString('en-US', { month: 'long' })
-  }
-
-  function getYear(dateString: string) {
-    const date = new Date(dateString)
-    return date.getFullYear()
-  }
-
+  
+// search/reset/refetch
   const handleSearch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: date ? getMonthName(date) : '',
-      year: date2 ? getYear(date2) : '',
+    const payload = {
+       type: selectedType || '',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
-      // @ts-ignore
-      patientType: selectedCode?.code || '',
     }
-
-    searchTreatmentRecord(initialPayload).then((result) => {
-      setProducts(result?.Treatments)
+ console.log(payload)
+    searchRTMonthlyRoaster(payload).then((result) => {
+      setProducts(result?.data || [])
       setLoading(false)
     })
   }
 
   const handleReset = () => {
-    const initialPayload = {
-      year: '',
-      searchQuery: '',
-      month: '',
-      patientType: '',
-    }
-
-    setDate('')
-    setDate2('')
+    setDate(null)
+    setDate2(null)
     setSearchKey('')
-    setSelectedCode(null)
-
-    searchTreatmentRecord(initialPayload).then((result) => {
-      setProducts(result?.Treatments)
+     setButtonType('')
+  
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
+    }
+    setLoading(true)
+    searchRTMonthlyRoaster(payload).then((result) => {
+      setProducts(result?.data || [])
       setLoading(false)
     })
   }
+
+  const refetch = () => {
+    setLoading(true)
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
+    }
+    setButtonType('')
+    searchRTMonthlyRoaster(payload).then((result) => {
+      setProducts(result?.data || [])
+      setLoading(false)
+    })
+  }
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   const filterSearchForm = (
     <div className='flex items-center justify-center'>
@@ -755,26 +792,7 @@ export default function MonthlyReport() {
     </>
   )
 
-  const refetch = () => {
-    setLoading(true)
-    const initialPayload = {
-      month: '',
-      year: '',
-      searchQuery: '',
-      patientType: '',
-    }
-
-    searchTreatmentRecord(initialPayload).then((result) => {
-      setProducts(result?.Treatments)
-      console.log(result, "ress")
-      setLoading(false)
-    })
-  }
-
-  // initial data load - Internal
-  useEffect(() => {
-    refetch()
-  }, [])
+  
 
   const attachmentBodyTemplate = (rowData: any) => {
     return <div>{rowData?.attachments?.length}</div>
@@ -786,12 +804,13 @@ export default function MonthlyReport() {
     <div className=''>
       <div className='ml-4'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-background'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-        <div className='mt-2'>
-          <ButtonGroup></ButtonGroup>
+       <div className='mt-2'>
+          <ButtonGroup activeButton={buttonType}
+            onButtonClick={setButtonType} ></ButtonGroup>
         </div>
         <TabView
           activeIndex={activeIndex}
@@ -1138,6 +1157,22 @@ export default function MonthlyReport() {
                 required
               />
             </div>
+            <div className="field">
+                          <label htmlFor="type" className="font-bold">
+                            Type
+                          </label>
+                          <Dropdown
+                            id="type"
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                            options={alltypes}
+                            optionLabel='name'
+                            optionValue='name'
+                            itemTemplate={itemTemplate}
+                            placeholder="Select type"
+                            className="w-full"
+                          />
+                        </div>
 
             <div>
               <label htmlFor='date' className='font-bold'>

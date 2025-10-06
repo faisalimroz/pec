@@ -84,7 +84,8 @@ module.exports = {
         redbg:"#FF4141",
         darkred:"#DF3737",
         darkblue:"#08197B",
-        lightviolet: "#4D68FF"
+        lightviolet: "#4D68FF",
+        gray: "#FFFFFF"
       },
       borderRadius: {
         lg: "var(--radius)",

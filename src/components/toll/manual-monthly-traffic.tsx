@@ -356,7 +356,7 @@ export default function ManualMonthlyTrafficTable() {
     <div className='rounded-md'>
       <div>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           right={rightToolbarTemplate}
         ></Toolbar>
 

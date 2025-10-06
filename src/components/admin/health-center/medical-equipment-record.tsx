@@ -774,7 +774,7 @@ export default function MedicalEquipment() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -838,7 +838,7 @@ export default function MedicalEquipment() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 

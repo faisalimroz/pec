@@ -802,7 +802,7 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
       <div className='ml-4'>
         <div className='card'>
           <Toolbar
-            className='rounded-none border-none p-0 bg-white'
+            className='rounded-none border-none p-0 bg-background'
             left={leftToolbarTemplate}
             right={rightToolbarTemplate}
           ></Toolbar>

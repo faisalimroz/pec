@@ -702,7 +702,7 @@ export default function AssetManagementTable() {
     setDate(null)
     setDate2(null)
     setSearchKey('')
-
+       setButtonType('') 
 
     const payload = {
       type: '',
@@ -839,7 +839,7 @@ export default function AssetManagementTable() {
       date_range: '',
       searchQuery: '',
     }
-
+  setButtonType('')
     searchAssetManagement(payload).then((result) => {
       setProducts(result?.data)
       setLoading(false)
@@ -857,7 +857,7 @@ export default function AssetManagementTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

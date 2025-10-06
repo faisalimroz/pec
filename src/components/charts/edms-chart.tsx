@@ -118,9 +118,19 @@ export function EDMSLettersList() {
   useEffect(() => {
     fetchData()
   }, [])
+const getFormattedDate = (): string => {
+  const date = new Date();
+  
+ 
+  return date.toLocaleDateString('en-GB', { 
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\//g, '-'); 
+};
 
   return (
-    <div className='w-full rounded-xl overflow-hidden border shadow-md h-auto md:h-[300px] xl:h-[400px] '>
+    <div className='w-full bg-white rounded-xl overflow-hidden border shadow-md h-auto md:h-[300px] xl:h-[400px] '>
       <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center gap-2 '>
         <div className='flex justify-between items-center w-full'>
           <div className='flex gap-3'>
@@ -147,7 +157,7 @@ export function EDMSLettersList() {
               <path d="M8 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               <path d="M3 10H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <h1 className='text-basae font-bold'>2025-09-03</h1>
+            <h1 className='text-basae font-bold'>{getFormattedDate()}</h1>
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
               <path d="M9.28516 18.5566L15.2852 12.5566L9.28516 6.55664" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
@@ -157,7 +167,7 @@ export function EDMSLettersList() {
 
 
       </div>
-      <div className='bg-main flex flex-col justify-center items-center py-5 '>
+      <div className='bg-main flex flex-col justify-center items-center h-[40%]'>
         <div className='flex flex-items-center  gap-2 '>
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="23" viewBox="0 0 22 23" fill="none">
             <g clip-path="url(#clip0_2054_51452)">
@@ -176,7 +186,7 @@ export function EDMSLettersList() {
         </div>
 
       </div>
-      <div className=''>
+      <div className='bg-white h-[45%] '>
         <WaterLevelCards></WaterLevelCards>
       </div>
       {/* <CardContent className='min-h-[280px] m-0'>

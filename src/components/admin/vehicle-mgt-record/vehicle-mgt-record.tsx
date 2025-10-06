@@ -539,6 +539,7 @@ export default function MonthlyReport() {
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
+ 
     searchVehicleMgtRecord(payload).then((result) => {
       setProducts(result?.data || [])
       setLoading(false)
@@ -683,7 +684,7 @@ export default function MonthlyReport() {
     <div className=''>
       <div className='ml-4'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-background'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         />

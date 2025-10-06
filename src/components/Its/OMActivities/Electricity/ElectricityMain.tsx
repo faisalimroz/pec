@@ -56,7 +56,7 @@ export default function ElectricityOM() {
     <div className=''>
       <div className='ml-4'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
         ></Toolbar>
 
