@@ -463,7 +463,7 @@ export async function searchAccidentReportRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/inspection/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-accidentreport/data/search`,
     param,
     {
       headers: {
@@ -472,14 +472,14 @@ export async function searchAccidentReportRS(param: unknown) {
       },
     }
   )
-
+  console.log(response.data)
   return response.data
 }
 export async function searchMiscellaneousRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-miscellaneous/data/search`,
     param,
     {
       headers: {
@@ -495,7 +495,7 @@ export async function searchRequisitonFormRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-requisitionform/data/search`,
     param,
     {
       headers: {
@@ -511,7 +511,7 @@ export async function searchCompletionFormRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-completionform/data/search`,
     param,
     {
       headers: {
@@ -527,7 +527,7 @@ export async function searchRecivingFromRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-recivingmaterials/data/search`,
     param,
     {
       headers: {
@@ -543,7 +543,7 @@ export async function searchInspectionRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-inspectionreport/data/search`,
     param,
     {
       headers: {
@@ -559,7 +559,7 @@ export async function searchControllersReportRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-controllersreport/data/search`,
     param,
     {
       headers: {
@@ -575,7 +575,7 @@ export async function searchLetterAttachmentRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-letterattachment/data/search`,
     param,
     {
       headers: {
@@ -591,7 +591,7 @@ export async function searchDrawingRS(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/roadSafety-patrol-drawing/data/search`,
     param,
     {
       headers: {
@@ -605,12 +605,15 @@ export async function searchDrawingRS(param: unknown) {
 }
 
 
+
+
+
 // worshop maintenance apis
 export async function searchAccidentReportWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/inspection/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-accident/data/search`,
     param,
     {
       headers: {
@@ -626,7 +629,7 @@ export async function searchMiscellaneousWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-miscellaneous/data/search`,
     param,
     {
       headers: {
@@ -642,7 +645,7 @@ export async function searchRequisitonFormWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-requisitionform/data/search`,
     param,
     {
       headers: {
@@ -658,7 +661,7 @@ export async function searchCompletionFormWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-completionform/data/search`,
     param,
     {
       headers: {
@@ -674,7 +677,7 @@ export async function searchRecivingFromWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-recivingmaterials/data/search`,
     param,
     {
       headers: {
@@ -690,7 +693,7 @@ export async function searchInspectionWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-inspectionreport/data/search`,
     param,
     {
       headers: {
@@ -707,7 +710,7 @@ export async function searchLetterAttachmentWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-letterattachment/data/search`,
     param,
     {
       headers: {
@@ -723,7 +726,7 @@ export async function searchDrawingWM(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/roadsafety/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/workshop-drawing/data/search`,
     param,
     {
       headers: {
