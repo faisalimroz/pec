@@ -134,8 +134,8 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         {showLogo && (
           <Link to='/dashboard' className='mr-4'>
             <div className='flex gap-4 items-center font-medium'>
-              <img src={logo} alt='Logo' className='h-12 w-auto' />
-              <h3>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+              <img src={logo} alt='Logo' className='h-8 w-auto' />
+              <h3 className='text-xs'>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
             </div>
           </Link>
         )}
@@ -144,7 +144,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             key={`${title}-${href}`}
             to={href}
             className={cn(
-              'font-roboto text-xs xl:text-sm font-medium flex items-center gap-1 xl:gap-2 px-2 py-1 rounded-md transition-colors hover:bg-white/10 ml-8',
+              'font-roboto text-xs font-medium flex items-center gap-1 xl:gap-2 px-2 py-1 rounded-md transition-colors hover:bg-white/10 ml-8',
               isActive ? 'bg-white/20' : ''
             )}
           >
@@ -158,7 +158,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
      
       {isEdmsActive && (
         <div className="hidden lg:flex flex-grow justify-center items-center">
-          <h2 className="text-xl font-bold text-white">Electronic Document Management System (EDMS)</h2>
+          <h2 className="text-md font-bold text-white">Electronic Document Management System (EDMS)</h2>
         </div>
       )}
     </div>

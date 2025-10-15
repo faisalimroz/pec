@@ -23,7 +23,7 @@ export const adminTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview/project-overview',
+    href: '/mb-pmis/project-overview',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -109,7 +109,7 @@ export const tollTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],

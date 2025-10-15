@@ -1,17 +1,15 @@
 import React from "react";
 
-type ButtonGroupWithIconsProps = {
+type AdminButton = {
   selectedProducts?: any[];
   openNew: () => void;
-  openNew2: () => void;
   exportCSV: () => void;
   confirmDeleteSelected: () => void;
 };
 
-const ButtonGroupWithIcon: React.FC<ButtonGroupWithIconsProps> = ({
+const AdminButton: React.FC<AdminButton> = ({
   selectedProducts,
   openNew,
-  openNew2,
   exportCSV,
   confirmDeleteSelected,
   
@@ -57,7 +55,7 @@ const ButtonGroupWithIcon: React.FC<ButtonGroupWithIconsProps> = ({
 
       <button
         className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold text-sm h-[40px] px-2 rounded-md"
-        onClick={openNew2}
+        onClick={exportCSV}
       >
         <BulkUpload />
         Bulk Upload 
@@ -83,4 +81,4 @@ const ButtonGroupWithIcon: React.FC<ButtonGroupWithIconsProps> = ({
   );
 };
 
-export default ButtonGroupWithIcon;
+export default AdminButton;

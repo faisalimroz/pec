@@ -12,6 +12,8 @@ import { toast } from 'sonner'
 import { useAuth } from '@/provider/authProvider'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
+import left from '@/assets/left.svg'
+import right from '@/assets/right.svg'
 interface Attachment {
     url: string
     _id: string
@@ -142,10 +144,10 @@ export default function AssetManagementTable() {
             <>
                 {hasEditAccess && (
                     <button
-                        className="flex items-center gap-2 bg-[#0B1F8F] text-white border border-[#E2E8F0]  px-4 py-3 rounded-md font-bold"
+                        className="flex items-center gap-2 bg-[#0B1F8F] text-white border border-[#E2E8F0]  px-2 py-2 rounded-md font-bold"
                         onClick={openNew}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             <path d="M7 10L12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             <path d="M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -188,33 +190,50 @@ export default function AssetManagementTable() {
         <div className='ml-4'>
             <div className='card'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
                 <div>
-                    <div className="flex items-start justify-center">
-                        {/* Left box */}
-                        <div className="w-[300px] h-[150px] bg-gray-300 py-4 px-3">
-                            {/* <img src={products[0]?.attachments[0].url} alt="none" /> */}
+                    <div className="flex flex-col items-center gap-6 mt-5">
+                    
+                        <div className="flex items-start justify-center gap-4">
+                         
+                            <div className="w-[300px] h-[150px] bg-gray-300 rounded-md shadow py-4 px-3" />
+
+                            <div className="w-[300px] h-[150px] bg-gray-300 rounded-md shadow py-4 px-3">
+                                <h1 className="font-semibold text-gray-800">Sr. Manager</h1>
+                                <p className="font-medium">Mr. Kim Hongsuk</p>
+                                <p className="text-sm text-gray-700 mt-2">Joining Date: 18-05-2022</p>
+                                <p className="text-sm text-gray-700">Mobile: 01752940010</p>
+                            </div>
                         </div>
 
-                        {/* Right box */}
-                        <div className="w-[300px]  h-[150px]  bg-gray-300 py-4 px-3">
-                            <h1></h1>
-                            <h1></h1>
-                            {/* <h1>Joining Date: {products[9]?.date}</h1> */}
-                            <h1>Mobile: </h1>
+                      
+                        <div className="relative flex justify-center w-full max-w-[700px] h-[100px]">
+                          
+                            
+
+                            <img src={left} alt="left" />
+                            <img src={right} alt="right" />
+
+                           
+                            <div className="absolute top-0 left-0 text-sm font-semibold text-gray-800">
+                                Mawa Toll Plaza
+                            </div>
+                            <div className="absolute top-0 right-0 text-sm font-semibold text-gray-800">
+                                Janjira Toll Plaza
+                            </div>
                         </div>
                     </div>
 
-              <div>
-                  {/* <img src={products[0]?.attachments[0].url} alt="none" />
+                    <div>
+                        {/* <img src={products[0]?.attachments[0].url} alt="none" />
                 <img src={products[0]?.attachments[0].url} alt="none" /> */}
-              </div>
+                    </div>
                 </div>
 
-                
+
 
             </div>
             <Dialog
@@ -233,7 +252,7 @@ export default function AssetManagementTable() {
 
                         <div className='field'>
                             <label htmlFor='name' className='font-bold'>
-                                File Name/Subject
+                                Name
                             </label>
                             <InputText
                                 id='name'

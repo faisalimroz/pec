@@ -475,7 +475,7 @@ export default function MonthlyReport() {
     const leftToolbarTemplate = () => {
         return (
             <div className='flex items-center gap-3'>
-                <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
+                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
                
@@ -787,7 +787,7 @@ const handleSearch = () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>

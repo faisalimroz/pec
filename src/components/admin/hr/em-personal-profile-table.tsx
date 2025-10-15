@@ -127,6 +127,10 @@ export default function EmPersonalProfileTable() {
   const [searchDate2, setSearchDate2] = useState<Date | null>(null)
   const [termination, setTermination] = useState<File[]>([])
   const [insuranceClaiming, setInsuranceClaiming] = useState<File[]>([])
+   const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
     null
   )
@@ -157,7 +161,70 @@ export default function EmPersonalProfileTable() {
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [viewDialogVisible, setViewDialogVisible] = useState<boolean>(false)
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('')
+ const uploadFile = async () => {
+    if (!file) {
+      setUploadStatus('Please select a file first.')
+      return
+    }
 
+    setUploading(true)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-equipment-record/bulk-upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      toast.success('File uploaded successfully!')
+      setFile(null)
+      refetch()
+      hideDialog2()
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      toast.error('An error occurred while uploading. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const hideDialog2 = () => {
+    setBulkDialog(false)
+    setFile(null)
+    setUploadStatus('')
+  }
+
+  const openNew2 = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setBulkDialog(true)
+  }
+
+   const productDialogFooter2 = (
+      <>
+        <Button
+          label='Cancel'
+          icon='pi pi-times'
+          className='p-button-text'
+          onClick={hideDialog2}
+        />
+        <Button
+          label='Save'
+          icon='pi pi-upload'
+          className='p-button-text'
+          onClick={uploadFile}
+          disabled={!file || uploading}
+        />
+      </>
+    )
   // Replace current page initialization useEffect
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -376,9 +443,9 @@ export default function EmPersonalProfileTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
-          Document List
-        </div>
+        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
+                    Document List
+                </div>
         {/* {isAdmin && (
           <button
             onClick={confirmDeleteSelected}
@@ -404,11 +471,14 @@ export default function EmPersonalProfileTable() {
            <ButtonGroup
             selectedProducts={selectedProducts}
             openNew={openNew}
+            openNew2={openNew2}
             exportCSV={exportCSV}
           />
           </div>
         )}
-        <Refresh handleReset={handleReset} />
+        <div className='mb-2'>
+          <Refresh handleReset={handleReset} />
+        </div>
       </>
     )
   }
@@ -578,6 +648,16 @@ export default function EmPersonalProfileTable() {
       />
     </>
   )
+const handleFileChange2 = (e: { target: { files: any[] } }) => {
+    const selectedFile = e.target.files[0]
+    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+      setFile(selectedFile)
+      setUploadStatus('')
+    } else {
+      setFile(null)
+      setUploadStatus('Please select a valid .xlsx file.')
+    }
+  }
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -722,7 +802,7 @@ export default function EmPersonalProfileTable() {
       <div className='ml-4'>
         <div className='card'>
           <Toolbar
-            className='rounded-none border-none p-0 bg-white'
+            className='rounded-none border-none p-0 bg-background'
             left={leftToolbarTemplate}
             right={rightToolbarTemplate}
           ></Toolbar>
@@ -783,7 +863,7 @@ export default function EmPersonalProfileTable() {
 
             <Column
               field='employeeName'
-              headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
+              headerClassName='bg-[#ffc2c2] text-sm min-w-[12rem]'
               bodyClassName='text-sm truncate max-w-lg'
               sortable
               header='Employee Name'
@@ -791,7 +871,7 @@ export default function EmPersonalProfileTable() {
 
             <Column
               field='position'
-              headerClassName='bg-[#ffc2c2] text-sm min-w-[16rem]'
+              headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-sm'
               // sortable
               header='Position'
@@ -864,7 +944,46 @@ export default function EmPersonalProfileTable() {
             ></Column>
           </DataTable>
         </div>
-
+<Dialog
+        visible={bulkDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Upload Bulk Data'
+        modal
+        className='p-fluid'
+        footer={productDialogFooter2}
+        onHide={hideDialog2}
+      >
+        <div className='grid grid-cols-2 items-center gap-6'>
+          <div className='field col-span-2'>
+            <label htmlFor='bulkUpload' className='font-bold'>
+              Select File (.xlsx Only):
+            </label>
+            <br />
+            <input
+              type='file'
+              id='bulkUpload'
+              accept='.xlsx'
+              // @ts-ignore
+              onChange={handleFileChange2}
+              disabled={uploading}
+              className='mt-3'
+            />
+            {/* {file && <p>Selected file: {file?.name}</p>} */}
+            {uploadStatus && (
+              <p
+                className={
+                  uploadStatus.includes('success')
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }
+              >
+                {uploadStatus}
+              </p>
+            )}
+          </div>
+        </div>
+      </Dialog>
         {/* upload data dialog  */}
         <Dialog
           visible={productDialog}

@@ -49,7 +49,7 @@ export const genInfoTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -88,7 +88,7 @@ export const adminTopNav = [
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'rtw',
+    uName: 'toll',
   },
   {
     title: 'Toll Operation',
@@ -108,7 +108,7 @@ export const adminTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -159,7 +159,7 @@ export const clinicTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -199,7 +199,7 @@ export const tollTopNav = [
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'rtw',
+    uName: 'toll',
   },
   {
     title: 'Toll Operation',
@@ -219,7 +219,7 @@ export const tollTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -270,7 +270,7 @@ export const financeTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -301,7 +301,7 @@ export const itsTopNav = [
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'mb-pmis',
+    uName: 'toll',
   },
   {
     title: 'RTW',
@@ -309,7 +309,7 @@ export const itsTopNav = [
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'rtw',
+    uName: 'toll',
   },
 
   {
@@ -330,7 +330,7 @@ export const itsTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -362,7 +362,7 @@ export const rntTopNav = [
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'mb-pmis',
+    uName: 'toll',
   },
   {
     title: 'RTW',
@@ -390,7 +390,7 @@ export const rntTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -420,7 +420,7 @@ export const rtwTopNav = [
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'mb-pmis',
+    uName: 'toll',
   },
   {
     title: 'RTW',
@@ -428,7 +428,7 @@ export const rtwTopNav = [
     isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'rtw',
+    uName: 'toll',
   },
   {
     title: 'Toll Operation',
@@ -448,7 +448,7 @@ export const rtwTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -479,7 +479,7 @@ export const pmisTopNav = [
     isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'mb-pmis',
+    uName: 'toll',
   },
   {
     title: 'RTW',
@@ -487,9 +487,8 @@ export const pmisTopNav = [
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'rtw',
+    uName: 'toll',
   },
-  
   {
     title: 'Toll Operation',
     href: '/toll/monthly-toll-revenue',
@@ -508,7 +507,7 @@ export const pmisTopNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],
@@ -538,7 +537,7 @@ export const edmsSecondNav=[
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'mb-pmis',
+    uName: 'toll',
   },
   {
     title: 'RTW',
@@ -546,7 +545,7 @@ export const edmsSecondNav=[
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'rtw',
+    uName: 'toll',
   },
 
   {
@@ -569,7 +568,7 @@ export const edmsSecondNav=[
 export const edmsTopNav = [
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: true,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],

@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchRTMonthlyReport } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
+import { searchRtwBills } from '@/api/rtwAPIs'
 
 interface Attachment {
   url: string
@@ -76,8 +77,8 @@ export default function MonthlyReport() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
   const dt = useRef<DataTable<Product[]>>(null)
-  const [date, setDate] = useState<string>('')
-  const [date2, setDate2] = useState<string>('')
+  const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
@@ -86,7 +87,7 @@ export default function MonthlyReport() {
   const [remarks, setRemarks] = useState('')
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])
-  const [selectedCode, setSelectedCode] = useState(null)
+  const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
   const [monthName, setMonthName] = useState<string>("");
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
@@ -150,7 +151,7 @@ export default function MonthlyReport() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/update/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -253,13 +254,14 @@ export default function MonthlyReport() {
       formData.append('description', description)
 
       formData.append('remarks', remarks)
+      formData.append('monthName', monthName)
 
       formData.append('date', formatDate(formDate))
       filesInput.forEach((file) => {
         formData.append('attachments', file)
       })
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/upload`,
         formData,
         {
           headers: {
@@ -270,7 +272,7 @@ export default function MonthlyReport() {
       )
 
       const response = res
-      console.log(response)
+      console.log(response.data)
 
       hideDialog()
       toast.success('Data Saved Successfully')
@@ -305,7 +307,7 @@ export default function MonthlyReport() {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/delete/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -355,7 +357,7 @@ export default function MonthlyReport() {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/delete/multiple/data`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -409,7 +411,7 @@ export default function MonthlyReport() {
   const leftToolbarTemplate = () => {
     return (
       <div className='flex items-center gap-3'>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
+        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
           Document List
         </div>
         {/* {isClinic && ( 
@@ -585,50 +587,40 @@ export default function MonthlyReport() {
     </>
   )
 
-  function getMonthName(dateString: string) {
-    const date = new Date(dateString)
-    return date.toLocaleString('en-US', { month: 'long' })
-  }
-
-  function getYear(dateString: string) {
-    const date = new Date(dateString)
-    return date.getFullYear()
-  }
 
   const handleSearch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: date ? getMonthName(date) : '',
-      year: date2 ? getYear(date2) : '',
+    const payload = {
+      month: selectedCode?.code || '',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
-      // @ts-ignore
-      patientType: selectedCode?.code || '',
     }
-
-    searchTreatmentRecord(initialPayload).then((result) => {
-      setProducts(result?.Treatments)
+       console.log(payload)
+    searchRTMonthlyReport(payload).then((result) => {
+      setProducts(result?.data || [])
       setLoading(false)
     })
   }
 
   const handleReset = () => {
-    const initialPayload = {
-      year: '',
+    setLoading(true)
+    const payload = {
+      month: selectedCode?.code || '',
+      date_range: '',
       searchQuery: '',
-      month: '',
-      patientType: '',
     }
 
-    setDate('')
-    setDate2('')
+    setDate(null)
+    setDate2(null)
     setSearchKey('')
     setSelectedCode(null)
 
-    searchTreatmentRecord(initialPayload).then((result) => {
-      setProducts(result?.Treatments)
+    searchRTMonthlyReport(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
+
 
   const filterSearchForm = (
     <div className='flex items-center justify-center'>
@@ -676,7 +668,7 @@ export default function MonthlyReport() {
             onChange={(e) => setSelectedCode(e.value)}
             options={months}
             optionLabel='name'
-            optionValue='name'
+
             itemTemplate={itemTemplate}
             placeholder='Month'
             className='border-none rounded-none ml-4 cursor-pointer ring-0'
@@ -761,16 +753,15 @@ export default function MonthlyReport() {
 
   const refetch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: '',
-      year: '',
+
+    const payload = {
+      month:'',
+      date_range: '',
       searchQuery: '',
-      patientType: '',
     }
 
-    searchTreatmentRecord(initialPayload).then((result) => {
-      setProducts(result?.Treatments)
-      console.log(result, "ress")
+    searchRTMonthlyReport(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
@@ -790,7 +781,7 @@ export default function MonthlyReport() {
     <div className=''>
       <div className='ml-4'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-background'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -854,7 +845,7 @@ export default function MonthlyReport() {
               ></Column>
 
               <Column
-                field='subject'
+                field='subjectName'
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -885,7 +876,7 @@ export default function MonthlyReport() {
                 field='remarks'
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-sm truncate max-w-xs'
-                sortable
+
                 className='min-w-[12rem]'
                 header='Remarks'
               ></Column>
@@ -963,7 +954,7 @@ export default function MonthlyReport() {
                 }
               />
             </div>
-           
+
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -980,28 +971,28 @@ export default function MonthlyReport() {
                 }
               />
             </div>
-             <div className='field'>
-                <label htmlFor='monthName' className='font-bold'>
-                  Month Name
-                </label>
-                <Dropdown
-                  id='monthName'
-                  value={updatedProduct.monthName}
-                  onChange={(e) =>
-                    setUpdatedProduct({
-                      ...updatedProduct,
-                      monthName: e.value,
-                    })
-                  }
-                  options={months}
-                  optionLabel='name'
-                  optionValue='name'
-                  
-                  itemTemplate={itemTemplate}
-                  placeholder='Select a Month'
-                  className='w-full'
-                />
-              </div>
+            <div className='field'>
+              <label htmlFor='monthName' className='font-bold'>
+                Month Name
+              </label>
+              <Dropdown
+                id='monthName'
+                value={updatedProduct.monthName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    monthName: e.value,
+                  })
+                }
+                options={months}
+                optionLabel='name'
+                optionValue='name'
+
+                itemTemplate={itemTemplate}
+                placeholder='Select a Month'
+                className='w-full'
+              />
+            </div>
             <div className='field'>
               <label htmlFor='date' className='font-bold'>
                 Date
@@ -1019,7 +1010,7 @@ export default function MonthlyReport() {
                 }
                 dateFormat='dd/mm/yy'
               />
-             
+
             </div>
             <div className='col-span-2'>
               <h3 className='font-bold mb-2'>Existing Attachments</h3>

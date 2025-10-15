@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { rtwLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rtwTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/road-traffic/road-safety-traffic/accident-report-view'
+// import DemoTable from '@/components/road-traffic/road-safety-traffic/accident-report-view'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/provider/authProvider'
 import Projectoverview from '@/components/rtw/project-overview'
@@ -43,7 +43,7 @@ export default function RoadAndTraffic() {
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
                   Project Overview
                 </h1>
-                <button className='p-3 ml-4 bg-main text-lg font-semibold text-white rounded-t'>
+                <button className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg ml-4'>
                   Document List
                 </button>
 

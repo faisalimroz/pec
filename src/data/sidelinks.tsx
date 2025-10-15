@@ -685,27 +685,7 @@ export const tollLinks: SideLink[] = [
 ]
 
 export const edmsLinks: SideLink[] = [
-  {
-    title: 'Dispatched',
-    label: '',
-    href: '/edms/dispatched',
-    uName: 'dispatched',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Received',
-    label: '',
-    href: '/edms/received',
-    uName: 'received',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Others',
-    label: '',
-    href: '/edms/others',
-    uName: 'others',
-    icon: <FileIcon />,
-  },
+  
 ]
 export const rtwLinks: SideLink[] = [
  {

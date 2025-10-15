@@ -35,7 +35,7 @@ const Refresh: React.FC<ButtonGroupWithIconsProps> = ({
 }) => {
 
   const RefreshIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
   <path d="M12 2V6" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M12 18V22" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M4.92969 4.92969L7.75969 7.75969" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -51,7 +51,7 @@ const Refresh: React.FC<ButtonGroupWithIconsProps> = ({
   return (
     <div className="ml-2">
       <button
-        className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] px-4 py-3 rounded-md font-bold"
+        className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] text-sm h-[40px] px-2 rounded-md font-bold mb-1"
         onClick={handleReset}
       >
         <RefreshIcon />

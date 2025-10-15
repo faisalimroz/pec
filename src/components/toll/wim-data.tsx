@@ -683,12 +683,12 @@ export default function AssetManagementTable() {
             />
 
 
-            <IconField iconPosition='left' className='relative'>
+            <IconField iconPosition='left' className='relative '>
                 <InputIcon className='pi pi-search' />
                 <InputText
                     type='search'
                     placeholder='Search'
-                    className='border-none ml-2 focus:ring-0'
+                    className='border-none ml-2 focus:ring-0 w-36'
                     onChange={(e) => setSearchKey(e.target.value)}
                     value={searchKey}
                 />

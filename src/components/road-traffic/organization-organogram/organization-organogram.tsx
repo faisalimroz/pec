@@ -49,7 +49,7 @@ const OrgChart: React.FC = () => {
     setIsLoading(true)
     try {
       const response = await axios.get<ApiResponse>(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/general/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/organization/organization-chart`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -141,7 +141,7 @@ const OrgChart: React.FC = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/general/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/organization/organization-chart`,
         formData,
         {
           headers: {
@@ -165,7 +165,7 @@ const OrgChart: React.FC = () => {
     }
   }
 
-  // console.log(layout)
+  // console.log(layout.image)
 
   return (
     <div className='w-full bg-white'>

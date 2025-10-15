@@ -27,7 +27,7 @@ const Refresh: React.FC<ButtonGroupWithIconsProps> = ({
   return (
     <div className="ml-2">
       <button
-        className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] px-4 py-3 rounded-md font-bold"
+        className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] text-sm h-[40px] px-2 rounded-md font-bold"
         onClick={handleReset}
       >
         <RefreshIcon />

@@ -468,7 +468,7 @@ export default function MedicalEquipment() {
     const leftToolbarTemplate = () => {
         return (
             <div className='flex items-center gap-3'>
-                <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
+                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
                
@@ -774,7 +774,7 @@ export default function MedicalEquipment() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -838,7 +838,7 @@ export default function MedicalEquipment() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 

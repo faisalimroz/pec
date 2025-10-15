@@ -479,9 +479,9 @@ export default function AssetManagementTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
-          Document List
-        </div>
+        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
+                    Document List
+                </div>
         {/* {isAdmin && (
           <button
             onClick={confirmDeleteSelected}
@@ -571,7 +571,7 @@ export default function AssetManagementTable() {
           <button
             key={button.value}
             onClick={() => handleButtonClick(button.value)}
-            className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
+            className={`px-3 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 ease-in-out
             ${activeButton === button.value
                 ? "bg-[#6F90AE] text-white"
                 : "bg-[#0B1F8F] text-white  "
@@ -702,7 +702,7 @@ export default function AssetManagementTable() {
     setDate(null)
     setDate2(null)
     setSearchKey('')
-
+       setButtonType('') 
 
     const payload = {
       type: '',
@@ -839,7 +839,7 @@ export default function AssetManagementTable() {
       date_range: '',
       searchQuery: '',
     }
-
+  setButtonType('')
     searchAssetManagement(payload).then((result) => {
       setProducts(result?.data)
       setLoading(false)
@@ -857,7 +857,7 @@ export default function AssetManagementTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

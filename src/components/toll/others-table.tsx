@@ -756,7 +756,7 @@ export default function OthersTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

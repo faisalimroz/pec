@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks, tollLinks } from '@/data/sidelinks'
 import { adminTopNav, getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/toll/wim-data'
+import DemoTable from '@/components/toll/all-wim-data'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {
@@ -40,10 +40,10 @@ export default function AssetManagement() {
 
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4 bg-[#F6F8F9]'>
-              <div className='space-y-2'>
-                <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
+              <div className='space-y-2 space-x-4'>
+                {/* <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
                  Wim Data
-                </h1>
+                </h1> */}
                  
                 <DemoTable />
               </div>

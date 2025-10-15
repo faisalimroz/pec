@@ -436,7 +436,7 @@ export default function ProductsDemo() {
       <Toast ref={toast} />
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

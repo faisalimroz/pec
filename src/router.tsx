@@ -76,7 +76,12 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/dashboard')).default,
             }),
           },
-
+          {
+            path: 'edms',
+            lazy: async () => ({
+              Component: (await import('@/pages/edms')).default,
+            }),
+          },
           {
             path: 'edms/dispatched',
             lazy: async () => ({
@@ -1091,7 +1096,7 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+                  '@/pages/toll/wim-data'
                 )
               ).default,
             }),
@@ -1651,7 +1656,7 @@ const router = createBrowserRouter([
   {
      path: '/edms/its/workplan',
             lazy: async () => ({
-              Component: (await import('@/pages/its - Copy/AboutUs')).default,
+              Component: (await import('@/pages/its - Copy/WorkPlan')).default,
             }),
   },
   // Error routes

@@ -17,7 +17,7 @@ const topNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
+    href: '/road-and-traffic/organization-organogram',
     isActive: false,
     logo: RntIcon,
     roles: ['r&t-manager', 'superadmin'],
@@ -25,7 +25,7 @@ const topNav = [
   },
    {
     title: 'Main Bridge',
-    href: '/mb-pmis',
+    href: '/mb-pmis/project-overview',
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -41,7 +41,7 @@ const topNav = [
   },
    {
     title: 'Toll Operation',
-    href: '/toll-operation',
+    href: '/toll/monthly-toll-revenue',
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -49,7 +49,7 @@ const topNav = [
   },
   {
     title: 'ITS',
-    href: '/its/overview',
+    href: '/its',
     isActive: false,
     logo: ItsIcon,
     roles: ['its-manager', 'superadmin'],
@@ -57,7 +57,7 @@ const topNav = [
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'edms'],

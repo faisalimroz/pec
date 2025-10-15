@@ -288,7 +288,7 @@ export default function VehicleDetectTollTable() {
     const leftToolbarTemplate = () => {
         return (
             <div className=''>
-                <div className='p-3 bg-main text-lg font-semibold text-white rounded-t'>
+                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
             </div>
@@ -305,7 +305,6 @@ export default function VehicleDetectTollTable() {
                         openNew={openNew2}
                         bulkUpload={openNew2}
 
-                        handleReset={handleReset}
                     />
                 )}
                 {/* <RefreshButton className='text-base ml-2' onClick={handleReset} /> */}
@@ -383,8 +382,9 @@ export default function VehicleDetectTollTable() {
 
     const filterSearchForm = (
         <div>
-            <div className='flex mx-auto w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'>
-                <div>
+            <div className='flex flex-wrap justify-center '>
+
+                <div className='flex  w-fit gap-2  border p-2 rounded-md bg-white '>
                     <Calendar
                         // @ts-ignore
                         value={date}
@@ -392,7 +392,7 @@ export default function VehicleDetectTollTable() {
                         onChange={(e) => setDate(e.value)}
 
                         dateFormat="dd/mm/yy"
-                        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+                        inputClassName='border-none rounded-none cursor-pointer focus:ring-0 w-28 '
                         placeholder='Start Date'
                         showIcon
                         icon={() => <i className='pi pi-angle-down' />}
@@ -404,25 +404,20 @@ export default function VehicleDetectTollTable() {
                         onChange={(e) => setDate2(e.value)}
 
                         dateFormat="dd/mm/yy"
-                        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0 w-28'
                         placeholder='End Date'
                         showIcon
                         icon={() => <i className='pi pi-angle-down' />}
                     />
-                </div>
-
-                <div>
                     <Dropdown
                         value={selectedLocation}
                         onChange={(e) => setSelectedLocation(e.value)}
                         options={location}
                         placeholder='Location'
                         itemTemplate={itemTemplate}
-                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                        className='border-none rounded-none ml-4 cursor-pointer ring-0 '
                     />
-                </div>
 
-                <div>
                     <Dropdown
                         value={selectedTraffic}
                         onChange={(e) => setTraffic(e.value)}
@@ -431,9 +426,6 @@ export default function VehicleDetectTollTable() {
                         itemTemplate={itemTemplate}
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
-                </div>
-
-                <div>
                     <Dropdown
                         value={selectedPeriod}
                         onChange={(e) => setSelectedPeriod(e.value)}
@@ -444,36 +436,41 @@ export default function VehicleDetectTollTable() {
                     />
                 </div>
 
+                <div className='flex  w-fit gap-2  border p-2 rounded-md bg-white '>
+                    <IconField iconPosition='left' className='relative '>
 
-                <IconField iconPosition='left' className='relative'>
-                   
-                    <InputText
-                        type='search'
-                        placeholder='Search'
-                        className='border-none ml-4 focus:ring-0'
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        value={searchKey}
-                    />
+                        <InputText
+                            type='search'
+                            placeholder='Search'
+                            className='border-none ml-4 focus:ring-0'
+                            onChange={(e) => setSearchKey(e.target.value)}
+                            value={searchKey}
+                        />
 
-                    <button
-                        onClick={() => handleSearch()}
-                        className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
-                        type='submit'
-                    >
-                        <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 24 24'
-                            fill='white'
-                            className='size-6'
+                        <button
+                            onClick={() => handleSearch()}
+                            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+                            type='submit'
                         >
-                            <path
-                                fillRule='evenodd'
-                                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-                                clipRule='evenodd'
-                            />
-                        </svg>
-                    </button>
-                </IconField>
+                            <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                viewBox='0 0 24 24'
+                                fill='white'
+                                className='size-6'
+                            >
+                                <path
+                                    fillRule='evenodd'
+                                    d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                                    clipRule='evenodd'
+                                />
+                            </svg>
+                        </button>
+                    </IconField>
+
+                </div>
+
+
+
             </div>
             <h1 className='text-center pt-10 text-xl font-bold text-[#000000]'>Traffic Report</h1>
         </div>
@@ -681,7 +678,7 @@ export default function VehicleDetectTollTable() {
             <div className='ml-4'>
                 <div>
                     <Toolbar
-                        className='rounded-none border-none p-0 bg-white'
+                        className='rounded-none border-none p-0 bg-background'
                         left={leftToolbarTemplate}
                         right={rightToolbarTemplate}
                     ></Toolbar>

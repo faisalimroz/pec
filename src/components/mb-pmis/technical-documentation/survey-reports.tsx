@@ -491,8 +491,8 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
 
     const leftToolbarTemplate = () => {
         return (
-            <div className='flex items-center gap-3'>
-                <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
+            <div className='flex items-center gap-3 '>
+                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
 
@@ -558,7 +558,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
             <button
               key={button.value}
               onClick={() => handleButtonClick(button.value)}
-              className={`px-6 py-3 font-semibold rounded-lg transition-colors duration-200 ease-in-out
+              className={`px-3 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 ease-in-out
               ${activeButton === button.value
                   ? "bg-[#6F90AE] text-white"
                   : "bg-[#0B1F8F] text-white  "
@@ -851,7 +851,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>

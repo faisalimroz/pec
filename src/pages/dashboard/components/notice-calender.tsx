@@ -218,7 +218,7 @@ export default function NoticeCalender(): JSX.Element {
                 <Link to='/admin-panel/notice-board'>
                   <Button
                     variant='secondary'
-                    className='bg-white text-gray-800 hover:bg-gray-100 h-[31px]'
+                    className='bg-white text-black hover:bg-gray-100 h-[31px]'
                   >
                     View More
                   </Button>
@@ -266,7 +266,7 @@ export default function NoticeCalender(): JSX.Element {
                     setDate(next);
                   }}
                 >
-                  <SelectTrigger className="w-[140px] h-[31px] bg-white text-gray-800">
+                  <SelectTrigger className="w-[140px] h-[31px] bg-white text-black">
                     <SelectValue placeholder="Select month" />
                   </SelectTrigger>
                   <SelectContent>

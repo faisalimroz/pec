@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchMiscellaneousRS } from '@/api/roadTrafficAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -73,8 +73,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+     const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -132,7 +132,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/roadSafety-patrol-miscellaneous/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -245,7 +245,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/roadSafety-patrol-miscellaneous/create`,
                 formData,
                 {
                     headers: {
@@ -291,7 +291,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/roadSafety-patrol-miscellaneous/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -341,7 +341,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/roadSafety-patrol-miscellaneous/create`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -395,7 +395,7 @@ export default function MonthlyReport() {
     const leftToolbarTemplate = () => {
         return (
             <div className='flex items-center gap-3'>
-                <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
+                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
                
@@ -522,41 +522,54 @@ export default function MonthlyReport() {
         return date.getFullYear()
     }
 
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
+   
+   const handleSearch = () => {
+               setLoading(true)
+               const payload = {
+       
+                   date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+                   searchQuery: searchKey,
+               }
+               console.log(payload)
+               searchMiscellaneousRS(payload).then((result) => {
+                   setProducts(result?.data || [])
+                   setLoading(false)
+               })
+           }
+       
+           const handleReset = () => {
+               setLoading(true)
+               const payload = {
+       
+                   date_range: '',
+                   searchQuery: '',
+               }
+       
+               setDate(null)
+               setDate2(null)
+               setSearchKey('')
+               setSelectedCode(null)
+       
+               searchMiscellaneousRS(payload).then((result) => {
+                   setProducts(result?.data)
+                   setLoading(false)
+               })
+           }
+       
+           const refetch = () => {
+               setLoading(true)
+       
+               const payload = {
+       
+                   date_range: '',
+                   searchQuery: '',
+               }
+       
+               searchMiscellaneousRS(payload).then((result) => {
+                   setProducts(result?.data)
+                   setLoading(false)
+               })
+           }
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -675,21 +688,7 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
+    
 
     // initial data load - Internal
     useEffect(() => {
@@ -706,7 +705,7 @@ export default function MonthlyReport() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -770,7 +769,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
