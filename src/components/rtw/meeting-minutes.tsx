@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
+import { searchMeetingMinutes } from '@/api/rtwAPIs'
 
 interface Attachment {
     url: string
@@ -48,7 +49,6 @@ export default function KecLetter() {
         slNo: '',
         subjectName: '',
         description: '',
-
         date: '',
         remarks: '',
         attachments: [],
@@ -75,8 +75,8 @@ export default function KecLetter() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+     const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -85,7 +85,7 @@ export default function KecLetter() {
     const [remarks, setRemarks] = useState('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -113,17 +113,14 @@ export default function KecLetter() {
 
     const handleUpdateProduct = async () => {
         if (!updatedProduct) return
-
         try {
             setLoading2(true)
             const formData = new FormData()
 
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -133,7 +130,7 @@ export default function KecLetter() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/meeting-minutes/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -205,7 +202,7 @@ export default function KecLetter() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/meeting-minutes/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -318,7 +315,7 @@ export default function KecLetter() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/meeting-minutes/create`,
                 formData,
                 {
                     headers: {
@@ -364,7 +361,7 @@ export default function KecLetter() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/meeting-minutes/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -414,7 +411,7 @@ export default function KecLetter() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/meeting-minutes/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -628,40 +625,59 @@ export default function KecLetter() {
         return date.getFullYear()
     }
 
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
+   const handleSearch = () => {
+          setLoading(true)
+          const payload = {
+              typesofDrawings: selectedCode?.code || '',
+              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+              searchQuery: searchKey,
+            
+          }
+          console.log(payload,'hello')
+          searchMeetingMinutes(payload).then((result) => {
+              setProducts(result?.data || [])
+              setLoading(false)
+          })
+      }
+  
+      const handleReset = () => {
+          setLoading(true)
+          const payload = {
+  
+              date_range: '',
+              searchQuery: '',
+          }
+  
+          setDate(null)
+          setDate2(null)
+          setSearchKey('')
+          setSelectedCode(null)
+  
+          searchMeetingMinutes(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+  
+     const refetch = () => {
+             setLoading(true)
+     
+             const payload = {
+     
+                 date_range: '',
+                 searchQuery: '',
+             }
+     
+             searchMeetingMinutes(payload).then((result) => {
+                 setProducts(result?.data)
+                 setLoading(false)
+             })
+         }
+          // initial data load - Internal
+         useEffect(() => {
+             refetch()
+         }, [])
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -790,21 +806,6 @@ export default function KecLetter() {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
 
     // initial data load - Internal
     useEffect(() => {
@@ -821,7 +822,7 @@ export default function KecLetter() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>

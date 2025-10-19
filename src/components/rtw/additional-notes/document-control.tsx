@@ -620,50 +620,60 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
+  
+     const handleSearch = () => {
+            setLoading(true)
+            const payload = {
+                typesofDrawings: selectedCode?.code || '',
+                date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+                searchQuery: searchKey,
+              
+            }
+            console.log(payload,'hello')
+            searchRTWTechDrawing(payload).then((result) => {
+                setProducts(result?.data || [])
+                setLoading(false)
+            })
         }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
+    
+        const handleReset = () => {
+            setLoading(true)
+            const payload = {
+    
+                date_range: '',
+                searchQuery: '',
+            }
+    
+            setDate(null)
+            setDate2(null)
+            setSearchKey('')
+            setSelectedCode(null)
+    
+            searchRTWTechDrawing(payload).then((result) => {
+                setProducts(result?.data)
+                setLoading(false)
+            })
         }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
+    
+       const refetch = () => {
+               setLoading(true)
+       
+               const payload = {
+       
+                   date_range: '',
+                   searchQuery: '',
+               }
+       
+               searchRTWTechDrawing(payload).then((result) => {
+                   setProducts(result?.data)
+                   setLoading(false)
+               })
+           }
+            // initial data load - Internal
+           useEffect(() => {
+               refetch()
+           }, [])
+  
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -792,26 +802,7 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
+  
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -823,7 +814,7 @@ export default function MonthlyReport() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>

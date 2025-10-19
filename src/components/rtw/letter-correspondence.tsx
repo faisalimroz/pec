@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -23,6 +22,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
+import { searchOfficialLetters } from '@/api/rtwAPIs'
 
 interface Attachment {
     url: string
@@ -74,14 +74,14 @@ export default function MedicineInOutRecord() {
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
-    const [deleteProductsDialog, setDeleteProductsDialog] =
-        useState<boolean>(false)
+    const [deleteProductsDialog, setDeleteProductsDialog] = useState<boolean>(false)
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -89,12 +89,12 @@ export default function MedicineInOutRecord() {
     const [refNo, setRefNo] = useState('')
     const [description, setDescription] = useState('')
     const [sender, setSender] = useState('')
- 
+
     const [remarks, setRemarks] = useState('')
     const [statusType, setInOutType] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
@@ -104,10 +104,10 @@ export default function MedicineInOutRecord() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-      const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -144,7 +144,7 @@ export default function MedicineInOutRecord() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/letter-and-official-correspondence/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -183,14 +183,14 @@ export default function MedicineInOutRecord() {
             }
         })
     }
-  const itemTemplate = (option: { name: string; code: string }) => {
-  return (
-    <div className="flex items-center gap-2">
-     <FileIcon/>      
-      <span>{option.name}</span> 
-    </div>
-  );
-};
+    const itemTemplate = (option: { name: string; code: string }) => {
+        return (
+            <div className="flex items-center gap-2">
+                <FileIcon />
+                <span>{option.name}</span>
+            </div>
+        );
+    };
 
     const updateProductDialogFooter = (
         <>
@@ -208,81 +208,81 @@ export default function MedicineInOutRecord() {
             />
         </>
     )
-const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/letter-and-official-correspondence/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     // ending all update dialog funcs
 
@@ -342,7 +342,7 @@ const uploadFile = async () => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/letter-and-official-correspondence/create`,
                 formData,
                 {
                     headers: {
@@ -387,7 +387,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/letter-and-official-correspondence/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -437,7 +437,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/letter-and-official-correspondence/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -502,18 +502,18 @@ const uploadFile = async () => {
     const rightToolbarTemplate = () => {
         return (
             <>
-               {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -609,50 +609,60 @@ const uploadFile = async () => {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+            status: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-            statusType: selectedCode?.code || '',
-        }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        }
+        console.log(payload, 'hello')
+        searchOfficialLetters(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
             searchQuery: '',
-            month: '',
-            statusType: '',
         }
 
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
         setSelectedCode(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchOfficialLetters(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchOfficialLetters(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -784,26 +794,6 @@ const uploadFile = async () => {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            statusType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
-
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
     }
@@ -814,7 +804,7 @@ const uploadFile = async () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -866,17 +856,17 @@ const uploadFile = async () => {
                                 className='min-w-[10rem]'
                                 sortable
                             ></Column>
-                            
+
                             <Column
                                 field='date'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                               
+
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
-                            
-                              <Column
+
+                            <Column
                                 field='fileName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
@@ -892,7 +882,7 @@ const uploadFile = async () => {
                                 className='min-w-[8rem]'
                                 header='Description'
                             ></Column>
-                              <Column
+                            <Column
                                 field='sender'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
@@ -900,25 +890,25 @@ const uploadFile = async () => {
                                 className='min-w-[8rem]'
                                 header='Sender'
                             ></Column>
-                         
-                          
+
+
 
                             <Column
-                                field='status'
+                                field='statusType'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                
+
                                 className='min-w-[8rem]'
                                 header='Status'
                             ></Column>
-                   
+
 
 
                             <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                            
+
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -927,7 +917,7 @@ const uploadFile = async () => {
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                              
+
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
@@ -944,46 +934,46 @@ const uploadFile = async () => {
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1010,9 +1000,9 @@ const uploadFile = async () => {
                                         statusType: e.target.value,
                                     })
                                 }
-                                  optionLabel="name"
-                                  optionValue='name'
-                                 itemTemplate={itemTemplate}
+                                optionLabel="name"
+                                optionValue='name'
+                                itemTemplate={itemTemplate}
                                 placeholder='Select status'
                             />
                         </div>
@@ -1063,7 +1053,7 @@ const uploadFile = async () => {
                         </div>
                         <div className='field'>
                             <label htmlFor='sender' className='font-bold'>
-                               Sender
+                                Sender
                             </label>
                             <InputText
                                 id='sender'
@@ -1234,7 +1224,7 @@ const uploadFile = async () => {
                                 <h3 className='font-bold'>Ref No.</h3>
                                 <p className='break-all'>{selectedProduct.refNo}</p>
                             </div>
-                               <div>
+                            <div>
                                 <h3 className='font-bold'>Description</h3>
                                 <p className='break-all'>{selectedProduct.description}</p>
                             </div>
@@ -1315,7 +1305,7 @@ const uploadFile = async () => {
                                 required
                             />
                         </div>
-                         <div className='field'>
+                        <div className='field'>
                             <label htmlFor='sender' className='font-bold'>
                                 Sender
                             </label>
@@ -1325,7 +1315,7 @@ const uploadFile = async () => {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='fileName' className='font-bold'>
                                 File Name/Subject

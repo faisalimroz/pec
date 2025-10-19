@@ -10,11 +10,9 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
-import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import RefreshButton from '@/components/refresh-button'
@@ -638,41 +636,59 @@ const uploadFile = async () => {
         const date = new Date(dateString)
         return date.getFullYear()
     }
-
-    const handleSearch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        const initialPayload = {
-            year: '',
-            searchQuery: '',
-            month: '',
-            patientType: '',
-        }
-
-        setDate('')
-        setDate2('')
-        setSearchKey('')
-        setSelectedCode(null)
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            setLoading(false)
-        })
-    }
+       const handleSearch = () => {
+              setLoading(true)
+              const payload = {
+                  typesofDrawings: selectedCode?.code || '',
+                  date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+                  searchQuery: searchKey,
+                
+              }
+              console.log(payload,'hello')
+              searchRTWTechDrawing(payload).then((result) => {
+                  setProducts(result?.data || [])
+                  setLoading(false)
+              })
+          }
+      
+          const handleReset = () => {
+              setLoading(true)
+              const payload = {
+      
+                  date_range: '',
+                  searchQuery: '',
+              }
+      
+              setDate(null)
+              setDate2(null)
+              setSearchKey('')
+              setSelectedCode(null)
+      
+              searchRTWTechDrawing(payload).then((result) => {
+                  setProducts(result?.data)
+                  setLoading(false)
+              })
+          }
+      
+         const refetch = () => {
+                 setLoading(true)
+         
+                 const payload = {
+         
+                     date_range: '',
+                     searchQuery: '',
+                 }
+         
+                 searchRTWTechDrawing(payload).then((result) => {
+                     setProducts(result?.data)
+                     setLoading(false)
+                 })
+             }
+              // initial data load - Internal
+             useEffect(() => {
+                 refetch()
+             }, [])
+    
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -801,26 +817,7 @@ const uploadFile = async () => {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -832,7 +829,7 @@ const uploadFile = async () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>

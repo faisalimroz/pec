@@ -31,7 +31,7 @@ export const useProcurement = (param: unknown) => {
     queryKey: createQueryKey('searchFinanceProcurement', param),
     queryFn: async () => {
       const { data } = await api.post(
-        '/api/v1/road-traffic/procurement/search/data',
+        '/api/v1/road-traffic/procurement/data/search',
         param
       )
       return data
@@ -47,7 +47,7 @@ export async function searchRtwDrawings(param: unknown) {
   console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/rhd-letter/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/rhd-letter/data/search`,
     param,
     {
       headers: {
@@ -66,7 +66,7 @@ export async function searchMaterialsList(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/procurement/search/data`,
+    `${BASE_URL}/api/v1/rtw/quality-material-test-report/data/search`,
     param,
     {
       headers: {
@@ -75,7 +75,7 @@ export async function searchMaterialsList(param: unknown) {
       },
     }
   )
-
+  
   return response.data
 }
 
@@ -83,7 +83,7 @@ export async function searchSurveyReport(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/rtw/technical-documentation-survey-report/data/search`,
     param,
     {
       headers: {
@@ -95,11 +95,11 @@ export async function searchSurveyReport(param: unknown) {
 
   return response.data
 }
-export async function searchMaintenanceManual(param: unknown) {
+export async function searchTechMaintenanceManual(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/rtw/technical-documentation-maintanence-manual/data/search`,
     param,
     {
       headers: {
@@ -116,7 +116,7 @@ export async function searchDailyWaterLevelReport(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/monthly-report/data/search`,
     param,
     {
       headers: {
@@ -132,7 +132,7 @@ export async function searchMonthlyReport(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/road-traffic/monthly-report/data/search`,
     param,
     {
       headers: {
@@ -144,14 +144,48 @@ export async function searchMonthlyReport(param: unknown) {
 
   return response.data
 }
-// quality safety apis
-
-export async function searchMateiralTestReport(param: unknown) {
+export async function searchRTWTechDrawing(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/building-maintenance/work-report
-/search/data`,
+    `${BASE_URL}/api/v1/rtw/technical-documentation-drawing/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+  console.log(response.data)
+}
+
+
+export async function searchTechMateiralTestReport(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/rtw/technical-documentation-materials/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  
+  return response.data
+
+}
+// quality safety apis
+export async function searcQualityhMateiralTestReport(param: unknown) {
+  // console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/rtw/quality-material-test-report/data/search`,
     param,
     {
       headers: {
@@ -163,13 +197,11 @@ export async function searchMateiralTestReport(param: unknown) {
 
   return response.data
 }
-
 export async function searchSafety(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/building-maintenance/inspection
-/search/data`,
+    `${BASE_URL}/api/v1/rtw/quality-safety/data/search`,
     param,
     {
       headers: {
@@ -186,7 +218,7 @@ export async function searchOfficialLetters(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/building-maintenance/work-completion/search/data`,
+    `${BASE_URL}/api/v1/rtw/letter-and-official-correspondence/search/data`,
     param,
     {
       headers: {
@@ -202,7 +234,7 @@ export async function searchMeetingMinutes(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/rtw/meeting-minutes/data/search`,
     param,
     {
       headers: {
@@ -220,7 +252,7 @@ export async function searchRtwBills(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-roaster/search/data`,
+    `${BASE_URL}/api/v1/rtw/rtw-bills/data/search`,
     param,
     {
       headers: {
@@ -237,7 +269,7 @@ export async function searchPictures(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-roaster/search/data`,
+    `${BASE_URL}/api/v1/rtw/visual-records/search/data`,
     param,
     {
       headers: {
@@ -256,7 +288,7 @@ export async function searchBackupFrequency(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/drawing/structural/search/data`,
+    `${BASE_URL}/api/v1/rtw/additional-notes-backup-frequency/data/search`,
     param,
     {
       headers: {
@@ -273,7 +305,7 @@ export async function searchDocumentControlManager(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/drawing/electrical/search/data`,
+    `${BASE_URL}/api/v1/rtw/additional-notes-control-manager/data/search`,
     param,
     {
       headers: {
@@ -290,7 +322,7 @@ export async function searchDocumentRevisionLog(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/rtw/additional-notes-revision-log/data/search`,
     param,
     {
       headers: {

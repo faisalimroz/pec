@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchSurveyReport } from '@/api/rtwAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -51,7 +51,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         refNo: '',
-        typesofSurvey: '', 
+        typesofSurvey: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -79,7 +79,7 @@ export default function MonthlyReport() {
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
     const [date, setDate] = useState<Date | null>(null)
-  const [date2, setDate2] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -90,9 +90,9 @@ export default function MonthlyReport() {
 
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [typesofSurvey, setTypesofDrawings] = useState<string>("");
+    const [typesofSurvey, setTypesofSurvey] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -101,10 +101,10 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-      const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
 
 
     const drawingTypes = [
@@ -144,7 +144,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-           
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('refNo', updatedProduct.refNo)
@@ -160,7 +160,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-survey-report/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -199,81 +199,81 @@ export default function MonthlyReport() {
             }
         })
     }
-const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-survey-report/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     const updateProductDialogFooter = (
         <>
@@ -334,16 +334,16 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('problem', refNo)
+            formData.append('refNo', refNo)
             formData.append('remarks', remarks)
-            formData.append('typeofsurveyType', typesofSurvey)
-           
+            formData.append('typeofsurvey', typesofSurvey)
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-survey-report/create`,
                 formData,
                 {
                     headers: {
@@ -389,7 +389,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-survey-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -439,7 +439,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-survey-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -536,18 +536,18 @@ const uploadFile = async () => {
     const rightToolbarTemplate = () => {
         return (
             <>
-              {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
 
             </>
         )
@@ -644,46 +644,62 @@ const uploadFile = async () => {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
+
+
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+            typesofSurvey: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
+        }
+        
+        console.log(payload, 'hello')
+        searchSurveyReport(payload).then((result) => {
+            setProducts(result?.data || [])
+            setLoading(false)
+        })
     }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+
+        searchSurveyReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
     }
 
-   const handleSearch = () => {
-    setLoading(true)
-    const payload = {
-      type: selectedCode,
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
-    searchTreatmentRecord(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
-    })
-  }
+    const refetch = () => {
+        setLoading(true)
 
-  const handleReset = () => {
-    setDate(null)
-    setDate2(null)
-    setSearchKey('')
-    setSelectedCode(null)
- 
-    const payload = {
-      type: '',
-      date_range: '',
-      searchQuery: '',
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchSurveyReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
     }
-    setLoading(true)
-    searchTreatmentRecord(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
-    })
-  }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
+
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -812,23 +828,6 @@ const uploadFile = async () => {
             />
         </>
     )
- const refetch = () => {
-    setLoading(true)
-    const payload = {
-      type: '',
-      date_range: '',
-      searchQuery: '',
-    }
-
-    searchTreatmentRecord(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
-    })
-  }
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -840,7 +839,7 @@ const uploadFile = async () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -902,7 +901,7 @@ const uploadFile = async () => {
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
-                             <Column
+                            <Column
                                 field='refNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
@@ -969,46 +968,46 @@ const uploadFile = async () => {
                     </TabPanel>
                 </TabView>
             </div>
-          <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1021,7 +1020,7 @@ const uploadFile = async () => {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                       
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1052,7 +1051,7 @@ const uploadFile = async () => {
                                 }
                             />
                         </div>
-                    
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1085,25 +1084,26 @@ const uploadFile = async () => {
                             />
                         </div>
                         <div className='field'>
-                                <label htmlFor='typesofSurvey' className='font-bold'>
-                                   Survey Type
-                                </label>
-                                <Dropdown
-                                    id='typesofSurvey'
-                                    value={updatedProduct.typesofSurvey}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            typesofSurvey: e.value,
-                                        })
-                                    }
-                                    options={drawingTypes}
-                                    itemTemplate={itemTemplate}
-                                     optionLabel='name'
-                                    placeholder='Select Type'
-                                    className='w-full'
-                                />
-                            </div>
+                            <label htmlFor='typesofSurvey' className='font-bold'>
+                                Survey Type
+                            </label>
+                            <Dropdown
+                                id='typesofSurvey'
+                                value={updatedProduct.typesofSurvey}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        typesofSurvey: e.value,
+                                    })
+                                }
+                                options={drawingTypes}
+                                itemTemplate={itemTemplate}
+                                optionLabel='name'
+                                optionValue="code"
+                                placeholder='Select Type'
+                                className='w-full'
+                            />
+                        </div>
                         <div className='field'>
                             <label htmlFor='date' className='font-bold'>
                                 Date
@@ -1121,7 +1121,7 @@ const uploadFile = async () => {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1309,7 +1309,7 @@ const uploadFile = async () => {
                                 Description
                             </label>
                             <InputText
-                                id='problem'
+                                id='description'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
@@ -1326,12 +1326,14 @@ const uploadFile = async () => {
                         </div>
                         <div className="field">
                             <label htmlFor="typesofSurvey" className="font-bold">
-                              Survey Type
+                                Survey Type
                             </label>
                             <Dropdown
                                 id="typesofSurvey"
                                 value={typesofSurvey}
-                                onChange={(e) => setTypesofDrawings(e.value)}
+                                onChange={(e) => setTypesofSurvey(e.value)}
+                                optionValue="code"
+                                
                                 options={drawingTypes}
                                 optionLabel='name'
                                 placeholder="Select Type"
