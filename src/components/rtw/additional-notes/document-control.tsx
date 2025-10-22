@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -22,6 +21,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import { searchDocumentControlManager } from '@/api/rtwAPIs'
 
 interface Attachment {
     url: string
@@ -73,8 +73,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+      const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -135,7 +135,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/additional-notes-control-manager/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -207,7 +207,7 @@ export default function MonthlyReport() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/additional-notes-control-manager/bulk-upload`,
         formData,
         {
           headers: {
@@ -320,7 +320,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/additional-notes-control-manager/create`,
                 formData,
                 {
                     headers: {
@@ -366,7 +366,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/additional-notes-control-manager/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -416,7 +416,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/additional-notes-control-manager/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -624,13 +624,13 @@ export default function MonthlyReport() {
      const handleSearch = () => {
             setLoading(true)
             const payload = {
-                typesofDrawings: selectedCode?.code || '',
+            
                 date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
                 searchQuery: searchKey,
               
             }
             console.log(payload,'hello')
-            searchRTWTechDrawing(payload).then((result) => {
+            searchDocumentControlManager(payload).then((result) => {
                 setProducts(result?.data || [])
                 setLoading(false)
             })
@@ -649,7 +649,7 @@ export default function MonthlyReport() {
             setSearchKey('')
             setSelectedCode(null)
     
-            searchRTWTechDrawing(payload).then((result) => {
+            searchDocumentControlManager(payload).then((result) => {
                 setProducts(result?.data)
                 setLoading(false)
             })
@@ -664,7 +664,7 @@ export default function MonthlyReport() {
                    searchQuery: '',
                }
        
-               searchRTWTechDrawing(payload).then((result) => {
+               searchDocumentControlManager(payload).then((result) => {
                    setProducts(result?.data)
                    setLoading(false)
                })
@@ -878,7 +878,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 

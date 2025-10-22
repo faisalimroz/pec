@@ -614,7 +614,7 @@ export default function MedicineInOutRecord() {
     const handleSearch = () => {
         setLoading(true)
         const payload = {
-            status: selectedCode?.code || '',
+            statusType: selectedCode?.code || '',
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
 
@@ -629,7 +629,7 @@ export default function MedicineInOutRecord() {
     const handleReset = () => {
         setLoading(true)
         const payload = {
-
+            statusType: '',
             date_range: '',
             searchQuery: '',
         }
@@ -649,7 +649,7 @@ export default function MedicineInOutRecord() {
         setLoading(true)
 
         const payload = {
-
+            statusType: '',
             date_range: '',
             searchQuery: '',
         }
@@ -709,8 +709,7 @@ export default function MedicineInOutRecord() {
                         value={selectedCode}
                         onChange={(e) => setSelectedCode(e.value)}
                         options={codes}
-                        optionLabel='name'
-                        optionValue='name'
+                        optionLabel='name'          
                         placeholder='Status'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                         itemTemplate={itemTemplate}
@@ -878,7 +877,7 @@ export default function MedicineInOutRecord() {
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-
+ 
                                 className='min-w-[8rem]'
                                 header='Description'
                             ></Column>

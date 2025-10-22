@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchRTWMonitoringMonthlyReport } from '@/api/rtwAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -76,19 +76,19 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    
+
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [monthName, setMonthName] = useState<string>("");
 
@@ -104,20 +104,20 @@ export default function MonthlyReport() {
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
 
-    const months = [
-        { name: "January", code: "JAN" },
-        { name: "February", code: "FEB" },
-        { name: "March", code: "MAR" },
-        { name: "April", code: "APR" },
-        { name: "May", code: "MAY" },
-        { name: "June", code: "JUN" },
-        { name: "July", code: "JUL" },
-        { name: "August", code: "AUG" },
-        { name: "September", code: "SEP" },
-        { name: "October", code: "OCT" },
-        { name: "November", code: "NOV" },
-        { name: "December", code: "DEC" },
-    ];
+  const months = [
+    { name: "January", code: "January" },
+    { name: "February", code: "February" },
+    { name: "March", code: "March" },
+    { name: "April", code: "April" },
+    { name: "May", code: "May" },
+    { name: "June", code: "June" },
+    { name: "July", code: "July" },
+    { name: "August", code: "August" },
+    { name: "September", code: "September" },
+    { name: "October", code: "October" },
+    { name: "November", code: "November" },
+    { name: "December", code: "December" },
+];
 
     const itemTemplate = (option: { name: string; code: string }) => (
         <div className="flex items-center gap-2">
@@ -150,7 +150,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -219,10 +219,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-          
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -235,7 +235,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -340,15 +340,16 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-           
+            formData.append('monthName', monthName)
+
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/create`,
                 formData,
                 {
                     headers: {
@@ -394,7 +395,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -444,7 +445,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -648,51 +649,60 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
+        const payload = {
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
+        }
+        console.log(payload, 'hello')
+        searchRTWMonitoringMonthlyReport(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
             searchQuery: '',
-            month: '',
-            patientType: '',
         }
 
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
-        setSelectedCode(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+
+        searchRTWMonitoringMonthlyReport(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchRTWMonitoringMonthlyReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -820,26 +830,7 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -919,7 +910,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column
@@ -927,6 +918,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 sortable
+                                
                                 className='min-w-[12rem]'
                                 header='Month Name'
                             ></Column>
@@ -1134,7 +1126,7 @@ export default function MonthlyReport() {
                                     options={months}
                                     placeholder='Select a Month'
                                     className='w-full'
-                                      itemTemplate={itemTemplate}
+                                    itemTemplate={itemTemplate}
                                 />
                             </div>
                         </div>
@@ -1331,12 +1323,14 @@ export default function MonthlyReport() {
                             </label>
                             <Dropdown
                                 id="monthName"
-                                value={monthName} // must be one of the strings from months
+                                value={monthName} 
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 placeholder="Select a Month"
+                                 optionValue="code"
+                                 optionLabel='name'
                                 className="w-full"
-                                  itemTemplate={itemTemplate}
+                                itemTemplate={itemTemplate}
                             />
                         </div>
                         <div className='field'>

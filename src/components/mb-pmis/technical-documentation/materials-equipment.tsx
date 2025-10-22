@@ -24,6 +24,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import { searchMBTechMaterialsList } from '@/api/mainBridgeAPIs'
 
 interface Attachment {
     url: string
@@ -113,7 +114,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -210,7 +211,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -317,7 +318,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/create`,
                 formData,
                 {
                     headers: {
@@ -363,7 +364,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -413,7 +414,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -618,44 +619,58 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-const handleSearch = () => {
-        setLoading(true)
-        const payload = {
-
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
-        }
-        searchHealthcenterMonthlyReport(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-          setDate(null)
-            setDate2(null)
-            setSearchKey('')
+   const handleSearch = () => {
+          setLoading(true)
+          const payload = {
+       
+              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+              searchQuery: searchKey,
             
+          }
         
-            const payload = {
-            
+          searchMBTechMaterialsList(payload).then((result) => {
+              setProducts(result?.data || [])
+              setLoading(false)
+          })
+      }
+  
+      const handleReset = () => {
+          setLoading(true)
+          const payload = {
+  
               date_range: '',
               searchQuery: '',
-            }
-            searchTreatmentRecord(payload).then((result) => {
-                setProducts(result?.data)
-                setLoading(false)
-            })
-        }
+          }
+  
+          setDate(null)
+          setDate2(null)
+          setSearchKey('')
+         
+  
+          searchMBTechMaterialsList(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+  
+     const refetch = () => {
+             setLoading(true)
+     
+             const payload = {
+     
+                 date_range: '',
+                 searchQuery: '',
+             }
+     
+             searchMBTechMaterialsList(payload).then((result) => {
+                 setProducts(result?.data)
+                 setLoading(false)
+             })
+         }
+          // initial data load - Internal
+         useEffect(() => {
+             refetch()
+         }, [])
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -774,25 +789,7 @@ const handleSearch = () => {
         </>
     )
 
-     const refetch = () => {
-            setLoading(true)
-           const payload = {
-   
-               date_range: '',
-               searchQuery: '',
-           }
-           searchHealthcenterMonthlyReport(payload).then((result) => {
-               setProducts(result?.data)
-               console.log(result, "ress")
-               setLoading(false)
-           })
-       }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
-
+    
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
     }

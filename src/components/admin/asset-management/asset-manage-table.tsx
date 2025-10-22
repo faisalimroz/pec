@@ -19,7 +19,7 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Dropdown } from 'primereact/dropdown'
@@ -675,15 +675,7 @@ export default function AssetManagementTable() {
     </>
   )
 
-  function getMonthName(dateString: string) {
-    const date = new Date(dateString)
-    return date.toLocaleString('en-US', { month: 'long' })
-  }
 
-  function getYear(dateString: string) {
-    const date = new Date(dateString)
-    return date.getFullYear()
-  }
 
   const handleSearch = () => {
     setLoading(true)
@@ -900,7 +892,7 @@ export default function AssetManagementTable() {
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            sortable
+             className='min-w-[10rem]'
           ></Column>
 
 
@@ -909,7 +901,7 @@ export default function AssetManagementTable() {
             field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            sortable
+             className='min-w-[10rem]'
             header='File Name/Subject'
           ></Column>
 
@@ -918,6 +910,7 @@ export default function AssetManagementTable() {
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             // sortable
+              className='min-w-[10rem]'
             header='Date'
           ></Column>
 
@@ -925,7 +918,7 @@ export default function AssetManagementTable() {
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+             className='min-w-[10rem]'
             header='Description'
           ></Column>
 
@@ -942,7 +935,7 @@ export default function AssetManagementTable() {
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-          // sortable
+            className='min-w-[10rem]'
           ></Column>
 
           <Column

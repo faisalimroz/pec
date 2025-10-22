@@ -24,6 +24,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import { searchMBTechSurveyReport } from '@/api/mainBridgeAPIs'
 
 interface Attachment {
     url: string
@@ -137,7 +138,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/survey-report/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -235,7 +236,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/survey-report//update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -342,7 +343,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/survey-report/create`,
                 formData,
                 {
                     headers: {
@@ -388,7 +389,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/survey-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -438,7 +439,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/survey-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -661,46 +662,58 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
-  const handleSearch = () => {
-    setLoading(true)
-    const payload = {
-      type: selectedType || 'All',
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
-    searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
-    })
-  }
-
-  const handleReset = () => {
-    setDate(null)
-    setDate2(null)
-    setSearchKey('')
-
-
-    const payload = {
-      type: '',
-      date_range: '',
-      searchQuery: '',
-    }
-    setLoading(true)
-    searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
-    })
-  }
+   const handleSearch = () => {
+          setLoading(true)
+          const payload = {
+       
+              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+              searchQuery: searchKey,
+            
+          }
+        
+          searchMBTechSurveyReport(payload).then((result) => {
+              setProducts(result?.data || [])
+              setLoading(false)
+          })
+      }
+  
+      const handleReset = () => {
+          setLoading(true)
+          const payload = {
+  
+              date_range: '',
+              searchQuery: '',
+          }
+  
+          setDate(null)
+          setDate2(null)
+          setSearchKey('')
+         
+  
+          searchMBTechSurveyReport(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+  
+     const refetch = () => {
+             setLoading(true)
+     
+             const payload = {
+     
+                 date_range: '',
+                 searchQuery: '',
+             }
+     
+             searchMBTechSurveyReport(payload).then((result) => {
+                 setProducts(result?.data)
+                 setLoading(false)
+             })
+         }
+          // initial data load - Internal
+         useEffect(() => {
+             refetch()
+         }, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -820,27 +833,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
-
+   
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
     }

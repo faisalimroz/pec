@@ -31,7 +31,7 @@ export const useProcurement = (param: unknown) => {
     queryKey: createQueryKey('searchFinanceProcurement', param),
     queryFn: async () => {
       const { data } = await api.post(
-        '/api/v1/road-traffic/procurement/search/data',
+        '/api/v1/mb-pmis/procurement/search/data',
         param
       )
       return data
@@ -43,11 +43,11 @@ export const useProcurement = (param: unknown) => {
 
 // rtw technical documentation
 
-export async function searchMBDrawings(param: unknown) {
+export async function searchMBTechDrawings(param: unknown) {
   console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/rhd-letter/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/rhd-letter/search/data`,
     param,
     {
       headers: {
@@ -62,11 +62,11 @@ export async function searchMBDrawings(param: unknown) {
 
 
 
-export async function searchMaterialsList(param: unknown) {
+export async function searchMBTechMaterialsList(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/procurement/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/tech-materialTest/search/data`,
     param,
     {
       headers: {
@@ -79,11 +79,11 @@ export async function searchMaterialsList(param: unknown) {
   return response.data
 }
 
-export async function searchSurveyReport(param: unknown) {
+export async function searchMBTechSurveyReport(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/survey-report/search/data`,
     param,
     {
       headers: {
@@ -95,11 +95,11 @@ export async function searchSurveyReport(param: unknown) {
 
   return response.data
 }
-export async function searchMaintenanceManual(param: unknown) {
+export async function searchMBTechMaintenanceManual(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/maintenance/search/data`,
     param,
     {
       headers: {
@@ -111,11 +111,11 @@ export async function searchMaintenanceManual(param: unknown) {
 
   return response.data
 }
-export async function searchOthers(param: unknown) {
+export async function searchMBTechOthers(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/others/search/data`,
     param,
     {
       headers: {
@@ -132,7 +132,7 @@ export async function searchMonitoring(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/monitoring/search/data`,
     param,
     {
       headers: {
@@ -151,7 +151,7 @@ export async function searchMateiralTestReport(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/building-maintenance/work-report
+    `${BASE_URL}/api/v1/mb-pmis/quality-material-test/search/data
 /search/data`,
     param,
     {
@@ -169,7 +169,7 @@ export async function searchSafety(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/building-maintenance/inspection
+    `${BASE_URL}/api/v1/mb-pmis/quality-safety/search/data
 /search/data`,
     param,
     {
@@ -187,7 +187,7 @@ export async function searchOfficialLetters(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/building-maintenance/work-completion/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/communication-letters/search/data`,
     param,
     {
       headers: {
@@ -203,7 +203,7 @@ export async function searchMeetingMinutes(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-report/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/communication-meeting-minutes/search/data`,
     param,
     {
       headers: {
@@ -221,7 +221,7 @@ export async function searchMBBills(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-roaster/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/bills/search/data`,
     param,
     {
       headers: {
@@ -234,11 +234,11 @@ export async function searchMBBills(param: unknown) {
   return response.data
 }
 //visual records
-export async function searchPictures(param: unknown) {
+export async function searchMBPictures(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/monthly-roaster/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/visual-records/search/data`,
     param,
     {
       headers: {
@@ -257,7 +257,7 @@ export async function searchBackupFrequency(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/drawing/structural/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/additional-backup-frequency/search/data`,
     param,
     {
       headers: {
@@ -274,7 +274,7 @@ export async function searchDocumentControlManager(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/drawing/electrical/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/additional-document-control-manager/search/data`,
     param,
     {
       headers: {
@@ -291,7 +291,7 @@ export async function searchDocumentRevisionLog(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/maintenance/miscellaneous/search/data`,
+    `${BASE_URL}/api/v1/mb-pmis/additional-/search/data`,
     param,
     {
       headers: {

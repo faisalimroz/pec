@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchBuildingMonthlyReport, searchHealthcenterMonthlyReport, searchMedicineInOutRecord, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -23,192 +22,185 @@ import JSZip from 'jszip'
 import RefreshButton from '@/components/refresh-button'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
+import { searchMBPictures } from '@/api/mainBridgeAPIs'
 
 interface Attachment {
-    url: string
-    _id: string
+  url: string
+  _id: string
 }
 interface Product {
-    _id: string | null
-    slNo: string
-    subjectName: string
-    description: string
-    types: string
-    contentType:string
-    date: string
-    remarks: string
-    attachments: Attachment[]
-    creator?: string
-    creationTimestamp?: string
-    updater?: string
-    updatingTimestamp?: string
+  _id: string | null
+  slNo: string
+  subjectName: string
+  description: string
+  types: string
+  contentType: string
+  date: string
+  remarks: string
+  attachments: Attachment[]
+  creator?: string
+  creationTimestamp?: string
+  updater?: string
+  updatingTimestamp?: string
 }
 
 export default function MonthlyReport() {
-    let emptyProduct: Product = {
-        _id: '',
-        slNo: '',
-        subjectName: '',
-        contentType:'',
-        description: '',
-        types: '',
-        date: '',
-        remarks: '',
-        attachments: [],
-    }
+  let emptyProduct: Product = {
+    _id: '',
+    slNo: '',
+    subjectName: '',
+    contentType: '',
+    description: '',
+    types: '',
+    date: '',
+    remarks: '',
+    attachments: [],
+  }
 
-    const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
+  const { roles, permissions } = useAuth()
+  const clinicPermission = permissions.find((p) => p.name === 'clinic')
+  const treatmentRecordPermission = clinicPermission?.children.find(
+    (c) => c.name === 'treatment-record'
+  )
 
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
+  const hasEditAccess = treatmentRecordPermission?.edit_authority || false
 
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
-    const [activeIndex, setActiveIndex] = useState(0)
-    const [products, setProducts] = useState<any>([])
-    const [productDialog, setProductDialog] = useState<boolean>(false)
-    const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
-    const [deleteProductsDialog, setDeleteProductsDialog] =
-        useState<boolean>(false)
-    const [product, setProduct] = useState<any>(emptyProduct)
-    const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
-    const [submitted, setSubmitted] = useState<boolean>(false)
-    const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<Date | null>(null)
-    const [date2, setDate2] = useState<Date | null>(null)
-    const [searchKey, setSearchKey] = useState<string>('')
-    const [loading, setLoading] = useState<boolean>(false)
-    const [loading2, setLoading2] = useState<boolean>(false)
-    const [subjectName, setSubjectName] = useState('')
-    const [description, setDescription] = useState('')
- 
-    const [remarks, setRemarks] = useState('')
-    
-    const [formDate, setFormDate] = useState<string>('')
-    const [filesInput, setFilesInput] = useState<File[]>([])
-      const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
-    const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [types, setTypes] = useState<string>("");
-    const [contentType, setContentType] = useState<string>("");
+  const isClinic = roles.some((role) =>
+    ['superadmin', 'clinic'].includes(role.title)
+  )
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [products, setProducts] = useState<any>([])
+  const [productDialog, setProductDialog] = useState<boolean>(false)
+  const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
+  const [deleteProductsDialog, setDeleteProductsDialog] =
+    useState<boolean>(false)
+  const [product, setProduct] = useState<any>(emptyProduct)
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
+  const [submitted, setSubmitted] = useState<boolean>(false)
+  const dt = useRef<DataTable<Product[]>>(null)
+  const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
+  const [searchKey, setSearchKey] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [loading2, setLoading2] = useState<boolean>(false)
+  const [subjectName, setSubjectName] = useState('')
+  const [description, setDescription] = useState('')
+  const [remarks, setRemarks] = useState('')
+  const [formDate, setFormDate] = useState<string>('')
+  const [filesInput, setFilesInput] = useState<File[]>([])
+  const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
+  const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
+  const [types, setTypes] = useState<string>("")
+  const [contentType, setContentType] = useState<string>("")
+  const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
+  const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
+  const [newAttachments, setNewAttachments] = useState<File[]>([])
+  const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
+  const [bulkDialog, setBulkDialog] = useState(false)
+  const [file, setFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadStatus, setUploadStatus] = useState("")
+  const [buttonType, setButtonType] = useState("")
 
-    const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const recordTypes = [
+    { name: 'During Survey', code: 'During Survey' },
+    { name: 'Construction', code: 'Construction' },
+    { name: 'Operation', code: 'Operation' },
+    { name: 'Maintenance', code: 'Maintenance' }
+  ]
 
-    const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
-    const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
-    const [newAttachments, setNewAttachments] = useState<File[]>([])
-    const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-      const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+  const contentTypes = [
+    { name: 'Pictures', code: 'Pictures' },
+    { name: 'Videos', code: 'Videos' },
+  ]
 
+  const itemTemplate = (option: { name: string; code: string }) => {
+    return (
+      <div className="flex items-center gap-2">
+        <FileIcon />
+        <span>{option.name}</span>
+      </div>
+    );
+  };
 
-    const recordTypes = [
+  // all update dialog func here
+  const openUpdateDialog = (product: Product) => {
+    setUpdatedProduct({ ...product })
+    setUpdateProductDialog(true)
+  }
 
-        { name: 'During Survey', code: 'During Survey' },
-        { name: 'Construction', code: 'Construction' },
-        { name: 'Operation', code: 'Operation' },
-        { name: 'Maintenance', code: 'Maintenance' }
+  const hideUpdateDialog = () => {
+    setUpdateProductDialog(false)
+    setUpdatedProduct(null)
+    setNewAttachments([])
+    setRemovedAttachments([])
+  }
 
-    ]
-    
-    const contentTypes  = [
+  const handleUpdateProduct = async () => {
+    if (!updatedProduct) return
 
-        { name: 'Pictures', code: 'Pictures' },
-        { name: 'Videos', code: 'Videos' },
-        
+    try {
+      setLoading2(true)
+      const formData = new FormData()
 
-    ]
-    const itemTemplate = (option: { name: string; code: string }) => {
-        return (
-            <div className="flex items-center gap-2">
-                <FileIcon />
-                <span>{option.name}</span>
-            </div>
-        );
-    };
+      formData.append('subjectName', updatedProduct.subjectName)
+      formData.append('description', updatedProduct.description)
+      formData.append('remarks', updatedProduct.remarks)
+      formData.append('date', updatedProduct.date)
+      formData.append('types', updatedProduct.types);
+      formData.append('contentType', updatedProduct.contentType);
+      newAttachments.forEach((file) => {
+        formData.append('attachments', file)
+      })
 
-    // all update dialog func here
-    const openUpdateDialog = (product: Product) => {
-        setUpdatedProduct({ ...product })
-        setUpdateProductDialog(true)
-    }
+      removedAttachments.forEach((attachmentId) => {
+        formData.append('removedAttachments', attachmentId)
+      })
 
-    const hideUpdateDialog = () => {
-        setUpdateProductDialog(false)
-        setUpdatedProduct(null)
-        setNewAttachments([])
-        setRemovedAttachments([])
-    }
-
-    const handleUpdateProduct = async () => {
-        if (!updatedProduct) return
-
-        try {
-            setLoading2(true)
-            const formData = new FormData()
-          
-            formData.append('subjectName', updatedProduct.subjectName)
-            formData.append('description', updatedProduct.description)
-            
-            formData.append('remarks', updatedProduct.remarks)
-            formData.append('date', updatedProduct.date)
-            formData.append('types', updatedProduct.types);
-            formData.append('contentType', updatedProduct.contentType);
-            newAttachments.forEach((file) => {
-                formData.append('attachments', file)
-            })
-
-            removedAttachments.forEach((attachmentId) => {
-                formData.append('removedAttachments', attachmentId)
-            })
-
-            const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                }
-            )
-
-            refetch()
-            hideUpdateDialog()
-            toast.success('Data updated successfully')
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
+      const res = await axios.put(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/visual-records/update/by/${updatedProduct._id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-    }
+      )
 
-    const handleNewAttachments = (files: File[]) => {
-        setNewAttachments(files)
+      refetch()
+      hideUpdateDialog()
+      toast.success('Data updated successfully')
+    } catch (error: any) {
+      if (error.response) {
+        const { message } = error.response.data
+        toast.error(message)
+      } else {
+        console.log(error)
+      }
+    } finally {
+      setLoading2(false)
     }
+  }
 
-    const handleRemoveAttachment = (attachmentId: string) => {
-        setRemovedAttachments((prev) => [...prev, attachmentId])
-        setUpdatedProduct((prev) => {
-            if (!prev) return null
-            return {
-                ...prev,
-                attachments: prev.attachments.filter((a) => a._id !== attachmentId),
-            }
-        })
-    }
-const uploadFile = async () => {
+  const handleNewAttachments = (files: File[]) => {
+    setNewAttachments(files)
+  }
+
+  const handleRemoveAttachment = (attachmentId: string) => {
+    setRemovedAttachments((prev) => [...prev, attachmentId])
+    setUpdatedProduct((prev) => {
+      if (!prev) return null
+      return {
+        ...prev,
+        attachments: prev.attachments.filter((a) => a._id !== attachmentId),
+      }
+    })
+  }
+  const uploadFile = async () => {
     if (!file) {
       setUploadStatus('Please select a file first.')
       return
@@ -221,7 +213,7 @@ const uploadFile = async () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/visual-records/bulk-upload`,
         formData,
         {
           headers: {
@@ -284,598 +276,575 @@ const uploadFile = async () => {
     }
   }
 
-    const updateProductDialogFooter = (
-        <>
-            <Button
-                label='Cancel'
-                icon='pi pi-times'
-                outlined
-                onClick={hideUpdateDialog}
-            />
-            <Button
-                label='Update'
-                icon='pi pi-check'
-                onClick={handleUpdateProduct}
-                loading={loading2}
-            />
-        </>
+  const updateProductDialogFooter = (
+    <>
+      <Button
+        label='Cancel'
+        icon='pi pi-times'
+        outlined
+        onClick={hideUpdateDialog}
+      />
+      <Button
+        label='Update'
+        icon='pi pi-check'
+        onClick={handleUpdateProduct}
+        loading={loading2}
+      />
+    </>
+  )
+
+  const handleFileChange = (newFiles: File[]) => {
+    setFilesInput(newFiles)
+  }
+
+  const openNew = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setProductDialog(true)
+  }
+
+  const hideDialog = () => {
+    setSubmitted(false)
+    setProductDialog(false)
+  }
+
+  const hideDeleteProductDialog = () => {
+    setDeleteProductDialog(false)
+  }
+
+  const hideDeleteProductsDialog = () => {
+    setDeleteProductsDialog(false)
+  }
+
+  function formatDate(dateTime?: any) {
+    if (!dateTime) return ''
+    const date = new Date(dateTime)
+
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const year = date.getFullYear()
+
+    return `${day}-${month}-${year}`
+  }
+
+  const saveProduct = async () => {
+    try {
+      setLoading2(true)
+      const formData = new FormData()
+
+      formData.append('subjectName', subjectName)
+      formData.append('description', description)
+      formData.append('types', types)
+      formData.append('contentType', contentType)
+      formData.append('remarks', remarks)
+
+      formData.append('date', formatDate(formDate))
+      filesInput.forEach((file) => {
+        formData.append('attachments', file)
+      })
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/visual-records/create`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      const response = res
+      console.log(response)
+
+      hideDialog()
+      toast.success('Data Saved Successfully')
+      refetch()
+    } catch (error: any) {
+      if (error.response) {
+        const { message } = error.response.data
+        toast.error(message)
+      } else {
+        console.log(error)
+      }
+    } finally {
+      setLoading2(false)
+    }
+  }
+
+  const editProduct = (product: Product) => {
+    setProduct({ ...product })
+    setProductDialog(true)
+  }
+
+  const confirmDeleteProduct = (product: Product) => {
+    setProduct(product)
+    setDeleteProductDialog(true)
+  }
+
+  const deleteProduct = async () => {
+    let _products = products.filter(
+      (val: { _id: any }) => val._id !== product._id
     )
 
-
-    const handleFileChange = (newFiles: File[]) => {
-        setFilesInput(newFiles)
-    }
-
-    const openNew = () => {
-        setProduct(emptyProduct)
-        setSubmitted(false)
-        setProductDialog(true)
-    }
-
-    const hideDialog = () => {
-        setSubmitted(false)
-        setProductDialog(false)
-    }
-
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false)
-    }
-
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false)
-    }
-
-    function formatDate(dateTime?: any) {
-        if (!dateTime) return ''
-        const date = new Date(dateTime)
-
-        const day = date.getDate().toString().padStart(2, '0')
-        const month = (date.getMonth() + 1).toString().padStart(2, '0')
-        const year = date.getFullYear()
-
-        return `${day}-${month}-${year}`
-    }
-
-    const saveProduct = async () => {
-        try {
-            setLoading2(true)
-            const formData = new FormData()
-
-            formData.append('subjectName', subjectName)
-            formData.append('description', description)
-            formData.append('types', types)
-            formData.append('contentType', contentType)
-            formData.append('remarks', remarks)
-            
-            formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
-            const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            )
-
-            const response = res
-            console.log(response)
-
-            hideDialog()
-            toast.success('Data Saved Successfully')
-            refetch()
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
+    try {
+      setLoading2(true)
+      const res = await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/visual-records/delete/by/${product._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
+      )
+
+      refetch()
+      toast.success('Data Deleted Successfully')
+    } catch (error: any) {
+      if (error.response) {
+        const { message } = error.response.data
+        toast.error(message)
+      } else {
+        console.log(error)
+      }
+    } finally {
+      setLoading2(false)
     }
 
-    const editProduct = (product: Product) => {
-        setProduct({ ...product })
-        setProductDialog(true)
+    setProducts(_products)
+    setDeleteProductDialog(false)
+    setProduct(emptyProduct)
+  }
+
+  const exportCSV = () => {
+    if (selectedProducts && selectedProducts.length > 0) {
+      dt.current?.exportCSV({ selectionOnly: true })
+    } else {
+      dt.current?.exportCSV()
     }
-
-    const confirmDeleteProduct = (product: Product) => {
-        setProduct(product)
-        setDeleteProductDialog(true)
+  }
+  // multi delete funcs
+  const confirmDeleteSelected = () => {
+    if (selectedProducts.length > 0) {
+      setDeleteMultipleDialog(true)
     }
+  }
 
-    const deleteProduct = async () => {
-        let _products = products.filter(
-            (val: { _id: any }) => val._id !== product._id
-        )
+  const hideDeleteMultipleDialog = () => {
+    setDeleteMultipleDialog(false)
+  }
 
-        try {
-            setLoading2(true)
-            const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                }
-            )
+  const deleteSelectedProducts = async () => {
+    try {
+      setLoading2(true)
+      const selectedIds = selectedProducts.map((product) => product._id)
 
-            refetch()
-            toast.success('Data Deleted Successfully')
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
+      const response = await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/visual-records/delete-multiple`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          data: {
+            ids: selectedIds,
+          },
         }
+      )
 
-        setProducts(_products)
-        setDeleteProductDialog(false)
-        setProduct(emptyProduct)
+      setDeleteMultipleDialog(false)
+      refetch()
+      toast.success('Selected items deleted successfully')
+    } catch (error: any) {
+      if (error.response) {
+        const { message } = error.response.data
+        toast.error(message)
+      } else {
+        console.error('Error deleting items:', error)
+        toast.error('Failed to delete selected items')
+      }
+    } finally {
+      setLoading2(false)
     }
 
-    const exportCSV = () => {
-        if (selectedProducts && selectedProducts.length > 0) {
-            dt.current?.exportCSV({ selectionOnly: true })
-        } else {
-            dt.current?.exportCSV()
-        }
-    }
-    // multi delete funcs
-    const confirmDeleteSelected = () => {
-        if (selectedProducts.length > 0) {
-            setDeleteMultipleDialog(true)
-        }
-    }
+    setSelectedProducts([])
+  }
 
-    const hideDeleteMultipleDialog = () => {
-        setDeleteMultipleDialog(false)
-    }
+  const deleteMultipleDialogFooter = (
+    <div className='flex justify-end gap-2'>
+      <button
+        type='button'
+        className='text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 font-semibold py-2 px-4 rounded border'
+        onClick={hideDeleteMultipleDialog}
+      >
+        Cancel
+      </button>
+      <button
+        type='button'
+        className='bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded'
+        onClick={deleteSelectedProducts}
+        disabled={loading2}
+      >
+        Delete
+      </button>
+    </div>
+  )
 
-    const deleteSelectedProducts = async () => {
-        try {
-            setLoading2(true)
-            const selectedIds = selectedProducts.map((product) => product._id)
+  // multi delete func end
 
-            const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                    data: {
-                        ids: selectedIds,
-                    },
-                }
-            )
-
-            setDeleteMultipleDialog(false)
-            refetch()
-            toast.success('Selected items deleted successfully')
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.error('Error deleting items:', error)
-                toast.error('Failed to delete selected items')
-            }
-        } finally {
-            setLoading2(false)
-        }
-
-        setSelectedProducts([])
-    }
-
-    const deleteMultipleDialogFooter = (
-        <div className='flex justify-end gap-2'>
-            <button
-                type='button'
-                className='text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 font-semibold py-2 px-4 rounded border'
-                onClick={hideDeleteMultipleDialog}
-            >
-                Cancel
-            </button>
-            <button
-                type='button'
-                className='bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded'
-                onClick={deleteSelectedProducts}
-                disabled={loading2}
-            >
-                Delete
-            </button>
+  const leftToolbarTemplate = () => {
+    return (
+      <div className='flex items-center gap-3'>
+        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
+          Document List
         </div>
+      </div>
     )
+  }
 
-    // multi delete func end
+  const rightToolbarTemplate = () => {
+    return (
+      <>
+        {hasEditAccess && (
+          <ButtonGroupWithIcon
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            openNew2={openNew2}
+            exportCSV={exportCSV}
+            confirmDeleteSelected={confirmDeleteSelected}
+          />
+        )}
+        <RefreshButton handleReset={handleReset} />
+      </>
+    )
+  }
+  interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
+  }
 
-    const leftToolbarTemplate = () => {
-        return (
-            <div className='flex items-center gap-3'>
-                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
-                    Document List
-                </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
-            </div>
-        )
-    }
-
-    const rightToolbarTemplate = () => {
-        return (
-            <>
-               {hasEditAccess && (
-                    <ButtonGroupWithIcon
-                        selectedProducts={selectedProducts}
-                        openNew={openNew}
-                        openNew2={openNew2}
-                        exportCSV={exportCSV}
-                        confirmDeleteSelected={confirmDeleteSelected}
-                       
-                    />
-                )}
-
-             <RefreshButton handleReset={handleReset} />
-            </>
-        )
-    }
-  const ButtonGroup = () => {
-    const [activeButton, setActiveButton] = useState('Pictures')
-
+  const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
     const buttons = [
       { label: 'Pictures', value: 'Pictures' },
       { label: 'Videos', value: 'Videos' },
-   
-    ]
+    ];
+
 
     const handleButtonClick = (buttonValue: string) => {
-      setActiveButton(buttonValue)
-      //api is not ready yet
-      console.log(`Button clicked: ${buttonValue}`)
+      setSelectedType(buttonValue);
+      onButtonClick(buttonValue);
+      setLoading(true);
+
+      const payload = {
+        contentType: buttonValue || "",                                  // <-- key that backend should use
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+        searchQuery: searchKey || "",
+        types: selectedCode?.code || '',
+      };
+
+      searchMBPictures(payload)
+        .then((result) => {
+          setProducts(result?.data || []);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Search failed:", error);
+          toast.error("Search failed. Please try again.");
+          setLoading(false);
+        });
+    };
+
+    return (
+      <div className="flex items-center space-x-2 py-2 rounded-lg">
+        {buttons.map((button) => (
+          <button
+            key={button.value}
+            onClick={() => handleButtonClick(button.value)}
+            className={`px-3 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 ease-in-out
+              ${activeButton === button.value
+                ? "bg-[#6F90AE] text-white"
+                : "bg-[#0B1F8F] text-white"}`}
+          >
+            {button.label}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  const hideViewDialog = () => {
+    setViewProductDialog(false)
+    setSelectedProduct(null)
+  }
+
+  const viewProduct = (product: Product) => {
+    setSelectedProduct(product)
+    setViewProductDialog(true)
+  }
+
+  const downloadAttachmentsAsZip = async (attachments: any) => {
+    const zip = new JSZip()
+    const folder = zip.folder('attachments')
+
+    console.log('dataaaaaaaaaaaaaa===> ', attachments)
+
+    for (const attachment of attachments) {
+      try {
+        const response = await fetch(attachment.url)
+        const blob = await response.blob()
+        const subjectName = attachment.url.split('/').pop()
+        //@ts-ignore
+        folder.file(subjectName, blob)
+      } catch (error) {
+        console.error(`Failed to fetch ${attachment.url}:`, error)
+      }
+    }
+
+    const content = await zip.generateAsync({ type: 'blob' })
+    saveAs(content, 'attachments.zip')
+  }
+
+  const actionBodyTemplate = (rowData: Product) => {
+    const menuRef = useRef<Menu>(null)
+    const items = [
+      {
+        label: 'View',
+        icon: 'pi pi-eye',
+        command: () => viewProduct(rowData),
+      },
+    ]
+    if (hasEditAccess) {
+      items.push(
+        {
+          label: 'Edit',
+          icon: 'pi pi-pencil',
+          command: () => openUpdateDialog(rowData),
+        },
+        {
+          label: 'Delete',
+          icon: 'pi pi-trash',
+          command: () => confirmDeleteProduct(rowData),
+        },
+        {
+          label: 'Download All Attachments (Zip)',
+          icon: 'pi pi-download',
+          command: () => downloadAttachmentsAsZip(rowData.attachments),
+        }
+      )
     }
 
     return (
-      <>
-        <div className='flex items-center space-x-2 py-2 rounded-lg'>
-          {buttons.map((button) => (
-            <button
-              key={button.value}
-              onClick={() => handleButtonClick(button.value)}
-              className={`
-            px-3 py-2 text-sm font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-            ${activeButton === button.value
-                  ? 'bg-[#6F90AE] text-sm font-semibold text-white'
-                  : ' bg-main text-sm font-semibold text-white'
-                }
-            
-          `}
-            >
-              {button.label}
-            </button>
-          ))}
-        </div>
-      </>
-
+      <div className='flex justify-content-center'>
+        <Menu model={items} popup ref={menuRef} />
+        <Button
+          icon='pi pi-ellipsis-v'
+          onClick={(e) => menuRef.current?.toggle(e)}
+          aria-controls='popup_menu'
+          aria-haspopup
+          className='p-button-rounded p-button-text'
+        />
+      </div>
     )
   }
-    const hideViewDialog = () => {
-        setViewProductDialog(false)
-        setSelectedProduct(null)
+
+  const viewProductDialogFooter = (
+    <>
+      <Button
+        label='Close'
+        icon='pi pi-times'
+        outlined
+        onClick={hideViewDialog}
+      />
+    </>
+  )
+
+  const handleSearch = () => {
+    setLoading(true)
+    const payload = {
+      types: selectedCode?.code || '',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+      searchQuery: searchKey,
+      // You can optionally include contentType based on current button:
+      contentType: buttonType || undefined,
     }
 
-    const viewProduct = (product: Product) => {
-        setSelectedProduct(product)
-        setViewProductDialog(true)
+    searchMBPictures(payload).then((result) => {
+      setProducts(result?.data || [])
+      setLoading(false)
+    })
+  }
+
+  const handleReset = () => {
+    setLoading(true)
+    const payload = {
+      types: '',
+      date_range: '',
+      searchQuery: '',
+      contentType: '', // reset contentType filter too
     }
 
-    const downloadAttachmentsAsZip = async (attachments: any) => {
-        const zip = new JSZip()
-        const folder = zip.folder('attachments')
+    setDate(null)
+    setDate2(null)
+    setSearchKey('')
+    setSelectedCode(null)
+    setButtonType('')
 
-        console.log('dataaaaaaaaaaaaaa===> ', attachments)
+    searchMBPictures(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
 
-        for (const attachment of attachments) {
-            try {
-                const response = await fetch(attachment.url)
-                const blob = await response.blob()
-                const subjectName = attachment.url.split('/').pop()
-                //@ts-ignore
-                folder.file(subjectName, blob)
-            } catch (error) {
-                console.error(`Failed to fetch ${attachment.url}:`, error)
-            }
-        }
+  const refetch = () => {
+    setLoading(true)
 
-        const content = await zip.generateAsync({ type: 'blob' })
-        saveAs(content, 'attachments.zip')
+    const payload = {
+      types: '',
+      date_range: '',
+      searchQuery: '',
+      contentType: '', // default no filter
     }
 
-    const actionBodyTemplate = (rowData: Product) => {
-        const menuRef = useRef<Menu>(null)
-        const items = [
-            {
-                label: 'View',
-                icon: 'pi pi-eye',
-                command: () => viewProduct(rowData),
-            },
-        ]
-        if (hasEditAccess) {
-            items.push(
-                {
-                    label: 'Edit',
-                    icon: 'pi pi-pencil',
-                    command: () => openUpdateDialog(rowData),
-                },
-                {
-                    label: 'Delete',
-                    icon: 'pi pi-trash',
-                    command: () => confirmDeleteProduct(rowData),
-                },
-                {
-                    label: 'Download All Attachments (Zip)',
-                    icon: 'pi pi-download',
-                    command: () => downloadAttachmentsAsZip(rowData.attachments),
-                }
-            )
-        }
+    searchMBPictures(payload).then((result) => {
+      setProducts(result?.data)
+      setLoading(false)
+    })
+  }
+  // initial data load - Internal
+  useEffect(() => {
+    refetch()
+  }, [])
 
-        return (
-            <div className='flex justify-content-center'>
-                <Menu model={items} popup ref={menuRef} />
-                <Button
-                    icon='pi pi-ellipsis-v'
-                    onClick={(e) => menuRef.current?.toggle(e)}
-                    aria-controls='popup_menu'
-                    aria-haspopup
-                    className='p-button-rounded p-button-text'
-                />
-            </div>
-        )
-    }
 
-    const viewProductDialogFooter = (
-        <>
-            <Button
-                label='Close'
-                icon='pi pi-times'
-                outlined
-                onClick={hideViewDialog}
-            />
-            {/* <Button
-        label='Download All'
-        icon='pi pi-download'
-        onClick={downloadAllFiles}
-      /> */}
-        </>
-    )
+  const filterSearchForm = (
+    <div className='flex items-center justify-center'>
+      <div
+        role='search'
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSearch()
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            handleSearch()
+          }
+        }}
+        className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
+      >
+        <Calendar
+          // @ts-ignore
+          value={date}
+          // @ts-ignore
+          onChange={(e) => setDate(e.value)}
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
+          dateFormat="dd/mm/yy"
+          inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+          placeholder='Start Date'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
+        />
+        <Calendar
+          // @ts-ignore
+          value={date2}
+          // @ts-ignore
+          onChange={(e) => setDate2(e.value)}
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
-   const handleSearch = () => {
-        setLoading(true)
-        const payload = {
-            type: selectedCode?.code || '',
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
-        }
-
-        searchMedicineInOutRecord(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        setLoading(true)
-        const payload = {
-            type: selectedCode?.code || '',
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
-        }
-        searchMedicineInOutRecord(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-    const filterSearchForm = (
-        <div className='flex items-center justify-center'>
-            <div
-                role='search'
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    handleSearch()
-                }}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault()
-                        handleSearch()
-                    }
-                }}
-                className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
-            >
-                <Calendar
-                    // @ts-ignore
-                    value={date}
-                    // @ts-ignore
-                    onChange={(e) => setDate(e.value)}
-
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-                    placeholder='Start Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-                <Calendar
-                    // @ts-ignore
-                    value={date2}
-                    // @ts-ignore
-                    onChange={(e) => setDate2(e.value)}
-
-                    dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-                    placeholder='End Date'
-                    showIcon
-                    icon={() => <i className='pi pi-angle-down' />}
-                />
-                <div>
-                    <Dropdown
-                        value={selectedCode}
-                        onChange={(e) => setSelectedCode(e.value)}
-                        options={recordTypes}
-                        itemTemplate={itemTemplate}
-                        optionLabel='name'
-                        placeholder='Type'
-                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
-                    />
-                </div>
-                <IconField iconPosition='left' className='relative'>
-                    <InputIcon className='pi pi-search' />
-                    <InputText
-                        type='search'
-                        placeholder='Search'
-                        className='border-none ml-4 focus:ring-0'
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        value={searchKey}
-                    />
-
-                    <button
-                        onClick={() => handleSearch()}
-                        className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
-                        type='submit'
-                    >
-                        <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 24 24'
-                            fill='white'
-                            className='size-6'
-                        >
-                            <path
-                                fillRule='evenodd'
-                                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-                                clipRule='evenodd'
-                            />
-                        </svg>
-                    </button>
-                </IconField>
-            </div>
+          dateFormat="dd/mm/yy"
+          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+          placeholder='End Date'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
+        />
+        <div>
+          <Dropdown
+            value={selectedCode}
+            onChange={(e) => setSelectedCode(e.value)}
+            options={recordTypes}
+            itemTemplate={itemTemplate}
+            optionLabel='name'
+            placeholder='Type'
+            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+          />
         </div>
-    )
+        <IconField iconPosition='left' className='relative'>
+          <InputIcon className='pi pi-search' />
+          <InputText
+            type='search'
+            placeholder='Search'
+            className='border-none ml-4 focus:ring-0'
+            onChange={(e) => setSearchKey(e.target.value)}
+            value={searchKey}
+          />
 
-    const productDialogFooter = (
-        <>
-            <Button label='Cancel' icon='pi pi-times' outlined onClick={hideDialog} />
-            <Button
-                label='Save'
-                loading={loading2}
-                icon='pi pi-check'
-                onClick={saveProduct}
-            />
-        </>
-    )
-    const deleteProductDialogFooter = (
-        <>
-            <Button
-                label='No'
-                icon='pi pi-times'
-                outlined
-                onClick={hideDeleteProductDialog}
-            />
-            <Button
-                label='Yes'
-                icon='pi pi-check'
-                severity='danger'
-                onClick={deleteProduct}
-            />
-        </>
-    )
-    const deleteProductsDialogFooter = (
-        <>
-            <Button
-                label='No'
-                icon='pi pi-times'
-                outlined
-                onClick={hideDeleteProductsDialog}
-            />
-            <Button
-                label='Yes'
-                icon='pi pi-check'
-                severity='danger'
-                onClick={deleteSelectedProducts}
-            />
-        </>
-    )
+          <button
+            onClick={() => handleSearch()}
+            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+            type='submit'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='white'
+              className='size-6'
+            >
+              <path
+                fillRule='evenodd'
+                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </IconField>
+      </div>
+    </div>
+  )
 
-   const refetch = () => {
-            setLoading(true)
-        const payload = {
-            type:'',
-            date_range: '',
-            searchQuery: '',
-        }
-           searchHealthcenterMonthlyReport(payload).then((result) => {
-               setProducts(result?.data)
-               console.log(result, "ress")
-               setLoading(false)
-           })
-       }
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
+  const productDialogFooter = (
+    <>
+      <Button label='Cancel' icon='pi pi-times' outlined onClick={hideDialog} />
+      <Button
+        label='Save'
+        loading={loading2}
+        icon='pi pi-check'
+        onClick={saveProduct}
+      />
+    </>
+  )
+  const deleteProductDialogFooter = (
+    <>
+      <Button
+        label='No'
+        icon='pi pi-times'
+        outlined
+        onClick={hideDeleteProductDialog}
+      />
+      <Button
+        label='Yes'
+        icon='pi pi-check'
+        severity='danger'
+        onClick={deleteProduct}
+      />
+    </>
+  )
+  const deleteProductsDialogFooter = (
+    <>
+      <Button
+        label='No'
+        icon='pi pi-times'
+        outlined
+        onClick={hideDeleteProductsDialog}
+      />
+      <Button
+        label='Yes'
+        icon='pi pi-check'
+        severity='danger'
+        onClick={deleteSelectedProducts}
+      />
+    </>
+  )
 
-    const attachmentBodyTemplate = (rowData: any) => {
-        return <div>{rowData?.attachments?.length}</div>
-    }
-
+  const attachmentBodyTemplate = (rowData: any) => {
+    return <div>{rowData?.attachments?.length}</div>
+  }
     // console.log(products)
 
     return (
@@ -887,7 +856,8 @@ const uploadFile = async () => {
                     right={rightToolbarTemplate}
                 ></Toolbar>
                 <div className='mt-2'>
-                    <ButtonGroup></ButtonGroup>
+                    <ButtonGroup activeButton={buttonType}
+                        onButtonClick={setButtonType} ></ButtonGroup>
                 </div>
                 <TabView
                     activeIndex={activeIndex}
@@ -1009,46 +979,46 @@ const uploadFile = async () => {
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1133,7 +1103,7 @@ const uploadFile = async () => {
                         </div>
                         <div className='field'>
                             <label htmlFor='contentType' className='font-bold'>
-                               Content Type
+                                Content Type
                             </label>
                             <Dropdown
                                 id='contentType'
@@ -1378,7 +1348,7 @@ const uploadFile = async () => {
                         </div>
                         <div className="field">
                             <label htmlFor="contentType" className="font-bold">
-                               Content Type
+                                Content Type
                             </label>
                             <Dropdown
                                 id="contentType"
@@ -1386,7 +1356,7 @@ const uploadFile = async () => {
                                 onChange={(e) => setContentType(e.value)}
                                 options={contentTypes}
                                 optionLabel='name'
-                                 optionValue='name'
+                                optionValue='name'
                                 placeholder="Select Content Type"
                                 itemTemplate={itemTemplate}
                                 className="w-full"
