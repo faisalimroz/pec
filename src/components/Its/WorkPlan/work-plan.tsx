@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -22,6 +21,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import { searchWorkPlan } from '@/api/itsAPIs'
 
 interface Attachment {
     url: string
@@ -87,9 +87,9 @@ export default function MonthlyReport() {
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
+    const [selectedType, setSelectedType] = useState<string | null>(null)
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -98,7 +98,7 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+    const [buttonType, setButtonType] = useState("")
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -135,7 +135,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/work-plan/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -248,7 +248,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/work-plan/create`,
                 formData,
                 {
                     headers: {
@@ -294,7 +294,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/work-plan/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -344,7 +344,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/work-plan/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -398,8 +398,9 @@ export default function MonthlyReport() {
     const leftToolbarTemplate = () => {
         return (
             <div className='flex items-center gap-3'>
-                <div className='p-3 '>
-                    <ButtonGroup/>
+                <div className='mt-2'>
+                    <ButtonGroup activeButton={buttonType}
+                        onButtonClick={setButtonType} ></ButtonGroup>
                 </div>
                
             </div>
@@ -423,19 +424,40 @@ export default function MonthlyReport() {
             </>
         )
     }
-      const ButtonGroup = () => {
-    const [activeButton, setActiveButton] = useState('Work Plan')
-
+      interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
+  }
+ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
      const buttons = [
-      { label: 'Work Plan', value: 'Work Plan' },
-      { label: 'Report', value: 'Report' }
-    ]
-
-    const handleButtonClick = (buttonValue: string) => {
-      setActiveButton(buttonValue)
-      //api is not ready yet
-      console.log(`Button clicked: ${buttonValue}`)
-    }
+       { label: 'Work Plan', value: 'Work Plan' },
+       { label: 'Report', value: 'Report' },
+     ];
+ 
+ 
+     const handleButtonClick = (buttonValue: string) => {
+       setSelectedType(buttonValue);
+       onButtonClick(buttonValue);
+       setLoading(true);
+ 
+       const payload = {
+         contentType: buttonValue || "",                                  // <-- key that backend should use
+         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+         searchQuery: searchKey || "",
+         types: selectedCode?.code || '',
+       };
+ 
+       searchWorkPlan(payload)
+         .then((result) => {
+           setProducts(result?.data || []);
+           setLoading(false);
+         })
+         .catch((error) => {
+           console.error("Search failed:", error);
+           toast.error("Search failed. Please try again.");
+           setLoading(false);
+         });
+     };
 
     return (
       <>
@@ -553,48 +575,58 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
      const handleSearch = () => {
-        setLoading(true)
-      setLoading(true)
-    const payload = {
-      type:'',
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      
-    }
-
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-          setDate(null)
-    setDate2(null)
-    setSearchKey('')
-
-
-    const payload = {
-      type:'',
-      date_range: '',
-      
-    }
-
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
+            setLoading(true)
+            const payload = {
+                types: selectedCode?.code || '',
+                date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+                searchQuery: searchKey,
+    
+            }
+            console.log(payload, 'hello')
+            searchWorkPlan(payload).then((result) => {
+                setProducts(result?.data || [])
+                setLoading(false)
+            })
+        }
+    
+        const handleReset = () => {
+            setLoading(true)
+            const payload = {
+    
+                date_range: '',
+                searchQuery: '',
+            }
+    
+            setDate(null)
+            setDate2(null)
+            setSearchKey('')
+             setSelectedCode(null)
+    
+            searchWorkPlan(payload).then((result) => {
+                setProducts(result?.data)
+                setLoading(false)
+            })
+        }
+    
+        const refetch = () => {
+            setLoading(true)
+    
+            const payload = {
+                types:'',
+                date_range: '',
+                searchQuery: '',
+            }
+    
+            searchWorkPlan(payload).then((result) => {
+                setProducts(result?.data)
+                setLoading(false)
+            })
+        }
+        // initial data load - Internal
+        useEffect(() => {
+            refetch()
+        }, [])
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -637,14 +669,7 @@ export default function MonthlyReport() {
                 />
               
                 <IconField iconPosition='left' className='relative'>
-                    {/* <InputIcon className='pi pi-search' />
-                    <InputText
-                        type='search'
-                        placeholder='Search'
-                        className='border-none ml-4 focus:ring-0'
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        value={searchKey}
-                    /> */}
+                   
 
                     <button
                         onClick={() => handleSearch()}
@@ -713,26 +738,7 @@ export default function MonthlyReport() {
         </>
     )
 
-   const refetch = () => {
-           setDate(null)
-    setDate2(null)
-    setSearchKey('')
-
-
-    const payload = {
-      type:'',
-      date_range: '',
-    }
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
+  
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -744,7 +750,7 @@ export default function MonthlyReport() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>

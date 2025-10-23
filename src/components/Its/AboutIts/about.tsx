@@ -50,7 +50,7 @@ const OrgChart: React.FC = () => {
     setIsLoading(true)
     try {
       const response = await axios.get<ApiResponse>(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/general/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/about-its`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -142,7 +142,7 @@ const OrgChart: React.FC = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/general/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/about-its`,
         formData,
         {
           headers: {

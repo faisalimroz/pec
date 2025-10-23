@@ -40,8 +40,11 @@ export default function AccidentReport() {
 
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
+               <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
+                About ITS
+                </h1>
               <div className='space-y-2'>
-          
+                
 
                 <DemoTable />
               </div>

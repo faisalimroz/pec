@@ -50,9 +50,9 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-        
+
         monthName: '',
-   
+
         date: '',
         remarks: '',
         attachments: [],
@@ -79,7 +79,7 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-      const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
@@ -88,10 +88,10 @@ export default function MonthlyReport() {
     const [description, setDescription] = useState('')
     const [problem, setproblem] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [monthName, setMonthName] = useState<string>("");
 
@@ -103,23 +103,23 @@ export default function MonthlyReport() {
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
     const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
 
-  const months = [
-        { name: "January", code: "JAN" },
-        { name: "February", code: "FEB" },
-        { name: "March", code: "MAR" },
-        { name: "April", code: "APR" },
-        { name: "May", code: "MAY" },
-        { name: "June", code: "JUN" },
-        { name: "July", code: "JUL" },
-        { name: "August", code: "AUG" },
-        { name: "September", code: "SEP" },
-        { name: "October", code: "OCT" },
-        { name: "November", code: "NOV" },
-        { name: "December", code: "DEC" },
+    const months = [
+        { name: "January", code: "January" },
+        { name: "February", code: "February" },
+        { name: "March", code: "March" },
+        { name: "April", code: "April" },
+        { name: "May", code: "May" },
+        { name: "June", code: "June" },
+        { name: "July", code: "July" },
+        { name: "August", code: "August" },
+        { name: "September", code: "September" },
+        { name: "October", code: "October" },
+        { name: "November", code: "November" },
+        { name: "December", code: "December" }
     ];
 
     const itemTemplate = (option: { name: string; code: string }) => (
@@ -129,80 +129,80 @@ export default function MonthlyReport() {
         </div>
     );
     const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/financial-bills/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/financial-bills/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -223,10 +223,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-        
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-         
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -345,9 +345,9 @@ export default function MonthlyReport() {
             formData.append('subjectName', subjectName)
             formData.append('description', description)
             formData.append('monthName', monthName)
-            
+
             formData.append('remarks', remarks)
-    
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -546,18 +546,18 @@ export default function MonthlyReport() {
     const rightToolbarTemplate = () => {
         return (
             <>
-              {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -653,59 +653,59 @@ export default function MonthlyReport() {
         </>
     )
 
-  
-   const handleSearch = () => {
-          setLoading(true)
-          const payload = {
-            
-              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-              searchQuery: searchKey,
-            
-          }
-          
-          searchMBBills(payload).then((result) => {
-              setProducts(result?.data || [])
-              setLoading(false)
-          })
-      }
-  
-      const handleReset = () => {
-          setLoading(true)
-          const payload = {
-  
-              date_range: '',
-              searchQuery: '',
-          }
-  
-          setDate(null)
-          setDate2(null)
-          setSearchKey('')
-          
-  
-          searchMBBills(payload).then((result) => {
-              setProducts(result?.data)
-              setLoading(false)
-          })
-      }
-  
-     const refetch = () => {
-             setLoading(true)
-     
-             const payload = {
-     
-                 date_range: '',
-                 searchQuery: '',
-             }
-     
-             searchMBBills(payload).then((result) => {
-                 setProducts(result?.data)
-                 setLoading(false)
-             })
-         }
-          // initial data load - Internal
-         useEffect(() => {
-             refetch()
-         }, [])
+
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
+        }
+
+        searchMBBills(payload).then((result) => {
+            setProducts(result?.data || [])
+            setLoading(false)
+        })
+    }
+
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+
+
+        searchMBBills(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchMBBills(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -746,7 +746,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-          
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -824,7 +824,7 @@ export default function MonthlyReport() {
         </>
     )
 
-      
+
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -898,7 +898,7 @@ export default function MonthlyReport() {
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>
-                             <Column
+                            <Column
                                 field='monthName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
@@ -914,8 +914,8 @@ export default function MonthlyReport() {
                                 className='min-w-[8rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
-                            
+
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -957,46 +957,46 @@ export default function MonthlyReport() {
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1009,7 +1009,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1040,21 +1040,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        {/* <div className='field'>
-              <label htmlFor='problem' className='font-bold'>
-                Problem
-              </label>
-              <InputText
-                id='problem'
-                value={updatedProduct.problem}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    problem: e.target.value,
-                  })
-                }
-              />
-            </div> */}
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1088,29 +1074,29 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            
+
                         </div>
                         <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month Name
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                      optionLabel='name'
-                                      optionValue='name'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    placeholder='Select a Month'
-                                    className='w-full'
-                                    itemTemplate={itemTemplate}
-                                />
-                            </div>
+                            <label htmlFor='monthName' className='font-bold'>
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id='monthName'
+                                optionLabel='name'
+                                optionValue='name'
+                                value={updatedProduct.monthName}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        monthName: e.value,
+                                    })
+                                }
+                                options={months}
+                                placeholder='Select a Month'
+                                className='w-full'
+                                itemTemplate={itemTemplate}
+                            />
+                        </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
                             <div className='flex flex-wrap gap-3'>
@@ -1227,7 +1213,7 @@ export default function MonthlyReport() {
                                 <h3 className='font-bold'>File Name/Subject</h3>
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
-                            
+
                             <div>
                                 <h3 className='font-bold'>Month Name</h3>
                                 <p className='break-all'>{selectedProduct.monthName}</p>
@@ -1270,7 +1256,7 @@ export default function MonthlyReport() {
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
-                  
+
                         <div className='field'>
                             <label htmlFor='subjectName' className='font-bold'>
                                 File Name/Subject
@@ -1304,7 +1290,7 @@ export default function MonthlyReport() {
                             </label>
                             <Dropdown
                                 id="monthName"
-                                value={monthName} // must be one of the strings from months
+                                value={monthName} 
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 optionLabel='name'
