@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -142,7 +141,7 @@ export default function MonthlyReport() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/bills/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/financial-bills/bulk-upload`,
         formData,
         {
           headers: {
@@ -240,7 +239,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/bills/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/financial-bills/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -354,7 +353,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/bills/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/financial-bills/create`,
                 formData,
                 {
                     headers: {
@@ -400,7 +399,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/bills/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/financial-bills/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -450,7 +449,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/bills/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/financial-bills/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -747,16 +746,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                {/* <div>
-          <Dropdown
-            value={selectedCode}
-            onChange={(e) => setSelectedCode(e.value)}
-            options={codes}
-            optionLabel='name'
-            placeholder='Patient Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
-          />
-        </div> */}
+          
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -1019,23 +1009,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+                        
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1123,6 +1097,7 @@ export default function MonthlyReport() {
                                 <Dropdown
                                     id='monthName'
                                       optionLabel='name'
+                                      optionValue='name'
                                     value={updatedProduct.monthName}
                                     onChange={(e) =>
                                         setUpdatedProduct({
@@ -1333,6 +1308,7 @@ export default function MonthlyReport() {
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 optionLabel='name'
+                                optionValue='name'
                                 placeholder="Select a Month"
                                 className="w-full"
                                 itemTemplate={itemTemplate}

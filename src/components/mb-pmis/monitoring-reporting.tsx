@@ -163,7 +163,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring-report/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -235,7 +235,7 @@ export default function MonthlyReport() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring-report/bulk-upload`,
         formData,
         {
           headers: {
@@ -348,7 +348,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring-report/create`,
                 formData,
                 {
                     headers: {
@@ -394,7 +394,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -444,7 +444,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/monitoring-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -1078,7 +1078,9 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            <div className='field'>
+                           
+                        </div>
+                         <div className='field'>
                                 <label htmlFor='monthName' className='font-bold'>
                                     Month Name
                                 </label>
@@ -1093,12 +1095,12 @@ export default function MonthlyReport() {
                                     }
                                     options={months}
                                     optionLabel='name'
+                                    optionValue='name'
                                         itemTemplate={itemTemplate}
                                     placeholder='Select a Month'
                                     className='w-full'
                                 />
                             </div>
-                        </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
                             <div className='flex flex-wrap gap-3'>
@@ -1296,8 +1298,9 @@ export default function MonthlyReport() {
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 placeholder="Select a Month"
-                                optionLabel='name'
                                 itemTemplate={itemTemplate}
+                                optionLabel='name'
+                                optionValue='name'
                                 className="w-full"
                             />
                         </div>

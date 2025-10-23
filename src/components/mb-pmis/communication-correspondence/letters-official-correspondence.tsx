@@ -145,7 +145,7 @@ export default function MedicineInOutRecord() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-letters/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/letter-and-official-correspondence/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -205,7 +205,7 @@ const uploadFile = async () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-letters/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/letter-and-official-correspondence/bulk-upload`,
         formData,
         {
           headers: {
@@ -343,7 +343,7 @@ const uploadFile = async () => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-letters/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/letter-and-official-correspondence/create`,
                 formData,
                 {
                     headers: {
@@ -388,7 +388,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-letters/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/letter-and-official-correspondence/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -438,7 +438,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-letters/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/letter-and-official-correspondence/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -900,7 +900,7 @@ const uploadFile = async () => {
                           
 
                             <Column
-                                field='status'
+                                field='statusType'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 
@@ -1007,6 +1007,7 @@ const uploadFile = async () => {
                                     })
                                 }
                                   optionLabel="name"
+                                  optionValue="name"
                                  itemTemplate={itemTemplate}
                                 placeholder='Select status'
                             />
@@ -1288,6 +1289,7 @@ const uploadFile = async () => {
                                 placeholder='Status'
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
+                                optionValue='name'
                             />
                         </div>
                         <div className='field'>

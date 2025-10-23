@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -134,7 +133,7 @@ export default function KecLetter() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test-report/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -186,7 +185,7 @@ const uploadFile = async () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test-report/bulk-upload`,
         formData,
         {
           headers: {
@@ -322,7 +321,7 @@ const uploadFile = async () => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test-report/create`,
                 formData,
                 {
                     headers: {
@@ -368,7 +367,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -418,7 +417,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/quality-material-test-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

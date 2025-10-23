@@ -20,8 +20,7 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
-import FileIcon from '@/components/icons/FileIcon'
+
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { searchMBTechOthers } from '@/api/mainBridgeAPIs'
 
@@ -142,7 +141,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/others/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-others/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -194,7 +193,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/others/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-others/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -324,7 +323,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/others/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-others/create`,
                 formData,
                 {
                     headers: {
@@ -370,7 +369,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/others/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-others/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -420,7 +419,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/others/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-others/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

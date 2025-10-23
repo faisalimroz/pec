@@ -156,7 +156,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/drawings/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-drawing/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -208,7 +208,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/drawings/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-drawing/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -332,13 +332,13 @@ export default function MonthlyReport() {
             formData.append('sender', sender)
             formData.append('docNo', docNo)
             formData.append('remarks', remarks)
-            formData.append('typesofDrawings', typesofDrawings)
+            formData.append('typesofDrawings', typesofDrawings);
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/drawings/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-drawing/create`,
                 formData,
                 {
                     headers: {
@@ -384,7 +384,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/drawings/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-drawing/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -434,7 +434,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/drawings/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-drawing/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -1093,6 +1093,7 @@ export default function MonthlyReport() {
                                 options={drawingTypes}
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
+                                optionValue='name'
                                 placeholder='Select Type'
                                 className='w-full'
                             />
@@ -1327,6 +1328,7 @@ export default function MonthlyReport() {
                                 onChange={(e) => setTypesofDrawings(e.value)}
                                 options={drawingTypes}
                                 optionLabel='name'
+                                optionValue='name'
                                 placeholder="Select Type"
                                 itemTemplate={itemTemplate}
                                 className="w-full"

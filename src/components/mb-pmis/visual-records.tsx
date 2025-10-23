@@ -678,7 +678,7 @@ export default function MonthlyReport() {
       types: '',
       date_range: '',
       searchQuery: '',
-      contentType: '', // reset contentType filter too
+      contentType: '', 
     }
 
     setDate(null)

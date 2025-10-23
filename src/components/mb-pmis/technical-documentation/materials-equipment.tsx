@@ -114,7 +114,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -211,7 +211,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -318,7 +318,7 @@ export default function MonthlyReport() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/create`,
                 formData,
                 {
                     headers: {
@@ -364,7 +364,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -414,7 +414,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/tech-materialTest/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

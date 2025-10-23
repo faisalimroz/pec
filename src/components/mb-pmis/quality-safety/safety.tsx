@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -715,16 +714,7 @@ export default function KecLetter() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                {/* <div>
-          <Dropdown
-            value={selectedCode}
-            onChange={(e) => setSelectedCode(e.value)}
-            options={codes}
-            optionLabel='name'
-            placeholder='Patient Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
-          />
-        </div> */}
+                
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -877,7 +867,7 @@ export default function KecLetter() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -994,26 +984,7 @@ export default function KecLetter() {
                                 }
                             />
                         </div>
-                        {/* <div className="field">
-                                                                <label htmlFor="location" className="font-bold">
-                                                                    Location
-                                                                </label>
-                        
-                                                                <Dropdown
-                                                                    id="location"
-                                                                    value={updatedProduct.location}
-                                                                    onChange={(e) =>
-                                                                        setUpdatedProduct({
-                                                                            ...updatedProduct,
-                                                                            location: e.value,
-                                                                        })
-                                                                    }
-                                                                    options={shifts}
-                                                                    optionLabel="label"
-                                                                    placeholder="Select a Location"
-                                                                    className="w-full"
-                                                                />
-                                                            </div> */}
+                       
                         <div className='field'>
                             <label htmlFor='subjectName' className='font-bold'>
                                 File Name
@@ -1186,29 +1157,7 @@ export default function KecLetter() {
                                 <h3 className='font-bold'>Description</h3>
                                 <p className='break-all'>{selectedProduct.description}</p>
                             </div>
-                            {/* <div className="field">
-                                        <label htmlFor="shiftName" className="font-bold">
-                                            Shift Name
-                                        </label>
-
-                                        <Dropdown
-                                            id="shiftName"
-                                            value={shiftName}
-                                            onChange={(e) => setShiftName(e.value)}
-                                            options={shifts}
-                                            optionLabel="label"
-                                            placeholder="Select a Shift"
-                                            required
-                                            className={classNames({
-                                                'p-invalid': submitted && !shiftName,
-                                            })}
-                                        />
-
-                                        {submitted && !shiftName && (
-                                            <small className="p-error">Shift name is required.</small>
-                                        )}
-                                    </div>
-                             */}
+                         
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
