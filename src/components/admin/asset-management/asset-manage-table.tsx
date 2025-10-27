@@ -335,7 +335,7 @@ export default function AssetManagementTable() {
       )
 
       const response = res
-      console.log(response)
+      
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()
@@ -344,7 +344,7 @@ export default function AssetManagementTable() {
         const { message } = error.response.data
         toast.error(message)
       } else {
-        console.log(error)
+       
       }
     } finally {
       setLoading2(false)

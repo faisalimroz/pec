@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { searchMonthlyReport } from '@/api/itsAPIs'
+import FileIcon from '@/components/icons/FileIcon'
 
 interface Attachment {
     url: string
@@ -114,6 +115,12 @@ export default function MonthlyReport() {
         { name: "November", code: "November" },
         { name: "December", code: "December" }
     ];
+      const itemTemplate = (option: { name: string; code: string }) => (
+            <div className="flex items-center gap-2">
+                <FileIcon />
+                <span>{option.name}</span>
+            </div>
+        )
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -809,7 +816,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -943,7 +950,9 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            <div className='field'>
+                          
+                        </div>
+                          <div className='field'>
                                 <label htmlFor='monthName' className='font-bold'>
                                     Month Name
                                 </label>
@@ -961,9 +970,9 @@ export default function MonthlyReport() {
                                     className='w-full'
                                     optionLabel='name'
                                     optionValue='name'
+                                    itemTemplate={itemTemplate}
                                 />
                             </div>
-                        </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
                             <div className='flex flex-wrap gap-3'>
@@ -1164,6 +1173,7 @@ export default function MonthlyReport() {
                                 className="w-full"
                                 optionLabel='name'
                                 optionValue='name'
+                                itemTemplate={itemTemplate}
                             />
                         </div>
                         <div className='field'>

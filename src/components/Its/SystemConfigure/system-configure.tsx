@@ -238,7 +238,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('monthName', monthName)
+            
 
             formData.append('remarks', remarks)
 

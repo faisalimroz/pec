@@ -99,7 +99,7 @@ export async function searchSystemConfigure(param: unknown) {
 }
 //  operation manual
 export async function searchOperationManual(param: unknown) {
-  // console.log('param', param)
+  console.log('param', param)
 
   const response = await axios.post(
     `${BASE_URL}/api/v1/its/operation-manual/data/search`,
