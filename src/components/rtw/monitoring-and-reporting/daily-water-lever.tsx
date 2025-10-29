@@ -40,7 +40,6 @@ interface Product {
     location: string
     description: string
     date: string
-  
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -556,45 +555,7 @@ export default function MonthlyReport() {
             </>
         )
     }
-    // const ButtonGroup = () => {
-    //     const [activeButton, setActiveButton] = useState('Pictures')
-
-    //     const buttons = [
-    //         { label: 'Monthly Water Level Graph', value: 'Monthly Water Level Graph' },
-    //         { label: 'Maximum Water Level Graph', value: 'Maximum Water Level Graph' },
-
-    //     ]
-
-    //     const handleButtonClick = (buttonValue: string) => {
-    //         setActiveButton(buttonValue)
-    //         //api is not ready yet
-    //         console.log(`Button clicked: ${buttonValue}`)
-    //     }
-
-    //     return (
-    //         <>
-    //             <div className='flex items-center space-x-2 py-2 rounded-lg'>
-    //                 {buttons.map((button) => (
-    //                     <button
-    //                         key={button.value}
-    //                         onClick={() => handleButtonClick(button.value)}
-    //                         className={`
-    //         px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-    //         ${activeButton === button.value
-    //                                 ? 'bg-[#6F90AE] text-base font-semibold text-white'
-    //                                 : ' bg-main text-base font-semibold text-white'
-    //                             }
-
-    //       `}
-    //                     >
-    //                         {button.label}
-    //                     </button>
-    //                 ))}
-    //             </div>
-    //         </>
-
-    //     )
-    // }
+ 
     const ButtonGroup = ({ onChange }: { onChange: (v: 'monthly' | 'maximum') => void }) => {
         return (
             <div className="flex items-center space-x-2 py-2 rounded-lg">
@@ -1521,11 +1482,10 @@ export default function MonthlyReport() {
                             </label>
                             <Dropdown
                                 id="location"
-                                value={location} // Use the state object
-                                onChange={(e) => setLocation(e.value)} // Set the state object
+                                value={location} 
+                                onChange={(e) => setLocation(e.value)} 
                                 options={locations}
                                 optionLabel='name'
-                                // Do NOT use optionValue='name'
                                 placeholder="Select Location"
                                 itemTemplate={itemTemplate}
                                 className="w-full"

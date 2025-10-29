@@ -12,13 +12,13 @@ type WaterRow = {
 
 
 const SAMPLE: WaterRow[] = [
-  { date: "2025-03-01", eightAM: 2.4, twelvePM: 2.9, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 3.2 },
-  { date: "2025-03-02", eightAM: 2.6, twelvePM: 3.0, twoPM: 3.2, sixPM: 2.7, maximumWaterLevel: 3.3 },
-  { date: "2025-03-03", eightAM: 2.3, twelvePM: 2.8, twoPM: 3.0, sixPM: 2.5, maximumWaterLevel: 3.1 },
-  { date: "2025-03-04", eightAM: 2.7, twelvePM: 3.1, twoPM: 3.4, sixPM: 2.9, maximumWaterLevel: 3.5 },
-  { date: "2025-03-05", eightAM: 2.1, twelvePM: 2.5, twoPM: 2.8, sixPM: 2.3, maximumWaterLevel: 2.9 },
-  { date: "2025-03-06", eightAM: 2.5, twelvePM: 2.9, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 3.2 },
-  { date: "2025-03-07", eightAM: 2.9, twelvePM: 3.3, twoPM: 3.6, sixPM: 3.0, maximumWaterLevel: 3.7 },
+  { date: "2025-03-01", eightAM: 6, twelvePM: 7, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 0 },
+  { date: "2025-03-02", eightAM: 6, twelvePM: 3.0, twoPM: 3.2, sixPM: 2.7, maximumWaterLevel: 3.3 },
+  { date: "2025-03-03", eightAM: 6, twelvePM: 2.8, twoPM: 3.0, sixPM: 2.5, maximumWaterLevel: 3.1 },
+  { date: "2025-03-04", eightAM: 6, twelvePM: 3.1, twoPM: 3.4, sixPM: 2.9, maximumWaterLevel: 3.5 },
+  { date: "2025-03-05", eightAM: 6, twelvePM: 2.5, twoPM: 2.8, sixPM: 2.3, maximumWaterLevel: 2.9 },
+  { date: "2025-03-06", eightAM: 6, twelvePM: 2.9, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 3.2 },
+  { date: "2025-03-07", eightAM: 6, twelvePM: 3.3, twoPM: 3.6, sixPM: 3.0, maximumWaterLevel: 3.7 },
 ];
 
 export default function WaterLevelMiniChart({
@@ -109,8 +109,8 @@ export default function WaterLevelMiniChart({
       scales: {
         x: { grid: { display: false } },
         y: {
-          beginAtZero: true,
-          title: { display: true, text: "Water Level (m PWD)" },
+          beginAtZero: false,
+              title: { display: true, text: "Water Level (m PWD)" },
          
         },
       },

@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchMainBridgeBills } from '@/api/tollApi'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -24,6 +24,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '../icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import RefreshButton from '@/components/refresh-button'
+import { types } from 'util'
 interface Attachment {
     url: string
     _id: string
@@ -51,7 +52,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         location: '',
-        monthName: '',    
+        monthName: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -78,22 +79,21 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [location, setlocation] = useState<{ name: string; code: string } | null>(null);
+    const [location, setlocation] = useState<string>("")
     const [remarks, setRemarks] = useState('')
-
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
+    const [selectedLocation, setSelectedLocation] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [monthName, setMonthName] = useState<{ name: string; code: string } | null>(null);
-  
+    const [monthName, setMonthName] = useState<string>("");
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -101,86 +101,86 @@ export default function MonthlyReport() {
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
     const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
 
 
-const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/main-bridge/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -201,7 +201,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const formData = new FormData()
-            
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('location', updatedProduct.location)
@@ -217,7 +217,7 @@ const uploadFile = async () => {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/main-bridge/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -274,21 +274,19 @@ const uploadFile = async () => {
         </>
     )
 
-    // ending all update dialog funcs
-  
     const months = [
-        { name: "January", code: "JAN" },
-        { name: "February", code: "FEB" },
-        { name: "March", code: "MAR" },
-        { name: "April", code: "APR" },
-        { name: "May", code: "MAY" },
-        { name: "June", code: "JUN" },
-        { name: "July", code: "JUL" },
-        { name: "August", code: "AUG" },
-        { name: "September", code: "SEP" },
-        { name: "October", code: "OCT" },
-        { name: "November", code: "NOV" },
-        { name: "December", code: "DEC" },
+        { name: "January", code: "January" },
+        { name: "February", code: "February" },
+        { name: "March", code: "March" },
+        { name: "April", code: "April" },
+        { name: "May", code: "May" },
+        { name: "June", code: "June" },
+        { name: "July", code: "July" },
+        { name: "August", code: "August" },
+        { name: "September", code: "September" },
+        { name: "October", code: "October" },
+        { name: "November", code: "November" },
+        { name: "December", code: "December" }
     ];
 
     const itemTemplate = (option: { name: string; code: string }) => (
@@ -303,7 +301,7 @@ const uploadFile = async () => {
         { name: 'Mawa', code: 'Mawa' },
         { name: 'Jinjira', code: 'Jinjira' },
     ]
-  
+
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
     }
@@ -345,15 +343,16 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('location', location?.name || '')
+            formData.append('location', location)
             formData.append('remarks', remarks)
-            formData.append('monthName', monthName?.name || '')       
-            formData.append('date', formatDate(formDate))  
+            formData.append('monthName', monthName)
+            formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
+
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/main-bridge/create`,
                 formData,
                 {
                     headers: {
@@ -364,7 +363,7 @@ const uploadFile = async () => {
             )
 
             const response = res
-            console.log(response)
+            console.log(response.data)
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -399,7 +398,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/main-bridge/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -449,7 +448,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/main-bridge/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -506,7 +505,7 @@ const uploadFile = async () => {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-              
+
             </div>
         )
     }
@@ -521,11 +520,11 @@ const uploadFile = async () => {
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -621,50 +620,64 @@ const uploadFile = async () => {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+            monthName: selectedCode?.code || '',
+            location: selectedLocation?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        }
+        console.log(payload, 'hello')
+        searchMainBridgeBills(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
+        setLoading(true)
+        const payload = {
+            monthName: selectedCode?.code || '',
+            location: selectedLocation?.code || '',
+            date_range: '',
             searchQuery: '',
-            month: '',
-            patientType: '',
         }
 
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
         setSelectedCode(null)
+        setSelectedLocation(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchMainBridgeBills(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+            monthName: '',
+            location: '',
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchMainBridgeBills(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -709,23 +722,24 @@ const uploadFile = async () => {
 
                 <Dropdown
                     id="monthName"
-                    value={monthName}
-                    onChange={(e) => setMonthName(e.value)}
+                    value={selectedCode}
+                    onChange={(e) => setSelectedCode(e.value)}
                     options={months}
                     optionLabel="name"
                     placeholder="Month"
                     className="border-none ml-4 focus:ring-0"
                     itemTemplate={itemTemplate}
+
                 />
                 <Dropdown
                     id="location"
-                    value={location}
-                    onChange={(e) => setlocation(e.value)}
+                    value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.value)}
                     options={locations}
                     optionLabel="name"
                     placeholder="Location"
                     className="border-none ml-4 focus:ring-0"
-                     itemTemplate={itemTemplate}
+                    itemTemplate={itemTemplate}
                 />
 
                 <IconField iconPosition='left' className='relative'>
@@ -805,26 +819,6 @@ const uploadFile = async () => {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -836,7 +830,7 @@ const uploadFile = async () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -900,7 +894,7 @@ const uploadFile = async () => {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -956,46 +950,46 @@ const uploadFile = async () => {
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1008,23 +1002,7 @@ const uploadFile = async () => {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1070,6 +1048,7 @@ const uploadFile = async () => {
                                 }
                                 options={locations}
                                 optionLabel="name"
+                                optionValue='name'
                                 placeholder='Select Location'
                                 className='w-full'
                                 itemTemplate={itemTemplate}
@@ -1108,26 +1087,27 @@ const uploadFile = async () => {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month Name
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    optionLabel="name"
-                                    placeholder='Select a Month'
-                                    itemTemplate={itemTemplate}
-                                    className='w-full'
-                                />
-                            </div>
+
+                        </div>     <div className='field'>
+                            <label htmlFor='monthName' className='font-bold'>
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id='monthName'
+                                value={updatedProduct.monthName}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        monthName: e.value,
+                                    })
+                                }
+                                options={months}
+                                optionLabel="name"
+                                optionValue='name'
+                                placeholder='Select a Month'
+                                itemTemplate={itemTemplate}
+                                className='w-full'
+                            />
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1330,8 +1310,10 @@ const uploadFile = async () => {
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 optionLabel="name"
+                                optionValue='code'
                                 placeholder="Select a Month"
                                 className="w-full"
+                                itemTemplate={itemTemplate}
                             />
                         </div>
                         <div className="field">
@@ -1344,6 +1326,7 @@ const uploadFile = async () => {
                                 onChange={(e) => setlocation(e.value)}
                                 options={locations}
                                 optionLabel="name"
+                                optionValue="code"
                                 placeholder="Select Location"
                                 itemTemplate={itemTemplate}
                                 className="w-full"

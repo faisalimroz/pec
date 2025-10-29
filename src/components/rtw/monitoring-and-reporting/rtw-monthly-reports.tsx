@@ -104,20 +104,20 @@ export default function MonthlyReport() {
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
 
-  const months = [
-    { name: "January", code: "January" },
-    { name: "February", code: "February" },
-    { name: "March", code: "March" },
-    { name: "April", code: "April" },
-    { name: "May", code: "May" },
-    { name: "June", code: "June" },
-    { name: "July", code: "July" },
-    { name: "August", code: "August" },
-    { name: "September", code: "September" },
-    { name: "October", code: "October" },
-    { name: "November", code: "November" },
-    { name: "December", code: "December" },
-];
+    const months = [
+        { name: "January", code: "January" },
+        { name: "February", code: "February" },
+        { name: "March", code: "March" },
+        { name: "April", code: "April" },
+        { name: "May", code: "May" },
+        { name: "June", code: "June" },
+        { name: "July", code: "July" },
+        { name: "August", code: "August" },
+        { name: "September", code: "September" },
+        { name: "October", code: "October" },
+        { name: "November", code: "November" },
+        { name: "December", code: "December" },
+    ];
 
     const itemTemplate = (option: { name: string; code: string }) => (
         <div className="flex items-center gap-2">
@@ -502,39 +502,7 @@ export default function MonthlyReport() {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
 
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
             </div>
         )
     }
@@ -743,16 +711,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                {/* <div>
-          <Dropdown
-            value={selectedCode}
-            onChange={(e) => setSelectedCode(e.value)}
-            options={codes}
-            optionLabel='name'
-            placeholder='Patient Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
-          />
-        </div> */}
+                
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -918,7 +877,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 sortable
-                                
+
                                 className='min-w-[12rem]'
                                 header='Month Name'
                             ></Column>
@@ -1015,23 +974,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+                        
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1323,12 +1266,12 @@ export default function MonthlyReport() {
                             </label>
                             <Dropdown
                                 id="monthName"
-                                value={monthName} 
+                                value={monthName}
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 placeholder="Select a Month"
-                                 optionValue="code"
-                                 optionLabel='name'
+                                optionValue="code"
+                                optionLabel='name'
                                 className="w-full"
                                 itemTemplate={itemTemplate}
                             />

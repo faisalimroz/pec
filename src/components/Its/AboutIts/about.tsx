@@ -34,9 +34,7 @@ const OrgChart: React.FC = () => {
   const checkPermission = checkRole?.children.find(
     (c) => c.name === 'organization-chart'
   )
-
   const isGeneral = checkPermission?.edit_authority || false
-
   const [layout, setLayout] = useState<ProjectLayout | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isUploading, setIsUploading] = useState<boolean>(false)

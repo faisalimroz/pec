@@ -1106,7 +1106,7 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import(
-                  '@/pages/toll/wim-data'
+                  '@/pages/toll/wim-data-comparison'
                 )
               ).default,
             }),
