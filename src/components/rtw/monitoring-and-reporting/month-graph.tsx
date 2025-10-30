@@ -1,8 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { Chart } from "primereact/chart";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
 
 type WaterRow = {
-  date: string;          
+  date: string;            // "YYYY-MM-DD" from API
   eightAM: number;
   twelvePM: number;
   twoPM: number;
@@ -10,29 +15,81 @@ type WaterRow = {
   maximumWaterLevel: number;
 };
 
+type Mode = "monthly" | "maximum";
 
-const SAMPLE: WaterRow[] = [
-  { date: "2025-03-01", eightAM: 6, twelvePM: 7, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 0 },
-  { date: "2025-03-02", eightAM: 6, twelvePM: 3.0, twoPM: 3.2, sixPM: 2.7, maximumWaterLevel: 3.3 },
-  { date: "2025-03-03", eightAM: 6, twelvePM: 2.8, twoPM: 3.0, sixPM: 2.5, maximumWaterLevel: 3.1 },
-  { date: "2025-03-04", eightAM: 6, twelvePM: 3.1, twoPM: 3.4, sixPM: 2.9, maximumWaterLevel: 3.5 },
-  { date: "2025-03-05", eightAM: 6, twelvePM: 2.5, twoPM: 2.8, sixPM: 2.3, maximumWaterLevel: 2.9 },
-  { date: "2025-03-06", eightAM: 6, twelvePM: 2.9, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 3.2 },
-  { date: "2025-03-07", eightAM: 6, twelvePM: 3.3, twoPM: 3.6, sixPM: 3.0, maximumWaterLevel: 3.7 },
+const MONTHS = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
 ];
 
-export default function WaterLevelMiniChart({
-  data = SAMPLE,                          
+export default function WaterLevelMiniChartFetcher({
   height = 480,
-  
 }: {
-  data?: WaterRow[];
   height?: number;
 }) {
-  const [mode, setMode] = useState<"monthly" | "maximum">("monthly");
+  const [data, setData] = useState<WaterRow[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<Mode>("monthly");
+
+  // Filters
+  const [month, setMonth] = useState<string | null>(null); // e.g., "March"
+  const [year, setYear] = useState<number | ''>('');
+  const [location, setLocation] = useState<string>("");
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate]   = useState<Date | null>(null);
+
+  // Format dd-mm-yyyy for API when using date range
+  const toDDMMYYYY = (d: Date) => {
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth()+1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return `${dd}-${mm}-${yyyy}`;
+  };
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      // Build POST body
+      const body: any = {};
+      if (location.trim()) body.location = location.trim();
+
+      // Prefer month/year if month is chosen; else use date range (if provided)
+      if (month) {
+        body.month = month;                 // e.g., "March"
+        if (year !== '') body.year = Number(year);
+      } else if (startDate || endDate) {
+        if (startDate) body.startDate = toDDMMYYYY(startDate);
+        if (endDate)   body.endDate   = toDDMMYYYY(endDate);
+      }
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monthly-water-level/chart`,
+        body,
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token") || ""}` } }
+      );
+
+      const rows: WaterRow[] = Array.isArray(res.data?.data) ? res.data.data : [];
+      setData(rows);
+    } catch (err) {
+      console.error("Chart fetch error:", err);
+      setData([]); // clear on error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // initial load (no filters)
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const labels = useMemo(
-    () => data.map((r) => new Date(r.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })),
+    () =>
+      data.map((r) =>
+        new Date(r.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+      ),
     [data]
   );
 
@@ -110,8 +167,7 @@ export default function WaterLevelMiniChart({
         x: { grid: { display: false } },
         y: {
           beginAtZero: false,
-              title: { display: true, text: "Water Level (m PWD)" },
-         
+          title: { display: true, text: "Water Level (m PWD)" },
         },
       },
     }),
@@ -119,9 +175,93 @@ export default function WaterLevelMiniChart({
   );
 
   return (
-    <div className="p-4 border rounded-md bg-white ">
-      
+    <div className="p-4 border rounded-md bg-white">
+      {/* Filters */}
+      <form
+        className="flex flex-wrap items-end gap-3 mb-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          fetchData();
+        }}
+      >
+        {/* Location */}
+        <span className="flex flex-col gap-1">
+          <label className="text-xs font-medium">Location</label>
+          <InputText
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="e.g., Mawa"
+          />
+        </span>
 
+        {/* Month (name) */}
+        <span className="flex flex-col gap-1">
+          <label className="text-xs font-medium">Month</label>
+          <Dropdown
+            value={month}
+            onChange={(e) => setMonth(e.value)}
+            options={MONTHS}
+            placeholder="Select month"
+            className="min-w-[12rem]"
+            showClear
+          />
+        </span>
+
+        {/* Year (optional) */}
+        <span className="flex flex-col gap-1">
+          <label className="text-xs font-medium">Year</label>
+          <InputText
+            value={year}
+            onChange={(e) => {
+              const v = e.target.value.trim();
+              setYear(v === "" ? "" : Number(v));
+            }}
+            placeholder="e.g., 2025"
+          />
+        </span>
+
+        {/* OR Date Range (overrides month if both are set? we’ll prefer month; otherwise uses range) */}
+        <span className="flex flex-col gap-1">
+          <label className="text-xs font-medium">Start Date</label>
+          <Calendar
+            value={startDate as any}
+            onChange={(e) => setStartDate(e.value as Date)}
+            dateFormat="dd/mm/yy"
+            placeholder="dd/mm/yy"
+            showIcon
+          />
+        </span>
+        <span className="flex flex-col gap-1">
+          <label className="text-xs font-medium">End Date</label>
+          <Calendar
+            value={endDate as any}
+            onChange={(e) => setEndDate(e.value as Date)}
+            dateFormat="dd/mm/yy"
+            placeholder="dd/mm/yy"
+            showIcon
+          />
+        </span>
+
+        {/* Mode toggle */}
+        <span className="flex flex-col gap-1">
+          <label className="text-xs font-medium">Mode</label>
+          <Dropdown
+            value={mode}
+            onChange={(e) => setMode(e.value)}
+            options={[
+              { label: "Monthly (8/12/2/6 PM)", value: "monthly" },
+              { label: "Maximum", value: "maximum" },
+            ]}
+            className="min-w-[14rem]"
+          />
+        </span>
+
+        <Button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Apply"}
+        </Button>
+      </form>
+
+      {/* Chart */}
       <div style={{ height }}>
         <Chart type="line" data={chartData} options={options} />
       </div>

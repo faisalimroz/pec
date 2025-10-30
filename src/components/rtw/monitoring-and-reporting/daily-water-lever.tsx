@@ -38,6 +38,7 @@ interface Product {
     twoPM: string
     sixPM: string
     location: string
+    maximumWaterLevel: string
     description: string
     date: string
     attachments: Attachment[]
@@ -54,6 +55,7 @@ export default function MonthlyReport() {
         eightAM: '',
         twelvePM: '',
         twoPM: '',
+        maximumWaterLevel: '',
         location: '',
         sixPM: '',
         description: '',
@@ -91,9 +93,9 @@ export default function MonthlyReport() {
     const [twoPM, setTwoPM] = useState('')
     const [sixPM, setSixPM] = useState('')
     const [description, setDescription] = useState('')
+     const [maximumWaterLevel, setMaximumWaterLevel] = useState('');
 
 
-    // const [maximumWaterLevel, setMaximumWaterLevel] = useState('')
 
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -360,12 +362,18 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+            const maximumWaterLevel = Math.max(
+            Number(eightAM),
+            Number(twelvePM),
+            Number(twoPM),
+            Number(sixPM)
+        );
             formData.append('eightAM', eightAM)
             formData.append('twelvePM', twelvePM)
             formData.append('twoPM', twoPM)
             formData.append('sixPM', sixPM)
             formData.append('description', description)
+            formData.append('maximumWaterLevel', maximumWaterLevel.toString())
 
           formData.append('location', location ? location.name : '')
 
@@ -1384,7 +1392,7 @@ export default function MonthlyReport() {
                 )}
             </Dialog>
 
-            <Dialog
+          <Dialog  
                 visible={productDialog}
                 style={{ width: '42rem' }}
                 breakpoints={{ '960px': '75vw', '641px': '90vw' }}
@@ -1465,6 +1473,7 @@ export default function MonthlyReport() {
                                 <small className='p-error'>6:00 PM Water Level (PWD) is required.</small>
                             )}
                         </div>
+                        
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1491,16 +1500,16 @@ export default function MonthlyReport() {
                                 className="w-full"
                             />
                         </div>
-                        {/* <div className='field'>
-                            <label htmlFor='maximumWaterLevel' className='font-bold'>
-                                Maximum Water Level
-                            </label>
-                            <InputText
-                                id='maximumWaterLevel'
-                                onChange={(e) => setMaximumWaterLevel(e.target.value)}
-                                required
-                            />
-                        </div> */}
+                        <div className='field'>
+                                        <label htmlFor='maximumWaterLevel' className='font-bold'>
+                                            Maximum Water Level (Auto)
+                                        </label>
+                                        <InputText
+                                            id='maximumWaterLevel'
+                                          value={String(Math.max(Number(twelvePM || 0), Number(twoPM || 0),Number(sixPM || 0), Number(eightAM || 0)))}
+                                            readOnly
+                                        />
+                                    </div>
 
                         <div>
                             <label htmlFor='date' className='font-bold'>

@@ -634,6 +634,23 @@ export async function searchEmployeeReport(param: unknown) {
   return response.data
 }
 
+export async function searchHierarchy(param: unknown) {
+  //   console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/hieararchy`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+ console.log(response.data)
+  return response.data
+}
+
 
 export async function searchAllWimData(param: unknown) {
   //   console.log('param', param)
@@ -653,3 +670,17 @@ export async function searchAllWimData(param: unknown) {
 }
 
 
+export async function getWimShiftStats(payload: {
+  location?: string;
+  date_range?: string; // "DD-MM-YYYY to DD-MM-YYYY"
+  shiftNames?: string[]; // e.g. ["Shift: 1st","Shift: 2nd"]
+}) {
+  const res = await axios.post(
+    `${import.meta.env.VITE_BASE_URL}/api/v1/toll/limited-wim-data/stats/shift`,
+    payload,
+    {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    }
+  );
+  return res.data?.data ?? [];
+}

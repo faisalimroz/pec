@@ -125,7 +125,7 @@ export async function searchDailyWaterLevelReport(param: unknown) {
       },
     }
   )
-
+ console.log(response.data)
   return response.data
 }
 export async function searchRTWMonitoringMonthlyReport(param: unknown) {
