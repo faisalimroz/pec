@@ -39,6 +39,7 @@ interface Product {
     sixPM: string
     location: string
     maximumWaterLevel: string
+    minimumWaterLevel: string
     description: string
     date: string
     attachments: Attachment[]
@@ -56,6 +57,7 @@ export default function MonthlyReport() {
         twelvePM: '',
         twoPM: '',
         maximumWaterLevel: '',
+        minimumWaterLevel: '',
         location: '',
         sixPM: '',
         description: '',
@@ -93,7 +95,7 @@ export default function MonthlyReport() {
     const [twoPM, setTwoPM] = useState('')
     const [sixPM, setSixPM] = useState('')
     const [description, setDescription] = useState('')
-     const [maximumWaterLevel, setMaximumWaterLevel] = useState('');
+   
 
 
 
@@ -101,6 +103,7 @@ export default function MonthlyReport() {
     const [filesInput, setFilesInput] = useState<File[]>([])
 
     const [selectedCode, setSelectedCode] = useState<any>(null);
+    const [selectedLocation, setSelectedLocation] = useState<any>(null);
     const [chartMode, setChartMode] = useState<'monthly' | 'maximum' | null>(null);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [location, setLocation] = useState<{ name: string; code: string } | null>(null);
@@ -247,14 +250,23 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+             const maximumWaterLevel= String(Math.max(
+                                    Number(updatedProduct.eightAM ),
+                                    Number(updatedProduct.twelvePM ),
+                                    Number(updatedProduct.twoPM ),
+                                    Number(updatedProduct.sixPM )))
+                                      const minimumWaterLevel= String(Math.min(
+                                    Number(updatedProduct.eightAM ),
+                                    Number(updatedProduct.twelvePM ),
+                                    Number(updatedProduct.twoPM ),
+                                    Number(updatedProduct.sixPM )))
             formData.append('eightAM', updatedProduct.eightAM)
             formData.append('twelvePM', updatedProduct.twelvePM)
             formData.append('twoPM', updatedProduct.twoPM)
             formData.append('sixPM', updatedProduct.sixPM)
             formData.append('description', updatedProduct.description)
-
-            // formData.append('maximumWaterLevel', updatedProduct.maximumWaterLevel)
+            formData.append('minimumWaterLevel', minimumWaterLevel)
+            formData.append('maximumWaterLevel', maximumWaterLevel)
             formData.append('date', updatedProduct.date)
             formData.append('location', updatedProduct.location);
             newAttachments.forEach((file) => {
@@ -363,19 +375,26 @@ export default function MonthlyReport() {
             setLoading2(true)
             const formData = new FormData()
             const maximumWaterLevel = Math.max(
-            Number(eightAM),
-            Number(twelvePM),
-            Number(twoPM),
-            Number(sixPM)
-        );
+                Number(eightAM),
+                Number(twelvePM),
+                Number(twoPM),
+                Number(sixPM)
+            );
+              const minimumWaterLevel = Math.min(
+                Number(eightAM),
+                Number(twelvePM),
+                Number(twoPM),
+                Number(sixPM)
+            );
             formData.append('eightAM', eightAM)
             formData.append('twelvePM', twelvePM)
             formData.append('twoPM', twoPM)
             formData.append('sixPM', sixPM)
             formData.append('description', description)
             formData.append('maximumWaterLevel', maximumWaterLevel.toString())
+            formData.append('minimumWaterLevel', minimumWaterLevel.toString())
 
-          formData.append('location', location ? location.name : '')
+            formData.append('location', location ? location.name : '')
 
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
@@ -563,7 +582,7 @@ export default function MonthlyReport() {
             </>
         )
     }
- 
+
     const ButtonGroup = ({ onChange }: { onChange: (v: 'monthly' | 'maximum') => void }) => {
         return (
             <div className="flex items-center space-x-2 py-2 rounded-lg">
@@ -701,6 +720,7 @@ export default function MonthlyReport() {
         setDate2(null)
         setSearchKey('')
         setSelectedCode(null)
+        setLocation(null)
 
         searchDailyWaterLevelReport(payload).then((result) => {
             setProducts(result?.data)
@@ -715,6 +735,7 @@ export default function MonthlyReport() {
             location: '',
             date_range: '',
             searchQuery: '',
+            selectedCode: ''
         }
 
         searchDailyWaterLevelReport(payload).then((result) => {
@@ -776,8 +797,8 @@ export default function MonthlyReport() {
                     {/* } */}
                     <div>
                         <Dropdown
-                            value={selectedCode}
-                            onChange={(e) => setSelectedCode(e.value)}
+                            value={selectedLocation}
+                            onChange={(e) => setSelectedLocation(e.value)}
                             options={locations}
                             itemTemplate={itemTemplate}
 
@@ -920,7 +941,17 @@ export default function MonthlyReport() {
                 {chartMode === 'monthly' && (
                     <div className="mt-6 px-10 ">
                         {filterSearchForm}
-                        <WaterLevelMiniChart />
+                        <WaterLevelMiniChart
+                            filterData={{
+                                location: selectedLocation?.code, // from your filter form
+                                month: selectedCode,              // from your filter form  
+                                // from your filter form
+                                startDate: date ? formatDate(date) : undefined, // DD-MM-YYYY
+                                endDate: date2 ? formatDate(date2) : undefined,       // DD-MM-YYYY
+                            }}
+                            mode="monthly"
+                            height={500}
+                        />
 
                     </div>
                 )}
@@ -962,23 +993,23 @@ export default function MonthlyReport() {
                                 scrollable
                             >
                                 {hasEditAccess && (
+                                    <Column
+                                        selectionMode='multiple'
+                                        headerStyle={{ width: '3rem' }}
+                                        exportable={false}
+                                        headerClassName='bg-[#ffc2c2] text-sm'
+                                        bodyClassName='text-sm truncate max-w-xs'
+                                    ></Column>
+                                )}
+
                                 <Column
-                                    selectionMode='multiple'
-                                    headerStyle={{ width: '3rem' }}
-                                    exportable={false}
+                                    field='slNo'
+                                    header='SL No.'
                                     headerClassName='bg-[#ffc2c2] text-sm'
                                     bodyClassName='text-sm truncate max-w-xs'
+                                    className='min-w-[10rem]'
+
                                 ></Column>
-                            )} 
-
-                               <Column
-                                field='slNo'
-                                header='SL No.'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                className='min-w-[10rem]'
-
-                            ></Column>
 
 
                                 <Column
@@ -1107,11 +1138,11 @@ export default function MonthlyReport() {
                             </label>
                             <InputText
                                 id='twelvePM'
-                                value={updatedProduct.twelvePM}
+                                value={updatedProduct.description}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        twelvePM: e.target.value,
+                                        description: e.target.value,
                                     })
                                 }
                             />
@@ -1177,25 +1208,41 @@ export default function MonthlyReport() {
                             />
                         </div>
 
-                        {/* <div className='field'>
+                        <div className='field'>
                             <label htmlFor='maximumWaterLevel' className='font-bold'>
                                 Maximum Water Level
                             </label>
                             <InputText
                                 id='maximumWaterLevel'
-                                value={updatedProduct.maximumWaterLevel}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        maximumWaterLevel: e.target.value,
-                                    })
-                                }
+                                value={String(Math.max(
+                                    Number(updatedProduct.eightAM || 0),
+                                    Number(updatedProduct.twelvePM || 0),
+                                    Number(updatedProduct.twoPM || 0),
+                                    Number(updatedProduct.sixPM || 0)
+                                ))}
+                                readOnly
+                                
                             />
-                        </div> */}
-
+                        </div>
+                          <div className='field'>
+                            <label htmlFor='minimumWaterLevel' className='font-bold'>
+                                Minimum Water Level
+                            </label>
+                            <InputText
+                                id='minimumWaterLevel'
+                                value={String(Math.min(
+                                    Number(updatedProduct.eightAM || 0),
+                                    Number(updatedProduct.twelvePM || 0),
+                                    Number(updatedProduct.twoPM || 0),
+                                    Number(updatedProduct.sixPM || 0)
+                                ))}
+                                readOnly
+                                
+                            />
+                        </div>
                         <div className='field'>
                             <label htmlFor='location' className='font-bold'>
-                                Type
+                                Location
                             </label>
                             <Dropdown
                                 id='location'
@@ -1366,10 +1413,7 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.location}</p>
                             </div>
 
-                            {/* <div>
-                                <h3 className='font-bold'>Maximum Water Level</h3>
-                                <p className='break-all'>{selectedProduct.maximumWaterLevel}</p>
-                            </div> */}
+                        
 
                             {hasEditAccess && (
                                 <div className='col-span-2'>
@@ -1392,7 +1436,7 @@ export default function MonthlyReport() {
                 )}
             </Dialog>
 
-          <Dialog  
+            <Dialog
                 visible={productDialog}
                 style={{ width: '42rem' }}
                 breakpoints={{ '960px': '75vw', '641px': '90vw' }}
@@ -1473,7 +1517,7 @@ export default function MonthlyReport() {
                                 <small className='p-error'>6:00 PM Water Level (PWD) is required.</small>
                             )}
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1491,8 +1535,8 @@ export default function MonthlyReport() {
                             </label>
                             <Dropdown
                                 id="location"
-                                value={location} 
-                                onChange={(e) => setLocation(e.value)} 
+                                value={location}
+                                onChange={(e) => setLocation(e.value)}
                                 options={locations}
                                 optionLabel='name'
                                 placeholder="Select Location"
@@ -1501,16 +1545,25 @@ export default function MonthlyReport() {
                             />
                         </div>
                         <div className='field'>
-                                        <label htmlFor='maximumWaterLevel' className='font-bold'>
-                                            Maximum Water Level (Auto)
-                                        </label>
-                                        <InputText
-                                            id='maximumWaterLevel'
-                                          value={String(Math.max(Number(twelvePM || 0), Number(twoPM || 0),Number(sixPM || 0), Number(eightAM || 0)))}
-                                            readOnly
-                                        />
-                                    </div>
-
+                            <label htmlFor='maximumWaterLevel' className='font-bold'>
+                                Maximum Water Level (Auto)
+                            </label>
+                            <InputText
+                                id='maximumWaterLevel'
+                                value={String(Math.max(Number(twelvePM || 0), Number(twoPM || 0), Number(sixPM || 0), Number(eightAM || 0)))}
+                                readOnly
+                            />
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='maximumWaterLevel' className='font-bold'>
+                                Minimum Water Level (Auto)
+                            </label>
+                            <InputText
+                                id='minimumWaterLevel'
+                                value={String(Math.min(Number(twelvePM || 0), Number(twoPM || 0), Number(sixPM || 0), Number(eightAM || 0)))}
+                                readOnly
+                            />
+                        </div>
                         <div>
                             <label htmlFor='date' className='font-bold'>
                                 Date

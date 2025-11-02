@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Chart } from "primereact/chart";
-import { Calendar } from "primereact/calendar";
-import { Dropdown } from "primereact/dropdown";
-import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
 
 type WaterRow = {
   date: string;            // "YYYY-MM-DD" from API
@@ -17,51 +13,40 @@ type WaterRow = {
 
 type Mode = "monthly" | "maximum";
 
-const MONTHS = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December"
-];
+type FilterData = {
+  location?: string;
+  month?: string;
 
-export default function WaterLevelMiniChartFetcher({
+  startDate?: string; // DD-MM-YYYY format
+  endDate?: string;   // DD-MM-YYYY format
+};
+
+export default function WaterLevelMiniChart({
   height = 480,
+  filterData, // Accept filter data as prop
+  mode = "monthly" // Accept mode as prop
 }: {
   height?: number;
+  filterData?: FilterData;
+  mode?: Mode;
 }) {
   const [data, setData] = useState<WaterRow[]>([]);
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<Mode>("monthly");
 
-  // Filters
-  const [month, setMonth] = useState<string | null>(null); // e.g., "March"
-  const [year, setYear] = useState<number | ''>('');
-  const [location, setLocation] = useState<string>("");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate]   = useState<Date | null>(null);
-
-  // Format dd-mm-yyyy for API when using date range
-  const toDDMMYYYY = (d: Date) => {
-    const dd = String(d.getDate()).padStart(2, '0');
-    const mm = String(d.getMonth()+1).padStart(2, '0');
-    const yyyy = d.getFullYear();
-    return `${dd}-${mm}-${yyyy}`;
-  };
-
-  const fetchData = async () => {
+  const fetchData = async (filters: FilterData = {}) => {
     try {
       setLoading(true);
 
-      // Build POST body
+      // Build POST body from filterData prop
       const body: any = {};
-      if (location.trim()) body.location = location.trim();
+      
+      if (filters.location) body.location = filters.location;
+      if (filters.month) body.month = filters.month;
+   
+      if (filters.startDate) body.startDate = filters.startDate;
+      if (filters.endDate) body.endDate = filters.endDate;
 
-      // Prefer month/year if month is chosen; else use date range (if provided)
-      if (month) {
-        body.month = month;                 // e.g., "March"
-        if (year !== '') body.year = Number(year);
-      } else if (startDate || endDate) {
-        if (startDate) body.startDate = toDDMMYYYY(startDate);
-        if (endDate)   body.endDate   = toDDMMYYYY(endDate);
-      }
+      console.log("Fetching chart data with filters:", body);
 
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monthly-water-level/chart`,
@@ -79,11 +64,12 @@ export default function WaterLevelMiniChartFetcher({
     }
   };
 
-  // initial load (no filters)
+  // Fetch data when filterData changes
   useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (filterData) {
+      fetchData(filterData);
+    }
+  }, [filterData]);
 
   const labels = useMemo(
     () =>
@@ -176,90 +162,13 @@ export default function WaterLevelMiniChartFetcher({
 
   return (
     <div className="p-4 border rounded-md bg-white">
-      {/* Filters */}
-      <form
-        className="flex flex-wrap items-end gap-3 mb-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          fetchData();
-        }}
-      >
-        {/* Location */}
-        <span className="flex flex-col gap-1">
-          <label className="text-xs font-medium">Location</label>
-          <InputText
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="e.g., Mawa"
-          />
-        </span>
-
-        {/* Month (name) */}
-        <span className="flex flex-col gap-1">
-          <label className="text-xs font-medium">Month</label>
-          <Dropdown
-            value={month}
-            onChange={(e) => setMonth(e.value)}
-            options={MONTHS}
-            placeholder="Select month"
-            className="min-w-[12rem]"
-            showClear
-          />
-        </span>
-
-        {/* Year (optional) */}
-        <span className="flex flex-col gap-1">
-          <label className="text-xs font-medium">Year</label>
-          <InputText
-            value={year}
-            onChange={(e) => {
-              const v = e.target.value.trim();
-              setYear(v === "" ? "" : Number(v));
-            }}
-            placeholder="e.g., 2025"
-          />
-        </span>
-
-        {/* OR Date Range (overrides month if both are set? we’ll prefer month; otherwise uses range) */}
-        <span className="flex flex-col gap-1">
-          <label className="text-xs font-medium">Start Date</label>
-          <Calendar
-            value={startDate as any}
-            onChange={(e) => setStartDate(e.value as Date)}
-            dateFormat="dd/mm/yy"
-            placeholder="dd/mm/yy"
-            showIcon
-          />
-        </span>
-        <span className="flex flex-col gap-1">
-          <label className="text-xs font-medium">End Date</label>
-          <Calendar
-            value={endDate as any}
-            onChange={(e) => setEndDate(e.value as Date)}
-            dateFormat="dd/mm/yy"
-            placeholder="dd/mm/yy"
-            showIcon
-          />
-        </span>
-
-        {/* Mode toggle */}
-        <span className="flex flex-col gap-1">
-          <label className="text-xs font-medium">Mode</label>
-          <Dropdown
-            value={mode}
-            onChange={(e) => setMode(e.value)}
-            options={[
-              { label: "Monthly (8/12/2/6 PM)", value: "monthly" },
-              { label: "Maximum", value: "maximum" },
-            ]}
-            className="min-w-[14rem]"
-          />
-        </span>
-
-        <Button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Apply"}
-        </Button>
-      </form>
+      {/* Loading indicator */}
+      {loading && (
+        <div className="text-center py-4">
+          <i className="pi pi-spin pi-spinner mr-2"></i>
+          Loading chart data...
+        </div>
+      )}
 
       {/* Chart */}
       <div style={{ height }}>
