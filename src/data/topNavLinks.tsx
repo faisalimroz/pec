@@ -100,7 +100,7 @@ export const adminTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its',
+    href: '/its/about-its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
@@ -546,7 +546,7 @@ export const edmsSecondNav=[
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
     uName: 'toll',
-  },
+  },  
 
   {
     title: 'Toll Operation',
@@ -575,7 +575,57 @@ export const edmsTopNav = [
     uName: 'edms',
   },
 ]
+export const edmsAdminSecondNav=[
+   {
+    title: 'Administration',
+    href: '/edms/administrative',
+    isActive: true,
+    logo: AdminIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'administration',
+  },
+  {
+    title: 'Road & Traffic',
+    href: '/edms/road-and-traffic/organization-organogram',
+    isActive: false,
+    logo: RntIcon,
+    roles: ['superadmin', 'r&t-manager'],
+    uName: 'road-&-traffic',
+  },
+  {
+    title: 'Main Bridge',
+    href: '/edms/mb-pmis/project-overview',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'toll',
+  },
+  {
+    title: 'RTW',
+    href: '/edms/rtw/project-overview',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'toll',
+  },  
 
+  {
+    title: 'Toll Operation',
+    href: '/edms/toll/monthly-toll-revenue',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'toll-manager'],
+    uName: 'toll',
+  },
+  {
+    title: 'ITS',
+    href: '/edms/its/about-its',
+    isActive: false,
+    logo: ItsIcon,
+    roles: ['superadmin', 'its-manager'],
+    uName: 'its',
+  },
+]
 // Function to filter navigation links based on user roles
 export const getFilteredNavLinks = (navLinks: any[], userRoles: string[]) => {
   return navLinks.filter((link) => {

@@ -8,15 +8,14 @@ import { getFilteredNavLinks, itsTopNav } from '@/data/edmsNavLinks'
 import DemoTable from '@/components/Its/WorkPlan/work-plan'
 import { useAuth } from '@/provider/authProvider'
 import NewNavbar from '@/components/edms/new-nav'
-import { edmsSecondNav } from '@/data/topNavLinks'
-
+import { edmsSecondNav, edmsTopNav } from '@/data/topNavLinks'
 export default function AccidentReport() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = itsTopNav
+  const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -39,14 +38,14 @@ export default function AccidentReport() {
                 <UserNav />
               </div>
             </LayoutHeader>
-              <div>
-                <NewNavbar links={edmsSecondNav} />
-              </div>
+            <div>
+              <NewNavbar links={edmsSecondNav} />
+            </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                 Work Plan
+                  Work Plan
                 </h1>
 
                 <DemoTable />

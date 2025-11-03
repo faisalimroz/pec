@@ -442,8 +442,8 @@ export const edmsSecondNav=[
   },
   {
     title: 'ITS',
-    href: 'its',
-    isActive: false,
+    href: '/its/about-its',
+    isActive: true,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
     uName: 'its',

@@ -30,21 +30,21 @@ export const administrationLinks: SideLink[] = [
   {
     title: 'Employee Personal Profile',
     label: '',
-    href: '/administrative/employee-personal-profile',
+    href: '/edms/administrative/employee-personal-profile',
     uName: 'hr',
     icon: <FileIcon />,
   },
   {
     title: 'Vehicle Mgt. Record',
     label: '',
-    href: '/administrative/vehicle-mgt-record',
+    href: '/edms/administrative/vehicle-mgt-record',
     uName: 'hr',
     icon: <FileIcon />,
   },
   {
     title: 'Asset Management',
     label: '',
-    href: '/administrative/asset-management',
+    href: '/edms/administrative/asset-management',
     uName: 'hr',
     icon: <FileIcon />,
   },
@@ -58,13 +58,13 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Monthly Maintenance Report',
         label: '',
-        href: '/administrative/building-maintenance-report',
+        href: '/edms/administrative/building-maintenance-report',
         icon: '',
       },
       {
         title: 'Tools',
         label: '',
-        href: '/administrative/building-maintenance-tools',
+        href: '/edms/administrative/building-maintenance-tools',
         icon: '',
       }
 
@@ -82,19 +82,19 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Monthly Report',
         label: '',
-        href: '/administrative/health-center-monthly-report',
+        href: '/edms/administrative/health-center-monthly-report',
         icon: '',
       },
       {
         title: 'Medicine In/Out Record',
         label: '',
-        href: '/administrative/health-center-medicine-record',
+        href: '/edms/administrative/health-center-medicine-record',
         icon: '',
       },
       {
         title: 'Medicine Equipment Record',
         label: '',
-        href: '/administrative/health-center-monthly-equipment-record',
+        href: '/edms/administrative/health-center-monthly-equipment-record',
         icon: '',
       },
 
@@ -111,13 +111,13 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Monthly Activity',
         label: '',
-        href: '/administrative/gardening-monthly-activity',
+        href: '/edms/administrative/gardening-monthly-activity',
         icon: '',
       },
       {
         title: 'Gardening Tools',
         label: '',
-        href: '/administrative/gardening-tools',
+        href: '/edms/administrative/gardening-tools',
         icon: '',
       },
 
@@ -134,13 +134,13 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Monthly Activity',
         label: '',
-        href: '/administrative/fire-mgt-monthly-report',
+        href: '/edms/administrative/fire-mgt-monthly-report',
         icon: '',
       },
       {
         title: ' Tools',
         label: '',
-        href: '/administrative/fire-mgt-tools',
+        href: '/edms/administrative/fire-mgt-tools',
         icon: '',
       },
 
@@ -158,13 +158,13 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Monthly Report',
         label: '',
-        href: '/administrative/it-electronics-communication-report',
+        href: '/edms/administrative/it-electronics-communication-report',
         icon: '',
       },
       {
         title: 'Tools',
         label: '',
-        href: '/administrative/it-electronics-communication-tools',
+        href: '/edms/administrative/it-electronics-communication-tools',
         icon: '',
       }
 
@@ -182,13 +182,13 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Monthly Report',
         label: '',
-        href: '/administrative/security-mgt-monthly-report',
+        href: '/edms/administrative/security-mgt-monthly-report',
         icon: '',
       },
       {
         title: 'Tools',
         label: '',
-        href: '/administrative/security-mgt-tools',
+        href: '/edms/administrative/security-mgt-tools',
         icon: '',
       }
 
@@ -207,14 +207,14 @@ export const administrationLinks: SideLink[] = [
   {
     title: 'Monthly IPC Updates',
     label: '',
-    href: '/finance/ipc-monthly-updates',
+    href: '/edms/administrative/ipc-monthly-updates',
     uName: 'finance-procurement',
     icon: <FileIcon />,
   },
   {
     title: 'IPC Records',
     label: '',
-    href: '/finance/ipc-records',
+    href: '/edms/administrative/ipc-records',
     uName: 'finance-procurement',
     icon: <FileIcon />,
   },
@@ -435,13 +435,13 @@ export const itsLinks: SideLink[] = [
   {
     title: 'About ITS',
     label: '',
-    href: '/edms/overview',
+    href: '/edms/its/about-its',
     icon: <AboutIcon />,
   },
   {
     title: 'Organization',
     label: '',
-    href: '/organization',
+    href: '/edms/its/organization',
     icon: <FileIcon />,
   },
   {
@@ -454,26 +454,26 @@ export const itsLinks: SideLink[] = [
   {
     title: 'Notice',
     label: '',
-    href: '/its/notice',
+    href: '/edms/its/notice',
     icon: <FileIcon />,
   },
   {
     title: 'System configure',
     label: '',
-    href: '/its/system-configure',
+    href: '/edms/its/system-configure',
     icon: <FileIcon />,
   },
   {
     title: 'Operation Manual',
     label: '',
-    href: '/its/operation-manual',
+    href: '/edms/its/operation-manual',
     icon: <FileIcon />,
   },
 
   {
     title: 'Monthly Report',
     label: '',
-    href: '/its/monthly-report',
+    href: '/edms/its/monthly-report',
     icon: <FileIcon />,
   },
 

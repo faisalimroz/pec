@@ -22,6 +22,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import { Checkbox } from 'primereact/checkbox';
 
 import FileIcon from '@/components/icons/FileIcon'
 
@@ -37,6 +38,7 @@ interface Product {
     monthName: string;
     date: string
     remarks: string
+   
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -50,8 +52,8 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-       
         monthName: '',
+     
         date: '',
         remarks: '',
         attachments: [],
@@ -84,7 +86,7 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-   
+
     const [remarks, setRemarks] = useState('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -101,6 +103,8 @@ export default function MonthlyReport() {
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
+    const [approved, setApproved] = useState<boolean>(false);
+
     const months = [
         { name: 'January', code: 'January' },
         { name: 'February', code: 'February' },
@@ -140,10 +144,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-         
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-           
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -333,7 +337,8 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-          
+           formData.append('approved', approved ? 'true' : 'false');
+
             formData.append('remarks', remarks)
             formData.append('monthName', monthName)
             formData.append('date', formatDate(formDate))
@@ -609,10 +614,10 @@ export default function MonthlyReport() {
         </>
     )
 
-   const handleSearch = () => {
-       setLoading(true)
+    const handleSearch = () => {
+        setLoading(true)
         const payload = {
-        
+
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
@@ -624,16 +629,16 @@ export default function MonthlyReport() {
     }
 
     const handleReset = () => {
-         setLoading(true)
+        setLoading(true)
         const payload = {
-       
+
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
 
-                  setDate(null)
-            setDate2(null)
-            setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
         setSelectedCode(null)
 
         searchWorkPlan(payload).then((result) => {
@@ -769,22 +774,22 @@ export default function MonthlyReport() {
         </>
     )
 
-      const refetch = () => {
-             setLoading(true)
-          
-             const payload = {
-             
-                 date_range: '',
-                 searchQuery: '',
-             }
-     
-             searchWorkPlan(payload).then((result) => {
-                 setProducts(result?.data)
-                 console.log(result, "ress")
-                 setLoading(false)
-             })
-         }
-     
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchWorkPlan(payload).then((result) => {
+            setProducts(result?.data)
+            console.log(result, "ress")
+            setLoading(false)
+        })
+    }
+
 
     // initial data load - Internal
     useEffect(() => {
@@ -876,11 +881,11 @@ export default function MonthlyReport() {
                                 field='monthName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                               
+
                                 className='min-w-[12rem]'
                                 header='Month Name'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -1005,7 +1010,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1186,7 +1191,7 @@ export default function MonthlyReport() {
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
-                           
+
 
                             {hasEditAccess && (
                                 <div className='col-span-2'>
@@ -1249,7 +1254,7 @@ export default function MonthlyReport() {
                                 required
                             />
                         </div>
-                        
+
                         <div className="field">
                             <label htmlFor="monthName" className="font-bold">
                                 Month Name
@@ -1260,10 +1265,10 @@ export default function MonthlyReport() {
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 placeholder="Select a Month"
-                               optionValue='name'
-                            optionLabel='name'
-                             className='w-full'
-                             itemTemplate={itemTemplate}
+                                optionValue='name'
+                                optionLabel='name'
+                                className='w-full'
+                                itemTemplate={itemTemplate}
                             />
                         </div>
                         <div className='field'>
@@ -1294,6 +1299,20 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Approve this document
+                            </label>
+                        </div>
+                    </div>
+
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
