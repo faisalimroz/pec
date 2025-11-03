@@ -1152,6 +1152,243 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
+
+// extra rat (edms)
+{
+            path: '/edms/road-and-traffic/organization-organogram',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/orgaorganization-organogram')
+              ).default,
+            }),
+          },
+           {
+            path: '/edms/road-and-traffic/kec-letter',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/kec-letter')
+              ).default,
+            }),
+          },
+            {
+            path: '/edms/road-and-traffic/monthly-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/monthly-report')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/monthly-roaster',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/monthly-roaster')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/accident')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/drawing')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/controllers-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/controllers-report')
+              ).default,
+            }),
+          },
+
+
+          {
+            path: '/edms/road-and-traffic/road-and-patrol/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-patrol/miscellaneous')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/accident')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/drawing')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/workshop/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/workshop/miscellaneous')
+              ).default,
+            }),
+          },
+
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/accident-incident-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/accident')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/requisition-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/requisition-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/completion-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/completion-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/reciving-materials-form',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/reciving-materials-form')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/inspection-report',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/inspection-report')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/letter-attachment',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/letter-attachment')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/drawing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/drawing')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/road-and-maintanance/miscellaneous',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/road-and-maintenance/miscellaneous')
+              ).default,
+            }),
+          },
           {
             path: 'its',
             lazy: async () => ({
@@ -1759,12 +1996,7 @@ const router = createBrowserRouter([
     }),
   },
   //extra edms
-  {
-    path: '/edms/administrative',
-    lazy: async () => ({
-      Component: (await import('@/pages/admin-edms/index')).default,
-    }),
-  },
+  
 
   {
     path: '/edms/its/workplan',

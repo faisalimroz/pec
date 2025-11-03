@@ -3,28 +3,24 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { itsLinks } from '@/data/sidelinks-edms'
-import { getFilteredNavLinks, itsTopNav } from '@/data/edmsNavLinks'
-import DemoTable from '@/components/Its/MonthlyReport/monthly-report'
+import { rntLinks } from '@/data/sidelinks'
+import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
+import DemoTable from '@/components/table'
 import { useAuth } from '@/provider/authProvider'
-import NewNavbar from '@/components/edms/new-nav'
-import { edmsSecondNav,edmsTopNav } from '@/data/topNavLinks'
 
-export default function AccidentReport() {
+export default function RoadAndTraffic() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
-
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-
-  const selectedNav = edmsTopNav
+  const selectedNav = rntTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
-      <section className='relative h-full overflow-hidden bg-background'>
+      <section className='relative h-full overflow-hidden bg-gray-100'>
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={itsLinks}
+          sideLinks={rntLinks}
         />
 
         <div
@@ -39,17 +35,15 @@ export default function AccidentReport() {
                 <UserNav />
               </div>
             </LayoutHeader>
-            <div>
-              <NewNavbar links={edmsSecondNav} />
-            </div>
+
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
-              <div className='space-y-2'>
-                <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                  Monthly Report
+              <div className='h-[calc(100vh)] flex items-center justify-center '>
+                <h1 className='text-4xl font-bold tracking-tight md:text-5xl text-center'>
+                  Welcome To Road & Traffic Department
                 </h1>
 
-                <DemoTable />
+                {/* <DemoTable /> */}
               </div>
             </LayoutBody>
           </Layout>

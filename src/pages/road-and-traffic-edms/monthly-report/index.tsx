@@ -3,14 +3,13 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { itsLinks } from '@/data/sidelinks-edms'
-import { getFilteredNavLinks, itsTopNav } from '@/data/edmsNavLinks'
-import DemoTable from '@/components/Its/MonthlyReport/monthly-report'
-import { useAuth } from '@/provider/authProvider'
-import NewNavbar from '@/components/edms/new-nav'
-import { edmsSecondNav,edmsTopNav } from '@/data/topNavLinks'
 
-export default function AccidentReport() {
+import DemoTable from '@/components/road-traffic/monthly-report/monthly-report-table'
+import { useAuth } from '@/provider/authProvider'
+import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
+import NewNavbar from '@/components/edms/new-nav'
+import { rntLinks } from '@/data/sidelinks-edms'
+export default function MonthlyReport() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
   const { roles } = useAuth()
@@ -24,7 +23,7 @@ export default function AccidentReport() {
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={itsLinks}
+          sideLinks={rntLinks}
         />
 
         <div
@@ -39,9 +38,9 @@ export default function AccidentReport() {
                 <UserNav />
               </div>
             </LayoutHeader>
-            <div>
-              <NewNavbar links={edmsSecondNav} />
-            </div>
+<div>
+                <NewNavbar links={edmsSecondNav} />
+              </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
