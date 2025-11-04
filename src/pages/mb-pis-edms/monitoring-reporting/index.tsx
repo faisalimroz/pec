@@ -3,18 +3,19 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { pmisLinks, rtwLinks } from '@/data/sidelinks'
-import { getFilteredNavLinks, pmisTopNav, rtwTopNav } from '@/data/topNavLinks'
+
 import DemoTable from '@/components/mb-pmis/monitoring-reporting'
 import { useAuth } from '@/provider/authProvider'
-
+import NewNavbar from '@/components/edms/new-nav'
+import { pmisLinks } from '@/data/sidelinks-edms'
+import { getFilteredNavLinks,edmsSecondNav, edmsTopNav } from '@/data/edmsNavLinks'
 export default function MonthlyReport() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = pmisTopNav
+  const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -37,7 +38,9 @@ export default function MonthlyReport() {
                 <UserNav />
               </div>
             </LayoutHeader>
-
+ <div>
+                <NewNavbar links={edmsSecondNav} />
+              </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>

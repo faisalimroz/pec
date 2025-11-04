@@ -23,7 +23,7 @@ export const adminTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -39,7 +39,7 @@ export const adminTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -77,7 +77,7 @@ export const tollTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -93,7 +93,7 @@ export const tollTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -144,7 +144,7 @@ export const financeTopNav = [
   },
   {
     title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: tollIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -187,7 +187,7 @@ export const itsTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -204,7 +204,7 @@ export const itsTopNav = [
 
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -241,7 +241,7 @@ export const rntTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -257,7 +257,7 @@ export const rntTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -299,7 +299,7 @@ export const rtwTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -315,7 +315,7 @@ export const rtwTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -358,7 +358,7 @@ export const pmisTopNav = [
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -375,7 +375,7 @@ export const pmisTopNav = [
   
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -417,7 +417,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -434,7 +434,7 @@ export const edmsSecondNav=[
 
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],

@@ -533,7 +533,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Main Bridge',
-    href: '/edms/mb-pmis/project-overview',
+    href: '/edms/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -550,7 +550,7 @@ export const edmsSecondNav=[
 
   {
     title: 'Toll Operation',
-    href: '/edms/toll/monthly-toll-revenue',
+    href: '/edms/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],

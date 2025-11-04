@@ -1462,6 +1462,124 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/toll')).default,
             }),
           },
+          //extra toll 
+            {
+            path: '/edms/toll/hierarchy',
+            lazy: async () => ({
+              Component: (await import('@/pages/toll-edms/hierarchy')).default,
+            }),
+          },
+          {
+            path: '/edms/toll/wim-data/wim-data-comparisons',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/wim-data'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/wim-data/represent-wim-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/wim-data-comparison'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/shift/shift-wise-toll-traffic-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/shift-wise/shift-wise-toll-traffic-data'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/shift/shift-wise-toll-traffic-comparison',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/shift-wise/shift-wise-toll-comparison'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/daily-toll-traffic-data',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/daily-report'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/daily-data-comparisons',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/daily-toll-trafic-comparison'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/daily-report',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/report'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/monthly-roster/main-bridge-bills',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/main-bridge/index'
+                )
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/toll/employee-personal-report',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/employee-personal-report'
+                )
+              ).default,
+            }),
+          },
+            {
+            path: '/edms/toll',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/index'
+                )
+              ).default,
+            }),
+          },
+          // {
+          //   path: 'toll/hierarchy',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          //toll
           {
             path: '/toll/hierarchy',
             lazy: async () => ({
@@ -2119,6 +2237,111 @@ const router = createBrowserRouter([
     path: '/mb-pmis/additional-notes/document-revision-log',
     lazy: async () => ({
       Component: (await import('@/pages/mb-pis/additional-notes/document-revision')).default,
+    }),
+  },
+  //extra mb pmis
+  {
+    path: '/edms/mb-pmis/project-overview',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/project-overview')).default,
+    }),
+  },
+ {
+    path: '/edms/mb-pmis',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/index')).default,
+    }),
+  },
+
+  {
+    path: '/edms/mb-pmis/technical-documentation/main-bridge-drawings',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/technical-documentation/main-bridge-drawings')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/technical-documentation/survey-reports',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/technical-documentation/survery-reports')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/technical-documentation/materials-and-equipment',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/technical-documentation/materials-and-equipment')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/technical-documentation/other',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/technical-documentation/others')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/technical-documentation/maintenance-manual',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/technical-documentation/main-bridge-maintenace')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/monitoring-and-reporting',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/monitoring-reporting')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/quality-and-safety/safety',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/quality-safety/safety')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/quality-and-safety/material-test-report',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/quality-safety/material-test-report')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/main-bridge-bills',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/financial-documentation/main-bridge-bills')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/picture-and-videos',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/visual-records')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/letter-and-official-correspondence',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/communication-correspondence/letter-and-correspondence')).default,
+    }),
+  },
+
+  {
+    path: '/edms/mb-pmis/meeting-minutes',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/communication-correspondence/meeting-minutes')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/additional-notes/backup-frequency',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/additional-notes/backup-frequency')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/additional-notes/document-control-manager',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/additional-notes/document-control')).default,
+    }),
+  },
+  {
+    path: '/edms/mb-pmis/additional-notes/document-revision-log',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/additional-notes/document-revision')).default,
     }),
   },
   //extra edms

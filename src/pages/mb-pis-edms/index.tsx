@@ -4,26 +4,24 @@ import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 
-import DemoTable from '@/components/toll/wim-data'
+import DemoTable from '@/components/table'
 import { useAuth } from '@/provider/authProvider'
-import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
 import NewNavbar from '@/components/edms/new-nav'
-import { tollLinks } from '@/data/sidelinks-edms'
-export default function AssetManagement() {
+import { pmisLinks } from '@/data/sidelinks-edms'
+import { getFilteredNavLinks,edmsSecondNav, edmsTopNav } from '@/data/edmsNavLinks'
+export default function RoadAndTraffic() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
-  
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-
   const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
-      <section className='relative h-full overflow-hidden bg-background'>
+      <section className='relative h-full overflow-hidden bg-gray-100'>
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={tollLinks}
+          sideLinks={pmisLinks}
         />
 
         <div
@@ -38,17 +36,17 @@ export default function AssetManagement() {
                 <UserNav />
               </div>
             </LayoutHeader>
- <div>
+  <div>
                 <NewNavbar links={edmsSecondNav} />
               </div>
             {/* ===== Main ===== */}
-            <LayoutBody className='space-y-4 bg-[#F6F8F9]'>
-              <div className='space-y-2'>
-                <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                 Wim Data
+            <LayoutBody className='space-y-4'>
+              <div className='h-[calc(100vh)] flex items-center justify-center '>
+                <h1 className='text-4xl font-bold tracking-tight md:text-5xl text-center'>
+                  Welcome To MB PMIS Department
                 </h1>
-                 
-                <DemoTable />
+
+                {/* <DemoTable /> */}
               </div>
             </LayoutBody>
           </Layout>

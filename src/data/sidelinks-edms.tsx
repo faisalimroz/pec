@@ -491,13 +491,13 @@ export const tollLinks: SideLink[] = [
       {
         title: 'Daily Toll & Traffic Data',
         label: '',
-        href: '/toll/daily-toll-traffic-data',
+        href: '/edms/toll/daily-toll-traffic-data',
         icon: '',
       },
       {
         title: 'Daily Toll & Traffic Data Comparisons',
         label: '',
-        href: '/toll/daily-data-comparisons',
+        href: '/edms/toll/daily-data-comparisons',
         icon: '',
       },
 
@@ -513,13 +513,13 @@ export const tollLinks: SideLink[] = [
       {
         title: 'Shift Wise Toll & Traffic Data',
         label: '',
-        href: '/toll/shift/shift-wise-toll-traffic-data',
+        href: '/edms/toll/shift/shift-wise-toll-traffic-data',
         icon: '',
       },
       {
         title: 'Shift Wise Toll & Traffic',
         label: '',
-        href: '/toll/shift/shift-wise-toll-traffic-comparison',
+        href: '/edms/toll/shift/shift-wise-toll-traffic-comparison',
         icon: '',
       },
 
@@ -537,13 +537,13 @@ export const tollLinks: SideLink[] = [
       {
         title: 'Represent WIM data',
         label: '',
-        href: '/toll/wim-data/represent-wim-data',
+        href: '/edms/toll/wim-data/represent-wim-data',
         icon: '',
       },
       {
         title: 'WIM data Comparisons',
         label: '',
-        href: '/toll/wim-data/wim-data-comparisons',
+        href: '/edms/toll/wim-data/wim-data-comparisons',
         icon: '',
       },
 
@@ -552,7 +552,7 @@ export const tollLinks: SideLink[] = [
   {
     title: 'Daily Report',
     label: '',
-    href: '/toll/daily-report',
+    href: '/edms/toll/daily-report',
     uName: 'special-audit',
     icon: <FileIcon />,
   },
@@ -567,7 +567,7 @@ export const tollLinks: SideLink[] = [
       {
         title: 'Main Bridge Bills',
         label: '',
-        href: '/toll/monthly-roster/main-bridge-bills',
+        href: '/edms/toll/monthly-roster/main-bridge-bills',
         uName: 'toll-monthly-roster',
         icon: <FileIcon />,
       }
@@ -578,14 +578,14 @@ export const tollLinks: SideLink[] = [
   {
     title: 'Employee Personal Report',
     label: '',
-    href: '/toll/employee-personal-report',
+    href: '/edms/toll/employee-personal-report',
     uName: 'toll-monthly-roster',
     icon: <FileIcon />,
   },
   {
     title: 'Hierarchy',
     label: '',
-    href: '/toll/hierarchy',
+    href: '/edms/toll/hierarchy',
     uName: 'toll-monthly-roster',
     icon: <FileIcon />,
   },
@@ -763,7 +763,7 @@ export const pmisLinks: SideLink[] = [
   {
     title: 'Project Overview',
     label: '',
-    href: '/mb-pmis/project-overview',
+    href: '/edms/mb-pmis/project-overview',
     uName: 'dispatched',
     icon: <FileIcon />,
   },
@@ -777,32 +777,32 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Main Bridge Drawings',
         label: '',
-        href: '/mb-pmis/technical-documentation/main-bridge-drawings',
+        href: '/edms/mb-pmis/technical-documentation/main-bridge-drawings',
         icon: '',
       },
       {
         title: 'Materials & Equipment List ',
         label: '',
-        href: '/mb-pmis/technical-documentation/materials-and-equipment',
+        href: '/edms/mb-pmis/technical-documentation/materials-and-equipment',
         icon: '',
       },
 
       {
         title: 'Survey Reports',
         label: '',
-        href: '/mb-pmis/technical-documentation/survey-reports',
+        href: '/edms/mb-pmis/technical-documentation/survey-reports',
         icon: '',
       },
       {
         title: 'Main Bridge Maintenance Manual',
         label: '',
-        href: '/mb-pmis/technical-documentation/maintenance-manual',
+        href: '/edms/mb-pmis/technical-documentation/maintenance-manual',
         icon: '',
       },
       {
         title: 'Other',
         label: '',
-        href: '/mb-pmis/technical-documentation/other',
+        href: '/edms/mb-pmis/technical-documentation/other',
         icon: '',
       },
     ],
@@ -810,7 +810,7 @@ export const pmisLinks: SideLink[] = [
   {
     title: 'Monitoring & Reporting',
     label: '',
-    href: '/mb-pmis/monitoring-and-reporting',
+    href: '/edms/mb-pmis/monitoring-and-reporting',
     uName: 'dispatched',
     icon: <FileIcon />,
   },
@@ -825,13 +825,13 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Material Test Report',
         label: '',
-        href: '/mb-pmis/quality-and-safety/material-test-report',
+        href: '/edms/mb-pmis/quality-and-safety/material-test-report',
         icon: '',
       },
       {
         title: 'Safety',
         label: '',
-        href: '/mb-pmis/quality-and-safety/safety',
+        href: '/edms/mb-pmis/quality-and-safety/safety',
         icon: '',
       },
     ],
@@ -846,13 +846,13 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'All RTW-related Letters & Official Correspondence',
         label: '',
-        href: '/mb-pmis/letter-and-official-correspondence',
+        href: '/edms/mb-pmis/letter-and-official-correspondence',
         icon: '',
       },
       {
         title: 'Meeting Minutes',
         label: '',
-        href: '/mb-pmis/meeting-minutes',
+        href: '/edms/mb-pmis/meeting-minutes',
         icon: '',
       }
     ],
@@ -867,7 +867,7 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Main Bridge Bills',
         label: '',
-        href: '/mb-pmis/main-bridge-bills',
+        href: '/edms/mb-pmis/main-bridge-bills',
         icon: '',
       }
     ],
@@ -882,7 +882,7 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Pictures and Videos',
         label: '',
-        href: '/mb-pmis/picture-and-videos',
+        href: '/edms/mb-pmis/picture-and-videos',
         icon: '',
       }
     ],
@@ -897,19 +897,19 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Backup Frequency',
         label: '',
-        href: '/mb-pmis/additional-notes/backup-frequency',
+        href: '/edms/mb-pmis/additional-notes/backup-frequency',
         icon: '',
       },
       {
         title: 'Document Control Manager',
         label: '',
-        href: '/mb-pmis/additional-notes/document-control-manager',
+        href: '/edms/mb-pmis/additional-notes/document-control-manager',
         icon: '',
       },
       {
         title: 'Document Revision Log',
         label: '',
-        href: '/mb-pmis/additional-notes/document-revision-log',
+        href: '/edms/mb-pmis/additional-notes/document-revision-log',
         icon: '',
       },
     ],

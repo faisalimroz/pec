@@ -3,18 +3,19 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { administrationLinks, tollLinks } from '@/data/sidelinks'
-import { adminTopNav, getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
+
 import DemoTable from '@/components/toll/all-wim-data'
 import { useAuth } from '@/provider/authProvider'
-
+import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
+import NewNavbar from '@/components/edms/new-nav'
+import { tollLinks } from '@/data/sidelinks-edms'
 export default function AssetManagement() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
   
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = tollTopNav
+  const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -37,7 +38,9 @@ export default function AssetManagement() {
                 <UserNav />
               </div>
             </LayoutHeader>
-
+ <div>
+                <NewNavbar links={edmsSecondNav} />
+              </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4 bg-[#F6F8F9]'>
               <div className='space-y-2 space-x-4'>
