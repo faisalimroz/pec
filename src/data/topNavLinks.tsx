@@ -525,7 +525,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Road & Traffic',
-    href: '/edms/road-and-traffic/organization-organogram',
+    href: '/edms/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -541,7 +541,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'RTW',
-    href: '/edms/rtw/project-overview',
+    href: '/edms/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -575,57 +575,57 @@ export const edmsTopNav = [
     uName: 'edms',
   },
 ]
-export const edmsAdminSecondNav=[
-   {
-    title: 'Administration',
-    href: '/edms/administrative',
-    isActive: true,
-    logo: AdminIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'administration',
-  },
-  {
-    title: 'Road & Traffic',
-    href: '/edms/road-and-traffic/organization-organogram',
-    isActive: false,
-    logo: RntIcon,
-    roles: ['superadmin', 'r&t-manager'],
-    uName: 'road-&-traffic',
-  },
-  {
-    title: 'Main Bridge',
-    href: '/edms/mb-pmis/project-overview',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'toll',
-  },
-  {
-    title: 'RTW',
-    href: '/edms/rtw/project-overview',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'toll',
-  },  
+// export const edmsAdminSecondNav=[
+//    {
+//     title: 'Administration',
+//     href: '/edms/administrative',
+//     isActive: true,
+//     logo: AdminIcon,
+//     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+//     uName: 'administration',
+//   },
+//   {
+//     title: 'Road & Traffic',
+//     href: '/edms/road-and-traffic/organization-organogram',
+//     isActive: false,
+//     logo: RntIcon,
+//     roles: ['superadmin', 'r&t-manager'],
+//     uName: 'road-&-traffic',
+//   },
+//   {
+//     title: 'Main Bridge',
+//     href: '/edms/mb-pmis/project-overview',
+//     isActive: false,
+//     logo: edmsIcon,
+//     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+//     uName: 'toll',
+//   },
+//   {
+//     title: 'RTW',
+//     href: '/edms/rtw/project-overview',
+//     isActive: false,
+//     logo: edmsIcon,
+//     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+//     uName: 'toll',
+//   },  
 
-  {
-    title: 'Toll Operation',
-    href: '/edms/toll/monthly-toll-revenue',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['superadmin', 'toll-manager'],
-    uName: 'toll',
-  },
-  {
-    title: 'ITS',
-    href: '/edms/its/about-its',
-    isActive: false,
-    logo: ItsIcon,
-    roles: ['superadmin', 'its-manager'],
-    uName: 'its',
-  },
-]
+//   {
+//     title: 'Toll Operation',
+//     href: '/edms/toll/monthly-toll-revenue',
+//     isActive: false,
+//     logo: edmsIcon,
+//     roles: ['superadmin', 'toll-manager'],
+//     uName: 'toll',
+//   },
+//   {
+//     title: 'ITS',
+//     href: '/edms/its/about-its',
+//     isActive: false,
+//     logo: ItsIcon,
+//     roles: ['superadmin', 'its-manager'],
+//     uName: 'its',
+//   },
+// ]
 // Function to filter navigation links based on user roles
 export const getFilteredNavLinks = (navLinks: any[], userRoles: string[]) => {
   return navLinks.filter((link) => {

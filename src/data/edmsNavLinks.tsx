@@ -15,7 +15,7 @@ export const adminTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic/about',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -31,7 +31,7 @@ export const adminTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -69,7 +69,7 @@ export const tollTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic/about',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -85,7 +85,7 @@ export const tollTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -128,7 +128,7 @@ export const financeTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic/about',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -179,7 +179,7 @@ export const itsTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic/about',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -195,7 +195,7 @@ export const itsTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -249,7 +249,7 @@ export const rntTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -291,7 +291,7 @@ export const rtwTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic/about',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -307,7 +307,7 @@ export const rtwTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -350,7 +350,7 @@ export const pmisTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic/about',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -366,7 +366,7 @@ export const pmisTopNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -409,7 +409,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -425,7 +425,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -442,7 +442,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'ITS',
-    href: '/its/about-its',
+    href: '/its',
     isActive: true,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],

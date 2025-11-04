@@ -3,18 +3,20 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { itsLinks } from '@/data/sidelinks'
-import { getFilteredNavLinks, itsTopNav } from '@/data/topNavLinks'
+
+
 import DemoTable from '@/components/Its/its-staff-staffSummary'
 import { useAuth } from '@/provider/authProvider'
-
+import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
+import NewNavbar from '@/components/edms/new-nav'
+import { itsLinks } from '@/data/sidelinks-edms'
 export default function ItsMain() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
 
-  const selectedNav = itsTopNav
+  const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -37,7 +39,9 @@ export default function ItsMain() {
                 <UserNav />
               </div>
             </LayoutHeader>
-
+  <div>
+                <NewNavbar links={edmsSecondNav} />
+              </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='h-[calc(100vh)] flex items-center justify-center '>

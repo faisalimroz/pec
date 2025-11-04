@@ -596,7 +596,7 @@ export const rtwLinks: SideLink[] = [
   {
     title: 'Project Overview',
     label: '',
-    href: '/rtw/project-overview',
+    href: '/edms/rtw/project-overview',
     uName: 'dispatched',
     icon: <FileIcon />,
   },
@@ -610,25 +610,25 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'RTW Drawings',
         label: '',
-        href: '/rtw/rtw-drawings',
+        href: '/edms/rtw/rtw-drawings',
         icon: '',
       },
       {
         title: 'Materials & Equipment List',
         label: '',
-        href: '/rtw/material-and-equipment',
+        href: '/edms/rtw/material-and-equipment',
         icon: '',
       },
       {
         title: 'Survey Reports',
         label: '',
-        href: '/rtw/survey-reports',
+        href: '/edms/rtw/survey-reports',
         icon: '',
       },
       {
         title: 'RTW Maintenance Manual',
         label: '',
-        href: '/rtw/rtw-maintenance-manual',
+        href: '/edms/rtw/rtw-maintenance-manual',
         icon: '',
       },
     ],
@@ -643,13 +643,13 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'Daily Water Level Records',
         label: '',
-        href: '/rtw/monitoring-and-reporting/daily-water-level-records',
+        href: '/edms/rtw/monitoring-and-reporting/daily-water-level-records',
         icon: '',
       },
       {
         title: 'RTW Monthly Reports',
         label: '',
-        href: '/rtw/monitoring-and-reporting/monthly-reports',
+        href: '/edms/rtw/monitoring-and-reporting/monthly-reports',
         icon: '',
       }
     ],
@@ -664,13 +664,13 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'Material Test Report',
         label: '',
-        href: '/rtw/material-test-report',
+        href: '/edms/rtw/material-test-report',
         icon: '',
       },
       {
         title: 'Safety',
         label: '',
-        href: '/rtw/safety',
+        href: '/edms/rtw/safety',
         icon: '',
       },
     ],
@@ -685,13 +685,13 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'All RTW-related Letters & Official Correspondence',
         label: '',
-        href: '/rtw/letter-and-official-correspondence',
+        href: '/edms/rtw/letter-and-official-correspondence',
         icon: '',
       },
       {
         title: 'Meeting Minutes',
         label: '',
-        href: '/rtw/meeting-minutes',
+        href: '/edms/rtw/meeting-minutes',
         icon: '',
       }
     ],
@@ -706,7 +706,7 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'RTW Bills',
         label: '',
-        href: '/rtw/rtw-bills',
+        href: '/edms/rtw/rtw-bills',
         icon: '',
       }
     ],
@@ -721,7 +721,7 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'Pictures and Videos',
         label: '',
-        href: '/rtw/picture-and-videos',
+        href: '/edms/rtw/picture-and-videos',
         icon: '',
       }
     ],
@@ -736,19 +736,19 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'Backup Frequency',
         label: '',
-        href: '/rtw/additional-notes/backup-frequency',
+        href: '/edms/rtw/additional-notes/backup-frequency',
         icon: '',
       },
       {
         title: 'Document Control Manager',
         label: '',
-        href: '/rtw/additional-notes/document-control-manager',
+        href: '/edms/rtw/additional-notes/document-control-manager',
         icon: '',
       },
       {
         title: 'Document Revision Log',
         label: '',
-        href: '/rtw/additional-notes/document-revision-log',
+        href: '/edms/rtw/additional-notes/document-revision-log',
         icon: '',
       },
     ],

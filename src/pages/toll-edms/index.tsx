@@ -3,18 +3,18 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-
-import DemoTable from '@/components/table'
+import { tollLinks } from '@/data/sidelinks'
+import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
+import DemoTable from '@/components/toll/toll-collect-traffic-table'
 import { useAuth } from '@/provider/authProvider'
-import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
-import NewNavbar from '@/components/edms/new-nav'
-import { rntLinks } from '@/data/sidelinks-edms'
 
-export default function RoadAndTraffic() {
+export default function TollCollectTraffic() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
+
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-  const selectedNav = edmsTopNav
+
+  const selectedNav = tollTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>
@@ -22,7 +22,7 @@ export default function RoadAndTraffic() {
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={rntLinks}
+          sideLinks={tollLinks}
         />
 
         <div
@@ -37,14 +37,12 @@ export default function RoadAndTraffic() {
                 <UserNav />
               </div>
             </LayoutHeader>
-  <div>
-                <NewNavbar links={edmsSecondNav} />
-              </div>
+
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='h-[calc(100vh)] flex items-center justify-center '>
                 <h1 className='text-4xl font-bold tracking-tight md:text-5xl text-center'>
-                  Welcome To Road & Traffic Department
+                  Welcome To Toll Department
                 </h1>
 
                 {/* <DemoTable /> */}

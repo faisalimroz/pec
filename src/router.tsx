@@ -1155,6 +1155,14 @@ const router = createBrowserRouter([
 
 // extra rat (edms)
 {
+            path: '/edms/road-and-traffic',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/index')
+              ).default,
+            }),
+          },
+{
             path: '/edms/road-and-traffic/organization-organogram',
             lazy: async () => ({
               Component: (
@@ -1386,6 +1394,14 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import('@/pages/road-and-traffic-edms/road-and-maintenance/miscellaneous')
+              ).default,
+            }),
+          },
+          {
+            path: '/edms/road-and-traffic/about',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/index')
               ).default,
             }),
           },
@@ -1894,6 +1910,116 @@ const router = createBrowserRouter([
     }),
   },
 
+//extra edms rtw
+{
+    path: '/edms/rtw',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/index')).default,
+    }),
+  },
+{
+    path: '/edms/rtw/project-overview',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/project-overview')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/material-test-report',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/quality-safety/material-test-report')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/safety',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/quality-safety/safety')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/meeting-minutes',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/communication-correspondence/meeting-minutes')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/letter-and-official-correspondence',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/communication-correspondence/letter-official-correspondence')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/rtw-bills',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/financial-documentation/rtw-bills')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/rtw-drawings',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/technical-documentation/rtw-drawings')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/rtw-drawings',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/technical-documentation/rtw-drawings')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/material-and-equipment',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/technical-documentation/materials-and-equipment')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/rtw-maintenance-manual',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/technical-documentation/rtw-maintenance-manual')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/survey-reports',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/technical-documentation/survey-reports')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/picture-and-videos',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/visual-records/pictures-and-videos')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/monitoring-and-reporting/monthly-reports',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/monitoring-and-reporting/monthly-report')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/monitoring-and-reporting/daily-water-level-records',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/monitoring-and-reporting/daily-water-level-records')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/additional-notes/backup-frequency',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/additional-notes/backup-frequency')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/additional-notes/document-control-manager',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/additional-notes/document-control')).default,
+    }),
+  },
+  {
+    path: '/edms/rtw/additional-notes/document-revision-log',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/additional-notes/document-revision-log')).default,
+    }),
+  },
+
 
 
   //main bridge pmis
@@ -1996,7 +2122,6 @@ const router = createBrowserRouter([
     }),
   },
   //extra edms
-  
 
   {
     path: '/edms/its/workplan',
@@ -2038,6 +2163,12 @@ const router = createBrowserRouter([
     path: '/edms/its/organization',
     lazy: async () => ({
       Component: (await import('@/pages/its-edms/Organization')).default,
+    }),
+  },
+  {
+    path: '/edms/its',
+    lazy: async () => ({
+      Component: (await import('@/pages/its-edms/index')).default,
     }),
   },
   // Error routes

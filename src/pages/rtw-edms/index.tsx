@@ -3,12 +3,11 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-
+import { rtwLinks } from '@/data/sidelinks-edms'
+import { getFilteredNavLinks, rtwTopNav,edmsSecondNav, edmsTopNav } from '@/data/edmsNavLinks'
 import DemoTable from '@/components/table'
 import { useAuth } from '@/provider/authProvider'
-import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
 import NewNavbar from '@/components/edms/new-nav'
-import { rntLinks } from '@/data/sidelinks-edms'
 
 export default function RoadAndTraffic() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
@@ -22,7 +21,7 @@ export default function RoadAndTraffic() {
         <Sidebar2
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
-          sideLinks={rntLinks}
+          sideLinks={rtwLinks}
         />
 
         <div
@@ -44,7 +43,7 @@ export default function RoadAndTraffic() {
             <LayoutBody className='space-y-4'>
               <div className='h-[calc(100vh)] flex items-center justify-center '>
                 <h1 className='text-4xl font-bold tracking-tight md:text-5xl text-center'>
-                  Welcome To Road & Traffic Department
+                  Welcome To RTW Department
                 </h1>
 
                 {/* <DemoTable /> */}
