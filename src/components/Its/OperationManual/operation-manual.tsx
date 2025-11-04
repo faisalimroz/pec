@@ -22,7 +22,7 @@ import JSZip from 'jszip'
 import { Dropdown } from 'primereact/dropdown';
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
-
+import { Checkbox } from 'primereact/checkbox';
 interface Attachment {
   url: string
   _id: string
@@ -91,7 +91,7 @@ export default function AssetManagementTable() {
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
   const [buttonType, setButtonType] = useState("");
-
+    const [approved, setApproved] = useState<boolean>(false);
      const alltypes = [
  
         { name: "Toll Software", value: "Toll Software" },
@@ -240,7 +240,7 @@ export default function AssetManagementTable() {
 
       formData.append('subjectName', subjectName)
         formData.append('type', type)
-
+ formData.append('approved', approved ? 'true' : 'false');
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
@@ -1179,7 +1179,8 @@ interface ButtonGroupProps {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -1188,7 +1189,19 @@ interface ButtonGroupProps {
               </div>
             </div>
           </div>
-          
+          <div className="col-span-2 mt-2">
+                                  <label className="font-bold mb-2 block">Approval</label>
+                                  <div className="flex items-center gap-3">
+                                      <Checkbox
+                                          inputId="approve"
+                                          checked={approved}
+                                          onChange={(e) => setApproved(!!e.checked)}
+                                      />
+                                      <label htmlFor="approve" className="text-sm">
+                                          Add this document for all
+                                      </label>
+                                  </div>
+                              </div>
 
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>

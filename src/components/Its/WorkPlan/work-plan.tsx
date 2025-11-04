@@ -37,8 +37,7 @@ interface Product {
     description: string
     monthName: string;
     date: string
-    remarks: string
-   
+    remarks: string  
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -1289,7 +1288,9 @@ export default function MonthlyReport() {
                             <div className='border rounded-md'>
                                 <Calendar
                                     id='date'
-                                    // @ts-ignore
+                                
+                                    value={formDate}
+                                
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1308,7 +1309,7 @@ export default function MonthlyReport() {
                                 onChange={(e) => setApproved(!!e.checked)}
                             />
                             <label htmlFor="approve" className="text-sm">
-                                Approve this document
+                                Add this document for all
                             </label>
                         </div>
                     </div>

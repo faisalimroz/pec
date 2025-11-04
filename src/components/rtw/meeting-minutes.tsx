@@ -23,7 +23,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchMeetingMinutes } from '@/api/rtwAPIs'
-
+import { Checkbox } from 'primereact/checkbox';
 interface Attachment {
     url: string
     _id: string
@@ -81,6 +81,7 @@ export default function KecLetter() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
+    const [approved, setApproved] = useState<boolean>(false);
     const [remarks, setRemarks] = useState('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -308,7 +309,7 @@ export default function KecLetter() {
             formData.append('description', description)
           
             formData.append('remarks', remarks)
-          
+          formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -1257,6 +1258,7 @@ export default function KecLetter() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1264,6 +1266,19 @@ export default function KecLetter() {
                                     placeholder='Select Date'
                                 />
                             </div>
+                        </div>
+                    </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                     <div className='gap-3 mt-5'>
