@@ -33,7 +33,7 @@ export async function searchOrganization(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/its/staff/all/data`,
+    `${BASE_URL}/api/v1/its/organization/data/search`,
     param,
     {
       headers: {
@@ -47,10 +47,10 @@ export async function searchOrganization(param: unknown) {
 }
 //work plan
 export async function searchWorkPlan(param: unknown) {
-  // console.log('param', param)
+   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/its/staff/all/data`,
+    `${BASE_URL}/api/v1/its/work-plan/data/search`,
     param,
     {
       headers: {
@@ -68,7 +68,7 @@ export async function searchNotice(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/its/staff/all/data`,
+    `${BASE_URL}/api/v1/its/notice/data/search`,
     param,
     {
       headers: {
@@ -82,10 +82,10 @@ export async function searchNotice(param: unknown) {
 }
 //system configure
 export async function searchSystemConfigure(param: unknown) {
-  // console.log('param', param)
+ // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/its/staff/all/data`,
+    `${BASE_URL}/api/v1/its/system-configure/data/search`,
     param,
     {
       headers: {
@@ -99,10 +99,10 @@ export async function searchSystemConfigure(param: unknown) {
 }
 //  operation manual
 export async function searchOperationManual(param: unknown) {
-  // console.log('param', param)
+  console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/its/staff/all/data`,
+    `${BASE_URL}/api/v1/its/operation-manual/data/search`,
     param,
     {
       headers: {
@@ -114,12 +114,13 @@ export async function searchOperationManual(param: unknown) {
 
   return response.data
 }
+
 //Monthly Report
 export async function searchMonthlyReport(param: unknown) {
   // console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/its/staff/all/data`,
+    `${BASE_URL}/api/v1/its/monthly-report/data/search`,
     param,
     {
       headers: {
@@ -131,5 +132,3 @@ export async function searchMonthlyReport(param: unknown) {
 
   return response.data
 }
-
-

@@ -22,6 +22,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
     url: string
@@ -96,7 +97,7 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+const [approved, setApproved] = useState<boolean>(false);
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -235,7 +236,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+             formData.append('approved', approved ? 'true' : 'false');
             formData.append('subjectName', subjectName)
             formData.append('description', description)
             formData.append('remarks', remarks)     
@@ -1094,6 +1095,7 @@ export default function MonthlyReport() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1111,6 +1113,19 @@ export default function MonthlyReport() {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

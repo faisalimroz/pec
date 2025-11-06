@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { Chart } from "primereact/chart";
 
 type WaterRow = {
-  date: string;          
+  date: string;            // "YYYY-MM-DD" from API
   eightAM: number;
   twelvePM: number;
   twoPM: number;
@@ -10,29 +11,71 @@ type WaterRow = {
   maximumWaterLevel: number;
 };
 
+type Mode = "monthly" | "maximum";
 
-const SAMPLE: WaterRow[] = [
-  { date: "2025-03-01", eightAM: 2.4, twelvePM: 2.9, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 3.2 },
-  { date: "2025-03-02", eightAM: 2.6, twelvePM: 3.0, twoPM: 3.2, sixPM: 2.7, maximumWaterLevel: 3.3 },
-  { date: "2025-03-03", eightAM: 2.3, twelvePM: 2.8, twoPM: 3.0, sixPM: 2.5, maximumWaterLevel: 3.1 },
-  { date: "2025-03-04", eightAM: 2.7, twelvePM: 3.1, twoPM: 3.4, sixPM: 2.9, maximumWaterLevel: 3.5 },
-  { date: "2025-03-05", eightAM: 2.1, twelvePM: 2.5, twoPM: 2.8, sixPM: 2.3, maximumWaterLevel: 2.9 },
-  { date: "2025-03-06", eightAM: 2.5, twelvePM: 2.9, twoPM: 3.1, sixPM: 2.6, maximumWaterLevel: 3.2 },
-  { date: "2025-03-07", eightAM: 2.9, twelvePM: 3.3, twoPM: 3.6, sixPM: 3.0, maximumWaterLevel: 3.7 },
-];
+type FilterData = {
+  location?: string;
+  month?: string;
+
+  startDate?: string; // DD-MM-YYYY format
+  endDate?: string;   // DD-MM-YYYY format
+};
 
 export default function WaterLevelMiniChart({
-  data = SAMPLE,                          
   height = 480,
-  
+  filterData, // Accept filter data as prop
+  mode = "monthly" // Accept mode as prop
 }: {
-  data?: WaterRow[];
   height?: number;
+  filterData?: FilterData;
+  mode?: Mode;
 }) {
-  const [mode, setMode] = useState<"monthly" | "maximum">("monthly");
+  const [data, setData] = useState<WaterRow[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async (filters: FilterData = {}) => {
+    try {
+      setLoading(true);
+
+      // Build POST body from filterData prop
+      const body: any = {};
+      
+      if (filters.location) body.location = filters.location;
+      if (filters.month) body.month = filters.month;
+   
+      if (filters.startDate) body.startDate = filters.startDate;
+      if (filters.endDate) body.endDate = filters.endDate;
+
+      console.log("Fetching chart data with filters:", body);
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monthly-water-level/chart`,
+        body,
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token") || ""}` } }
+      );
+
+      const rows: WaterRow[] = Array.isArray(res.data?.data) ? res.data.data : [];
+      setData(rows);
+    } catch (err) {
+      console.error("Chart fetch error:", err);
+      setData([]); // clear on error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch data when filterData changes
+  useEffect(() => {
+    if (filterData) {
+      fetchData(filterData);
+    }
+  }, [filterData]);
 
   const labels = useMemo(
-    () => data.map((r) => new Date(r.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })),
+    () =>
+      data.map((r) =>
+        new Date(r.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+      ),
     [data]
   );
 
@@ -109,9 +152,8 @@ export default function WaterLevelMiniChart({
       scales: {
         x: { grid: { display: false } },
         y: {
-          beginAtZero: true,
+          beginAtZero: false,
           title: { display: true, text: "Water Level (m PWD)" },
-         
         },
       },
     }),
@@ -119,9 +161,16 @@ export default function WaterLevelMiniChart({
   );
 
   return (
-    <div className="p-4 border rounded-md bg-white ">
-      
+    <div className="p-4 border rounded-md bg-white">
+      {/* Loading indicator */}
+      {loading && (
+        <div className="text-center py-4">
+          <i className="pi pi-spin pi-spinner mr-2"></i>
+          Loading chart data...
+        </div>
+      )}
 
+      {/* Chart */}
       <div style={{ height }}>
         <Chart type="line" data={chartData} options={options} />
       </div>

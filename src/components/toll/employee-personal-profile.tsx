@@ -9,7 +9,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchEmployeePersonalProfile } from '@/api/adminAPIs'
+import { searchEmployeeReport } from '@/api/tollApi'
 import axios from 'axios'
 import { toast } from 'sonner'
 import MultiFileInput from '@/components/MultiFileInput'
@@ -18,6 +18,9 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { useLocation, useNavigate } from 'react-router-dom'
 import EmPersonalDetail from './em-personal-detail'
+import ButtonGroup from '@/components/ui/employee'
+import Refresh from '@/components/ui/refresh'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Product {
   _id: string
@@ -103,7 +106,7 @@ export default function EmPersonalProfileTable() {
 
   const navigate = useNavigate()
   const location = useLocation()
-
+const [approved, setApproved] = useState<boolean>(false);
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -125,6 +128,10 @@ export default function EmPersonalProfileTable() {
   const [searchDate2, setSearchDate2] = useState<Date | null>(null)
   const [termination, setTermination] = useState<File[]>([])
   const [insuranceClaiming, setInsuranceClaiming] = useState<File[]>([])
+   const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
     null
   )
@@ -155,7 +162,70 @@ export default function EmPersonalProfileTable() {
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [viewDialogVisible, setViewDialogVisible] = useState<boolean>(false)
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('')
+ const uploadFile = async () => {
+    if (!file) {
+      setUploadStatus('Please select a file first.')
+      return
+    }
 
+    setUploading(true)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/employee-personal-profile/bulk-upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      toast.success('File uploaded successfully!')
+      setFile(null)
+      refetch()
+      hideDialog2()
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      toast.error('An error occurred while uploading. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const hideDialog2 = () => {
+    setBulkDialog(false)
+    setFile(null)
+    setUploadStatus('')
+  }
+
+  const openNew2 = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setBulkDialog(true)
+  }
+
+   const productDialogFooter2 = (
+      <>
+        <Button
+          label='Cancel'
+          icon='pi pi-times'
+          className='p-button-text'
+          onClick={hideDialog2}
+        />
+        <Button
+          label='Save'
+          icon='pi pi-upload'
+          className='p-button-text'
+          onClick={uploadFile}
+          disabled={!file || uploading}
+        />
+      </>
+    )
   // Replace current page initialization useEffect
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -242,7 +312,7 @@ export default function EmPersonalProfileTable() {
       })
 
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/employee-personal-profile/upload`,
         data,
         {
           headers: {
@@ -257,31 +327,32 @@ export default function EmPersonalProfileTable() {
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch();
-      // Reset form data after successful save
-      setFormData({
-        employeeName: '',
-        employeeId: '',
-        dept: '',
-        firmName: '',
-        position: '',
-        dateOfMobilization: '',
-        dateOfDemobilization: '',
-        remarks: '',
-        salary: '',
-        boqNo: '',
-        location: '',
-        branch: '',
-        mobile: '',
-        address: '',
-        email: '',
-        cvCertificates: [],
-        agreement: [],
-        showcaseLetter: [],
-        warningLetter: [],
-        termination: [],
-        insuranceClaiming: [],
-        profileImg: '',
-      });
+          // Reset form data after successful save
+    setFormData({
+      employeeName: '',
+      employeeId: '',
+      dept: '',
+      firmName: '',
+      position: '',
+      dateOfMobilization: '',
+      dateOfDemobilization: '',
+      remarks: '',
+      salary: '',
+      boqNo: '',
+      location: '',
+      branch: '',
+      mobile: '',
+      address: '',
+      approved: formData.approved,
+      email: '',
+      cvCertificates: [],
+      agreement: [],
+      showcaseLetter: [],
+      warningLetter: [],
+      termination: [],
+      insuranceClaiming: [],
+      profileImg: '',
+    });
 
     } catch (error: any) {
       if (error.response) {
@@ -320,7 +391,7 @@ export default function EmPersonalProfileTable() {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/employee-personal-profile/delete/multiple/data`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -370,13 +441,13 @@ export default function EmPersonalProfileTable() {
   )
 
   // multi delete func end
- 
+
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-lg'>
-          Document List
-        </div>
+        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
+                    Document List
+                </div>
         {/* {isAdmin && (
           <button
             onClick={confirmDeleteSelected}
@@ -398,29 +469,18 @@ export default function EmPersonalProfileTable() {
     return (
       <>
         {hasEditAccess && (
-          <div className='space-x-2 flex'>
-            {/* <button
-              className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-              onClick={openNew}
-            >
-              Upload Document
-            </button> */}
-            <button
-              className="flex items-center gap-2 bg-[#0B1F8F] text-white border border-[#E2E8F0]  px-4 py-3 rounded-md font-bold"
-              onClick={exportCSV}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M17 8L12 3L7 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M12 3V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-             Download Document
-            </button>
-            
-           
+          <div className='space-x-2 mb-2'>
+           <ButtonGroup
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            openNew2={openNew2}
+            exportCSV={exportCSV}
+          />
           </div>
         )}
-        <RefreshButton handleReset={handleReset} />
+        <div className='mb-2'>
+          <Refresh handleReset={handleReset} />
+        </div>
       </>
     )
   }
@@ -471,10 +531,10 @@ export default function EmPersonalProfileTable() {
           : '',
       searchQuery: searchKey,
       //@ts-ignore
-      employeType: selectedType?.code || '',
+ 
     }
 
-    searchEmployeePersonalProfile(initialPayload).then((result) => {
+    searchEmployeeReport(initialPayload).then((result) => {
       setProducts(result?.EmployeePersonals)
       setLoading(false)
     })
@@ -493,7 +553,7 @@ export default function EmPersonalProfileTable() {
     setSearchKey('')
     setCurrentPage(0)
 
-    searchEmployeePersonalProfile(initialPayload).then((result) => {
+    searchEmployeeReport(initialPayload).then((result) => {
       setProducts(result?.EmployeePersonals)
       setLoading(false)
     })
@@ -523,7 +583,6 @@ export default function EmPersonalProfileTable() {
           inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           placeholder='Start Date'
           showIcon
-           icon={() => <i className='pi pi-angle-down' />}
         />
       </div>
       <div>
@@ -534,11 +593,10 @@ export default function EmPersonalProfileTable() {
           inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           placeholder='End Date'
           showIcon
-           icon={() => <i className='pi pi-angle-down' />}
         />
       </div>
 
-    
+     
 
       <IconField iconPosition='left' className='relative w-fit'>
         <InputIcon className='pi pi-search' />
@@ -583,6 +641,16 @@ export default function EmPersonalProfileTable() {
       />
     </>
   )
+const handleFileChange2 = (e: { target: { files: any[] } }) => {
+    const selectedFile = e.target.files[0]
+    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+      setFile(selectedFile)
+      setUploadStatus('')
+    } else {
+      setFile(null)
+      setUploadStatus('Please select a valid .xlsx file.')
+    }
+  }
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -657,7 +725,7 @@ export default function EmPersonalProfileTable() {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/employee-personal-profile/delete/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -709,7 +777,7 @@ export default function EmPersonalProfileTable() {
       searchQuery: '',
     }
 
-    searchEmployeePersonalProfile(initialPayload).then((result) => {
+    searchEmployeeReport(initialPayload).then((result) => {
       setProducts(result?.EmployeePersonals)
       setLoading(false)
     })
@@ -727,7 +795,7 @@ export default function EmPersonalProfileTable() {
       <div className='ml-4'>
         <div className='card'>
           <Toolbar
-            className='rounded-none border-none p-0 bg-white'
+            className='rounded-none border-none p-0 bg-background'
             left={leftToolbarTemplate}
             right={rightToolbarTemplate}
           ></Toolbar>
@@ -770,14 +838,6 @@ export default function EmPersonalProfileTable() {
             )}
 
             <Column
-              field='slNo'
-              header='SL'
-              headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
-              sortable
-              showClearButton
-            ></Column>
-            <Column
               field='boqNo'
               header='BOQ'
               headerClassName='bg-[#ffc2c2] text-sm'
@@ -796,21 +856,15 @@ export default function EmPersonalProfileTable() {
 
             <Column
               field='employeeName'
-              headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
+              headerClassName='bg-[#ffc2c2] text-sm min-w-[12rem]'
               bodyClassName='text-sm truncate max-w-lg'
               sortable
               header='Employee Name'
             ></Column>
-            <Column
-              field='mobile'
-              headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
-              // sortable
-              header='Mobile'
-            ></Column>
+
             <Column
               field='position'
-              headerClassName='bg-[#ffc2c2] text-sm min-w-[16rem]'
+              headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-sm'
               // sortable
               header='Position'
@@ -829,7 +883,7 @@ export default function EmPersonalProfileTable() {
               header='Date of Mobilization'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
               bodyClassName='text-sm truncate max-w-lg'
-            // sortable
+              // sortable
             ></Column>
 
             <Column
@@ -837,7 +891,25 @@ export default function EmPersonalProfileTable() {
               header='Date of Demobilization'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-sm truncate max-w-lg'
-            // sortable
+              // sortable
+            ></Column>
+
+           
+
+            <Column
+              field='mobile'
+              headerClassName='bg-[#ffc2c2] text-sm'
+              bodyClassName='text-sm truncate max-w-lg'
+              // sortable
+              header='Mobile'
+            ></Column>
+
+            <Column
+              field='salary'
+              headerClassName='bg-[#ffc2c2] text-sm'
+              bodyClassName='text-sm truncate max-w-lg'
+              sortable
+              header='Salary'
             ></Column>
 
             <Column
@@ -851,7 +923,46 @@ export default function EmPersonalProfileTable() {
             ></Column>
           </DataTable>
         </div>
-
+<Dialog
+        visible={bulkDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Upload Bulk Data'
+        modal
+        className='p-fluid'
+        footer={productDialogFooter2}
+        onHide={hideDialog2}
+      >
+        <div className='grid grid-cols-2 items-center gap-6'>
+          <div className='field col-span-2'>
+            <label htmlFor='bulkUpload' className='font-bold'>
+              Select File (.xlsx Only):
+            </label>
+            <br />
+            <input
+              type='file'
+              id='bulkUpload'
+              accept='.xlsx'
+              // @ts-ignore
+              onChange={handleFileChange2}
+              disabled={uploading}
+              className='mt-3'
+            />
+            {/* {file && <p>Selected file: {file?.name}</p>} */}
+            {uploadStatus && (
+              <p
+                className={
+                  uploadStatus.includes('success')
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }
+              >
+                {uploadStatus}
+              </p>
+            )}
+          </div>
+        </div>
+      </Dialog>
         {/* upload data dialog  */}
         <Dialog
           visible={productDialog}
@@ -913,7 +1024,7 @@ export default function EmPersonalProfileTable() {
                 />
               </div>
 
-              {/* <div className='field'>
+              <div className='field'>
                 <label htmlFor='remarks' className='font-bold'>
                   Remarks
                 </label>
@@ -923,19 +1034,9 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div> */}
+              </div>
 
-              {/* <div className='field'>
-                <label htmlFor='salary' className='font-bold'>
-                  Salary
-                </label>
-                <InputText
-                  id='salary'
-                  value={formData.salary}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div> */}
+      
 
               <div className='field'>
                 <label htmlFor='boqNo' className='font-bold'>
@@ -949,29 +1050,8 @@ export default function EmPersonalProfileTable() {
                 />
               </div>
 
-              {/* <div className='field'>
-                <label htmlFor='location' className='font-bold'>
-                  Location
-                </label>
-                <InputText
-                  id='location'
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div> */}
+          
 
-              {/* <div className='field'>
-                <label htmlFor='branch' className='font-bold'>
-                  Branch
-                </label>
-                <InputText
-                  id='branch'
-                  value={formData.branch}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div> */}
 
               <div className='field'>
                 <label htmlFor='mobile' className='font-bold'>
@@ -985,7 +1065,7 @@ export default function EmPersonalProfileTable() {
                 />
               </div>
 
-              {/* <div className='field'>
+              <div className='field'>
                 <label htmlFor='address' className='font-bold'>
                   Address
                 </label>
@@ -995,9 +1075,9 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div> */}
+              </div>
 
-              {/* <div className='field'>
+              <div className='field'>
                 <label htmlFor='email' className='font-bold'>
                   Email
                 </label>
@@ -1007,7 +1087,7 @@ export default function EmPersonalProfileTable() {
                   onChange={handleInputChange}
                   required
                 />
-              </div> */}
+              </div>
 
               <div>
                 <label htmlFor='date' className='font-bold'>
@@ -1047,17 +1127,7 @@ export default function EmPersonalProfileTable() {
                   />
                 </div>
               </div>
-              {/* <div className='field'>
-                <label htmlFor='firmName' className='font-bold'>
-                  Firm Name
-                </label>
-                <InputText
-                  id='firmName'
-                  value={formData.firmName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div> */}
+              
             </div>
 
             <div className='gap-3 mt-5'>
@@ -1070,7 +1140,7 @@ export default function EmPersonalProfileTable() {
               </div>
             </div>
 
-            {/* <div className='gap-3 mt-5'>
+            <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Agreements Files
               </label>
@@ -1095,12 +1165,12 @@ export default function EmPersonalProfileTable() {
                 Upload Warning Letter Files
               </label>
 
-              <div> */}
-            {/* <MultiFileInput onFilesChange={handleWarningLetter} />
-              </div> */}
-            {/* </div> */}
+              <div>
+                <MultiFileInput onFilesChange={handleWarningLetter} />
+              </div>
+            </div>
 
-            {/* <div className='gap-3 mt-5'>
+            <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Resignation or Termination Files
               </label>
@@ -1118,7 +1188,7 @@ export default function EmPersonalProfileTable() {
               <div>
                 <MultiFileInput onFilesChange={handleInsuranceClaiming} />
               </div>
-            </div> */}
+            </div>
 
             <div className='field col-span-2'>
               <label htmlFor='profileImg' className='block mb-1 font-semibold'>
@@ -1147,6 +1217,24 @@ export default function EmPersonalProfileTable() {
                 </div>
               )}
             </div>
+             <div className="col-span-2 mt-2">
+  <label className="font-bold mb-2 block">Approval</label>
+  <div className="flex items-center gap-3">
+    <Checkbox
+      inputId="approve"
+      checked={formData.approved} // Dynamically bind to formData.approved
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          approved: e.checked, // Update the approved field dynamically
+        })
+      }
+    />
+    <label htmlFor="approve" className="text-sm">
+      Add this document for all
+    </label>
+  </div>
+</div>
           </>
         </Dialog>
 
@@ -1215,7 +1303,7 @@ export default function EmPersonalProfileTable() {
         >
           <div
             className='overflow-y-auto'
-          // style={{ height: 'calc(90vh - 120px)' }}
+            // style={{ height: 'calc(90vh - 120px)' }}
           >
             {selectedEmployeeId && (
               <EmPersonalDetail id={selectedEmployeeId} isDialog={true} />

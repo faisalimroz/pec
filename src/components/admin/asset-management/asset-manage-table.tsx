@@ -19,10 +19,11 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Dropdown } from 'primereact/dropdown'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
   url: string
@@ -76,6 +77,7 @@ export default function AssetManagementTable() {
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
   const [fileName, setfileName] = useState('')
+  const [approved, setApproved] = useState<boolean>(false);
   const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
@@ -96,7 +98,7 @@ export default function AssetManagementTable() {
   const [buttonType, setButtonType] = useState("");
   // all update dialog func here
   const alltypes = [
-    { name: "All", value: "All" },
+    
     { name: "Service Area 1", value: "Service Area 1" },
     { name: "Service Area 2", value: "Service Area 2" },
     { name: "Service Area 3", value: "Service Area 3" },
@@ -319,6 +321,7 @@ export default function AssetManagementTable() {
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
+       formData.append('approved', approved ? 'true' : 'false');
       formData.append('type', type)
       filesInput.forEach((file) => {
         formData.append('attachments', file)
@@ -335,7 +338,7 @@ export default function AssetManagementTable() {
       )
 
       const response = res
-      console.log(response)
+      
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()
@@ -344,7 +347,7 @@ export default function AssetManagementTable() {
         const { message } = error.response.data
         toast.error(message)
       } else {
-        console.log(error)
+       
       }
     } finally {
       setLoading2(false)
@@ -539,7 +542,7 @@ export default function AssetManagementTable() {
 
 
     const buttons = [
-      { label: "All", value: "" },
+    
       { label: "Service Area 1", value: "Service Area 1" },
       { label: "Service Area 2", value: "Service Area 2" },
       { label: "Service Area 3", value: "Service Area 3" },
@@ -675,20 +678,12 @@ export default function AssetManagementTable() {
     </>
   )
 
-  function getMonthName(dateString: string) {
-    const date = new Date(dateString)
-    return date.toLocaleString('en-US', { month: 'long' })
-  }
 
-  function getYear(dateString: string) {
-    const date = new Date(dateString)
-    return date.getFullYear()
-  }
 
   const handleSearch = () => {
     setLoading(true)
     const payload = {
-      type: selectedType || 'All',
+      type: selectedType,
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
@@ -900,7 +895,7 @@ export default function AssetManagementTable() {
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            sortable
+             className='min-w-[10rem]'
           ></Column>
 
 
@@ -909,7 +904,7 @@ export default function AssetManagementTable() {
             field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            sortable
+             className='min-w-[10rem]'
             header='File Name/Subject'
           ></Column>
 
@@ -918,6 +913,7 @@ export default function AssetManagementTable() {
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             // sortable
+              className='min-w-[10rem]'
             header='Date'
           ></Column>
 
@@ -925,7 +921,7 @@ export default function AssetManagementTable() {
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+             className='min-w-[10rem]'
             header='Description'
           ></Column>
 
@@ -942,7 +938,7 @@ export default function AssetManagementTable() {
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-          // sortable
+            className='min-w-[10rem]'
           ></Column>
 
           <Column
@@ -1322,7 +1318,8 @@ export default function AssetManagementTable() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -1353,6 +1350,19 @@ export default function AssetManagementTable() {
               <MultiFileInput onFilesChange={handleFileChange} />
             </div>
           </div>
+          <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="approve"
+                                    checked={approved}
+                                    onChange={(e) => setApproved(!!e.checked)}
+                                />
+                                <label htmlFor="approve" className="text-sm">
+                                    Add this document for all
+                                </label>
+                            </div>
+                        </div>
         </>
       </Dialog>
 

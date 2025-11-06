@@ -24,7 +24,8 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
-
+import { searchMBTechMaterialsList } from '@/api/mainBridgeAPIs'
+import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
     url: string
     _id: string
@@ -71,6 +72,7 @@ export default function MonthlyReport() {
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
     const [deleteProductsDialog, setDeleteProductsDialog] =
         useState<boolean>(false)
+         const [approved, setApproved] = useState<boolean>(false);
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
@@ -113,7 +115,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -210,7 +212,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -311,13 +313,13 @@ export default function MonthlyReport() {
             formData.append('sender', sender)
           
             formData.append('remarks', remarks)
-
+formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/create`,
                 formData,
                 {
                     headers: {
@@ -363,7 +365,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -413,7 +415,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-materials/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -618,44 +620,58 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-const handleSearch = () => {
-        setLoading(true)
-        const payload = {
-
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
-        }
-        searchHealthcenterMonthlyReport(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-          setDate(null)
-            setDate2(null)
-            setSearchKey('')
+   const handleSearch = () => {
+          setLoading(true)
+          const payload = {
+       
+              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+              searchQuery: searchKey,
             
+          }
         
-            const payload = {
-            
+          searchMBTechMaterialsList(payload).then((result) => {
+              setProducts(result?.data || [])
+              setLoading(false)
+          })
+      }
+  
+      const handleReset = () => {
+          setLoading(true)
+          const payload = {
+  
               date_range: '',
               searchQuery: '',
-            }
-            searchTreatmentRecord(payload).then((result) => {
-                setProducts(result?.data)
-                setLoading(false)
-            })
-        }
+          }
+  
+          setDate(null)
+          setDate2(null)
+          setSearchKey('')
+         
+  
+          searchMBTechMaterialsList(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+  
+     const refetch = () => {
+             setLoading(true)
+     
+             const payload = {
+     
+                 date_range: '',
+                 searchQuery: '',
+             }
+     
+             searchMBTechMaterialsList(payload).then((result) => {
+                 setProducts(result?.data)
+                 setLoading(false)
+             })
+         }
+          // initial data load - Internal
+         useEffect(() => {
+             refetch()
+         }, [])
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -774,25 +790,7 @@ const handleSearch = () => {
         </>
     )
 
-     const refetch = () => {
-            setLoading(true)
-           const payload = {
-   
-               date_range: '',
-               searchQuery: '',
-           }
-           searchHealthcenterMonthlyReport(payload).then((result) => {
-               setProducts(result?.data)
-               console.log(result, "ress")
-               setLoading(false)
-           })
-       }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
-
+    
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
     }
@@ -1243,6 +1241,7 @@ const handleSearch = () => {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1260,6 +1259,19 @@ const handleSearch = () => {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                     <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

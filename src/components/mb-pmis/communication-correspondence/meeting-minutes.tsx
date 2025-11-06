@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchHealthcenterMonthlyReport, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -21,7 +20,10 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+
+import { searchMeetingMinutes } from '@/api/mainBridgeAPIs'
+import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
     url: string
@@ -80,25 +82,22 @@ export default function KecLetter() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [problem, setproblem] = useState('')
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
- 
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
-
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
-
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
+ const [approved, setApproved] = useState<boolean>(false);
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -114,18 +113,14 @@ export default function KecLetter() {
 
     const handleUpdateProduct = async () => {
         if (!updatedProduct) return
-
         try {
             setLoading2(true)
             const formData = new FormData()
-    
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-       
             formData.append('remarks', updatedProduct.remarks)
-            
             formData.append('date', updatedProduct.date)
-           
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -135,7 +130,7 @@ export default function KecLetter() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-meeting-minutes/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -194,10 +189,82 @@ export default function KecLetter() {
 
     // ending all update dialog funcs
 
-    const codes = [
-        { name: 'Internal Patient', code: 'Internal' },
-        { name: 'Outside Patient', code: 'Outside' },
-    ]
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
+        }
+
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-meeting-minutes/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
+    }
+
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
+    }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
+
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -237,10 +304,10 @@ export default function KecLetter() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+formData.append('approved', approved ? 'true' : 'false');
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-           
+          
             formData.append('remarks', remarks)
           
             formData.append('date', formatDate(formDate))
@@ -248,7 +315,7 @@ export default function KecLetter() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-meeting-minutes/create`,
                 formData,
                 {
                     headers: {
@@ -294,7 +361,7 @@ export default function KecLetter() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-meeting-minutes/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -344,7 +411,7 @@ export default function KecLetter() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/communication-meeting-minutes/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -442,12 +509,13 @@ export default function KecLetter() {
         return (
             <>
                 {hasEditAccess && (
-                    <ButtonGroupWithIcons
+                    <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
+                        openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                     
+
                     />
                 )}
 
@@ -557,35 +625,60 @@ export default function KecLetter() {
         return date.getFullYear()
     }
 
-     const handleSearch = () => {
-           setLoading(true)
-           const payload = {
-   
-               date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-               searchQuery: searchKey,
-           }
-           searchHealthcenterMonthlyReport(payload).then((result) => {
-               setProducts(result?.data)
-               setLoading(false)
-           })
-       }
-   
-       const handleReset = () => {
-             setDate(null)
-               setDate2(null)
-               setSearchKey('')
-               
-           
-               const payload = {
-               
+   const handleSearch = () => {
+          setLoading(true)
+          const payload = {
+              typesofDrawings: selectedCode?.code || '',
+              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+              searchQuery: searchKey,
+            
+          }
+          console.log(payload,'hello')
+          searchMeetingMinutes(payload).then((result) => {
+              setProducts(result?.data || [])
+              setLoading(false)
+          })
+      }
+  
+      const handleReset = () => {
+          setLoading(true)
+          const payload = {
+  
+              date_range: '',
+              searchQuery: '',
+          }
+  
+          setDate(null)
+          setDate2(null)
+          setSearchKey('')
+          setSelectedCode(null)
+  
+          searchMeetingMinutes(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+  
+     const refetch = () => {
+             setLoading(true)
+     
+             const payload = {
+     
                  date_range: '',
                  searchQuery: '',
-               }
-               searchTreatmentRecord(payload).then((result) => {
-                   setProducts(result?.data)
-                   setLoading(false)
-               })
-           }
+             }
+     
+             searchMeetingMinutes(payload).then((result) => {
+                 setProducts(result?.data)
+                 setLoading(false)
+             })
+         }
+          // initial data load - Internal
+         useEffect(() => {
+             refetch()
+         }, [])
+
+
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -713,20 +806,6 @@ export default function KecLetter() {
         </>
     )
 
-    const refetch = () => {
-         setLoading(true)
-        const payload = {
-
-            date_range: '',
-            searchQuery: '',
-        }
-
-        searchTreatmentRecord([payload]).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
 
     // initial data load - Internal
     useEffect(() => {
@@ -796,7 +875,6 @@ export default function KecLetter() {
 
                             ></Column>
 
-                          
 
                             <Column
                                 field='date'
@@ -815,7 +893,7 @@ export default function KecLetter() {
                                 className='min-w-[8rem]'
                                 header='File Name'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -857,7 +935,46 @@ export default function KecLetter() {
                     </TabPanel>
                 </TabView>
             </div>
-
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -870,7 +987,7 @@ export default function KecLetter() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -901,7 +1018,7 @@ export default function KecLetter() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -935,7 +1052,7 @@ export default function KecLetter() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1054,7 +1171,7 @@ export default function KecLetter() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1121,7 +1238,7 @@ export default function KecLetter() {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1141,6 +1258,7 @@ export default function KecLetter() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1158,6 +1276,19 @@ export default function KecLetter() {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                     <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

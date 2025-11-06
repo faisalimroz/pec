@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -26,6 +25,8 @@ import WaterLevelMiniChart from './month-graph'
 import YearlyWaterLevelChart from './year-graph'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import RefreshButton from '@/components/refresh-button'
+import { searchDailyWaterLevelReport } from '@/api/rtwAPIs'
+import { Checkbox } from 'primereact/checkbox';
 interface Attachment {
     url: string
     _id: string
@@ -37,25 +38,18 @@ interface Product {
     twelvePM: string
     twoPM: string
     sixPM: string
-   
-    location:string
-   
-    date: string
+    location: string
     maximumWaterLevel: string
+    minimumWaterLevel: string
+    description: string
+    date: string
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
     updater?: string
     updatingTimestamp?: string
 }
-type WaterRow = {
-  date: string;        
-  eightAM: number;
-  twelvePM: number;
-  twoPM: number;
-  sixPM: number;
-  maximumWaterLevel: number;
-};
+
 export default function MonthlyReport() {
     let emptyProduct: Product = {
         _id: '',
@@ -63,11 +57,12 @@ export default function MonthlyReport() {
         eightAM: '',
         twelvePM: '',
         twoPM: '',
-        location:'',
-        sixPM: '',
-        
-        date: '',
         maximumWaterLevel: '',
+        minimumWaterLevel: '',
+        location: '',
+        sixPM: '',
+        description: '',
+        date: '',
         attachments: [],
     }
 
@@ -91,8 +86,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -100,16 +95,20 @@ export default function MonthlyReport() {
     const [twelvePM, setTwelvePM] = useState('')
     const [twoPM, setTwoPM] = useState('')
     const [sixPM, setSixPM] = useState('')
+    const [description, setDescription] = useState('')
+    const [approved, setApproved] = useState<boolean>(false);
    
-    const [maximumWaterLevel, setMaximumWaterLevel] = useState('')
-   
+
+
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    // const [selectedCode, setSelectedCode] = useState(null)
+
     const [selectedCode, setSelectedCode] = useState<any>(null);
+    const [selectedLocation, setSelectedLocation] = useState<any>(null);
     const [chartMode, setChartMode] = useState<'monthly' | 'maximum' | null>(null);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [location, setLocation] = useState<string>("");
+    const [location, setLocation] = useState<{ name: string; code: string } | null>(null);
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -120,9 +119,9 @@ export default function MonthlyReport() {
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
     const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
     const months = [
         { name: 'January', code: 'January' },
         { name: 'February', code: 'February' },
@@ -143,7 +142,7 @@ export default function MonthlyReport() {
         { name: 'Jinjira', code: 'Jinjira' }
 
     ]
-      const year = [
+    const year = [
 
         { name: '2026', code: '2026' },
         { name: '2025', code: '2025' },
@@ -158,81 +157,81 @@ export default function MonthlyReport() {
             </div>
         );
     };
-const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/daily-water-level-report/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -253,13 +252,23 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const formData = new FormData()
-            
+             const maximumWaterLevel= String(Math.max(
+                                    Number(updatedProduct.eightAM ),
+                                    Number(updatedProduct.twelvePM ),
+                                    Number(updatedProduct.twoPM ),
+                                    Number(updatedProduct.sixPM )))
+                                      const minimumWaterLevel= String(Math.min(
+                                    Number(updatedProduct.eightAM ),
+                                    Number(updatedProduct.twelvePM ),
+                                    Number(updatedProduct.twoPM ),
+                                    Number(updatedProduct.sixPM )))
             formData.append('eightAM', updatedProduct.eightAM)
             formData.append('twelvePM', updatedProduct.twelvePM)
             formData.append('twoPM', updatedProduct.twoPM)
             formData.append('sixPM', updatedProduct.sixPM)
-          
-            // formData.append('maximumWaterLevel', updatedProduct.maximumWaterLevel)
+            formData.append('description', updatedProduct.description)
+            formData.append('minimumWaterLevel', minimumWaterLevel)
+            formData.append('maximumWaterLevel', maximumWaterLevel)
             formData.append('date', updatedProduct.date)
             formData.append('location', updatedProduct.location);
             newAttachments.forEach((file) => {
@@ -271,7 +280,7 @@ const uploadFile = async () => {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/daily-water-level-report/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -367,20 +376,34 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+            const maximumWaterLevel = Math.max(
+                Number(eightAM),
+                Number(twelvePM),
+                Number(twoPM),
+                Number(sixPM)
+            );
+              const minimumWaterLevel = Math.min(
+                Number(eightAM),
+                Number(twelvePM),
+                Number(twoPM),
+                Number(sixPM)
+            );
             formData.append('eightAM', eightAM)
             formData.append('twelvePM', twelvePM)
             formData.append('twoPM', twoPM)
             formData.append('sixPM', sixPM)
-           
-            formData.append('location', location)
-           
+            formData.append('description', description)
+            formData.append('maximumWaterLevel', maximumWaterLevel.toString())
+            formData.append('minimumWaterLevel', minimumWaterLevel.toString())
+          
+            formData.append('location', location ? location.name : '')
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/daily-water-level-report/create`,
                 formData,
                 {
                     headers: {
@@ -426,7 +449,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/daily-water-level-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -476,7 +499,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/daily-water-level-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -544,62 +567,24 @@ const uploadFile = async () => {
     const rightToolbarTemplate = () => {
         return (
             <>
-              {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
 
 
             </>
         )
     }
-    // const ButtonGroup = () => {
-    //     const [activeButton, setActiveButton] = useState('Pictures')
 
-    //     const buttons = [
-    //         { label: 'Monthly Water Level Graph', value: 'Monthly Water Level Graph' },
-    //         { label: 'Maximum Water Level Graph', value: 'Maximum Water Level Graph' },
-
-    //     ]
-
-    //     const handleButtonClick = (buttonValue: string) => {
-    //         setActiveButton(buttonValue)
-    //         //api is not ready yet
-    //         console.log(`Button clicked: ${buttonValue}`)
-    //     }
-
-    //     return (
-    //         <>
-    //             <div className='flex items-center space-x-2 py-2 rounded-lg'>
-    //                 {buttons.map((button) => (
-    //                     <button
-    //                         key={button.value}
-    //                         onClick={() => handleButtonClick(button.value)}
-    //                         className={`
-    //         px-6 py-3 font-semibold  rounded-lg transition-colors duration-200 ease-in-out
-    //         ${activeButton === button.value
-    //                                 ? 'bg-[#6F90AE] text-base font-semibold text-white'
-    //                                 : ' bg-main text-base font-semibold text-white'
-    //                             }
-
-    //       `}
-    //                     >
-    //                         {button.label}
-    //                     </button>
-    //                 ))}
-    //             </div>
-    //         </>
-
-    //     )
-    // }
     const ButtonGroup = ({ onChange }: { onChange: (v: 'monthly' | 'maximum') => void }) => {
         return (
             <div className="flex items-center space-x-2 py-2 rounded-lg">
@@ -710,50 +695,61 @@ const uploadFile = async () => {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+            location: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-        
-        }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        }
+        console.log(payload, 'hello')
+        searchDailyWaterLevelReport(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
+        setLoading(true)
+        const payload = {
+            location: '',
+            date_range: '',
             searchQuery: '',
-            month: '',
-          
         }
 
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
         setSelectedCode(null)
+        setLocation(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchDailyWaterLevelReport(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+            location: '',
+            date_range: '',
+            searchQuery: '',
+            selectedCode: ''
+        }
+
+        searchDailyWaterLevelReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
+
 
     const filterSearchForm = (
         <div>
@@ -772,39 +768,39 @@ const uploadFile = async () => {
                     }}
                     className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
                 >
-                    {chartMode === null &&
-                        <div>
-                            <Calendar
-                                // @ts-ignore
-                                value={date}
-                                // @ts-ignore
-                                onChange={(e) => setDate(e.value)}
+                    {/* {chartMode === null && */}
 
-                                dateFormat="dd/mm/yy"
-                                inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-                                placeholder='Start Date'
-                                showIcon
-                                icon={() => <i className='pi pi-angle-down' />}
-                            />
-                            <Calendar
-                                // @ts-ignore
-                                value={date2}
-                                // @ts-ignore
-                                onChange={(e) => setDate2(e.value)}
+                    <Calendar
+                        // @ts-ignore
+                        value={date}
+                        // @ts-ignore
+                        onChange={(e) => setDate(e.value)}
 
-                                dateFormat="dd/mm/yy"
-                                inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-                                placeholder='End Date'
-                                showIcon
-                                icon={() => <i className='pi pi-angle-down' />}
-                            />
-                        </div>
+                        dateFormat="dd/mm/yy"
+                        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+                        placeholder='Start Date'
+                        showIcon
+                        icon={() => <i className='pi pi-angle-down' />}
+                    />
+                    <Calendar
+                        // @ts-ignore
+                        value={date2}
+                        // @ts-ignore
+                        onChange={(e) => setDate2(e.value)}
 
-                    }
+                        dateFormat="dd/mm/yy"
+                        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                        placeholder='End Date'
+                        showIcon
+                        icon={() => <i className='pi pi-angle-down' />}
+                    />
+
+
+                    {/* } */}
                     <div>
                         <Dropdown
-                            value={selectedCode}
-                            onChange={(e) => setSelectedCode(e.value)}
+                            value={selectedLocation}
+                            onChange={(e) => setSelectedLocation(e.value)}
                             options={locations}
                             itemTemplate={itemTemplate}
 
@@ -929,26 +925,6 @@ const uploadFile = async () => {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-          
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -960,14 +936,24 @@ const uploadFile = async () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
                 {chartMode === 'monthly' && (
                     <div className="mt-6 px-10 ">
                         {filterSearchForm}
-                       <WaterLevelMiniChart  />
+                        <WaterLevelMiniChart
+                            filterData={{
+                                location: selectedLocation?.code, // from your filter form
+                                month: selectedCode,              // from your filter form  
+                                // from your filter form
+                                startDate: date ? formatDate(date) : undefined, // DD-MM-YYYY
+                                endDate: date2 ? formatDate(date2) : undefined,       // DD-MM-YYYY
+                            }}
+                            mode="monthly"
+                            height={500}
+                        />
 
                     </div>
                 )}
@@ -975,7 +961,7 @@ const uploadFile = async () => {
                 {chartMode === 'maximum' && (
                     <div className="mt-6 ">
                         {filterSearchForm}
-                       <YearlyWaterLevelChart />
+                        <YearlyWaterLevelChart />
                     </div>
                 )}
                 {chartMode === null && (
@@ -1008,24 +994,24 @@ const uploadFile = async () => {
                                 loading={loading}
                                 scrollable
                             >
-                                {/* {hasEditAccess && (
+                                {hasEditAccess && (
+                                    <Column
+                                        selectionMode='multiple'
+                                        headerStyle={{ width: '3rem' }}
+                                        exportable={false}
+                                        headerClassName='bg-[#ffc2c2] text-sm'
+                                        bodyClassName='text-sm truncate max-w-xs'
+                                    ></Column>
+                                )}
+
                                 <Column
-                                    selectionMode='multiple'
-                                    headerStyle={{ width: '3rem' }}
-                                    exportable={false}
+                                    field='slNo'
+                                    header='SL No.'
                                     headerClassName='bg-[#ffc2c2] text-sm'
                                     bodyClassName='text-sm truncate max-w-xs'
+                                    className='min-w-[10rem]'
+
                                 ></Column>
-                            )} */}
-
-                                {/* <Column
-                                field='slNo'
-                                header='SL No.'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                className='min-w-[10rem]'
-
-                            ></Column> */}
 
 
                                 <Column
@@ -1036,7 +1022,7 @@ const uploadFile = async () => {
                                     className='min-w-[12rem]'
                                     header='Date'
                                 ></Column>
-                               
+
 
                                 <Column
                                     field='eightAM'
@@ -1095,46 +1081,46 @@ const uploadFile = async () => {
                 )}
 
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1154,11 +1140,11 @@ const uploadFile = async () => {
                             </label>
                             <InputText
                                 id='twelvePM'
-                                value={updatedProduct.twelvePM}
+                                value={updatedProduct.description}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        twelvePM: e.target.value,
+                                        description: e.target.value,
                                     })
                                 }
                             />
@@ -1230,19 +1216,35 @@ const uploadFile = async () => {
                             </label>
                             <InputText
                                 id='maximumWaterLevel'
-                                value={updatedProduct.maximumWaterLevel}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        maximumWaterLevel: e.target.value,
-                                    })
-                                }
+                                value={String(Math.max(
+                                    Number(updatedProduct.eightAM || 0),
+                                    Number(updatedProduct.twelvePM || 0),
+                                    Number(updatedProduct.twoPM || 0),
+                                    Number(updatedProduct.sixPM || 0)
+                                ))}
+                                readOnly
+                                
                             />
                         </div>
-
+                          <div className='field'>
+                            <label htmlFor='minimumWaterLevel' className='font-bold'>
+                                Minimum Water Level
+                            </label>
+                            <InputText
+                                id='minimumWaterLevel'
+                                value={String(Math.min(
+                                    Number(updatedProduct.eightAM || 0),
+                                    Number(updatedProduct.twelvePM || 0),
+                                    Number(updatedProduct.twoPM || 0),
+                                    Number(updatedProduct.sixPM || 0)
+                                ))}
+                                readOnly
+                                
+                            />
+                        </div>
                         <div className='field'>
                             <label htmlFor='location' className='font-bold'>
-                                Type
+                                Location
                             </label>
                             <Dropdown
                                 id='location'
@@ -1311,7 +1313,7 @@ const uploadFile = async () => {
                     </div>
                 )}
             </Dialog>
- 
+
             <Dialog
                 visible={viewProductDialog}
                 style={{ width: '50rem' }}
@@ -1413,10 +1415,7 @@ const uploadFile = async () => {
                                 <p className='break-all'>{selectedProduct.location}</p>
                             </div>
 
-                            <div>
-                                <h3 className='font-bold'>Maximum Water Level</h3>
-                                <p className='break-all'>{selectedProduct.maximumWaterLevel}</p>
-                            </div>
+                        
 
                             {hasEditAccess && (
                                 <div className='col-span-2'>
@@ -1520,20 +1519,21 @@ const uploadFile = async () => {
                                 <small className='p-error'>6:00 PM Water Level (PWD) is required.</small>
                             )}
                         </div>
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
                             </label>
                             <InputText
                                 id='description'
-                                onChange={(e) => setTwelvePM(e.target.value)}
+                                onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
                         </div>
 
                         <div className="field">
                             <label htmlFor="location" className="font-bold">
-                               Location
+                                Location
                             </label>
                             <Dropdown
                                 id="location"
@@ -1541,22 +1541,31 @@ const uploadFile = async () => {
                                 onChange={(e) => setLocation(e.value)}
                                 options={locations}
                                 optionLabel='name'
-                                placeholder="Select Type"
+                                placeholder="Select Location"
                                 itemTemplate={itemTemplate}
                                 className="w-full"
                             />
                         </div>
-                        {/* <div className='field'>
+                        <div className='field'>
                             <label htmlFor='maximumWaterLevel' className='font-bold'>
-                                Maximum Water Level
+                                Maximum Water Level (Auto)
                             </label>
                             <InputText
                                 id='maximumWaterLevel'
-                                onChange={(e) => setMaximumWaterLevel(e.target.value)}
-                                required
+                                value={String(Math.max(Number(twelvePM || 0), Number(twoPM || 0), Number(sixPM || 0), Number(eightAM || 0)))}
+                                readOnly
                             />
-                        </div> */}
-
+                        </div>
+                        <div className='field'>
+                            <label htmlFor='maximumWaterLevel' className='font-bold'>
+                                Minimum Water Level (Auto)
+                            </label>
+                            <InputText
+                                id='minimumWaterLevel'
+                                value={String(Math.min(Number(twelvePM || 0), Number(twoPM || 0), Number(sixPM || 0), Number(eightAM || 0)))}
+                                readOnly
+                            />
+                        </div>
                         <div>
                             <label htmlFor='date' className='font-bold'>
                                 Date
@@ -1565,6 +1574,7 @@ const uploadFile = async () => {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1574,6 +1584,7 @@ const uploadFile = async () => {
                             </div>
                         </div>
                     </div>
+                    
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1584,6 +1595,19 @@ const uploadFile = async () => {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
+                    <div className="col-span-2 mt-2">
+                                            <label className="font-bold mb-2 block">Approval</label>
+                                            <div className="flex items-center gap-3">
+                                                <Checkbox
+                                                    inputId="approve"
+                                                    checked={approved}
+                                                    onChange={(e) => setApproved(!!e.checked)}
+                                                />
+                                                <label htmlFor="approve" className="text-sm">
+                                                    Add this document for all
+                                                </label>
+                                            </div>
+                                        </div>
                 </>
             </Dialog>
 

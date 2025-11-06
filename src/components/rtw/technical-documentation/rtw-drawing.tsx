@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchRTWTechDrawing } from '@/api/rtwAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -24,7 +24,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
-
+import { Checkbox } from 'primereact/checkbox';
 interface Attachment {
     url: string
     _id: string
@@ -80,7 +80,7 @@ export default function MonthlyReport() {
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
     const [date, setDate] = useState<Date | null>(null)
-  const [date2, setDate2] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -88,10 +88,10 @@ export default function MonthlyReport() {
     const [sender, setSender] = useState('')
     const [docNo, setDocNo] = useState('')
     const [remarks, setRemarks] = useState('')
- 
+        const [approved, setApproved] = useState<boolean>(false);
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [typesofDrawings, setTypesofDrawings] = useState<string>("");
 
@@ -161,7 +161,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-drawing/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -213,7 +213,7 @@ const uploadFile = async () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-drawing/bulk-upload`,
         formData,
         {
           headers: {
@@ -343,7 +343,7 @@ const uploadFile = async () => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-drawing/create`,
                 formData,
                 {
                     headers: {
@@ -389,7 +389,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-drawing/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -439,7 +439,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-drawing/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -643,47 +643,60 @@ const uploadFile = async () => {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
+   const handleSearch = () => {
+          setLoading(true)
+          const payload = {
+              typesofDrawings: selectedCode?.code || '',
+              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+              searchQuery: searchKey,
+            
+          }
+          console.log(payload,'hello')
+          searchRTWTechDrawing(payload).then((result) => {
+              setProducts(result?.data || [])
+              setLoading(false)
+          })
+      }
+  
+      const handleReset = () => {
+          setLoading(true)
+          const payload = {
+  
+              date_range: '',
+              searchQuery: '',
+          }
+  
+          setDate(null)
+          setDate2(null)
+          setSearchKey('')
+          setSelectedCode(null)
+  
+          searchRTWTechDrawing(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+  
+     const refetch = () => {
+             setLoading(true)
+     
+             const payload = {
+     
+                 date_range: '',
+                 searchQuery: '',
+             }
+     
+             searchRTWTechDrawing(payload).then((result) => {
+                 setProducts(result?.data)
+                 setLoading(false)
+             })
+         }
+          // initial data load - Internal
+         useEffect(() => {
+             refetch()
+         }, [])
 
-    const handleSearch = () => {
-       setLoading(true)
-       const payload = {
-         typesofDrawings: selectedCode,
-         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-         searchQuery: searchKey,
-       }
-       console.log(payload)
-       searchTreatmentRecord(payload).then((result) => {
-         setProducts(result?.data)
-         setLoading(false)
-       })
-     }
-    
-     const handleReset = () => {
-       setDate(null)
-       setDate2(null)
-       setSearchKey('')
-   
-   
-       const payload = {
-         typesofDrawings: '',
-         date_range: '',
-         searchQuery: '',
-       }
-       setLoading(true)
-       searchTreatmentRecord(payload).then((result) => {
-         setProducts(result?.data)
-         setLoading(false)
-       })
-     }
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -732,7 +745,7 @@ const uploadFile = async () => {
                         options={drawingTypes}
                         itemTemplate={itemTemplate}
                         optionLabel='name'
-                        optionValue='name'
+                       
                         placeholder='Type Of Drawings'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                     />
@@ -814,24 +827,7 @@ const uploadFile = async () => {
         </>
     )
 
-    const refetch = () => {
-       setLoading(true)
-       const payload = {
-         typesofDrawings: '',
-         date_range: '',
-         searchQuery: '',
-       }
-   
-       searchTreatmentRecord(payload).then((result) => {
-         setProducts(result?.data)
-         setLoading(false)
-       })
-     }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
+  
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -843,7 +839,7 @@ const uploadFile = async () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -1363,6 +1359,7 @@ const uploadFile = async () => {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1372,6 +1369,7 @@ const uploadFile = async () => {
                             </div>
                         </div>
                     </div>
+                    
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1380,6 +1378,19 @@ const uploadFile = async () => {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

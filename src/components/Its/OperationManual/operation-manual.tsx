@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchAssetManagement } from '@/api/adminAPIs'
+import { searchOperationManual } from '@/api/itsAPIs'
 import axios from 'axios'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
@@ -21,7 +21,8 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { Dropdown } from 'primereact/dropdown';
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
-
+import FileIcon from '@/components/icons/FileIcon'
+import { Checkbox } from 'primereact/checkbox';
 interface Attachment {
   url: string
   _id: string
@@ -29,12 +30,11 @@ interface Attachment {
 interface Product {
   _id: string | null
   slNo: string
-
-  fileName: string
+  subjectName: string
   date: string
-
   description: string
   remarks: string
+  type: string
   attachments: Attachment[]
   creator?: string
   creationTimestamp?: string
@@ -46,10 +46,10 @@ export default function AssetManagementTable() {
   let emptyProduct: Product = {
     _id: '',
     slNo: '',
-    fileName: '',
+    subjectName: '',
     date: '',
-
     description: '',
+    type: '',
     remarks: '',
     attachments: [],
   }
@@ -58,7 +58,6 @@ export default function AssetManagementTable() {
   const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
 
   const hasEditAccess = checkPermission?.edit_authority || false
-
   const isAdmin = roles.some((role) =>
     ['superadmin', 'admin'].includes(role.title)
   )
@@ -71,13 +70,13 @@ export default function AssetManagementTable() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
   const dt = useRef<DataTable<Product[]>>(null)
-  const [date, setDate] = useState<string>('')
-  const [date2, setDate2] = useState<string>('')
+  const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
-  const [fileName, setfileName] = useState('')
-
+  const [subjectName, setsubjectName] = useState('')
+   const [type, setType] = useState<string>("");
   const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
@@ -86,12 +85,28 @@ export default function AssetManagementTable() {
 
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
+  const [selectedType, setSelectedType] = useState<string | null>(null)
   const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
   const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+  const [buttonType, setButtonType] = useState("");
+    const [approved, setApproved] = useState<boolean>(false);
+     const alltypes = [
+ 
+        { name: "Toll Software", value: "Toll Software" },
+        { name: "Wim Software", value: "Wim Software" },
+        { name: "Server & Network", value: "Server & Network" },
+        { name: "ITS Manual", value: "ITS Manual" },
+        { name: "Other", value: "Other" },
+    
+      ];
+      const itemTemplate = (option: { name: string; value: string }) => (
+        <div className="flex items-center gap-2">
+          <FileIcon />
+          <span>{option.name}</span>
+        </div>
+      )
   // all update dialog func here
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
@@ -111,7 +126,7 @@ export default function AssetManagementTable() {
     try {
       setLoading2(true)
       const formData = new FormData()
-      formData.append('fileName', updatedProduct.fileName)
+      formData.append('subjectName', updatedProduct.subjectName)
       formData.append('description', updatedProduct.description)
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
@@ -125,7 +140,7 @@ export default function AssetManagementTable() {
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/update/${updatedProduct._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/operation-manual/update/by/${updatedProduct._id}`,
         formData,
         {
           headers: {
@@ -223,9 +238,9 @@ export default function AssetManagementTable() {
       setLoading2(true)
       const formData = new FormData()
 
-      formData.append('fileName', fileName)
-
-
+      formData.append('subjectName', subjectName)
+        formData.append('type', type)
+ formData.append('approved', approved ? 'true' : 'false');
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
@@ -233,7 +248,7 @@ export default function AssetManagementTable() {
         formData.append('attachments', file)
       })
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/operation-manual/create`,
         formData,
         {
           headers: {
@@ -244,7 +259,7 @@ export default function AssetManagementTable() {
       )
 
       const response = res
-      console.log(response)
+      console.log(response,'hello')
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()
@@ -273,7 +288,7 @@ export default function AssetManagementTable() {
     try {
       setLoading2(true)
       const res = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/${product._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/operation-manual/delete/by/${product._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -334,7 +349,7 @@ export default function AssetManagementTable() {
       const selectedIds = selectedProducts.map((product) => product._id)
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/multiple/data`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/operation-manual/delete-multiple`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -387,36 +402,12 @@ export default function AssetManagementTable() {
 
   const leftToolbarTemplate = () => {
     return (
-      <div className=''>
+      <div className='bg-background'>
         <div className=''>
-          <ButtonGroup/>
+           <ButtonGroup activeButton={buttonType}
+            onButtonClick={setButtonType} ></ButtonGroup>
         </div>
-        {/* {isAdmin && (
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-        {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-        {/* <Button
-          label='Delete'
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected}
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+       
       </div>
     )
   }
@@ -437,10 +428,13 @@ export default function AssetManagementTable() {
       </>
     )
   }
+interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
 
+  }
 
-  const ButtonGroup = () => {
-    const [activeButton, setActiveButton] = useState('Toll Software')
+  const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
 
     const buttons = [
       { label: 'Toll Software', value: 'Toll Software' },
@@ -450,11 +444,23 @@ export default function AssetManagementTable() {
       { label: 'Other', value: 'Other' }
     ]
 
-    const handleButtonClick = (buttonValue: string) => {
-      setActiveButton(buttonValue)
-      //api is not ready yet
-      console.log(`Button clicked: ${buttonValue}`)
-    }
+   const handleButtonClick = (buttonValue: string) => {
+
+      setSelectedType(buttonValue);
+      onButtonClick(buttonValue)
+      setLoading(true);
+      const payload = {
+        type: buttonValue || "",
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+        searchQuery: searchKey || "",
+      };
+
+      searchOperationManual(payload).then((result) => {
+        setProducts(result?.data);
+        setLoading(false);
+      });
+
+    };
 
     return (
       <>
@@ -571,43 +577,34 @@ export default function AssetManagementTable() {
     </>
   )
 
-  function getMonthName(dateString: string) {
-    const date = new Date(dateString)
-    return date.toLocaleString('en-US', { month: 'long' })
-  }
-
-  function getYear(dateString: string) {
-    const date = new Date(dateString)
-    return date.getFullYear()
-  }
-
   const handleSearch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: date ? getMonthName(date) : '',
-      year: date2 ? getYear(date2) : '',
+    const payload = {
+      type: selectedType,
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
-
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    console.log(payload,'hlld')
+    searchOperationManual(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
 
   const handleReset = () => {
-    const initialPayload = {
-      year: '',
-      searchQuery: '',
-      month: '',
-    }
-
-    setDate('')
-    setDate2('')
+    setDate(null)
+    setDate2(null)
     setSearchKey('')
+       setButtonType('') 
 
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
+    }
+    setLoading(true)
+    searchOperationManual(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
@@ -730,14 +727,14 @@ export default function AssetManagementTable() {
 
   const refetch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: '',
-      year: '',
+    const payload = {
+      type: '',
+      date_range: '',
       searchQuery: '',
     }
-
-    searchAssetManagement(initialPayload).then((result) => {
-      setProducts(result?.Assets)
+  setButtonType('')
+    searchOperationManual(payload).then((result) => {
+      setProducts(result?.data)
       setLoading(false)
     })
   }
@@ -757,9 +754,7 @@ export default function AssetManagementTable() {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-        <div className='mt-2'>
-    
-        </div>
+      
         <DataTable
           ref={dt}
           value={products}
@@ -801,10 +796,9 @@ export default function AssetManagementTable() {
 
 
           <Column
-            field='fileName'
+            field='subjectName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            
             header='File Name/Subject'
           ></Column>
 
@@ -812,7 +806,6 @@ export default function AssetManagementTable() {
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // 
             header='Date'
           ></Column>
 
@@ -820,7 +813,6 @@ export default function AssetManagementTable() {
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // 
             header='Description'
           ></Column>
 
@@ -866,16 +858,16 @@ export default function AssetManagementTable() {
 
 
             <div className='field'>
-              <label htmlFor='fileName' className='font-bold'>
+              <label htmlFor='subjectName' className='font-bold'>
                 File Name/Subject
               </label>
               <InputText
-                id='fileName'
-                value={updatedProduct.fileName}
+                id='subjectName'
+                value={updatedProduct.subjectName}
                 onChange={(e) =>
                   setUpdatedProduct({
                     ...updatedProduct,
-                    fileName: e.target.value,
+                    subjectName: e.target.value,
                   })
                 }
               />
@@ -932,6 +924,27 @@ export default function AssetManagementTable() {
                   })
                 }
                 dateFormat='dd/mm/yy'
+              />
+            </div>
+             <div className='field'>
+              <label htmlFor='type' className='font-bold'>
+                Type
+              </label>
+              <Dropdown
+                id='type'
+                value={updatedProduct.type}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    type: e.target.value,
+                  })
+                }
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                placeholder='Select type'
+                className='w-full'
+                itemTemplate={itemTemplate}
               />
             </div>
             <div className='col-span-2'>
@@ -1050,7 +1063,7 @@ export default function AssetManagementTable() {
 
               <div>
                 <h3 className='font-bold'>File Name/Subject</h3>
-                <p className='break-all'>{selectedProduct.fileName}</p>
+                <p className='break-all'>{selectedProduct.subjectName}</p>
               </div>
               <div>
                 <h3 className='font-bold'>Description</h3>
@@ -1098,19 +1111,19 @@ export default function AssetManagementTable() {
 
 
             <div className='field'>
-              <label htmlFor='fileName' className='font-bold'>
+              <label htmlFor='subjectName' className='font-bold'>
                 File Name/Subject
               </label>
               <InputText
-                id='fileName'
-                onChange={(e) => setfileName(e.target.value)}
+                id='subjectName'
+                onChange={(e) => setsubjectName(e.target.value)}
                 required
                 autoFocus
                 className={classNames({
-                  'p-invalid': submitted && !fileName,
+                  'p-invalid': submitted && !subjectName,
                 })}
               />
-              {submitted && !fileName && (
+              {submitted && !subjectName && (
                 <small className='p-error'>File Name/ Subject is required.</small>
               )}
             </div>
@@ -1130,22 +1143,7 @@ export default function AssetManagementTable() {
               />
             </div>
 
-            <div>
-              <label htmlFor='date' className='font-bold'>
-                Date
-              </label>
-              <div className='border rounded-md'>
-                <Calendar
-                  id='date'
-                  // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
-                  dateFormat='dd/mm/yy'
-                  inputClassName='border-0 focus:ring-0 cursor-pointer'
-                  className='focus:ring-0'
-                  placeholder='Select Date'
-                />
-              </div>
-            </div>
+            
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -1157,7 +1155,41 @@ export default function AssetManagementTable() {
                 required
               />
             </div>
+            <div className="field">
+                          <label htmlFor="type" className="font-bold">
+                            Type
+                          </label>
+                          <Dropdown
+                            id="type"
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                            options={alltypes}
+                            optionLabel='name'
+                            optionValue='name'
+                            itemTemplate={itemTemplate}
+                            placeholder="Select type"
+                            className="w-full"
+                          />
+                        </div>
+                        <div>
+              <label htmlFor='date' className='font-bold'>
+                Date
+              </label>
+              <div className='border rounded-md'>
+                <Calendar
+                  id='date'
+                  // @ts-ignore
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
+                  dateFormat='dd/mm/yy'
+                  inputClassName='border-0 focus:ring-0 cursor-pointer'
+                  className='focus:ring-0'
+                  placeholder='Select Date'
+                />
+              </div>
+            </div>
           </div>
+         
 
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
@@ -1169,6 +1201,19 @@ export default function AssetManagementTable() {
               <MultiFileInput onFilesChange={handleFileChange} />
             </div>
           </div>
+          <div className="col-span-2 mt-2">
+                                                      <label className="font-bold mb-2 block">Approval</label>
+                                                      <div className="flex items-center gap-3">
+                                                          <Checkbox
+                                                              inputId="approve"
+                                                              checked={approved}
+                                                              onChange={(e) => setApproved(!!e.checked)}
+                                                          />
+                                                          <label htmlFor="approve" className="text-sm">
+                                                              Add this document for all
+                                                          </label>
+                                                      </div>
+                                                  </div>
         </>
       </Dialog>
 

@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
     url: string
@@ -62,7 +63,7 @@ export default function MedicineInOutRecord() {
     )
 
     const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
+const [approved, setApproved] = useState<boolean>(false);
     const isClinic = roles.some((role) =>
         ['superadmin', 'clinic'].includes(role.title)
     )
@@ -322,7 +323,7 @@ export default function MedicineInOutRecord() {
 
             formData.append('medicineName', medicineName)
             formData.append('refNo', refNo)
-
+formData.append('approved', approved ? 'true' : 'false');
             formData.append('remarks', remarks)
             formData.append('inoutType', inoutType)
             formData.append('date', formatDate(formDate))
@@ -1276,6 +1277,7 @@ export default function MedicineInOutRecord() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1295,6 +1297,19 @@ export default function MedicineInOutRecord() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
+                    <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="approve"
+                                    checked={approved}
+                                    onChange={(e) => setApproved(!!e.checked)}
+                                />
+                                <label htmlFor="approve" className="text-sm">
+                                    Add this document for all
+                                </label>
+                            </div>
+                        </div>
                 </>
             </Dialog>
 

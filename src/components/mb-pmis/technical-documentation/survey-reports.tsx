@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchAssetManagement, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -21,10 +20,10 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
-
+import { searchMBTechSurveyReport } from '@/api/mainBridgeAPIs'
+import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
     url: string
     _id: string
@@ -69,6 +68,7 @@ export default function MonthlyReport() {
     const isClinic = roles.some((role) =>
         ['superadmin', 'clinic'].includes(role.title)
     )
+     const [approved, setApproved] = useState<boolean>(false);
     const [buttonType, setButtonType] = useState("");
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
@@ -81,8 +81,8 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-   const [date, setDate] = useState<Date | null>(null)
-  const [date2, setDate2] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
@@ -93,9 +93,9 @@ export default function MonthlyReport() {
 
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-const [selectedType, setSelectedType] = useState<string | null>(null)
+    const [selectedType, setSelectedType] = useState<string | null>(null)
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -137,7 +137,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-survey-report/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -235,7 +235,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-survey-report//update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -331,18 +331,18 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         try {
             setLoading2(true)
             const formData = new FormData()
-
+formData.append('approved', approved ? 'true' : 'false');
             formData.append('subjectName', subjectName)
             formData.append('sender', sender)
             formData.append('refNo', refNo)
             formData.append('remarks', remarks)
-             formData.append('type', type)
+            formData.append('type', type)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-survey-report/create`,
                 formData,
                 {
                     headers: {
@@ -388,7 +388,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-survey-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -438,7 +438,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-survey-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -520,55 +520,55 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
             </>
         )
     }
-     interface ButtonGroupProps {
-    activeButton: string;
-    onButtonClick: (value: string) => void;
+    interface ButtonGroupProps {
+        activeButton: string;
+        onButtonClick: (value: string) => void;
 
-  }
-   const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
-  
-  
-      const buttons = [
-       { name: "Pier Settlement Survey", value: "Pier Settlement Survey" },
-        { name: "Other Survey", value: "Other Survey" },
+    }
+    const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
 
-      ];
-  
-      const handleButtonClick = (buttonValue: string) => {
-  
-        setSelectedType(buttonValue);
-        onButtonClick(buttonValue)
-        setLoading(true);
-        const payload = {
-          type: buttonValue || "",
-          date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
-          searchQuery: searchKey || "",
+
+        const buttons = [
+            { name: "Pier Settlement Survey", value: "Pier Settlement Survey" },
+            { name: "Other Survey", value: "Other Survey" },
+
+        ];
+
+        const handleButtonClick = (buttonValue: string) => {
+
+            setSelectedType(buttonValue);
+            onButtonClick(buttonValue)
+            setLoading(true);
+            const payload = {
+                type: buttonValue || "",
+                date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+                searchQuery: searchKey || "",
+            };
+
+            searchMBTechSurveyReport(payload).then((result) => {
+                setProducts(result?.data);
+                setLoading(false);
+            });
+
         };
-  
-        searchAssetManagement(payload).then((result) => {
-          setProducts(result?.data);
-          setLoading(false);
-        });
-  
-      };
-  
-      return (
-        <div className="flex items-center space-x-2 py-2 rounded-lg">
-          {buttons.map((button) => (
-            <button
-              key={button.value}
-              onClick={() => handleButtonClick(button.value)}
-              className={`px-3 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 ease-in-out
+
+        return (
+            <div className="flex items-center space-x-2 py-2 rounded-lg">
+                {buttons.map((button) => (
+                    <button
+                        key={button.value}
+                        onClick={() => handleButtonClick(button.value)}
+                        className={`px-3 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 ease-in-out
               ${activeButton === button.value
-                  ? "bg-[#6F90AE] text-white"
-                  : "bg-[#0B1F8F] text-white  "
-                }`}
-            >
-              {button.name}
-            </button>
-          ))}
-        </div>
-      );
+                                ? "bg-[#6F90AE] text-white"
+                                : "bg-[#0B1F8F] text-white  "
+                            }`}
+                    >
+                        {button.name}
+                    </button>
+                ))}
+            </div>
+        );
     };
     const hideViewDialog = () => {
         setViewProductDialog(false)
@@ -661,46 +661,60 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+            type: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
+        }
+
+        searchMBTechSurveyReport(payload).then((result) => {
+            setProducts(result?.data || [])
+            setLoading(false)
+            setSelectedCode(null)
+        })
     }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+            type: '',
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+        setButtonType('')
+
+        searchMBTechSurveyReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
     }
 
-  const handleSearch = () => {
-    setLoading(true)
-    const payload = {
-      type: selectedType || 'All',
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchMBTechSurveyReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
     }
-    searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
-    })
-  }
-
-  const handleReset = () => {
-    setDate(null)
-    setDate2(null)
-    setSearchKey('')
-
-
-    const payload = {
-      type: '',
-      date_range: '',
-      searchQuery: '',
-    }
-    setLoading(true)
-    searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
-    })
-  }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -820,26 +834,6 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -856,8 +850,8 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
                     right={rightToolbarTemplate}
                 ></Toolbar>
                 <div className='mt-2'>
-                   <ButtonGroup activeButton={buttonType}
-            onButtonClick={setButtonType} ></ButtonGroup>
+                    <ButtonGroup activeButton={buttonType}
+                        onButtonClick={setButtonType} ></ButtonGroup>
                 </div>
                 <TabView
                     activeIndex={activeIndex}
@@ -1366,6 +1360,7 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1383,6 +1378,19 @@ const [selectedType, setSelectedType] = useState<string | null>(null)
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                     <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

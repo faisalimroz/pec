@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchRTWMonitoringMonthlyReport } from '@/api/rtwAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -24,7 +24,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
-
+import { Checkbox } from 'primereact/checkbox';
 interface Attachment {
     url: string
     _id: string
@@ -76,19 +76,20 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    
+    const [approved, setApproved] = useState<boolean>(false);
+
     const [remarks, setRemarks] = useState('')
-    const [department, setDepartment] = useState<string>('')
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [monthName, setMonthName] = useState<string>("");
 
@@ -105,18 +106,18 @@ export default function MonthlyReport() {
     const [uploadStatus, setUploadStatus] = useState("");
 
     const months = [
-        { name: "January", code: "JAN" },
-        { name: "February", code: "FEB" },
-        { name: "March", code: "MAR" },
-        { name: "April", code: "APR" },
-        { name: "May", code: "MAY" },
-        { name: "June", code: "JUN" },
-        { name: "July", code: "JUL" },
-        { name: "August", code: "AUG" },
-        { name: "September", code: "SEP" },
-        { name: "October", code: "OCT" },
-        { name: "November", code: "NOV" },
-        { name: "December", code: "DEC" },
+        { name: "January", code: "January" },
+        { name: "February", code: "February" },
+        { name: "March", code: "March" },
+        { name: "April", code: "April" },
+        { name: "May", code: "May" },
+        { name: "June", code: "June" },
+        { name: "July", code: "July" },
+        { name: "August", code: "August" },
+        { name: "September", code: "September" },
+        { name: "October", code: "October" },
+        { name: "November", code: "November" },
+        { name: "December", code: "December" },
     ];
 
     const itemTemplate = (option: { name: string; code: string }) => (
@@ -150,7 +151,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -219,10 +220,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('patientType', updatedProduct.patientType)
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-          
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -235,7 +236,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -340,15 +341,16 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-           
+            formData.append('monthName', monthName)
+formData.append('approved', approved ? 'true' : 'false');
             formData.append('remarks', remarks)
-            formData.append('patientType', department)
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/create`,
                 formData,
                 {
                     headers: {
@@ -394,7 +396,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -444,7 +446,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/monitoring-monthly-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -501,39 +503,7 @@ export default function MonthlyReport() {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
 
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
             </div>
         )
     }
@@ -648,51 +618,60 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
-            searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
+        const payload = {
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
+        }
+        console.log(payload, 'hello')
+        searchRTWMonitoringMonthlyReport(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
             searchQuery: '',
-            month: '',
-            patientType: '',
         }
 
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
-        setSelectedCode(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+
+        searchRTWMonitoringMonthlyReport(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
 
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchRTWMonitoringMonthlyReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -733,16 +712,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                {/* <div>
-          <Dropdown
-            value={selectedCode}
-            onChange={(e) => setSelectedCode(e.value)}
-            options={codes}
-            optionLabel='name'
-            placeholder='Patient Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
-          />
-        </div> */}
+                
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -820,26 +790,7 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -851,7 +802,7 @@ export default function MonthlyReport() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -919,7 +870,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column
@@ -927,6 +878,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
                                 sortable
+
                                 className='min-w-[12rem]'
                                 header='Month Name'
                             ></Column>
@@ -1023,23 +975,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+                        
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1134,7 +1070,7 @@ export default function MonthlyReport() {
                                     options={months}
                                     placeholder='Select a Month'
                                     className='w-full'
-                                      itemTemplate={itemTemplate}
+                                    itemTemplate={itemTemplate}
                                 />
                             </div>
                         </div>
@@ -1331,12 +1267,14 @@ export default function MonthlyReport() {
                             </label>
                             <Dropdown
                                 id="monthName"
-                                value={monthName} // must be one of the strings from months
+                                value={monthName}
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 placeholder="Select a Month"
+                                optionValue="code"
+                                optionLabel='name'
                                 className="w-full"
-                                  itemTemplate={itemTemplate}
+                                itemTemplate={itemTemplate}
                             />
                         </div>
                         <div className='field'>
@@ -1358,6 +1296,7 @@ export default function MonthlyReport() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1367,6 +1306,7 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
+                    
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1375,6 +1315,19 @@ export default function MonthlyReport() {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

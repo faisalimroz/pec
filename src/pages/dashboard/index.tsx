@@ -41,7 +41,7 @@ const topNav = [
   },
    {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],

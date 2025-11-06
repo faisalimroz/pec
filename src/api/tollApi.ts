@@ -429,6 +429,22 @@ export async function searchMonthlyRoster(param: unknown) {
 
   return response.data
 }
+export async function searchMainBridgeBills(param: unknown) {
+  //   console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/main-bridge/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 
 export async function searchVehicleDetectToll(param: unknown) {
   //   console.log('param', param)
@@ -581,4 +597,90 @@ export async function searchTollTrafficVer(param: unknown) {
   )
 
   return response.data
+}
+
+
+export async function searchDailyReport(param: unknown) {
+  //   console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/daily-report/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
+export async function searchEmployeeReport(param: unknown) {
+  //   console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/employee-personal-profile/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+ console.log(response.data)
+  return response.data
+}
+
+export async function searchHierarchy(param: unknown) {
+  //   console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/hieararchy`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+ console.log(response.data)
+  return response.data
+}
+
+
+export async function searchAllWimData(param: unknown) {
+  //   console.log('param', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/all-wim-data/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+ console.log(response.data)
+  return response.data
+}
+
+
+export async function getWimShiftStats(payload: {
+  location?: string;
+  date_range?: string; // "DD-MM-YYYY to DD-MM-YYYY"
+  shiftNames?: string[]; // e.g. ["Shift: 1st","Shift: 2nd"]
+}) {
+  const res = await axios.post(
+    `${import.meta.env.VITE_BASE_URL}/api/v1/toll/limited-wim-data/stats/shift`,
+    payload,
+    {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    }
+  );
+  return res.data?.data ?? [];
 }

@@ -17,7 +17,7 @@ export const genInfoTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -33,7 +33,7 @@ export const genInfoTopNav = [
   },
   {
     title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: tollIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -68,7 +68,7 @@ export const adminTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -92,7 +92,7 @@ export const adminTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -100,7 +100,7 @@ export const adminTopNav = [
   },
   {
     title: 'ITS',
-    href: '/its',
+    href: '/its/about-its',
     isActive: false,
     logo: ItsIcon,
     roles: ['superadmin', 'its-manager'],
@@ -127,7 +127,7 @@ export const clinicTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -143,7 +143,7 @@ export const clinicTopNav = [
   },
   {
     title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: tollIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -179,7 +179,7 @@ export const tollTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -203,7 +203,7 @@ export const tollTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: true,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -238,7 +238,7 @@ export const financeTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -254,7 +254,7 @@ export const financeTopNav = [
   },
   {
     title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: tollIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -289,7 +289,7 @@ export const itsTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -314,7 +314,7 @@ export const itsTopNav = [
 
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -350,7 +350,7 @@ export const rntTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: true,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -374,7 +374,7 @@ export const rntTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -408,7 +408,7 @@ export const rtwTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -432,7 +432,7 @@ export const rtwTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -467,7 +467,7 @@ export const pmisTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -491,7 +491,7 @@ export const pmisTopNav = [
   },
   {
     title: 'Toll Operation',
-    href: '/toll/monthly-toll-revenue',
+    href: '/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -525,7 +525,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Road & Traffic',
-    href: '/edms/road-and-traffic/organization-organogram',
+    href: '/edms/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
@@ -533,7 +533,7 @@ export const edmsSecondNav=[
   },
   {
     title: 'Main Bridge',
-    href: '/edms/mb-pmis/project-overview',
+    href: '/edms/mb-pmis',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -541,16 +541,16 @@ export const edmsSecondNav=[
   },
   {
     title: 'RTW',
-    href: '/edms/rtw/project-overview',
+    href: '/edms/rtw',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
     uName: 'toll',
-  },
+  },  
 
   {
     title: 'Toll Operation',
-    href: '/edms/toll/monthly-toll-revenue',
+    href: '/edms/toll',
     isActive: false,
     logo: edmsIcon,
     roles: ['superadmin', 'toll-manager'],
@@ -575,7 +575,57 @@ export const edmsTopNav = [
     uName: 'edms',
   },
 ]
+// export const edmsAdminSecondNav=[
+//    {
+//     title: 'Administration',
+//     href: '/edms/administrative',
+//     isActive: true,
+//     logo: AdminIcon,
+//     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+//     uName: 'administration',
+//   },
+//   {
+//     title: 'Road & Traffic',
+//     href: '/edms/road-and-traffic',
+//     isActive: false,
+//     logo: RntIcon,
+//     roles: ['superadmin', 'r&t-manager'],
+//     uName: 'road-&-traffic',
+//   },
+//   {
+//     title: 'Main Bridge',
+//     href: '/edms/mb-pmis/project-overview',
+//     isActive: false,
+//     logo: edmsIcon,
+//     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+//     uName: 'toll',
+//   },
+//   {
+//     title: 'RTW',
+//     href: '/edms/rtw/project-overview',
+//     isActive: false,
+//     logo: edmsIcon,
+//     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+//     uName: 'toll',
+//   },  
 
+//   {
+//     title: 'Toll Operation',
+//     href: '/edms/toll',
+//     isActive: false,
+//     logo: edmsIcon,
+//     roles: ['superadmin', 'toll-manager'],
+//     uName: 'toll',
+//   },
+//   {
+//     title: 'ITS',
+//     href: '/edms/its/about-its',
+//     isActive: false,
+//     logo: ItsIcon,
+//     roles: ['superadmin', 'its-manager'],
+//     uName: 'its',
+//   },
+// ]
 // Function to filter navigation links based on user roles
 export const getFilteredNavLinks = (navLinks: any[], userRoles: string[]) => {
   return navLinks.filter((link) => {

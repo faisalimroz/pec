@@ -13,6 +13,7 @@ import '@/styles/table-style.css'
 import { searchAccidentReportRS } from '@/api/roadTrafficAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { Checkbox } from 'primereact/checkbox'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
@@ -74,12 +75,13 @@ export default function MonthlyReport() {
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
     const [date, setDate] = useState<Date | null>(null)
-  const [date2, setDate2] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
+    const [approved, setApproved] = useState<boolean>(false);
 
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
@@ -119,6 +121,8 @@ export default function MonthlyReport() {
             const formData = new FormData()
 
             formData.append('subjectName', updatedProduct.subjectName)
+
+
             formData.append('description', updatedProduct.description)
 
             formData.append('remarks', updatedProduct.remarks)
@@ -238,7 +242,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('remarks', remarks)
 
             formData.append('date', formatDate(formDate))
@@ -524,52 +528,52 @@ export default function MonthlyReport() {
     }
 
     const handleSearch = () => {
-               setLoading(true)
-               const payload = {
-       
-                   date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-                   searchQuery: searchKey,
-               }
-               console.log(payload)
-               searchAccidentReportRS(payload).then((result) => {
-                   setProducts(result?.data || [])
-                   setLoading(false)
-               })
-           }
-       
-           const handleReset = () => {
-               setLoading(true)
-               const payload = {
-       
-                   date_range: '',
-                   searchQuery: '',
-               }
-       
-               setDate(null)
-               setDate2(null)
-               setSearchKey('')
-               setSelectedCode(null)
-       
-               searchAccidentReportRS(payload).then((result) => {
-                   setProducts(result?.data)
-                   setLoading(false)
-               })
-           }
-       
-           const refetch = () => {
-               setLoading(true)
-       
-               const payload = {
-       
-                   date_range: '',
-                   searchQuery: '',
-               }
-       
-               searchAccidentReportRS(payload).then((result) => {
-                   setProducts(result?.data)
-                   setLoading(false)
-               })
-           }
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
+        console.log(payload)
+        searchAccidentReportRS(payload).then((result) => {
+            setProducts(result?.data || [])
+            setLoading(false)
+        })
+    }
+
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+
+        searchAccidentReportRS(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchAccidentReportRS(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -689,7 +693,7 @@ export default function MonthlyReport() {
         </>
     )
 
-  
+
 
     // initial data load - Internal
     useEffect(() => {
@@ -1103,6 +1107,7 @@ export default function MonthlyReport() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1120,6 +1125,20 @@ export default function MonthlyReport() {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

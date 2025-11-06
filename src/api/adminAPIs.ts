@@ -71,7 +71,7 @@ export async function searchAssetManagement(param: unknown) {
       },
     }
   )
-
+console.log(response)
   return response.data
 }
 

@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -22,7 +21,8 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
-
+import { searchNotice } from '@/api/itsAPIs'
+import { Checkbox } from 'primereact/checkbox';
 interface Attachment {
     url: string
     _id: string
@@ -63,6 +63,7 @@ export default function MonthlyReport() {
     const isClinic = roles.some((role) =>
         ['superadmin', 'clinic'].includes(role.title)
     )
+        const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -133,7 +134,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/notice/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -236,14 +237,15 @@ export default function MonthlyReport() {
             setLoading2(true)
             const formData = new FormData()
             formData.append('subjectName', subjectName)
-            formData.append('description', description)        
+            formData.append('description', description)    
+               formData.append('approved', approved ? 'true' : 'false');  
             formData.append('remarks', remarks)           
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/notice/create`,
                 formData,
                 {
                     headers: {
@@ -289,7 +291,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/notice/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -322,6 +324,7 @@ export default function MonthlyReport() {
             dt.current?.exportCSV()
         }
     }
+    
     // multi delete funcs
     const confirmDeleteSelected = () => {
         if (selectedProducts.length > 0) {
@@ -339,7 +342,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/notice/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -510,48 +513,61 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
-    const handleSearch = () => {
-        setLoading(true)
-      setLoading(true)
-    const payload = {
-   
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
-
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-          setDate(null)
-    setDate2(null)
-    setSearchKey('')
-
-
-    const payload = {
-      
-      date_range: '',
-      searchQuery: '',
-    }
-
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
+  
+     const handleSearch = () => {
+            setLoading(true)
+            const payload = {
+          
+                date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+                searchQuery: searchKey,
+    
+            }
+            console.log(payload, 'hello')
+            searchNotice(payload).then((result) => {
+                setProducts(result?.data || [])
+                setLoading(false)
+            })
+        }
+    
+        const handleReset = () => {
+            setLoading(true)
+            const payload = {
+    
+                date_range: '',
+                searchQuery: '',
+            }
+    
+            setDate(null)
+            setDate2(null)
+            setSearchKey('')
+          
+    
+            searchNotice(payload).then((result) => {
+                setProducts(result?.data)
+                setLoading(false)
+            })
+        }
+    
+        const refetch = () => {
+            setLoading(true)
+    
+            const payload = {
+    
+                date_range: '',
+                searchQuery: '',
+            }
+    
+            searchNotice(payload).then((result) => {
+                setProducts(result?.data)
+                setLoading(false)
+            })
+        }
+        // initial data load - Internal
+        useEffect(() => {
+            refetch()
+        }, [])
+    
+  
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -670,26 +686,7 @@ export default function MonthlyReport() {
         </>
     )
 
-   const refetch = () => {
-    setDate(null)
-    setDate2(null)
-    setSearchKey('')
-    const payload = {
-      date_range: '',
-      searchQuery: '',
-    }
-
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
+  
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -701,7 +698,7 @@ export default function MonthlyReport() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -765,7 +762,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -1098,6 +1095,7 @@ export default function MonthlyReport() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1107,6 +1105,7 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
+                   
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1117,6 +1116,19 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
+                    <div className="col-span-2 mt-2">
+                                                                <label className="font-bold mb-2 block">Approval</label>
+                                                                <div className="flex items-center gap-3">
+                                                                    <Checkbox
+                                                                        inputId="approve"
+                                                                        checked={approved}
+                                                                        onChange={(e) => setApproved(!!e.checked)}
+                                                                    />
+                                                                    <label htmlFor="approve" className="text-sm">
+                                                                        Add this document for all
+                                                                    </label>
+                                                                </div>
+                                                            </div>
                 </>
             </Dialog>
 

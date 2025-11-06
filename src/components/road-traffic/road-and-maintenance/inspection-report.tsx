@@ -22,6 +22,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
     url: string
@@ -86,7 +87,7 @@ export default function MonthlyReport() {
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
-
+const [approved, setApproved] = useState<boolean>(false);
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
@@ -234,7 +235,7 @@ export default function MonthlyReport() {
             formData.append('description', description)
 
             formData.append('remarks', remarks)
-    
+    formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -1087,6 +1088,7 @@ export default function MonthlyReport() {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1106,6 +1108,19 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
+                    <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="approve"
+                                    checked={approved}
+                                    onChange={(e) => setApproved(!!e.checked)}
+                                />
+                                <label htmlFor="approve" className="text-sm">
+                                    Add this document for all
+                                </label>
+                            </div>
+                        </div>
                 </>
             </Dialog>
 

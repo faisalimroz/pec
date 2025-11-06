@@ -10,19 +10,18 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
-import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import { searchBackupFrequency } from '@/api/mainBridgeAPIs'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
     url: string
@@ -86,7 +85,7 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    
+      const [approved, setApproved] = useState<boolean>(false);
     const [remarks, setRemarks] = useState('')
   
     const [formDate, setFormDate] = useState<string>('')
@@ -144,7 +143,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/additional-notes-backup-frequency/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -196,7 +195,7 @@ const uploadFile = async () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/bulk-upload`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/additional-notes-backup-frequency/bulk-upload`,
         formData,
         {
           headers: {
@@ -324,7 +323,7 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-       
+       formData.append('approved', approved ? 'true' : 'false');
             formData.append('remarks', remarks)
          
             formData.append('date', formatDate(formDate))
@@ -332,7 +331,7 @@ const uploadFile = async () => {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/additional-notes-backup-frequency/create`,
                 formData,
                 {
                     headers: {
@@ -378,7 +377,7 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/additional-notes-backup-frequency/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -428,7 +427,7 @@ const uploadFile = async () => {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/additional-notes-backup-frequency/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -632,47 +631,59 @@ const uploadFile = async () => {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
-    const handleSearch = () => {
-        setLoading(true)
-        const payload = {
-
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
-        }
-
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-
-    const handleReset = () => {
-        setDate(null)
-        setDate2(null)
-        setSearchKey('')
-
-
-        const payload = {
-
-            date_range: '',
-            searchQuery: '',
-        }
-        setLoading(true)
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data || [])
-            setLoading(false)
-        })
-    }
+   const handleSearch = () => {
+          setLoading(true)
+          const payload = {
+        
+              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+              searchQuery: searchKey,
+  
+          }
+          console.log(payload, 'hello')
+          searchBackupFrequency(payload).then((result) => {
+              setProducts(result?.data || [])
+              setLoading(false)
+          })
+      }
+  
+      const handleReset = () => {
+          setLoading(true)
+          const payload = {
+  
+              date_range: '',
+              searchQuery: '',
+          }
+  
+          setDate(null)
+          setDate2(null)
+          setSearchKey('')
+        
+  
+          searchBackupFrequency(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+  
+      const refetch = () => {
+          setLoading(true)
+  
+          const payload = {
+  
+              date_range: '',
+              searchQuery: '',
+          }
+  
+          searchBackupFrequency(payload).then((result) => {
+              setProducts(result?.data)
+              setLoading(false)
+          })
+      }
+      // initial data load - Internal
+      useEffect(() => {
+          refetch()
+      }, [])
+  
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -714,16 +725,7 @@ const uploadFile = async () => {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                {/* <div>
-          <Dropdown
-            value={selectedCode}
-            onChange={(e) => setSelectedCode(e.value)}
-            options={codes}
-            optionLabel='name'
-            placeholder='Patient Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
-          />
-        </div> */}
+               
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -800,24 +802,7 @@ const uploadFile = async () => {
             />
         </>
     )
-    const refetch = () => {
-        setLoading(true)
-        const payload = {
-
-            date_range: '',
-            searchQuery: '',
-        }
-        searchTreatmentRecord(payload).then((result) => {
-            setProducts(result?.data || [])
-            setLoading(false)
-        })
-    }
-
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
+ 
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -829,7 +814,7 @@ const uploadFile = async () => {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -1269,6 +1254,7 @@ const uploadFile = async () => {
                                 <Calendar
                                     id='date'
                                     // @ts-ignore
+                                    value={formDate}
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1286,6 +1272,19 @@ const uploadFile = async () => {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

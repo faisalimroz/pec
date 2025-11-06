@@ -34,9 +34,7 @@ const OrgChart: React.FC = () => {
   const checkPermission = checkRole?.children.find(
     (c) => c.name === 'organization-chart'
   )
-
   const isGeneral = checkPermission?.edit_authority || false
-
   const [layout, setLayout] = useState<ProjectLayout | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isUploading, setIsUploading] = useState<boolean>(false)
@@ -50,7 +48,7 @@ const OrgChart: React.FC = () => {
     setIsLoading(true)
     try {
       const response = await axios.get<ApiResponse>(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/general/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/about/about-us`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -142,7 +140,7 @@ const OrgChart: React.FC = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/general/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/about/about-us`,
         formData,
         {
           headers: {

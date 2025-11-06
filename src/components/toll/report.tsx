@@ -10,9 +10,8 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchTreatmentRecord } from '@/api/adminAPIs'
+import { searchDailyReport } from '@/api/tollApi'
 import axios from 'axios'
-import RefreshButton from '@/components/refresh-button'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
@@ -23,7 +22,10 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '../icons/FileIcon'
-
+import ButtonGroupWithIcon from '../ui/common-all-buttons'
+import RefreshButton from '@/components/refresh-button'
+import { types } from 'util'
+import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
     url: string
     _id: string
@@ -34,6 +36,7 @@ interface Product {
     subjectName: string
     description: string
     monthName: string;
+    location: string
     date: string
     remarks: string
     attachments: Attachment[]
@@ -49,6 +52,7 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
+        location: '',
         monthName: '',
         date: '',
         remarks: '',
@@ -76,29 +80,109 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<string>('')
-    const [date2, setDate2] = useState<string>('')
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
+    const [location, setlocation] = useState<string>("")
     const [remarks, setRemarks] = useState('')
-   
     const [formDate, setFormDate] = useState<string>('')
+    const [approved, setApproved] = useState<boolean>(false);
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
+    const [selectedLocation, setSelectedLocation] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [monthName, setMonthName] = useState<{ name: string; code: string } | null>(null);
+    const [monthName, setMonthName] = useState<string>("");
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
 
 
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
+        }
 
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/daily-report/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
+    }
+
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
+    }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -119,10 +203,10 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-       
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-          
+            formData.append('location', updatedProduct.location)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -135,7 +219,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/daily-report/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -192,35 +276,19 @@ export default function MonthlyReport() {
         </>
     )
 
-    // ending all update dialog funcs
-    const monthOptionTemplate = (option: any) => {
-        return (
-            <div className="flex items-center gap-2">
-                {/* Example SVG (calendar icon) */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M10.5 1.5H4.5C4.10218 1.5 3.72064 1.65804 3.43934 1.93934C3.15804 2.22064 3 2.60218 3 3V15C3 15.3978 3.15804 15.7794 3.43934 16.0607C3.72064 16.342 4.10218 16.5 4.5 16.5H13.5C13.8978 16.5 14.2794 16.342 14.5607 16.0607C14.842 15.7794 15 15.3978 15 15V6L10.5 1.5Z" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M10.5 1.5V6H15" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12 9.75H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12 12.75H6" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M7.5 6.75H6.75H6" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <span className='text-black'>{option.name}</span>
-            </div>
-        );
-    };
     const months = [
-        { name: "January", code: "JAN" },
-        { name: "February", code: "FEB" },
-        { name: "March", code: "MAR" },
-        { name: "April", code: "APR" },
-        { name: "May", code: "MAY" },
-        { name: "June", code: "JUN" },
-        { name: "July", code: "JUL" },
-        { name: "August", code: "AUG" },
-        { name: "September", code: "SEP" },
-        { name: "October", code: "OCT" },
-        { name: "November", code: "NOV" },
-        { name: "December", code: "DEC" },
+        { name: "January", code: "January" },
+        { name: "February", code: "February" },
+        { name: "March", code: "March" },
+        { name: "April", code: "April" },
+        { name: "May", code: "May" },
+        { name: "June", code: "June" },
+        { name: "July", code: "July" },
+        { name: "August", code: "August" },
+        { name: "September", code: "September" },
+        { name: "October", code: "October" },
+        { name: "November", code: "November" },
+        { name: "December", code: "December" }
     ];
 
     const itemTemplate = (option: { name: string; code: string }) => (
@@ -231,12 +299,7 @@ export default function MonthlyReport() {
     );
 
    
-    // const locationTemplate = (option: { name: string; code: string }) => (
-    //     <div className="flex items-center gap-2">
-    //         <FileIcon />
-    //         <span>{option.name}</span>
-    //     </div>
-    // );
+
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
     }
@@ -278,15 +341,17 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-      
+            formData.append('location', location)
             formData.append('remarks', remarks)
-         
+            formData.append('approved', approved ? 'true' : 'false');
+            formData.append('monthName', monthName)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
             })
+          
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/daily-report/create`,
                 formData,
                 {
                     headers: {
@@ -295,9 +360,9 @@ export default function MonthlyReport() {
                     },
                 }
             )
-
+     
             const response = res
-            console.log(response)
+            console.log(response.data)
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -332,7 +397,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/daily-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -382,7 +447,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/clinic/treatment-record/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/daily-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -439,7 +504,7 @@ export default function MonthlyReport() {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-              
+
             </div>
         )
     }
@@ -448,20 +513,17 @@ export default function MonthlyReport() {
         return (
             <>
                 {hasEditAccess && (
-                    <button
-        className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold px-4 py-3 rounded-md"
-        onClick={exportCSV}
-      >
-       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M7 10L12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-       Download Files{selectedProducts?.length === 0 ? "" : `(${selectedProducts?.length})`}
-      </button>
+                    <ButtonGroupWithIcon
+                        selectedProducts={selectedProducts}
+                        openNew={openNew}
+                        openNew2={openNew2}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
+
+                    />
                 )}
 
-               <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -557,50 +619,64 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+            monthName: selectedCode?.code || '',
+            location: selectedLocation?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-            // @ts-ignore
-            patientType: selectedCode?.code || '',
-        }
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        }
+        console.log(payload, 'hello')
+        searchDailyReport(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-        const initialPayload = {
-            year: '',
+        setLoading(true)
+        const payload = {
+            monthName: selectedCode?.code || '',
+            location: selectedLocation?.code || '',
+            date_range: '',
             searchQuery: '',
-            month: '',
-            patientType: '',
         }
 
-        setDate('')
-        setDate2('')
+        setDate(null)
+        setDate2(null)
         setSearchKey('')
         setSelectedCode(null)
+        setSelectedLocation(null)
 
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
+        searchDailyReport(payload).then((result) => {
+            setProducts(result?.data)
             setLoading(false)
         })
     }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+            monthName: '',
+            location: '',
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchDailyReport(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -643,17 +719,7 @@ export default function MonthlyReport() {
                     icon={() => <i className='pi pi-angle-down' />}
                 />
 
-                <Dropdown
-                    id="monthName"
-                    value={monthName}
-                    onChange={(e) => setMonthName(e.value)}
-                    options={months}
-                    optionLabel="name"
-                    placeholder="Select a Month"
-                    className="border-none ml-4 focus:ring-0"
-                    itemTemplate={itemTemplate}
-                />
-               
+           
 
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
@@ -732,26 +798,6 @@ export default function MonthlyReport() {
         </>
     )
 
-    const refetch = () => {
-        setLoading(true)
-        const initialPayload = {
-            month: '',
-            year: '',
-            searchQuery: '',
-            patientType: '',
-        }
-
-        searchTreatmentRecord(initialPayload).then((result) => {
-            setProducts(result?.Treatments)
-            console.log(result, "ress")
-            setLoading(false)
-        })
-    }
-
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -763,7 +809,7 @@ export default function MonthlyReport() {
         <div className=''>
             <div className='ml-4'>
                 <Toolbar
-                    className='rounded-none border-none p-0 bg-white'
+                    className='rounded-none border-none p-0 bg-background'
                     left={leftToolbarTemplate}
                     right={rightToolbarTemplate}
                 ></Toolbar>
@@ -827,7 +873,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='subject'
+                                field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -883,7 +929,46 @@ export default function MonthlyReport() {
                     </TabPanel>
                 </TabView>
             </div>
-
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -896,23 +981,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -944,7 +1013,6 @@ export default function MonthlyReport() {
                             />
                         </div>
                         
-
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -977,26 +1045,27 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month Name
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    optionLabel="name"
-                                    placeholder='Select a Month'
-                                    className='w-full'
-                                     itemTemplate={itemTemplate}
-                                />
-                            </div>
+
+                        </div>     <div className='field'>
+                            <label htmlFor='monthName' className='font-bold'>
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id='monthName'
+                                value={updatedProduct.monthName}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        monthName: e.value,
+                                    })
+                                }
+                                options={months}
+                                optionLabel="name"
+                                optionValue='name'
+                                placeholder='Select a Month'
+                                itemTemplate={itemTemplate}
+                                className='w-full'
+                            />
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1119,7 +1188,10 @@ export default function MonthlyReport() {
                                 <h3 className='font-bold'>Month Name</h3>
                                 <p className='break-all'>{selectedProduct.monthName}</p>
                             </div>
-                            
+                            <div>
+                                <h3 className='font-bold'>Location</h3>
+                                <p className='break-all'>{selectedProduct.location}</p>
+                            </div>
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1196,9 +1268,10 @@ export default function MonthlyReport() {
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 optionLabel="name"
+                                optionValue='name'
                                 placeholder="Select a Month"
                                 className="w-full"
-                                 itemTemplate={itemTemplate}
+                                itemTemplate={itemTemplate}
                             />
                         </div>
                         
@@ -1240,6 +1313,19 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
+                     <div className="col-span-2 mt-2">
+                                            <label className="font-bold mb-2 block">Approval</label>
+                                            <div className="flex items-center gap-3">
+                                                <Checkbox
+                                                    inputId="approve"
+                                                    checked={approved}
+                                                    onChange={(e) => setApproved(!!e.checked)}
+                                                />
+                                                <label htmlFor="approve" className="text-sm">
+                                                    Add this document for all
+                                                </label>
+                                            </div>
+                                        </div>
                 </>
             </Dialog>
 

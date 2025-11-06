@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import EmPersonalDetail from './em-personal-detail'
 import ButtonGroup from '@/components/ui/employee'
 import Refresh from '@/components/ui/refresh'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Product {
   _id: string
@@ -134,6 +135,7 @@ export default function EmPersonalProfileTable() {
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
     null
   )
+  const [approved, setApproved] = useState<boolean>(false);
   const [formData, setFormData] = useState<any>({
     employeeName: '',
     employeeId: '',
@@ -157,6 +159,7 @@ export default function EmPersonalProfileTable() {
     termination: [],
     insuranceClaiming: [],
     profileImg: '',
+    approved: approved,
   })
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [viewDialogVisible, setViewDialogVisible] = useState<boolean>(false)
@@ -1279,6 +1282,24 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
                 </div>
               )}
             </div>
+           <div className="col-span-2 mt-2">
+  <label className="font-bold mb-2 block">Approval</label>
+  <div className="flex items-center gap-3">
+    <Checkbox
+      inputId="approve"
+      checked={formData.approved} // Dynamically bind to formData.approved
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          approved: e.checked, // Update the approved field dynamically
+        })
+      }
+    />
+    <label htmlFor="approve" className="text-sm">
+      Add this document for all
+    </label>
+  </div>
+</div>
           </>
         </Dialog>
 

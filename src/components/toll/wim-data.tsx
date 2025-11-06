@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchAssetManagement } from '@/api/adminAPIs'
+
 import axios from 'axios'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
@@ -22,6 +22,8 @@ import JSZip from 'jszip'
 import { Dropdown } from 'primereact/dropdown';
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import Wim from './limited-wim-data'
+import { searchAllWimData } from '@/api/tollApi'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
     url: string
@@ -68,7 +70,7 @@ export default function AssetManagementTable() {
         ['superadmin', 'admin'].includes(role.title)
     )
     const locations = [
-        { label: 'All', value: 'All' },
+
         { label: 'Mawa', value: 'Mawa' },
         { label: 'Jinjira', value: 'Jinjira' },
     ]
@@ -111,46 +113,48 @@ export default function AssetManagementTable() {
     const [shiftName, setShiftName] = useState('')
     const [pass, setPass] = useState('')
     const [violation, setViolation] = useState('')
-    const [total, setTotal] = useState('')
+    // const [total, setTotal] = useState('')
     const [remarks, setRemarks] = useState('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [formDate, setFormDate] = useState<string>('')
+    const [approved, setApproved] = useState<boolean>(false);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [selectedLocation, setSelectedLocation] = useState(null)
+    const [selectedLocation, setSelectedLocation] = useState<{ label: string; value: string } | null>(null)
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-    const [selectedShift, setSelectedShift] = useState(null)
+    const [selectedShift, setSelectedShift] = useState<{ label: string; value: string } | null>(null)
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
     // Fetch data based on active tab
-    const fetchData = async () => {
-        setLoading(true);
-        if (activeTab === 'all') {
-            const initialPayload = {
-                month: '',
-                year: '',
-                searchQuery: '',
-            };
-            try {
-                const result = await searchAssetManagement(initialPayload);
-                setProducts(result?.Assets || []);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setProducts([]);
-            }
-        } else if (activeTab === 'wim') {
-            // For WIM Data - set empty for now
-            setProducts([]);
-        }
-        setLoading(false);
-    };
+    // const refetch = async () => {
+    //     setLoading(true);
+    //     if (activeTab === 'all') {
+    //         const payload = {
+    //             location: '',
+    //             shiftName:'',
+    //             date_range: '',
+    //             searchQuery: '',
+    //         };
+    //         try {
+    //             const result = await searchAllWimData(payload);
+    //             setProducts(result?.Assets || []);
+    //         } catch (error) {
+    //             console.error("Error fetching data:", error);
+    //             setProducts([]);
+    //         }
+    //     } else if (activeTab === 'wim') {
+    //         // For WIM Data - set empty for now
+    //         setProducts([]);
+    //     }
+    //     setLoading(false);
+    // };
 
     // Initial data load
     useEffect(() => {
-        fetchData();
+        refetch();
     }, [activeTab]);
 
     // Update dialog functions
@@ -171,11 +175,13 @@ export default function AssetManagementTable() {
 
         try {
             setLoading2(true)
+
             const formData = new FormData()
+            const total = String(Number(updatedProduct.pass || 0) + Number(updatedProduct.violation || 0))
             formData.append('location', updatedProduct.location)
             formData.append('pass', updatedProduct.pass)
             formData.append('violation', updatedProduct.violation)
-            formData.append('total', updatedProduct.total)
+            formData.append('total', total)
             formData.append('shiftName', updatedProduct.shiftName)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
@@ -189,7 +195,7 @@ export default function AssetManagementTable() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/update/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/all-wim-data/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -199,7 +205,7 @@ export default function AssetManagementTable() {
                 }
             )
 
-            fetchData()
+            refetch()
             hideUpdateDialog()
             toast.success('Data updated successfully')
         } catch (error: any) {
@@ -284,11 +290,12 @@ export default function AssetManagementTable() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+            const total = String(Number(pass || 0) + Number(violation || 0))
             formData.append('location', location)
             formData.append('shiftName', shiftName)
             formData.append('pass', pass)
             formData.append('violation', violation)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('total', total)
             formData.append('remarks', remarks)
             formData.append('date', formatDate(formDate))
@@ -296,7 +303,7 @@ export default function AssetManagementTable() {
                 formData.append('attachments', file)
             })
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/all-wim-data/create`,
                 formData,
                 {
                     headers: {
@@ -305,10 +312,10 @@ export default function AssetManagementTable() {
                     },
                 }
             )
-
+            console.log(remarks, violation)
             hideDialog()
             toast.success('Data Saved Successfully')
-            fetchData()
+            refetch()
         } catch (error: any) {
             if (error.response) {
                 const { message } = error.response.data
@@ -334,7 +341,7 @@ export default function AssetManagementTable() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/all-wim-data/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -342,7 +349,7 @@ export default function AssetManagementTable() {
                 }
             )
 
-            fetchData()
+            refetch()
             toast.success('Data Deleted Successfully')
         } catch (error: any) {
             if (error.response) {
@@ -383,7 +390,7 @@ export default function AssetManagementTable() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-manage/delete/multiple/data`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/toll/all-wim-data/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -395,7 +402,7 @@ export default function AssetManagementTable() {
             )
 
             setDeleteMultipleDialog(false)
-            fetchData()
+            refetch()
             toast.success('Selected items deleted successfully')
         } catch (error: any) {
             if (error.response) {
@@ -469,31 +476,14 @@ export default function AssetManagementTable() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
-                    
+
                 )}
-               
-<RefreshButton handleReset={handleReset} />
-             
-                {/* {activeTab === 'wim' && (
-                    <button
-                        className="flex items-center gap-2  border border-[#E2E8F0]  bg-white text-[#0B1F8F] px-4 py-3 rounded-md font-bold"
-                        onClick={handleReset}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 2V6" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12 18V22" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M4.92969 4.92969L7.75969 7.75969" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M16.2383 16.2402L19.0683 19.0702" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M2 12H6" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M18 12H22" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M4.92969 19.0702L7.75969 16.2402" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M16.2383 7.75969L19.0683 4.92969" stroke="#0B1F8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Refresh
-                    </button>
-                )} */}
+
+                <RefreshButton handleReset={handleReset} />
+
+
             </>
         )
     }
@@ -583,28 +573,22 @@ export default function AssetManagementTable() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         if (activeTab !== 'all') return;
 
         setLoading(true)
-        const initialPayload = {
-            month: date ? getMonthName(date) : '',
-            year: date2 ? getYear(date2) : '',
+        const payload = {
+            shiftName: selectedShift || '',
+            location: selectedLocation || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
-        }
 
-        searchAssetManagement(initialPayload).then((result) => {
-            setProducts(result?.Assets)
+        }
+        console.log(payload, 'hello')
+        searchAllWimData(payload).then((result) => {
+            setProducts(result?.data || [])
             setLoading(false)
         })
     }
@@ -612,22 +596,41 @@ export default function AssetManagementTable() {
     const handleReset = () => {
         if (activeTab !== 'all') return;
 
-        const initialPayload = {
-            year: '',
+        const payload = {
+            shiftName: selectedShift?.label || '',
+            location: selectedLocation?.label || '',
+            date_range: '',
             searchQuery: '',
-            month: '',
         }
-
         setDate('')
         setDate2('')
         setSearchKey('')
-
-        searchAssetManagement(initialPayload).then((result) => {
+        setlocation('')
+        setShiftName('')
+        searchAllWimData(payload).then((result) => {
             setProducts(result?.Assets)
             setLoading(false)
         })
     }
+    const refetch = () => {
+        setLoading(true)
 
+        const payload = {
+            shiftName: '',
+            location: '',
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchAllWimData(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
     const filterSearchForm = (
         <form
             className='flex mx-auto w-fit gap-4 divide-x-2 border p-2 rounded-md bg-white'
@@ -912,11 +915,11 @@ export default function AssetManagementTable() {
                                                     location: e.value,
                                                 })
                                             }
-                                            options={shifts}
+                                            options={locations}
                                             optionLabel="label"
                                             placeholder="Select a Location"
                                             className="w-full"
-                                             itemTemplate={itemTemplate}
+                                            itemTemplate={itemTemplate}
                                         />
                                     </div>
                                     <div className="field">
@@ -977,13 +980,8 @@ export default function AssetManagementTable() {
                                         </label>
                                         <InputText
                                             id='total'
-                                            value={updatedProduct.total}
-                                            onChange={(e) =>
-                                                setUpdatedProduct({
-                                                    ...updatedProduct,
-                                                    total: e.target.value,
-                                                })
-                                            }
+                                            value={String(Number(updatedProduct.pass || 0) + Number(updatedProduct.violation || 0))}
+                                            readOnly
                                         />
                                     </div>
 
@@ -1208,7 +1206,7 @@ export default function AssetManagementTable() {
                                             className={classNames({
                                                 'p-invalid': submitted && !location,
                                             })}
-                                             itemTemplate={itemTemplate}
+                                            itemTemplate={itemTemplate}
                                         />
 
                                         {submitted && !location && (
@@ -1232,21 +1230,22 @@ export default function AssetManagementTable() {
                                             className={classNames({
                                                 'p-invalid': submitted && !shiftName,
                                             })}
-                                             itemTemplate={itemTemplate}
+                                            itemTemplate={itemTemplate}
                                         />
 
                                         {submitted && !shiftName && (
                                             <small className="p-error">Shift name is required.</small>
                                         )}
                                     </div>
+
                                     <div className='field'>
                                         <label htmlFor='total' className='font-bold'>
-                                            Total
+                                            Total (Auto)
                                         </label>
                                         <InputText
                                             id='total'
-                                            onChange={(e) => setTotal(e.target.value)}
-                                            required
+                                            value={String(Number(pass || 0) + Number(violation || 0))}
+                                            readOnly
                                         />
                                     </div>
                                     <div className='field'>
@@ -1308,6 +1307,19 @@ export default function AssetManagementTable() {
                                         <MultiFileInput onFilesChange={handleFileChange} />
                                     </div>
                                 </div>
+                                 <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                             </>
                         </Dialog>
 
