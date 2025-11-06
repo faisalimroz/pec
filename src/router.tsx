@@ -1152,7 +1152,14 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-
+ {
+            path: 'road-and-traffic',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/index')
+              ).default,
+            }),
+          },
 // extra rat (edms)
 {
             path: '/edms/road-and-traffic',
@@ -1765,9 +1772,9 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: 'toll/monthly-toll-revenue',
+            path: 'toll',
             lazy: async () => ({
-              Component: (await import('@/pages/toll/monthly-toll-revenue'))
+              Component: (await import('@/pages/toll/index'))
                 .default,
             }),
           },

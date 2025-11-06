@@ -23,6 +23,7 @@ import { Dropdown } from 'primereact/dropdown';
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import Wim from './limited-wim-data'
 import { searchAllWimData } from '@/api/tollApi'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
     url: string
@@ -69,7 +70,7 @@ export default function AssetManagementTable() {
         ['superadmin', 'admin'].includes(role.title)
     )
     const locations = [
-        
+
         { label: 'Mawa', value: 'Mawa' },
         { label: 'Jinjira', value: 'Jinjira' },
     ]
@@ -116,6 +117,7 @@ export default function AssetManagementTable() {
     const [remarks, setRemarks] = useState('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [formDate, setFormDate] = useState<string>('')
+    const [approved, setApproved] = useState<boolean>(false);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [selectedLocation, setSelectedLocation] = useState<{ label: string; value: string } | null>(null)
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
@@ -173,7 +175,7 @@ export default function AssetManagementTable() {
 
         try {
             setLoading2(true)
-         
+
             const formData = new FormData()
             const total = String(Number(updatedProduct.pass || 0) + Number(updatedProduct.violation || 0))
             formData.append('location', updatedProduct.location)
@@ -293,6 +295,7 @@ export default function AssetManagementTable() {
             formData.append('shiftName', shiftName)
             formData.append('pass', pass)
             formData.append('violation', violation)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('total', total)
             formData.append('remarks', remarks)
             formData.append('date', formatDate(formDate))
@@ -480,7 +483,7 @@ export default function AssetManagementTable() {
 
                 <RefreshButton handleReset={handleReset} />
 
-               
+
             </>
         )
     }
@@ -1234,7 +1237,7 @@ export default function AssetManagementTable() {
                                             <small className="p-error">Shift name is required.</small>
                                         )}
                                     </div>
-                                   
+
                                     <div className='field'>
                                         <label htmlFor='total' className='font-bold'>
                                             Total (Auto)
@@ -1304,6 +1307,19 @@ export default function AssetManagementTable() {
                                         <MultiFileInput onFilesChange={handleFileChange} />
                                     </div>
                                 </div>
+                                 <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                             </>
                         </Dialog>
 

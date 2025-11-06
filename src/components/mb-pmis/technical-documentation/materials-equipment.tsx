@@ -25,7 +25,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { searchMBTechMaterialsList } from '@/api/mainBridgeAPIs'
-
+import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
     url: string
     _id: string
@@ -72,6 +72,7 @@ export default function MonthlyReport() {
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
     const [deleteProductsDialog, setDeleteProductsDialog] =
         useState<boolean>(false)
+         const [approved, setApproved] = useState<boolean>(false);
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
@@ -312,7 +313,7 @@ export default function MonthlyReport() {
             formData.append('sender', sender)
           
             formData.append('remarks', remarks)
-
+formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -1258,6 +1259,19 @@ export default function MonthlyReport() {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                     <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

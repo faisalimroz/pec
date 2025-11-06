@@ -23,6 +23,7 @@ import RefreshButton from '@/components/refresh-button'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchMBPictures } from '@/api/mainBridgeAPIs'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
   url: string
@@ -64,7 +65,7 @@ export default function MonthlyReport() {
   )
 
   const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
+ const [approved, setApproved] = useState<boolean>(false);
   const isClinic = roles.some((role) =>
     ['superadmin', 'clinic'].includes(role.title)
   )
@@ -331,7 +332,7 @@ export default function MonthlyReport() {
     try {
       setLoading2(true)
       const formData = new FormData()
-
+formData.append('approved', approved ? 'true' : 'false');
       formData.append('subjectName', subjectName)
       formData.append('description', description)
       formData.append('types', types)
@@ -1399,6 +1400,19 @@ export default function MonthlyReport() {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                     <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

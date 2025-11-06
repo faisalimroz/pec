@@ -1306,6 +1306,17 @@ formData.append('approved', approved ? 'true' : 'false');
                             </div>
                         </div>
                     </div>
+                    
+                    <div className='gap-3 mt-5'>
+                        <label className='block mb-1 font-semibold'>
+                            Upload Document
+                            <span className='text-red-500'>*</span>
+                        </label>
+
+                        <div>
+                            <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
                     <div className="col-span-2 mt-2">
                         <label className="font-bold mb-2 block">Approval</label>
                         <div className="flex items-center gap-3">
@@ -1317,16 +1328,6 @@ formData.append('approved', approved ? 'true' : 'false');
                             <label htmlFor="approve" className="text-sm">
                                 Add this document for all
                             </label>
-                        </div>
-                    </div>
-                    <div className='gap-3 mt-5'>
-                        <label className='block mb-1 font-semibold'>
-                            Upload Document
-                            <span className='text-red-500'>*</span>
-                        </label>
-
-                        <div>
-                            <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
                 </>

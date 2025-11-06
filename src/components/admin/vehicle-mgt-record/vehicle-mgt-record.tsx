@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import FileIcon from '@/components/icons/FileIcon'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
   url: string
@@ -86,7 +87,7 @@ export default function MonthlyReport() {
   const [date, setDate] = useState<Date | null>(null)
   const [date2, setDate2] = useState<Date | null>(null)
   const [taxExpiryDate, setTaxExpiryDate] = useState<Date | null>(null)
-
+const [approved, setApproved] = useState<boolean>(false);
   const [searchKey, setSearchKey] = useState('')
   const [loading, setLoading] = useState(false)
   const [loading2, setLoading2] = useState(false)
@@ -335,6 +336,7 @@ export default function MonthlyReport() {
       formData.append('regNo', regNo)
       formData.append('remarks', remarks)
       formData.append('vehicleClass', vehicleClass)
+       formData.append('approved', approved ? 'true' : 'false');
       formData.append('status', status) // string like "Exemption"
       formData.append('taxExpiryDate', formatDate(taxExpiryDate))
       formData.append('fitnessDuration', fitnessDuration)
@@ -1116,6 +1118,19 @@ export default function MonthlyReport() {
               <MultiFileInput onFilesChange={setFilesInput} />
             </div>
           </div>
+          <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="approve"
+                                    checked={approved}
+                                    onChange={(e) => setApproved(!!e.checked)}
+                                />
+                                <label htmlFor="approve" className="text-sm">
+                                    Add this document for all
+                                </label>
+                            </div>
+                        </div>
         </>
       </Dialog>
 

@@ -23,6 +23,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Dropdown } from 'primereact/dropdown'
+import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {
   url: string
@@ -76,6 +77,7 @@ export default function AssetManagementTable() {
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
   const [fileName, setfileName] = useState('')
+  const [approved, setApproved] = useState<boolean>(false);
   const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
@@ -96,7 +98,7 @@ export default function AssetManagementTable() {
   const [buttonType, setButtonType] = useState("");
   // all update dialog func here
   const alltypes = [
-    { name: "All", value: "All" },
+    
     { name: "Service Area 1", value: "Service Area 1" },
     { name: "Service Area 2", value: "Service Area 2" },
     { name: "Service Area 3", value: "Service Area 3" },
@@ -319,6 +321,7 @@ export default function AssetManagementTable() {
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
+       formData.append('approved', approved ? 'true' : 'false');
       formData.append('type', type)
       filesInput.forEach((file) => {
         formData.append('attachments', file)
@@ -539,7 +542,7 @@ export default function AssetManagementTable() {
 
 
     const buttons = [
-      { label: "All", value: "" },
+    
       { label: "Service Area 1", value: "Service Area 1" },
       { label: "Service Area 2", value: "Service Area 2" },
       { label: "Service Area 3", value: "Service Area 3" },
@@ -680,7 +683,7 @@ export default function AssetManagementTable() {
   const handleSearch = () => {
     setLoading(true)
     const payload = {
-      type: selectedType || 'All',
+      type: selectedType,
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
@@ -1347,6 +1350,19 @@ export default function AssetManagementTable() {
               <MultiFileInput onFilesChange={handleFileChange} />
             </div>
           </div>
+          <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="approve"
+                                    checked={approved}
+                                    onChange={(e) => setApproved(!!e.checked)}
+                                />
+                                <label htmlFor="approve" className="text-sm">
+                                    Add this document for all
+                                </label>
+                            </div>
+                        </div>
         </>
       </Dialog>
 

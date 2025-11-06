@@ -73,21 +73,21 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-     const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-        const [approved, setApproved] = useState<boolean>(false);
+    const [approved, setApproved] = useState<boolean>(false);
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-     
+
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -117,13 +117,13 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-          
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-           
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -236,9 +236,9 @@ export default function MonthlyReport() {
             setLoading2(true)
             const formData = new FormData()
             formData.append('subjectName', subjectName)
-            formData.append('description', description)   
-             formData.append('approved', approved ? 'true' : 'false');     
-            formData.append('remarks', remarks)           
+            formData.append('description', description)
+            formData.append('approved', approved ? 'true' : 'false');
+            formData.append('remarks', remarks)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -323,7 +323,7 @@ export default function MonthlyReport() {
             dt.current?.exportCSV()
         }
     }
-    
+
     // multi delete funcs
     const confirmDeleteSelected = () => {
         if (selectedProducts.length > 0) {
@@ -398,7 +398,7 @@ export default function MonthlyReport() {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -412,7 +412,7 @@ export default function MonthlyReport() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                   
+
                     />
                 )}
 
@@ -512,61 +512,61 @@ export default function MonthlyReport() {
         </>
     )
 
-  
-     const handleSearch = () => {
-            setLoading(true)
-            const payload = {
-          
-                date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-                searchQuery: searchKey,
-    
-            }
-            console.log(payload, 'hello')
-            searchOrganization(payload).then((result) => {
-                setProducts(result?.data || [])
-                setLoading(false)
-            })
+
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
         }
-    
-        const handleReset = () => {
-            setLoading(true)
-            const payload = {
-    
-                date_range: '',
-                searchQuery: '',
-            }
-    
-            setDate(null)
-            setDate2(null)
-            setSearchKey('')
-          
-    
-            searchOrganization(payload).then((result) => {
-                setProducts(result?.data)
-                setLoading(false)
-            })
+        console.log(payload, 'hello')
+        searchOrganization(payload).then((result) => {
+            setProducts(result?.data || [])
+            setLoading(false)
+        })
+    }
+
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
         }
-    
-        const refetch = () => {
-            setLoading(true)
-    
-            const payload = {
-    
-                date_range: '',
-                searchQuery: '',
-            }
-    
-            searchOrganization(payload).then((result) => {
-                setProducts(result?.data)
-                setLoading(false)
-            })
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+
+
+        searchOrganization(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
         }
-        // initial data load - Internal
-        useEffect(() => {
-            refetch()
-        }, [])
-    
-  
+
+        searchOrganization(payload).then((result) => {
+            setProducts(result?.data)
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
+
+
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -607,7 +607,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-              
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -685,7 +685,7 @@ export default function MonthlyReport() {
         </>
     )
 
-  
+
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -768,7 +768,7 @@ export default function MonthlyReport() {
                                 className='min-w-[8rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -823,7 +823,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -854,7 +854,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -888,7 +888,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1007,7 +1007,7 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1074,7 +1074,7 @@ export default function MonthlyReport() {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1104,6 +1104,17 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
+                   
+                    <div className='gap-3 mt-5'>
+                        <label className='block mb-1 font-semibold'>
+                            Upload Document
+                            <span className='text-red-500'>*</span>
+                        </label>
+
+                        <div>
+                            <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
                     <div className="col-span-2 mt-2">
                                             <label className="font-bold mb-2 block">Approval</label>
                                             <div className="flex items-center gap-3">
@@ -1117,16 +1128,6 @@ export default function MonthlyReport() {
                                                 </label>
                                             </div>
                                         </div>
-                    <div className='gap-3 mt-5'>
-                        <label className='block mb-1 font-semibold'>
-                            Upload Document
-                            <span className='text-red-500'>*</span>
-                        </label>
-
-                        <div>
-                            <MultiFileInput onFilesChange={handleFileChange} />
-                        </div>
-                    </div>
                 </>
             </Dialog>
 

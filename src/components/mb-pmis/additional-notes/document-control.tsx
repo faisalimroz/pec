@@ -22,7 +22,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { searchDocumentControlManager } from '@/api/mainBridgeAPIs'
-
+import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
     url: string
     _id: string
@@ -87,7 +87,7 @@ export default function MonthlyReport() {
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
- 
+  const [approved, setApproved] = useState<boolean>(false);
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -121,7 +121,7 @@ export default function MonthlyReport() {
          
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-         
+      
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
           
@@ -307,7 +307,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('subjectName', subjectName)
             formData.append('description', description)
      
@@ -1247,6 +1247,19 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1257,6 +1270,8 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
+                   
+                     
                 </>
             </Dialog>
 

@@ -13,6 +13,7 @@ import '@/styles/table-style.css'
 import { searchRecivingFromRS } from '@/api/roadTrafficAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { Checkbox } from 'primereact/checkbox'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
@@ -81,6 +82,7 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
+    const [approved, setApproved] = useState<boolean>(false);
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
@@ -119,6 +121,7 @@ export default function MonthlyReport() {
             const formData = new FormData()
 
             formData.append('subjectName', updatedProduct.subjectName)
+       
             formData.append('description', updatedProduct.description)
         
             formData.append('remarks', updatedProduct.remarks)
@@ -240,7 +243,7 @@ export default function MonthlyReport() {
             formData.append('description', description)
            
             formData.append('remarks', remarks)
-          
+          formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -1122,6 +1125,19 @@ export default function MonthlyReport() {
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
+                        </div>
+                    </div>
+                <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
                     </div>
                 </>

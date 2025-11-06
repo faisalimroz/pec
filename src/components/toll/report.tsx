@@ -25,6 +25,7 @@ import FileIcon from '../icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import RefreshButton from '@/components/refresh-button'
 import { types } from 'util'
+import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
     url: string
     _id: string
@@ -89,6 +90,7 @@ export default function MonthlyReport() {
     const [location, setlocation] = useState<string>("")
     const [remarks, setRemarks] = useState('')
     const [formDate, setFormDate] = useState<string>('')
+    const [approved, setApproved] = useState<boolean>(false);
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [selectedLocation, setSelectedLocation] = useState<{ name: string; code: string } | null>(null)
@@ -341,6 +343,7 @@ export default function MonthlyReport() {
             formData.append('description', description)
             formData.append('location', location)
             formData.append('remarks', remarks)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('monthName', monthName)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
@@ -1310,6 +1313,19 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
+                     <div className="col-span-2 mt-2">
+                                            <label className="font-bold mb-2 block">Approval</label>
+                                            <div className="flex items-center gap-3">
+                                                <Checkbox
+                                                    inputId="approve"
+                                                    checked={approved}
+                                                    onChange={(e) => setApproved(!!e.checked)}
+                                                />
+                                                <label htmlFor="approve" className="text-sm">
+                                                    Add this document for all
+                                                </label>
+                                            </div>
+                                        </div>
                 </>
             </Dialog>
 
