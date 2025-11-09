@@ -221,7 +221,13 @@ export const administrationLinks: SideLink[] = [
 ]
 
 export const rntLinks: SideLink[] = [
-
+ {
+    title: 'Road & Traffic',
+    label: '',
+    href: '',
+    icon: '',
+    uName: 'administrative',
+  },
   {
     title: 'Organization/ Organogram',
     label: '',
@@ -431,7 +437,13 @@ export const rntLinks: SideLink[] = [
 ]
 
 export const itsLinks: SideLink[] = [
-
+ {
+    title: 'ITS',
+    label: '',
+    href: '',
+    icon: '',
+    uName: 'administrative',
+  },
   {
     title: 'About ITS',
     label: '',
@@ -480,7 +492,13 @@ export const itsLinks: SideLink[] = [
 ]
 
 export const tollLinks: SideLink[] = [
-
+ {
+    title: 'Toll Operation',
+    label: '',
+    href: '',
+    icon: '',
+    uName: 'administrative',
+  },
   {
     title: 'Daily Toll & Traffic Data',
     label: '',
@@ -593,6 +611,13 @@ export const tollLinks: SideLink[] = [
 
 
 export const rtwLinks: SideLink[] = [
+   {
+    title: 'RTW',
+    label: '',
+    href: '',
+    icon: '',
+    uName: 'administrative',
+  },
   {
     title: 'Project Overview',
     label: '',
@@ -760,6 +785,13 @@ export const rtwLinks: SideLink[] = [
 
 
 export const pmisLinks: SideLink[] = [
+   {
+    title: 'Main Bridge',
+    label: '',
+    href: '',
+    icon: '',
+    uName: 'administrative',
+  },
   {
     title: 'Project Overview',
     label: '',

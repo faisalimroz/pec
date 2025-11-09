@@ -625,15 +625,6 @@ formData.append('approved', approved ? 'true' : 'false');
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
 
     const handleSearch = () => {
@@ -644,7 +635,7 @@ formData.append('approved', approved ? 'true' : 'false');
             searchQuery: searchKey,
 
         }
-        console.log(payload, 'hello')
+
         searchRtwBills(payload).then((result) => {
             setProducts(result?.data || [])
             setLoading(false)

@@ -17,7 +17,7 @@ const topNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/organization-organogram',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['r&t-manager', 'superadmin'],
@@ -25,7 +25,7 @@ const topNav = [
   },
    {
     title: 'Main Bridge',
-    href: '/mb-pmis/project-overview',
+    href: '/mb-pmis',
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -33,7 +33,7 @@ const topNav = [
   },
   {
     title: 'RTW',
-    href: '/rtw/project-overview',
+    href: '/rtw',
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
@@ -45,7 +45,7 @@ const topNav = [
     isActive: false,
     logo: documentSearchIcon,
     roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'toll-operation',
+    uName: 'toll',
   },
   {
     title: 'ITS',
