@@ -77,13 +77,28 @@ export async function searchNotice(param: unknown) {
       },
     }
   )
-
+console.log('response', response.data)
   return response.data
 }
+
+// export async function searchNoticeApproved(param: unknown) {
+//   // no auth header required if backend is public; keep it if you want
+//   const response = await axios.post(
+//     `${BASE_URL}/api/v1/its/notice/public/search`,
+//     param,
+//     { headers: {
+//         authorization: `Bearer ${token}`,
+//         'Content-Type': 'application/json',
+//       },}
+//   );
+//   console.log('response', response.data); 
+//   return response.data;
+// }
+
 //system configure
 export async function searchSystemConfigure(param: unknown) {
  // console.log('param', param)
-
+console.log('token hit')
   const response = await axios.post(
     `${BASE_URL}/api/v1/its/system-configure/data/search`,
     param,
@@ -94,7 +109,7 @@ export async function searchSystemConfigure(param: unknown) {
       },
     }
   )
-
+console.log('response', response.data)
   return response.data
 }
 //  operation manual
@@ -129,6 +144,6 @@ export async function searchMonthlyReport(param: unknown) {
       },
     }
   )
-
+console.log('response', response.data)  
   return response.data
 }

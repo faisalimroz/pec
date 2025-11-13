@@ -22,7 +22,8 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom';
 
 interface Attachment {
     url: string
@@ -53,18 +54,15 @@ export default function MonthlyReport() {
         remarks: '',
         attachments: [],
     }
-
+ const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+       const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+    console.log('rtManagerPermission', rtManagerPermission);
+    const roadSafetyPermission = rtManagerPermission?.children?.find(
+        (child) => child.name === 'r&t-road-maintenance');
+      
+    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -90,7 +88,8 @@ export default function MonthlyReport() {
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     
 
-    const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
+   
+     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -523,7 +522,8 @@ const [approved, setApproved] = useState<boolean>(false);
                   }
                   console.log(payload)
                   searchRTMCompletionForm(payload).then((result) => {
-                      setProducts(result?.data || [])
+                       const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                       setLoading(false)
                   })
               }
@@ -542,7 +542,8 @@ const [approved, setApproved] = useState<boolean>(false);
                   setSelectedCode(null)
           
                   searchRTMCompletionForm(payload).then((result) => {
-                      setProducts(result?.data)
+                       const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                       setLoading(false)
                   })
               }
@@ -557,7 +558,8 @@ const [approved, setApproved] = useState<boolean>(false);
                      }
              
                      searchRTMCompletionForm(payload).then((result) => {
-                         setProducts(result?.data)
+                          const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                          setLoading(false)
                      })
                  }

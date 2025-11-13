@@ -24,6 +24,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
     url: string
@@ -61,6 +62,8 @@ export default function MonthlyReport() {
     }
 
     const { roles, permissions } = useAuth()
+    const { pathname } = useLocation();
+         const showAll = pathname.startsWith('/edms');
     const clinicPermission = permissions.find((p) => p.name === 'clinic')
     const treatmentRecordPermission = clinicPermission?.children.find(
         (c) => c.name === 'treatment-record'
@@ -651,7 +654,8 @@ const [approved, setApproved] = useState<boolean>(false);
     }
 
         searchBuildingToolsReport(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -668,7 +672,8 @@ const [approved, setApproved] = useState<boolean>(false);
           searchQuery: '',
         }
         searchBuildingToolsReport(payload).then((result) => {
-            setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -810,8 +815,8 @@ const [approved, setApproved] = useState<boolean>(false);
         }
 
         searchBuildingToolsReport(initialPayload).then((result) => {
-            setProducts(result?.data)
-            console.log(result, "ress")
+          const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }

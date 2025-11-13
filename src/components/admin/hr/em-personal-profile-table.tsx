@@ -95,6 +95,8 @@ export default function EmPersonalProfileTable() {
   }
 
   const { roles, permissions } = useAuth()
+  const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
   const checkRole = permissions.find((p) => p.name === 'admin')
   const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
 
@@ -536,7 +538,9 @@ export default function EmPersonalProfileTable() {
     }
 
     searchEmployeePersonalProfile(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+     
+      const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -555,7 +559,8 @@ export default function EmPersonalProfileTable() {
     setCurrentPage(0)
 
     searchEmployeePersonalProfile(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+       const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -788,7 +793,8 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
     }
 
     searchEmployeePersonalProfile(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+      const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }

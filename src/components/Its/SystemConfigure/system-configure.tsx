@@ -13,7 +13,6 @@ import '@/styles/table-style.css'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { TabView, TabPanel } from 'primereact/tabview'
-import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import RefreshButton from '@/components/refresh-button'
@@ -23,6 +22,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { searchSystemConfigure } from '@/api/itsAPIs'
 import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 interface Attachment {
     url: string
     _id: string
@@ -52,17 +52,16 @@ export default function MonthlyReport() {
         attachments: [],
     }
 
-    const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-    const [approved, setApproved] = useState<boolean>(false);
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
+    
+   
 
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+    const [approved, setApproved] = useState<boolean>(false);
+   const { pathname } = useLocation();
+ const showAll = pathname.startsWith('/edms');
+const { roles, permissions } = useAuth()
+  const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+    const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-system-configure');
+  const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -97,6 +96,7 @@ export default function MonthlyReport() {
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
+   
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -238,8 +238,8 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            
- formData.append('approved', approved ? 'true' : 'false');
+
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('remarks', remarks)
 
             formData.append('date', formatDate(formDate))
@@ -514,59 +514,47 @@ export default function MonthlyReport() {
         </>
     )
 
-   const handleSearch = () => {
-          setLoading(true)
-          const payload = {
-        
-              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-              searchQuery: searchKey,
-  
-          }
-          console.log(payload, 'hello')
-          searchSystemConfigure(payload).then((result) => {
-              setProducts(result?.data || [])
-              setLoading(false)
-          })
-      }
-  
-      const handleReset = () => {
-          setLoading(true)
-          const payload = {
-  
-              date_range: '',
-              searchQuery: '',
-          }
-  
-          setDate(null)
-          setDate2(null)
-          setSearchKey('')
-        
-  
-          searchSystemConfigure(payload).then((result) => {
-              setProducts(result?.data)
-              setLoading(false)
-          })
-      }
-  
-      const refetch = () => {
-          setLoading(true)
-  
-          const payload = {
-  
-              date_range: '',
-              searchQuery: '',
-          }
-  
-          searchSystemConfigure(payload).then((result) => {
-              setProducts(result?.data)
-              setLoading(false)
-          })
-      }
-      // initial data load - Internal
-      useEffect(() => {
-          refetch()
-      }, [])
-  
+    const handleSearch = () => {
+        setLoading(true);
+        const payload = {
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        };
+        searchSystemConfigure(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false);
+        });
+    };
+    const handleReset = () => {
+        setLoading(true);
+        const payload = { date_range: '', searchQuery: '' };
+
+        setDate(null);
+        setDate2(null);
+        setSearchKey('');
+
+        searchSystemConfigure(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false);
+        });
+    };
+
+    const refetch = () => {
+        setLoading(true);
+        const payload = { date_range: '', searchQuery: '' };
+        searchSystemConfigure(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false);
+        });
+    };
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
+
 
 
     const filterSearchForm = (
@@ -687,8 +675,8 @@ export default function MonthlyReport() {
         </>
     )
 
-  
- 
+
+
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -1107,7 +1095,7 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
-                   
+
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1119,18 +1107,18 @@ export default function MonthlyReport() {
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                            <label className="font-bold mb-2 block">Approval</label>
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    inputId="approve"
-                                                    checked={approved}
-                                                    onChange={(e) => setApproved(!!e.checked)}
-                                                />
-                                                <label htmlFor="approve" className="text-sm">
-                                                    Add this document for all
-                                                </label>
-                                            </div>
-                                        </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

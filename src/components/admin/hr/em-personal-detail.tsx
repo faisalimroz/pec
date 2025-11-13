@@ -85,6 +85,8 @@ export default function EmPersonalDetail({
 
   // all update dialog func here
   const { roles, permissions } = useAuth()
+  const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
   const checkRole = permissions.find((p) => p.name === 'admin')
   const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
 

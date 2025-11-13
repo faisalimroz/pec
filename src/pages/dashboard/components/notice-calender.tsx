@@ -212,7 +212,7 @@ export default function NoticeCalender(): JSX.Element {
                     </clipPath>
                   </defs>
                 </svg>
-                <span className='font-bold text-[20px]'>NOTICE BOARD</span>
+                <span className='font-bold text-[16px]'>Notice Board</span>
               </div>
               {hasEditAccess && (
                 <Link to='/admin-panel/notice-board'>
@@ -250,7 +250,7 @@ export default function NoticeCalender(): JSX.Element {
                 <path d="M8.96875 2.46289V6.46289" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 <path d="M3.96875 10.4629H21.9688" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
-              <span className='font-bold text-[20px] ml-2'>Calendar</span>
+              <span className='font-bold text-[16px] ml-2'>Calendar</span>
             </div>
             {hasEditAccess && (
               <div className="flex items-center gap-2">

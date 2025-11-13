@@ -24,6 +24,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { searchMonthlyReport } from '@/api/itsAPIs'
 import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom';
 interface Attachment {
     url: string
     _id: string
@@ -55,17 +56,13 @@ export default function MonthlyReport() {
         attachments: [],
     }
 
-    const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
+  const { pathname } = useLocation();
+ const showAll = pathname.startsWith('/edms');
+const { roles, permissions } = useAuth()
+  const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+    const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-monthly-report');
+ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
 
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -421,39 +418,7 @@ export default function MonthlyReport() {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+               
             </div>
         )
     }
@@ -567,59 +532,65 @@ export default function MonthlyReport() {
         </>
     )
 
-    const handleSearch = () => {
-        setLoading(true)
-        const payload = {
+ const handleSearch = () => {
+    setLoading(true)
+    const payload = {
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+        searchQuery: searchKey,
+    }
+   
+    searchMonthlyReport(payload).then((result) => {
+        const rows = Array.isArray(result?.data) ? result.data : [];
+        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setLoading(false); // This is correct
+    }).catch((error) => {
+        console.error('Search error:', error);
+        setLoading(false); // Also set loading false on error
+    })
+}
 
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
-
-        }
-        console.log(payload, 'hello')
-        searchMonthlyReport(payload).then((result) => {
-            setProducts(result?.data || [])
-            setLoading(false)
-        })
+const handleReset = () => {
+    setLoading(true)
+    const payload = {
+        date_range: '',
+        searchQuery: '',
     }
 
-    const handleReset = () => {
-        setLoading(true)
-        const payload = {
+    setDate(null)
+    setDate2(null)
+    setSearchKey('')
 
-            date_range: '',
-            searchQuery: '',
-        }
+    searchMonthlyReport(payload).then((result) => {
+        const rows = Array.isArray(result?.data) ? result.data : [];
+        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setLoading(false); // This is correct
+    }).catch((error) => {
+        console.error('Reset error:', error);
+        setLoading(false);
+    })
+}
 
-        setDate(null)
-        setDate2(null)
-        setSearchKey('')
-
-
-        searchMonthlyReport(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
+const refetch = () => {
+    setLoading(true)
+    const payload = {
+        date_range: '',
+        searchQuery: '',
     }
 
-    const refetch = () => {
-        setLoading(true)
+    searchMonthlyReport(payload).then((result) => {
+        const rows = Array.isArray(result?.data) ? result.data : [];
+        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setLoading(false); // ✅ ADD THIS - was missing!
+    }).catch((error) => {
+        console.error('Refetch error:', error);
+        setLoading(false);
+    })
+}
 
-        const payload = {
-
-            date_range: '',
-            searchQuery: '',
-        }
-
-        searchMonthlyReport(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
-        })
-    }
-    // initial data load - Internal
-    useEffect(() => {
-        refetch()
-    }, [])
-
+// initial data load - Internal
+useEffect(() => {
+    refetch()
+}, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -1204,19 +1175,7 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-span-2 mt-2">
-                                            <label className="font-bold mb-2 block">Approval</label>
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    inputId="approve"
-                                                    checked={approved}
-                                                    onChange={(e) => setApproved(!!e.checked)}
-                                                />
-                                                <label htmlFor="approve" className="text-sm">
-                                                    Add this document for all
-                                                </label>
-                                            </div>
-                                        </div>
+                   
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document

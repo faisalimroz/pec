@@ -23,6 +23,7 @@ import { Dropdown } from 'primereact/dropdown';
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom';
 interface Attachment {
   url: string
   _id: string
@@ -53,15 +54,13 @@ export default function AssetManagementTable() {
     remarks: '',
     attachments: [],
   }
+  const { pathname } = useLocation();
+  const showAll = pathname.startsWith('/edms');
   const { roles, permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
-  const hasEditAccess = checkPermission?.edit_authority || false
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
-  )
-  const [products, setProducts] = useState<any>([])
+   const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+    const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-operation-manual');
+const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
+  const [products, setProducts] = useState<any>([]) 
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [deleteProductsDialog, setDeleteProductsDialog] =
@@ -76,7 +75,7 @@ export default function AssetManagementTable() {
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
   const [subjectName, setsubjectName] = useState('')
-   const [type, setType] = useState<string>("");
+  const [type, setType] = useState<string>("");
   const [description, setDescription] = useState('')
   const [remarks, setRemarks] = useState('')
   const [filesInput, setFilesInput] = useState<File[]>([])
@@ -91,22 +90,22 @@ export default function AssetManagementTable() {
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
   const [buttonType, setButtonType] = useState("");
-    const [approved, setApproved] = useState<boolean>(false);
-     const alltypes = [
- 
-        { name: "Toll Software", value: "Toll Software" },
-        { name: "Wim Software", value: "Wim Software" },
-        { name: "Server & Network", value: "Server & Network" },
-        { name: "ITS Manual", value: "ITS Manual" },
-        { name: "Other", value: "Other" },
-    
-      ];
-      const itemTemplate = (option: { name: string; value: string }) => (
-        <div className="flex items-center gap-2">
-          <FileIcon />
-          <span>{option.name}</span>
-        </div>
-      )
+  const [approved, setApproved] = useState<boolean>(false);
+  const alltypes = [
+
+    { name: "Toll Software", value: "Toll Software" },
+    { name: "Wim Software", value: "Wim Software" },
+    { name: "Server & Network", value: "Server & Network" },
+    { name: "ITS Manual", value: "ITS Manual" },
+    { name: "Other", value: "Other" },
+
+  ];
+  const itemTemplate = (option: { name: string; value: string }) => (
+    <div className="flex items-center gap-2">
+      <FileIcon />
+      <span>{option.name}</span>
+    </div>
+  )
   // all update dialog func here
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
@@ -239,8 +238,8 @@ export default function AssetManagementTable() {
       const formData = new FormData()
 
       formData.append('subjectName', subjectName)
-        formData.append('type', type)
- formData.append('approved', approved ? 'true' : 'false');
+      formData.append('type', type)
+      formData.append('approved', approved ? 'true' : 'false');
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
@@ -259,7 +258,7 @@ export default function AssetManagementTable() {
       )
 
       const response = res
-      console.log(response,'hello')
+      console.log(response, 'hello')
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()
@@ -404,10 +403,10 @@ export default function AssetManagementTable() {
     return (
       <div className='bg-background'>
         <div className=''>
-           <ButtonGroup activeButton={buttonType}
+          <ButtonGroup activeButton={buttonType}
             onButtonClick={setButtonType} ></ButtonGroup>
         </div>
-       
+
       </div>
     )
   }
@@ -417,18 +416,18 @@ export default function AssetManagementTable() {
       <>
         {hasEditAccess && (
           <ButtonGroupWithIcons
-                                 selectedProducts={selectedProducts}
-                                 openNew={openNew}
-                                 exportCSV={exportCSV}
-                                 confirmDeleteSelected={confirmDeleteSelected}
-                            
-                             />
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            exportCSV={exportCSV}
+            confirmDeleteSelected={confirmDeleteSelected}
+
+          />
         )}
-       <RefreshButton handleReset={handleReset} />
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }
-interface ButtonGroupProps {
+  interface ButtonGroupProps {
     activeButton: string;
     onButtonClick: (value: string) => void;
 
@@ -444,7 +443,7 @@ interface ButtonGroupProps {
       { label: 'Other', value: 'Other' }
     ]
 
-   const handleButtonClick = (buttonValue: string) => {
+    const handleButtonClick = (buttonValue: string) => {
 
       setSelectedType(buttonValue);
       onButtonClick(buttonValue)
@@ -584,9 +583,10 @@ interface ButtonGroupProps {
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
-    console.log(payload,'hlld')
+
     searchOperationManual(payload).then((result) => {
-      setProducts(result?.data)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -595,7 +595,7 @@ interface ButtonGroupProps {
     setDate(null)
     setDate2(null)
     setSearchKey('')
-       setButtonType('') 
+    setButtonType('')
 
     const payload = {
       type: '',
@@ -604,8 +604,9 @@ interface ButtonGroupProps {
     }
     setLoading(true)
     searchOperationManual(payload).then((result) => {
-      setProducts(result?.data)
-      setLoading(false)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setLoading(false);
     })
   }
 
@@ -732,9 +733,10 @@ interface ButtonGroupProps {
       date_range: '',
       searchQuery: '',
     }
-  setButtonType('')
+    setButtonType('')
     searchOperationManual(payload).then((result) => {
-      setProducts(result?.data)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -754,7 +756,7 @@ interface ButtonGroupProps {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-      
+
         <DataTable
           ref={dt}
           value={products}
@@ -790,7 +792,7 @@ interface ButtonGroupProps {
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            
+
           ></Column>
 
 
@@ -926,7 +928,7 @@ interface ButtonGroupProps {
                 dateFormat='dd/mm/yy'
               />
             </div>
-             <div className='field'>
+            <div className='field'>
               <label htmlFor='type' className='font-bold'>
                 Type
               </label>
@@ -1143,7 +1145,7 @@ interface ButtonGroupProps {
               />
             </div>
 
-            
+
 
             <div className='field'>
               <label htmlFor='remarks' className='font-bold'>
@@ -1156,22 +1158,22 @@ interface ButtonGroupProps {
               />
             </div>
             <div className="field">
-                          <label htmlFor="type" className="font-bold">
-                            Type
-                          </label>
-                          <Dropdown
-                            id="type"
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                            options={alltypes}
-                            optionLabel='name'
-                            optionValue='name'
-                            itemTemplate={itemTemplate}
-                            placeholder="Select type"
-                            className="w-full"
-                          />
-                        </div>
-                        <div>
+              <label htmlFor="type" className="font-bold">
+                Type
+              </label>
+              <Dropdown
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                itemTemplate={itemTemplate}
+                placeholder="Select type"
+                className="w-full"
+              />
+            </div>
+            <div>
               <label htmlFor='date' className='font-bold'>
                 Date
               </label>
@@ -1180,7 +1182,7 @@ interface ButtonGroupProps {
                   id='date'
                   // @ts-ignore
                   value={formDate}
-                                    onChange={(e) => setFormDate(e.value)}
+                  onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -1189,7 +1191,7 @@ interface ButtonGroupProps {
               </div>
             </div>
           </div>
-         
+
 
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
@@ -1202,18 +1204,18 @@ interface ButtonGroupProps {
             </div>
           </div>
           <div className="col-span-2 mt-2">
-                                                      <label className="font-bold mb-2 block">Approval</label>
-                                                      <div className="flex items-center gap-3">
-                                                          <Checkbox
-                                                              inputId="approve"
-                                                              checked={approved}
-                                                              onChange={(e) => setApproved(!!e.checked)}
-                                                          />
-                                                          <label htmlFor="approve" className="text-sm">
-                                                              Add this document for all
-                                                          </label>
-                                                      </div>
-                                                  </div>
+            <label className="font-bold mb-2 block">Approval</label>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                inputId="approve"
+                checked={approved}
+                onChange={(e) => setApproved(!!e.checked)}
+              />
+              <label htmlFor="approve" className="text-sm">
+                Add this document for all
+              </label>
+            </div>
+          </div>
         </>
       </Dialog>
 

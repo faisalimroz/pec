@@ -24,6 +24,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
     url: string
@@ -59,6 +60,8 @@ export default function MonthlyReport() {
     }
 
     const { roles, permissions } = useAuth()
+    const { pathname } = useLocation();
+         const showAll = pathname.startsWith('/edms');
     const clinicPermission = permissions.find((p) => p.name === 'clinic')
     const treatmentRecordPermission = clinicPermission?.children.find(
         (c) => c.name === 'treatment-record'
@@ -622,15 +625,7 @@ export default function MonthlyReport() {
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
 
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
@@ -642,7 +637,8 @@ export default function MonthlyReport() {
     }
 
         searchITTools(payload).then((result) => {
-            setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -660,7 +656,8 @@ export default function MonthlyReport() {
     }
 
         searchITTools(payload).then((result) => {
-            setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -805,8 +802,8 @@ export default function MonthlyReport() {
     }
 
         searchITTools(payload).then((result) => {
-            setProducts(result?.data)
-            console.log(result, "ress")
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }

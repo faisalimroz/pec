@@ -31,8 +31,8 @@ export const administrationLinks: SideLink[] = [
         title: 'Employee Personal Profile',
         label: '',
         href: '/administrative/employee-personal-profile',
-         uName: 'hr',
-          icon: <FileIcon />,
+        uName: 'hr',
+        icon: <FileIcon />,
       },
   {
     title: 'Vehicle Mgt. Record',
@@ -317,42 +317,42 @@ export const rntLinks: SideLink[] = [
     label: '',
     href: '', 
     icon: '', 
-    uName: 'drawing', 
+    uName: '', 
   },
 
     {
     title: 'Organization/ Organogram',
     label: '',
     href: '/road-and-traffic/organization-organogram',
-    uName: 'drawing',
+    uName: 'r&t-organization',
     icon: <FileIcon />,
   },
   {
     title: 'Monthly Roster (Final)',
     label: '',
     href: '/road-and-traffic/monthly-roaster',
-    uName: 'drawing',
+    uName: 'r&t-monthly-roster',
     icon: <GuardIcon />,
   },
   {
     title: 'Monthly Report',
     label: '',
     href: '/road-and-traffic/monthly-report',
-    uName: 'monthly-report',
+    uName: 'r&t-monthly-report',
     icon: <ReportIcon />,
   },
   {
     title: 'KEC Letter',
     label: '',
     href: '/road-and-traffic/kec-letter',
-    uName: 'building-maint',
+    uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
    {
     title: 'Road Maintenance Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-road-maintenance',
     icon: <SignalIcon />,
     sub: [
       {
@@ -409,7 +409,7 @@ export const rntLinks: SideLink[] = [
     title: 'Road Safety & Patrol Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-road-safety-patrol',
     icon: <PatrolIcon />,
     sub: [
       {
@@ -473,7 +473,7 @@ export const rntLinks: SideLink[] = [
     title: 'Workshop Maintenance Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-workshop-maintenance',
     icon: <WorkshopIcon />,
     sub: [
       {
@@ -534,7 +534,7 @@ export const itsLinks: SideLink[] = [
     label: '',
     href: '', 
     icon: '', 
-    uName: 'drawing', 
+    uName: 'its-manager', 
   },
  
    {
@@ -707,6 +707,176 @@ export const tollLinks: SideLink[] = [
 export const edmsLinks: SideLink[] = [
   
 ]
+// export const rtwLinks: SideLink[] = [
+//    {
+//     title: 'RTW',
+//     label: '',
+//     href: '', 
+//     icon: '', 
+//     uName: 'drawing', 
+//   }, 
+//   {
+//     title: 'Project Overview',
+//     label: '',
+//     href: '/rtw/project-overview',
+//     uName: 'dispatched',
+//     icon: <FileIcon />,
+//   },
+
+//    {
+//     title: 'Technical Documentation',
+//     label: '',
+//     href: '',
+//     uName: 'technical-documentation',
+//     icon: <FileIcon />,
+//     sub: [
+//       {
+//         title: 'RTW Drawings',
+//         label: '',
+//         href: '/rtw/rtw-drawings',
+//         icon: '',
+//       },  
+//        {
+//         title: 'Materials & Equipment List',
+//         label: '',
+//         href: '/rtw/material-and-equipment',
+//         icon: '',
+//       },  
+//        {
+//         title: 'Survey Reports',
+//         label: '',
+//         href: '/rtw/survey-reports',
+//         icon: '',
+//       },  
+//        {
+//         title: 'RTW Maintenance Manual',
+//         label: '',
+//         href: '/rtw/rtw-maintenance-manual',
+//         icon: '',
+//       },  
+//     ],
+//   },
+//   {
+//     title: 'Monitoring & Reporting',
+//     label: '',
+//     href: '',
+//     uName: 'monitoring-reporting',
+//     icon: <FileIcon />,
+//     sub: [
+//       {
+//         title: 'Daily Water Level Records',
+//         label: '',
+//         href: '/rtw/monitoring-and-reporting/daily-water-level-records',
+//         icon: '',
+//       },  
+//        {
+//         title: 'RTW Monthly Reports',
+//         label: '',
+//         href: '/rtw/monitoring-and-reporting/monthly-reports',
+//         icon: '',
+//       }
+//     ],
+//   },
+//     {
+//     title: 'Quality, Safety',
+//     label: '',
+//     href: '',
+//     uName: 'quality-safety',
+//     icon: <FileIcon />,
+//     sub: [
+//       {
+//         title: 'Material Test Report',
+//         label: '',
+//         href: '/rtw/material-test-report',
+//         icon: '',
+//       },  
+//        {
+//         title: 'Safety',
+//         label: '',
+//         href: '/rtw/safety',
+//         icon: '',
+//       },
+//     ],
+//   },
+//    {
+//     title: 'Communication & Correspondence',
+//     label: '',
+//     href: '',
+//     uName: 'communication-correspondence',
+//     icon: <FileIcon />,
+//     sub: [
+//       {
+//         title: 'All RTW-related Letters & Official Correspondence',
+//         label: '',
+//         href: '/rtw/letter-and-official-correspondence',
+//         icon: '',
+//       },  
+//        {
+//         title: 'Meeting Minutes',
+//         label: '',
+//         href: '/rtw/meeting-minutes',
+//         icon: '',
+//       }
+//     ],
+//   },
+//   {
+//     title: 'Financial Documentation',
+//     label: '',
+//     href: '',
+//     uName: 'financial-documentation',
+//     icon: <FileIcon />,
+//     sub: [
+//       {
+//         title: 'RTW Bills',
+//         label: '',
+//         href: '/rtw/rtw-bills',
+//         icon: '',
+//       }
+//     ],
+//   },
+//   {
+//     title: 'Visual Records',
+//     label: '',
+//     href: '',
+//     uName: 'visual-records',
+//     icon: <FileIcon />,
+//     sub: [
+//       {
+//         title: 'Pictures and Videos',
+//         label: '',
+//         href: '/rtw/picture-and-videos',
+//         icon: '',
+//       }
+//     ],
+//   },
+//    {
+//     title: 'Additional Notes',
+//     label: '',
+//     href: '',
+//     uName: 'additional-notes',
+//     icon: <FileIcon />,
+//     sub: [
+//       {
+//         title: 'Backup Frequency',
+//         label: '',
+//         href: '/rtw/additional-notes/backup-frequency',
+//         icon: '',
+//       },  
+//        {
+//         title: 'Document Control Manager',
+//         label: '',
+//         href: '/rtw/additional-notes/document-control-manager',
+//         icon: '',
+//       },
+//        {
+//         title: 'Document Revision Log',
+//         label: '',
+//         href: '/rtw/additional-notes/document-revision-log',
+//         icon: '',
+//       },
+//     ],
+//   },
+// ]
 export const rtwLinks: SideLink[] = [
    {
     title: 'RTW',
@@ -714,19 +884,20 @@ export const rtwLinks: SideLink[] = [
     href: '', 
     icon: '', 
     uName: 'drawing', 
-  },
- {
+  }, 
+  {
     title: 'Project Overview',
     label: '',
     href: '/rtw/project-overview',
     uName: 'dispatched',
     icon: <FileIcon />,
   },
+
    {
     title: 'Technical Documentation',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'dispatched',
     icon: <FileIcon />,
     sub: [
       {
@@ -759,7 +930,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Monitoring & Reporting',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'dispatched',
     icon: <FileIcon />,
     sub: [
       {
@@ -780,7 +951,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Quality, Safety',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'dispatched',
     icon: <FileIcon />,
     sub: [
       {
@@ -801,7 +972,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Communication & Correspondence',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'dispatched',
     icon: <FileIcon />,
     sub: [
       {
@@ -822,7 +993,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Financial Documentation',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'dispatched',
     icon: <FileIcon />,
     sub: [
       {
@@ -837,7 +1008,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Visual Records',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'dispatched',
     icon: <FileIcon />,
     sub: [
       {
@@ -852,7 +1023,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Additional Notes',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'dispatched',
     icon: <FileIcon />,
     sub: [
       {

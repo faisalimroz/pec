@@ -2364,6 +2364,7 @@ const router = createBrowserRouter([
       Component: (await import('@/pages/mb-pis-edms/additional-notes/document-revision')).default,
     }),
   },
+  
   //extra edms
 
   {

@@ -25,7 +25,7 @@ import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox';
 
 import FileIcon from '@/components/icons/FileIcon'
-
+import { useLocation } from 'react-router-dom';
 interface Attachment {
     url: string
     _id: string
@@ -37,7 +37,7 @@ interface Product {
     description: string
     monthName: string;
     date: string
-    remarks: string  
+    remarks: string
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -52,23 +52,21 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         monthName: '',
-     
         date: '',
         remarks: '',
         attachments: [],
     }
 
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
+    const isEdms = pathname.startsWith('/edms');
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+  const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+    console.log('itsManagerPermission ', itsManagerPermission );
+    const itsPermission = itsManagerPermission?.children?.find(
+        (child) => child.name === 'its-work-plan');
+      
+    const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -103,6 +101,7 @@ export default function MonthlyReport() {
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
     const [approved, setApproved] = useState<boolean>(false);
+
 
     const months = [
         { name: 'January', code: 'January' },
@@ -336,7 +335,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-           formData.append('approved', approved ? 'true' : 'false');
+            formData.append('approved', approved ? 'true' : 'false');
 
             formData.append('remarks', remarks)
             formData.append('monthName', monthName)
@@ -616,14 +615,14 @@ export default function MonthlyReport() {
     const handleSearch = () => {
         setLoading(true)
         const payload = {
-
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
 
         searchWorkPlan(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false);
         })
     }
 
@@ -641,8 +640,9 @@ export default function MonthlyReport() {
         setSelectedCode(null)
 
         searchWorkPlan(payload).then((result) => {
-            setProducts(result?.data)
-            setLoading(false)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false);
         })
     }
 
@@ -783,9 +783,9 @@ export default function MonthlyReport() {
         }
 
         searchWorkPlan(payload).then((result) => {
-            setProducts(result?.data)
-            console.log(result, "ress")
-            setLoading(false)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false);
         })
     }
 
@@ -1288,9 +1288,9 @@ export default function MonthlyReport() {
                             <div className='border rounded-md'>
                                 <Calendar
                                     id='date'
-                                
+
                                     value={formDate}
-                                
+
                                     onChange={(e) => setFormDate(e.value)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1300,7 +1300,7 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
-                   
+
 
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
@@ -1313,18 +1313,18 @@ export default function MonthlyReport() {
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                                                <label className="font-bold mb-2 block">Approval</label>
-                                                                <div className="flex items-center gap-3">
-                                                                    <Checkbox
-                                                                        inputId="approve"
-                                                                        checked={approved}
-                                                                        onChange={(e) => setApproved(!!e.checked)}
-                                                                    />
-                                                                    <label htmlFor="approve" className="text-sm">
-                                                                        Add this document for all
-                                                                    </label>
-                                                                </div>
-                                                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

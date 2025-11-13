@@ -106,6 +106,8 @@ const UpdateAdmin = () => {
     { id: 'notice', label: 'Notice' },
     { id: 'clinic', label: 'Clinic' },
     { id: 'r&t-manager', label: 'Road & Traffic Dept.' },
+    { id: 'rtw-manager', label: 'RTW Dept.' },
+    { id: 'mb-pmis-manager', label: 'Main Bridge Dept.' },
     { id: 'ai-dashboard', label: 'AI Dashboard' },
     { id: 'toll-manager', label: 'Toll Dept.' },
   ]
@@ -116,42 +118,12 @@ const UpdateAdmin = () => {
 
   // This would be fetched from an API in a real application
   const [permissionsData, setPermissionsData] = useState<ParentPermission[]>([
-    {
+   {
       name: 'r&t-manager',
       authority: false,
       children: [
         {
-          name: 'r&t-procurement',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'maint-safety-traffic',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'patrol-security',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mech-elec',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'building-maint',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-report',
+          name: 'r&t-organization',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -163,97 +135,166 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'drawing',
+          name: 'r&t-monthly-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
+        {
+          name: 'r&t-kec-letter',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-road-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-road-safety-patrol',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-workshop-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        
+      ],
+    },
+     {
+      name: 'rtw-manager',
+      authority: false,
+      children: [
+        {
+          name: 'rtw-project-overview',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-technical-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-monitoring-&-Reporting',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-quality-safety',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-communicaton-&-correspondence',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-financial-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-visual-records',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-additional-notes',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        
       ],
     },
     {
       name: 'its-manager',
       authority: false,
       children: [
-        {
+          {
           name: 'about-its',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'report',
+          name: 'its-organization',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'internal-letter-announce',
+          name: 'its-work-plan',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'o&m-activities',
+          name: 'its-notice',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'inventory-management',
+          name: 'its-system-configure',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'its-procurement',
+          name: 'its-operation-manual',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'training',
+          name: 'its-monthly-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
-        {
-          name: 'information-diagram',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'warranty',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
+        
       ],
     },
     {
       name: 'toll-manager',
       authority: false,
       children: [
-        {
-          name: 'toll-collect-traffic',
+         {
+          name: 'daily-toll-&-traffic-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'special-audit',
+          name: 'shift-wise-toll-&-traffic-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'monthly-toll-revenue',
+          name: 'wim-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'vehicle-detect-toll',
+          name: 'toll-daily-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -265,44 +306,86 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'comparison',
+          name: 'toll-employee-personal-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'kec-manual-data',
+          name: 'toll-hierarchy',
           view_authority: false,
           edit_authority: false,
           g_children: [],
-        },
-        {
-          name: 'kec-manual-data-graph',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'toll-traffic-ver',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
+        }
       ],
     },
-
+    {
+      name: 'mb-pmis-manager',
+      authority: false,
+      children: [
+        {
+          name: 'main-bridgeproject-overview',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'main-bridge-technical-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'main-bridge-monitoring-&-Reporting',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'main-bridge-quality,-safety',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'main-bridge-communicaton-&-correspondence',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'main-bridge-financial-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'main-bridge-visual-records',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'main-bridge-additional-notes',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        
+      ],
+    },
     {
       name: 'admin',
       authority: false,
       children: [
         {
-          name: 'hr',
+          name: 'employee-personal-profile',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'admin-monthly-roster',
+          name: 'vehicle-mgt-record',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -314,7 +397,37 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'admin-notice',
+          name: 'admin-building-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'health-center',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'gardening-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'fire-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'it-electronics',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'security-mgt',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -325,74 +438,39 @@ const UpdateAdmin = () => {
       name: 'finance-manager',
       authority: false,
       children: [
+      
         {
-          name: 'rhd-bill-details',
+          name: 'monthly-ipc-updates',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'maintain-ipc-pdf',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'maintain-ipc-ps-data',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-invoice-record',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-salary-sheet',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-pit-sheet',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'toll-money',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'finance-procurement',
+          name: 'ipc-records',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
       ],
     },
-    {
-      name: 'clinic',
-      authority: false,
-      children: [
-        {
-          name: 'medicine-record',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'treatment-record',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
+    // {
+    //   name: 'clinic',
+    //   authority: false,
+    //   children: [
+    //     {
+    //       name: 'medicine-record',
+    //       view_authority: false,
+    //       edit_authority: false,
+    //       g_children: [],
+    //     },
+    //     {
+    //       name: 'treatment-record',
+    //       view_authority: false,
+    //       edit_authority: false,
+    //       g_children: [],
+    //     },
+    //   ],
+    // },
     {
       name: 'general-information',
       authority: false,
@@ -757,8 +835,8 @@ const UpdateAdmin = () => {
       }))
 
     // Log for debugging
-    console.log('Updated roles:', roles)
-    console.log('Active permissions:', activePermissions)
+    // console.log('Updated roles:', roles)
+    // console.log('Active permissions:', activePermissions)
 
     setFormData((prev) => ({
       ...prev,
@@ -1025,7 +1103,7 @@ const UpdateAdmin = () => {
             permissions: formData.permissions,
           }
 
-      console.log('Submitting request body:', requestBody)
+      // console.log('Submitting request body:', requestBody)
 
       if (selectedUser) {
         await axios.put(
@@ -1162,7 +1240,6 @@ const UpdateAdmin = () => {
     )
   }
 
-  console.log(users)
 
   return (
     <>

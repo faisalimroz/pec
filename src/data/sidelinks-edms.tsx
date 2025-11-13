@@ -226,13 +226,13 @@ export const rntLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'administrative',
+    uName: '',
   },
   {
     title: 'Organization/ Organogram',
     label: '',
     href: '/edms/road-and-traffic/organization-organogram',
-    uName: 'r&t-monthly-roster',
+    uName: 'r&t-organization',
     icon: <FileIcon />,
   },
   {
@@ -246,21 +246,21 @@ export const rntLinks: SideLink[] = [
     title: 'Monthly Report',
     label: '',
     href: '/edms/road-and-traffic/monthly-report',
-    uName: 'monthly-report',
+    uName: 'r&t-monthly-report',
     icon: <ReportIcon />,
   },
   {
     title: 'KEC Letter',
     label: '',
     href: '/edms/road-and-traffic/kec-letter',
-    uName: 'building-maint',
+    uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
   {
     title: 'Road Maintenance Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-road-maintenance',
     icon: <SignalIcon />,
     sub: [
       {
@@ -317,7 +317,7 @@ export const rntLinks: SideLink[] = [
     title: 'Road Safety & Patrol Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-road-safety-patrol',
     icon: <PatrolIcon />,
     sub: [
       {
@@ -381,7 +381,7 @@ export const rntLinks: SideLink[] = [
     title: 'Workshop Maintenance Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-workshop-maintenance',
     icon: <WorkshopIcon />,
     sub: [
       {
@@ -442,7 +442,7 @@ export const itsLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'administrative',
+    uName: 'its-manager',
   },
   {
     title: 'About ITS',
