@@ -60,8 +60,6 @@ const { pathname } = useLocation();
      const showAll = pathname.startsWith('/edms');
 
   const { roles, permissions } = useAuth()
-
-
        const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
     console.log('rtManagerPermission', rtManagerPermission);
     const roadSafetyPermission = rtManagerPermission?.children?.find(

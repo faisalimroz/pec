@@ -59,12 +59,11 @@ export default function AssetManagementTable() {
   const { roles, permissions } = useAuth()
   const { pathname } = useLocation();
        const showAll = pathname.startsWith('/edms');
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-  const hasEditAccess = checkPermission?.edit_authority || false
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
-  )
+ const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+ console.log('adminManagerPermission', adminManagerPermission);
+    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'asset-management');
+    console.log('adminPermission', adminPermission);
+    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)

@@ -23,7 +23,8 @@ import RefreshButton from '@/components/refresh-button'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchMBPictures } from '@/api/mainBridgeAPIs'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
   url: string
@@ -58,17 +59,13 @@ export default function MonthlyReport() {
     attachments: [],
   }
 
-  const { roles, permissions } = useAuth()
-  const clinicPermission = permissions.find((p) => p.name === 'clinic')
-  const treatmentRecordPermission = clinicPermission?.children.find(
-    (c) => c.name === 'treatment-record'
-  )
+ const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
 
-  const hasEditAccess = treatmentRecordPermission?.edit_authority || false
- const [approved, setApproved] = useState<boolean>(false);
-  const isClinic = roles.some((role) =>
-    ['superadmin', 'clinic'].includes(role.title)
-  )
+    const { roles, permissions } = useAuth()
+ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
+    const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'main-bridge-visual-records');
+    const hasEditAccess = mbPmisPermission?.edit_authority === true && showAll;
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -105,7 +102,7 @@ export default function MonthlyReport() {
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState("")
   const [buttonType, setButtonType] = useState("")
-
+   const [approved, setApproved] = useState<boolean>(false);
   const recordTypes = [
     { name: 'During Survey', code: 'During Survey' },
     { name: 'Construction', code: 'Construction' },

@@ -167,6 +167,7 @@ const UpdateAdmin = () => {
         
       ],
     },
+
      {
       name: 'rtw-manager',
       authority: false,
@@ -184,7 +185,7 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'rtw-monitoring-&-Reporting',
+          name: 'rtw-monitoring-reporting',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -196,7 +197,7 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'rtw-communicaton-&-correspondence',
+          name: 'rtw-communication-correspondence',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -324,49 +325,49 @@ const UpdateAdmin = () => {
       authority: false,
       children: [
         {
-          name: 'main-bridgeproject-overview',
+          name: 'mb-pmis-project-overview',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'main-bridge-technical-documentation',
+          name: 'mb-pmis-technical-documentation',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'main-bridge-monitoring-&-Reporting',
+          name: 'mb-pmis-monitoring-reporting',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'main-bridge-quality,-safety',
+          name: 'mb-pmis-quality-safety',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'main-bridge-communicaton-&-correspondence',
+          name: 'mb-pmis-communication-correspondence',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'main-bridge-financial-documentation',
+          name: 'mb-pmis-financial-documentation',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'main-bridge-visual-records',
+          name: 'mb-pmis-visual-records',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'main-bridge-additional-notes',
+          name: 'mb-pmis-additional-notes',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -385,7 +386,7 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'vehicle-mgt-record',
+          name: 'vehicle-management',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -397,7 +398,7 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'admin-building-maintenance',
+          name: 'building-maintenance',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -1103,7 +1104,7 @@ const UpdateAdmin = () => {
             permissions: formData.permissions,
           }
 
-      // console.log('Submitting request body:', requestBody)
+      console.log('Submitting request body:', requestBody)
 
       if (selectedUser) {
         await axios.put(

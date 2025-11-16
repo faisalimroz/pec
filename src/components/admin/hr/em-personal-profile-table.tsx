@@ -97,15 +97,9 @@ export default function EmPersonalProfileTable() {
   const { roles, permissions } = useAuth()
   const { pathname } = useLocation();
      const showAll = pathname.startsWith('/edms');
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
-  const hasEditAccess = checkPermission?.edit_authority || false
-
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
-  )
-
+   const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'employee-personal-profile');
+    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
   const navigate = useNavigate()
   const location = useLocation()
 

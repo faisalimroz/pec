@@ -64,16 +64,11 @@ const [approved, setApproved] = useState<boolean>(false);
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
      const showAll = pathname.startsWith('/edms');
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+    const financeManagerPermission = permissions.find((p) => p.name === 'finance-manager');
+    console.log('financeManagerPermission', financeManagerPermission);
+    const financePermission = financeManagerPermission?.children?.find((child) => child.name === 'monthly-ipc-updates');
+    console.log('financePermission', financePermission);
+    const hasEditAccess = financePermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

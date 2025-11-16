@@ -25,6 +25,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchSafety } from '@/api/rtwAPIs'
 import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 interface Attachment {
     url: string
     _id: string
@@ -55,17 +56,15 @@ export default function KecLetter() {
         attachments: [],
     }
 
+    const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
+
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+   const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
+   console.log(rtwManagerPermission,'rtwManagerPermissionrtwManagerPermission')
+    const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-quality-safety');
+    console.log(rtwPermission,'rtwPermissionrtwPermission')
+    const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

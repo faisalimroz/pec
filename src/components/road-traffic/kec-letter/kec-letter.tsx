@@ -56,12 +56,9 @@ const { pathname } = useLocation();
      const showAll = pathname.startsWith('/edms');
 
     const { roles, permissions } = useAuth()
-   const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
-    console.log('rtManagerPermission', rtManagerPermission);
-    const roadSafetyPermission = rtManagerPermission?.children?.find(
-        (child) => child.name === 'r&t-kec-letter');
-        console.log('roadSafetyPermission', roadSafetyPermission);
-    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;;
+    const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+    const roadSafetyPermission = rtManagerPermission?.children?.find((child) => child.name === 'r&t-kec-letter');
+    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
     const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])

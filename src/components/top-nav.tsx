@@ -57,6 +57,8 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         'finance-&-accounts',
         'clinic',
         'ai-dashboard',
+        'mb-pmis-manager',
+        'rtw-manager',
         'notice',    
       ]
 

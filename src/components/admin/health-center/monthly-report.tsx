@@ -60,16 +60,11 @@ export default function MonthlyReport() {
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
      const showAll = pathname.startsWith('/edms');
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
+     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'health-center');
+    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+ 
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
