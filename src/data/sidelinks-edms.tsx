@@ -497,13 +497,13 @@ export const tollLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'administrative',
+    uName: '',
   },
   {
     title: 'Daily Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'toll-daily-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -525,7 +525,7 @@ export const tollLinks: SideLink[] = [
     title: 'Shift Wise Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'toll-shiftwise-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -548,7 +548,7 @@ export const tollLinks: SideLink[] = [
     title: 'WIM Data',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'toll-wim-data',
     icon: <FileIcon />,
     sub: [
 
@@ -571,7 +571,7 @@ export const tollLinks: SideLink[] = [
     title: 'Daily Report',
     label: '',
     href: '/edms/toll/daily-report',
-    uName: 'special-audit',
+    uName: 'toll-daily-report',
     icon: <FileIcon />,
   },
 
@@ -597,19 +597,17 @@ export const tollLinks: SideLink[] = [
     title: 'Employee Personal Report',
     label: '',
     href: '/edms/toll/employee-personal-report',
-    uName: 'toll-monthly-roster',
+    uName: 'toll-employee-report',
     icon: <FileIcon />,
   },
   {
     title: 'Hierarchy',
     label: '',
     href: '/edms/toll/hierarchy',
-    uName: 'toll-monthly-roster',
+    uName: 'toll-hierarchy',
     icon: <FileIcon />,
   },
 ]
-
-
 export const rtwLinks: SideLink[] = [
    {
     title: 'RTW',
@@ -779,10 +777,6 @@ export const rtwLinks: SideLink[] = [
     ],
   },
 ]
-
-
-
-
 
 export const pmisLinks: SideLink[] = [
    {

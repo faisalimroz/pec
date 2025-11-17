@@ -638,7 +638,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
         console.log(payload, 'hello')
         searchBackupFrequency(payload).then((result) => {
-            setProducts(result?.data || [])
+              const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -657,7 +658,8 @@ formData.append('approved', approved ? 'true' : 'false');
       
 
         searchBackupFrequency(payload).then((result) => {
-            setProducts(result?.data)
+          const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -672,7 +674,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchBackupFrequency(payload).then((result) => {
-            setProducts(result?.data)
+          const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -1250,7 +1253,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                     id='date'
                                     // @ts-ignore
                                     value={formDate}
-                                    onChange={(e) => setFormDate(e.value)}
+                                    onChange={(e) => setFormDate(e.value as string)}
                                     dateFormat='dd/mm/yy'
                                     inputClassName='border-0 focus:ring-0 cursor-pointer'
                                     className='focus:ring-0'

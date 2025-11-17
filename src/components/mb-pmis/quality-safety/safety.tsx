@@ -629,7 +629,8 @@ formData.append('approved', approved ? 'true' : 'false');
           }
           console.log(payload,'hello')
           searchSafety(payload).then((result) => {
-              setProducts(result?.data || [])
+              const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -648,7 +649,8 @@ formData.append('approved', approved ? 'true' : 'false');
         
   
           searchSafety(payload).then((result) => {
-              setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -663,7 +665,8 @@ formData.append('approved', approved ? 'true' : 'false');
              }
      
              searchSafety(payload).then((result) => {
-                 setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }

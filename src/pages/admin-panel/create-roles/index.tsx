@@ -421,7 +421,7 @@ const handleSuperAdminToggle = (next: boolean) => {
           g_children: [],
         },
         {
-          name: 'wim-data',
+          name: 'toll-wim-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -439,7 +439,7 @@ const handleSuperAdminToggle = (next: boolean) => {
           g_children: [],
         },
         {
-          name: 'toll-employee-personal-report',
+          name: 'toll-employee-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -1037,7 +1037,7 @@ const withCreator = (payload: any) => ({
     try {
       const token = localStorage.getItem('token')
       const creatorEmail = user?.email || ''
-      console.log(creatorEmail, 'submitting formData')
+
       // Create the request body based on whether superadmin is checked
       const requestBody = isSuperAdmin
         ? {
@@ -1060,7 +1060,7 @@ const withCreator = (payload: any) => ({
         }
       )
 
-      console.log('API Response:', response.data)
+   
       toast.success('User created successfully')
 
       // Reset form

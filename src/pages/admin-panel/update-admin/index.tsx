@@ -113,6 +113,7 @@ const UpdateAdmin = () => {
   ]
 
   const { user } = useAuth()
+  console.log('Current user:', user)
 
   const showSuperAdmin = user?.id === '68241d8e54ae5fe52759b799'
 
@@ -289,7 +290,7 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'wim-data',
+          name: 'toll-wim-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -307,7 +308,7 @@ const UpdateAdmin = () => {
           g_children: [],
         },
         {
-          name: 'toll-employee-personal-report',
+          name: 'toll-employee-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -1069,7 +1070,10 @@ const UpdateAdmin = () => {
     // console.log('Permission map:', permissionMap)
     // console.log('Updated permissions data:', updatedPermissionsData)
   }
-
+const withCreator = (payload: any) => ({
+  ...payload,
+  creator: user?.email,  // logged-in user's email
+});
   // Handle form submission for update
   const handleSubmit = async () => {
     if (
@@ -1088,6 +1092,8 @@ const UpdateAdmin = () => {
     try {
       const token = localStorage.getItem('token')
 
+      const creatorEmail = user?.email || ''
+  
       // request body based on whether superadmin is checked
       const requestBody = isSuperAdmin
         ? {
@@ -1095,14 +1101,9 @@ const UpdateAdmin = () => {
             email: formData.email,
             password: formData.password,
             role: ['superadmin'],
+            creator: creatorEmail,
           }
-        : {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-            role: formData.role,
-            permissions: formData.permissions,
-          }
+        : withCreator(formData)
 
       console.log('Submitting request body:', requestBody)
 
@@ -1360,7 +1361,7 @@ const UpdateAdmin = () => {
                     </h4>
                     <div className='mt-1'>
                       <p className='text-sm text-gray-900'>
-                        {selectedUser?.updater || 'N/A'}
+                        {selectedUser?.creator || 'N/A'}
                       </p>
                       {selectedUser?.updatingTimestamp && (
                         <p className='text-sm text-gray-600'>

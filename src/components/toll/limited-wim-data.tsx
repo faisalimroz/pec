@@ -4,6 +4,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { IconField } from 'primereact/iconfield';
 import FileIcon from '../icons/FileIcon';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 interface ShiftData {
   name: string;
@@ -103,18 +104,23 @@ const Wim: React.FC = () => {
       };
     });
   };
+   const { pathname } = useLocation();
+     
 
   const fetchShiftStats = async () => {
     try {
       setLoading(true);
-
+    const showAll = pathname.startsWith('/edms');
       let date_range = '';
       if (selectedDate) {
         const d = ddmmyyyy(selectedDate);
         date_range = `${d}`;
       }
 
-      const payload: Record<string, string> = {};
+      const payload: Record<string, string> = {
+      // Add approvedOnly flag
+      approved: !showAll ? "true" : "false"
+    };
       if (selectedLocation) payload.location = selectedLocation;
       if (date_range) payload.date_range = date_range;
 

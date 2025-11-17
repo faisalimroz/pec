@@ -631,7 +631,8 @@ export default function KecLetter() {
           }
           console.log(payload,'hello')
           searchMeetingMinutes(payload).then((result) => {
-              setProducts(result?.data || [])
+             const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -650,7 +651,8 @@ export default function KecLetter() {
           setSelectedCode(null)
   
           searchMeetingMinutes(payload).then((result) => {
-              setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -665,7 +667,8 @@ export default function KecLetter() {
              }
      
              searchMeetingMinutes(payload).then((result) => {
-                 setProducts(result?.data)
+                const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }

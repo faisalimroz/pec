@@ -636,7 +636,8 @@ export default function KecLetter() {
           }
           console.log(payload,'hello')
           searchSafety(payload).then((result) => {
-              setProducts(result?.data || [])
+             const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -655,7 +656,8 @@ export default function KecLetter() {
           setSelectedCode(null)
   
           searchSafety(payload).then((result) => {
-              setProducts(result?.data)
+              const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -670,7 +672,8 @@ export default function KecLetter() {
              }
      
              searchSafety(payload).then((result) => {
-                 setProducts(result?.data)
+                const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }

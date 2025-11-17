@@ -185,14 +185,7 @@ export const tollTopNav = [
     roles: ['superadmin', 'r&t-manager'],
     uName: 'road-&-traffic',
   },
-  {
-    title: 'Main Bridge',
-    href: '/mb-pmis',
-    isActive: false,
-    logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
-    uName: 'road-&-traffic',
-  },
+ 
   {
     title: 'RTW',
     href: '/rtw',

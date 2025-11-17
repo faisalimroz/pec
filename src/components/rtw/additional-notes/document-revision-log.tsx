@@ -84,7 +84,7 @@ export default function MonthlyReport() {
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-    const [selectedCode, setSelectedCode] = useState(null)
+
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
 
@@ -622,14 +622,15 @@ const uploadFile = async () => {
    const handleSearch = () => {
           setLoading(true)
           const payload = {
-              typesofDrawings: selectedCode?.code || '',
+      
               date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
               searchQuery: searchKey,
             
           }
           console.log(payload,'hello')
           searchDocumentRevisionLog(payload).then((result) => {
-              setProducts(result?.data || [])
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -645,10 +646,11 @@ const uploadFile = async () => {
           setDate(null)
           setDate2(null)
           setSearchKey('')
-          setSelectedCode(null)
+     
   
           searchDocumentRevisionLog(payload).then((result) => {
-              setProducts(result?.data)
+             const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -663,7 +665,8 @@ const uploadFile = async () => {
              }
      
              searchDocumentRevisionLog(payload).then((result) => {
-                 setProducts(result?.data)
+              const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }
@@ -712,16 +715,7 @@ const uploadFile = async () => {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                {/* <div>
-          <Dropdown
-            value={selectedCode}
-            onChange={(e) => setSelectedCode(e.value)}
-            options={codes}
-            optionLabel='name'
-            placeholder='Patient Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
-          />
-        </div> */}
+            
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText

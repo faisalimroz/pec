@@ -64,7 +64,7 @@ export default function MonthlyReport() {
 
     const { roles, permissions } = useAuth()
  const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
-    const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'main-bridge-visual-records');
+    const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'mb-pmis-visual-records');
     const hasEditAccess = mbPmisPermission?.edit_authority === true && showAll;
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
@@ -532,7 +532,7 @@ formData.append('approved', approved ? 'true' : 'false');
       setLoading(true);
 
       const payload = {
-        contentType: buttonValue || "",                                  // <-- key that backend should use
+        contentType: buttonValue || "",                                
         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
         searchQuery: searchKey || "",
         types: selectedCode?.code || '',
@@ -540,7 +540,8 @@ formData.append('approved', approved ? 'true' : 'false');
 
       searchMBPictures(payload)
         .then((result) => {
-          setProducts(result?.data || []);
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
           setLoading(false);
         })
         .catch((error) => {
@@ -665,7 +666,8 @@ formData.append('approved', approved ? 'true' : 'false');
     }
 
     searchMBPictures(payload).then((result) => {
-      setProducts(result?.data || [])
+     const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -686,7 +688,8 @@ formData.append('approved', approved ? 'true' : 'false');
     setButtonType('')
 
     searchMBPictures(payload).then((result) => {
-      setProducts(result?.data)
+    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -698,11 +701,12 @@ formData.append('approved', approved ? 'true' : 'false');
       types: '',
       date_range: '',
       searchQuery: '',
-      contentType: '', // default no filter
+      contentType: '', 
     }
 
     searchMBPictures(payload).then((result) => {
-      setProducts(result?.data)
+    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }

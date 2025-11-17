@@ -656,7 +656,8 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
           }
           console.log(payload,'hello')
           searchMonitoring(payload).then((result) => {
-              setProducts(result?.data || [])
+              const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -675,7 +676,8 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
           
   
           searchMonitoring(payload).then((result) => {
-              setProducts(result?.data)
+                const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -690,7 +692,8 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
              }
      
              searchMonitoring(payload).then((result) => {
-                 setProducts(result?.data)
+               const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }

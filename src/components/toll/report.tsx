@@ -26,6 +26,7 @@ import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import RefreshButton from '@/components/refresh-button'
 import { types } from 'util'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 interface Attachment {
     url: string
     _id: string
@@ -60,16 +61,11 @@ export default function MonthlyReport() {
     }
 
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+        const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
+    const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
+    const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-daily-report');
+    const hasEditAccess = tollPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -632,7 +628,8 @@ export default function MonthlyReport() {
         }
         console.log(payload, 'hello')
         searchDailyReport(payload).then((result) => {
-            setProducts(result?.data || [])
+             const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -653,7 +650,8 @@ export default function MonthlyReport() {
         setSelectedLocation(null)
 
         searchDailyReport(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -669,7 +667,8 @@ export default function MonthlyReport() {
         }
 
         searchDailyReport(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }

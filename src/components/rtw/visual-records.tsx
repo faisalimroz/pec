@@ -533,7 +533,7 @@ export default function MonthlyReport() {
       setLoading(true);
 
       const payload = {
-        contentType: buttonValue || "",                                  // <-- key that backend should use
+        contentType: buttonValue || "",                               
         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
         searchQuery: searchKey || "",
         types: selectedCode?.code || '',
@@ -541,7 +541,8 @@ export default function MonthlyReport() {
 
       searchPictures(payload)
         .then((result) => {
-          setProducts(result?.data || []);
+        const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
           setLoading(false);
         })
         .catch((error) => {
@@ -661,12 +662,12 @@ export default function MonthlyReport() {
       types: selectedCode?.code || '',
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
-      // You can optionally include contentType based on current button:
       contentType: buttonType || undefined,
     }
 
     searchPictures(payload).then((result) => {
-      setProducts(result?.data || [])
+    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -687,7 +688,8 @@ export default function MonthlyReport() {
     setButtonType('')
 
     searchPictures(payload).then((result) => {
-      setProducts(result?.data)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -699,11 +701,12 @@ export default function MonthlyReport() {
       types: '',
       date_range: '',
       searchQuery: '',
-      contentType: '', // default no filter
+      contentType: '',
     }
 
     searchPictures(payload).then((result) => {
-      setProducts(result?.data)
+   const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }

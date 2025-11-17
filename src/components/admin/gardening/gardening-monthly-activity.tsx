@@ -669,7 +669,8 @@ formData.append('approved', approved ? 'true' : 'false');
             searchQuery: '',
         }
         searchGardeningMonthlyActivity(payload).then((result) => {
-            setProducts(result?.data)
+                      const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }

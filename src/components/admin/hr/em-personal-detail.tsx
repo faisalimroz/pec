@@ -82,7 +82,7 @@ export default function EmPersonalDetail({
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const pageParam = searchParams.get('page')
-
+   const [approved, setApproved] = useState<boolean>(false);
   // all update dialog func here
   const { roles, permissions } = useAuth()
   const { pathname } = useLocation();

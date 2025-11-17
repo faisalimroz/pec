@@ -651,7 +651,8 @@ const uploadFile = async () => {
           }
           console.log(payload,'hello')
           searchRTWTechDrawing(payload).then((result) => {
-              setProducts(result?.data || [])
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -670,7 +671,8 @@ const uploadFile = async () => {
           setSelectedCode(null)
   
           searchRTWTechDrawing(payload).then((result) => {
-              setProducts(result?.data)
+     const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -685,7 +687,8 @@ const uploadFile = async () => {
              }
      
              searchRTWTechDrawing(payload).then((result) => {
-                 setProducts(result?.data)
+                 const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }

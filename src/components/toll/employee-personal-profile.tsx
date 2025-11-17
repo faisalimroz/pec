@@ -25,6 +25,7 @@ import { Checkbox } from 'primereact/checkbox'
 interface Product {
   _id: string
   employeeName: string
+  approved: string
   employeeId: string
   dept: string
   firmName: string
@@ -70,6 +71,7 @@ export default function EmPersonalProfileTable() {
   let emptyProduct: Product = {
     _id: '',
     employeeName: '',
+    approved: '',
     employeeId: '',
     firmName: '',
     dept: '',
@@ -93,20 +95,16 @@ export default function EmPersonalProfileTable() {
     profileImg: '',
     slNo: '',
   }
-
-  const { roles, permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
-  const hasEditAccess = checkPermission?.edit_authority || false
-
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
-  )
-
-  const navigate = useNavigate()
-  const location = useLocation()
+    const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
 const [approved, setApproved] = useState<boolean>(false);
+  const { roles, permissions } = useAuth()
+  const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
+    const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-employee-report');
+    const hasEditAccess = tollPermission?.edit_authority === true && showAll;
+  const navigate = useNavigate()
+  
+
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -535,7 +533,10 @@ const [approved, setApproved] = useState<boolean>(false);
     }
 
     searchEmployeeReport(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+      
+
+      const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -554,7 +555,8 @@ const [approved, setApproved] = useState<boolean>(false);
     setCurrentPage(0)
 
     searchEmployeeReport(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+        const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -778,7 +780,8 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
     }
 
     searchEmployeeReport(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+  const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -1222,11 +1225,11 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
   <div className="flex items-center gap-3">
     <Checkbox
       inputId="approve"
-      checked={formData.approved} // Dynamically bind to formData.approved
+      checked={formData.approved} 
       onChange={(e) =>
         setFormData({
           ...formData,
-          approved: e.checked, // Update the approved field dynamically
+          approved: e.checked, 
         })
       }
     />

@@ -633,7 +633,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
         setLoading(true)
         searchTechMaintenanceManual(payload).then((result) => {
-            setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -775,7 +776,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchTechMaintenanceManual(payload).then((result) => {
-            setProducts(result?.data)
+          const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
