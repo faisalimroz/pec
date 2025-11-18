@@ -62,9 +62,7 @@ export default function MonthlyReport() {
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'security-mgt');
     const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

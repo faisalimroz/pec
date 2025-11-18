@@ -128,6 +128,7 @@ export const useKecManual = (param: unknown) => {
       return data
     },
   })
+  
 }
 
 // ------------- TanStack Query Funcs End ------------------------
@@ -578,7 +579,7 @@ export async function searchKecManual(param: unknown) {
       },
     }
   )
-
+console.log(response.data,'fghfghf')
   return response.data
 }
 

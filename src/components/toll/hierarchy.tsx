@@ -60,10 +60,8 @@ export default function AssetManagementTable() {
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
     const showAll = pathname.startsWith('/edms');
-   const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
-
+    const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager')
     const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-hierarchy');
-   
     const hasEditAccess = tollPermission?.edit_authority === true && showAll;
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -128,12 +126,12 @@ export default function AssetManagementTable() {
             setLoading2(true)
             const formData = new FormData()
             formData.append('name', name)
-            formData.append('position', positon) // send as "position" to backend
+            formData.append('position', positon) 
             formData.append('mobile', mobile)
             formData.append('date', formatDate(formDate))
 
             filesInput.slice(0, 3).forEach((file) => {
-                formData.append('images', file) // <-- must be 'images'
+                formData.append('images', file) 
             })
 
             await axios.post(
@@ -165,7 +163,7 @@ export default function AssetManagementTable() {
     // ------- Legacy list fetch you had; kept to preserve structure -------
     const refetch = () => {
         setLoading(true)
-        // You had a generic refetch; we keep it no-op-ish.
+   
         setProducts([])
         setLoading(false)
     }
@@ -173,10 +171,10 @@ export default function AssetManagementTable() {
     useEffect(() => {
         refetch()
         fetchHierarchy()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+      
     }, [])
 
-    // derived image urls
+    
     const img0 = hierarchy?.images?.[0]?.url || ''
     const img1 = hierarchy?.images?.[1]?.url || ''
     const img2 = hierarchy?.images?.[2]?.url || ''

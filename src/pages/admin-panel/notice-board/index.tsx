@@ -718,7 +718,7 @@ export default function NoticeBoard() {
       <div className='m-6'>
         <div className='card'>
           <Toolbar
-            className='rounded-none border-none p-0 bg-white'
+            className='rounded-none border-none p-0 bg-background'
             // left={leftToolbarTemplate}
             right={rightToolbarTemplate}
           ></Toolbar>

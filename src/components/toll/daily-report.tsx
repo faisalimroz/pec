@@ -77,18 +77,18 @@ export default function VehicleDetectTollTable() {
     const [uploadStatus, setUploadStatus] = useState('')
 
     const [fDate, setFDate] = useState<string>('')
-    const [dataType, setDataType] = useState('')
+    const [dataType, setDataType] = useState<string | null>(null);
 
     const [deleteDialog, setDeleteDialog] = useState(false)
     const [deleteDate, setDeleteDate] = useState('')
     const [loading2, setLoading2] = useState(false)
-
+    const [formDate, setFormDate] = useState<string>('')
     const [todaysDate, setTodaysDate] = useState('')
-     const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
-const [approved, setApproved] = useState<boolean>(false);
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
+    const [approved, setApproved] = useState<boolean>(false);
     const { roles, permissions } = useAuth()
-   const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
+    const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
     const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-daily-report');
     const hasEditAccess = tollPermission?.edit_authority === true && showAll;
     const itemTemplate = (option: { label: string; value: string }) => {
@@ -133,8 +133,8 @@ const [approved, setApproved] = useState<boolean>(false);
         setUploading(true)
 
         const formData = new FormData()
-        formData.append('date', formatDate(fDate))
-        formData.append('dataType', dataType)
+        formData.append('date', formatDate(formDate))
+        //    formData.append('shift', dataType)
         formData.append('file', file)
 
         try {
@@ -148,7 +148,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     },
                 }
             )
-
+            console.log(response.data)
             toast.success('File uploaded successfully!')
             setFile(null)
             refetch()
@@ -236,6 +236,7 @@ const [approved, setApproved] = useState<boolean>(false);
             toast.success('Data Deleted Successfully')
         } catch (error: any) {
             if (error.response) {
+                console.error('Error uploading file:', error.response?.data || error);
                 const { message } = error.response.data
                 toast.error(message)
             } else {
@@ -300,12 +301,12 @@ const [approved, setApproved] = useState<boolean>(false);
                         selectedProducts={selectedProducts}
                         openNew={openNew2}
                         bulkUpload={openNew2}
-                        
+
                     />
                 )}
-            <div className='mb-1'>
+                <div className='mb-1'>
                     <RefreshButton handleReset={handleReset} />
-            </div>
+                </div>
             </>
         )
     }
@@ -380,107 +381,107 @@ const [approved, setApproved] = useState<boolean>(false);
 
     const filterSearchForm = (
         <div>
-                  <div className='flex flex-wrap justify-center '>
-            
-                            <div className='flex  w-fit gap-2  border p-2 rounded-md bg-white '>
-                                <Calendar
-                                    // @ts-ignore
-                                    value={date}
-                                    // @ts-ignore
-                                    onChange={(e) => setDate(e.value)}
-            
-                                    dateFormat="dd/mm/yy"
-                                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0 w-28 '
-                                    placeholder='Start Date'
-                                    showIcon
-                                    icon={() => <i className='pi pi-angle-down' />}
+            <div className='flex flex-wrap justify-center '>
+
+                <div className='flex  w-fit gap-2  border p-2 rounded-md bg-white '>
+                    <Calendar
+                        // @ts-ignore
+                        value={date}
+                        // @ts-ignore
+                        onChange={(e) => setDate(e.value)}
+
+                        dateFormat="dd/mm/yy"
+                        inputClassName='border-none rounded-none cursor-pointer focus:ring-0 w-28 '
+                        placeholder='Start Date'
+                        showIcon
+                        icon={() => <i className='pi pi-angle-down' />}
+                    />
+                    <Calendar
+                        // @ts-ignore
+                        value={date2}
+                        // @ts-ignore
+                        onChange={(e) => setDate2(e.value)}
+
+                        dateFormat="dd/mm/yy"
+                        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0 w-28'
+                        placeholder='End Date'
+                        showIcon
+                        icon={() => <i className='pi pi-angle-down' />}
+                    />
+
+
+
+                    <Dropdown
+                        value={selectedLocation}
+                        onChange={(e) => setSelectedLocation(e.value)}
+                        options={location}
+                        placeholder='Location'
+                        itemTemplate={itemTemplate}
+                        className='border-none rounded-none ml-4 cursor-pointer ring-0 '
+                    />
+
+                    <Dropdown
+                        value={selectedTraffic}
+                        onChange={(e) => setTraffic(e.value)}
+                        options={traffic}
+                        placeholder='Traffic'
+                        itemTemplate={itemTemplate}
+                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                    />
+                    <Dropdown
+                        value={selectedPeriod}
+                        onChange={(e) => setSelectedPeriod(e.value)}
+                        options={period}
+                        itemTemplate={itemTemplate}
+                        placeholder='Period'
+                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
+                    />
+
+
+
+                </div>
+
+                <div className='flex  w-fit gap-2  border p-2 rounded-md bg-white '>
+
+
+
+
+
+                    <IconField iconPosition='left' className='relative '>
+
+                        <InputText
+                            type='search'
+                            placeholder='Search'
+                            className='border-none ml-4 focus:ring-0'
+                            onChange={(e) => setSearchKey(e.target.value)}
+                            value={searchKey}
+                        />
+
+                        <button
+                            onClick={() => handleSearch()}
+                            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+                            type='submit'
+                        >
+                            <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                viewBox='0 0 24 24'
+                                fill='white'
+                                className='size-6'
+                            >
+                                <path
+                                    fillRule='evenodd'
+                                    d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                                    clipRule='evenodd'
                                 />
-                                <Calendar
-                                    // @ts-ignore
-                                    value={date2}
-                                    // @ts-ignore
-                                    onChange={(e) => setDate2(e.value)}
-            
-                                    dateFormat="dd/mm/yy"
-                                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0 w-28'
-                                    placeholder='End Date'
-                                    showIcon
-                                    icon={() => <i className='pi pi-angle-down' />}
-                                />
-            
-            
-                                
-                                    <Dropdown
-                                        value={selectedLocation}
-                                        onChange={(e) => setSelectedLocation(e.value)}
-                                        options={location}
-                                        placeholder='Location'
-                                        itemTemplate={itemTemplate}
-                                        className='border-none rounded-none ml-4 cursor-pointer ring-0 '
-                                    />
-                                    
-                                    <Dropdown
-                                        value={selectedTraffic}
-                                        onChange={(e) => setTraffic(e.value)}
-                                        options={traffic}
-                                        placeholder='Traffic'
-                                        itemTemplate={itemTemplate}
-                                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
-                                    />
-                                     <Dropdown
-                                        value={selectedPeriod}
-                                        onChange={(e) => setSelectedPeriod(e.value)}
-                                        options={period}
-                                        itemTemplate={itemTemplate}
-                                        placeholder='Period'
-                                        className='border-none rounded-none ml-4 cursor-pointer ring-0'
-                                    />
-                               
-                               
-                                
-                            </div>
-            
-                            <div className='flex  w-fit gap-2  border p-2 rounded-md bg-white '>
-                                
-            
-                              
-                                   
-                                
-                                    <IconField iconPosition='left' className='relative '>
-            
-                                        <InputText
-                                            type='search'
-                                            placeholder='Search'
-                                            className='border-none ml-4 focus:ring-0'
-                                            onChange={(e) => setSearchKey(e.target.value)}
-                                            value={searchKey}
-                                        />
-            
-                                        <button
-                                            onClick={() => handleSearch()}
-                                            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
-                                            type='submit'
-                                        >
-                                            <svg
-                                                xmlns='http://www.w3.org/2000/svg'
-                                                viewBox='0 0 24 24'
-                                                fill='white'
-                                                className='size-6'
-                                            >
-                                                <path
-                                                    fillRule='evenodd'
-                                                    d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-                                                    clipRule='evenodd'
-                                                />
-                                            </svg>
-                                        </button>
-                                    </IconField>
-                                
-                            </div>
-            
-            
-            
-                        </div>
+                            </svg>
+                        </button>
+                    </IconField>
+
+                </div>
+
+
+
+            </div>
             <h1 className='text-center pt-10 text-xl font-bold text-[#000000]'>Traffic Report</h1>
         </div>
 
@@ -767,19 +768,20 @@ const [approved, setApproved] = useState<boolean>(false);
                             <Calendar
                                 id='date'
                                 // @ts-ignore
-                                onChange={(e) => setFDate(e.value)}
+                                value={formDate}
+                                onChange={(e) => setFormDate(e.value as string)}
                                 dateFormat='dd/mm/yy'
                                 placeholder='Select Date'
                             />
                         </div>
                     </div>
-
                     <div>
                         <Dropdown
                             value={dataType}
                             onChange={(e) => setDataType(e.value)}
                             options={traffic}
-                            optionLabel='name'
+                            optionLabel='label'
+                            optionValue='value'
                             placeholder='Select Type'
                             className='mt-5'
                         />
