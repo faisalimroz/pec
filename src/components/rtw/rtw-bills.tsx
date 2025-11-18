@@ -23,6 +23,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchRtwBills } from '@/api/rtwAPIs'
 import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 interface Attachment {
     url: string
     _id: string
@@ -53,16 +54,13 @@ export default function KecLetter() {
     }
 
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
+    const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
 
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
 
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+   const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
+    const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-financial-documentation');
+    const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -625,15 +623,6 @@ formData.append('approved', approved ? 'true' : 'false');
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
 
     const handleSearch = () => {
@@ -644,9 +633,10 @@ formData.append('approved', approved ? 'true' : 'false');
             searchQuery: searchKey,
 
         }
-        console.log(payload, 'hello')
+
         searchRtwBills(payload).then((result) => {
-            setProducts(result?.data || [])
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -665,7 +655,8 @@ formData.append('approved', approved ? 'true' : 'false');
         setSelectedCode(null)
 
         searchRtwBills(payload).then((result) => {
-            setProducts(result?.data)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -680,7 +671,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchRtwBills(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }

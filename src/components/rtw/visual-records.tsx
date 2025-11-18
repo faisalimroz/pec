@@ -24,6 +24,7 @@ import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchPictures } from '@/api/rtwAPIs'
 import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 interface Attachment {
   url: string
   _id: string
@@ -57,17 +58,14 @@ export default function MonthlyReport() {
     attachments: [],
   }
 
-  const { roles, permissions } = useAuth()
-  const clinicPermission = permissions.find((p) => p.name === 'clinic')
-  const treatmentRecordPermission = clinicPermission?.children.find(
-    (c) => c.name === 'treatment-record'
-  )
+  
+  const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
 
-  const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-  const isClinic = roles.some((role) =>
-    ['superadmin', 'clinic'].includes(role.title)
-  )
+    const { roles, permissions } = useAuth()
+  const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
+    const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-visual-records');
+    const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -85,7 +83,7 @@ export default function MonthlyReport() {
   const [loading2, setLoading2] = useState<boolean>(false)
   const [subjectName, setSubjectName] = useState('')
   const [description, setDescription] = useState('')
-    const [approved, setApproved] = useState<boolean>(false);
+  const [approved, setApproved] = useState<boolean>(false);
   const [remarks, setRemarks] = useState('')
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])
@@ -338,7 +336,7 @@ export default function MonthlyReport() {
       formData.append('types', types)
       formData.append('contentType', contentType)
       formData.append('remarks', remarks)
-formData.append('approved', approved ? 'true' : 'false');
+      formData.append('approved', approved ? 'true' : 'false');
       formData.append('date', formatDate(formDate))
       filesInput.forEach((file) => {
         formData.append('attachments', file)
@@ -535,7 +533,7 @@ formData.append('approved', approved ? 'true' : 'false');
       setLoading(true);
 
       const payload = {
-        contentType: buttonValue || "",                                  // <-- key that backend should use
+        contentType: buttonValue || "",                               
         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
         searchQuery: searchKey || "",
         types: selectedCode?.code || '',
@@ -543,7 +541,8 @@ formData.append('approved', approved ? 'true' : 'false');
 
       searchPictures(payload)
         .then((result) => {
-          setProducts(result?.data || []);
+        const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
           setLoading(false);
         })
         .catch((error) => {
@@ -663,12 +662,12 @@ formData.append('approved', approved ? 'true' : 'false');
       types: selectedCode?.code || '',
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
-      // You can optionally include contentType based on current button:
       contentType: buttonType || undefined,
     }
 
     searchPictures(payload).then((result) => {
-      setProducts(result?.data || [])
+    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -679,7 +678,7 @@ formData.append('approved', approved ? 'true' : 'false');
       types: '',
       date_range: '',
       searchQuery: '',
-      contentType: '', 
+      contentType: '',
     }
 
     setDate(null)
@@ -689,7 +688,8 @@ formData.append('approved', approved ? 'true' : 'false');
     setButtonType('')
 
     searchPictures(payload).then((result) => {
-      setProducts(result?.data)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -701,11 +701,12 @@ formData.append('approved', approved ? 'true' : 'false');
       types: '',
       date_range: '',
       searchQuery: '',
-      contentType: '', // default no filter
+      contentType: '',
     }
 
     searchPictures(payload).then((result) => {
-      setProducts(result?.data)
+   const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -846,78 +847,78 @@ formData.append('approved', approved ? 'true' : 'false');
   const attachmentBodyTemplate = (rowData: any) => {
     return <div>{rowData?.attachments?.length}</div>
   }
-    // console.log(products)
+  // console.log(products)
 
-    return (
-        <div className=''>
-            <div className='ml-4'>
-                <Toolbar
-                    className='rounded-none border-none p-0 bg-background'
-                    left={leftToolbarTemplate}
-                    right={rightToolbarTemplate}
-                ></Toolbar>
-                <div className='mt-2'>
-                    <ButtonGroup activeButton={buttonType}
-                        onButtonClick={setButtonType} ></ButtonGroup>
-                </div>
-                <TabView
-                    activeIndex={activeIndex}
-                    onTabChange={(e) => setActiveIndex(e.index)}
-                >
-                    {/* 1st tab  */}
-                    <TabPanel>
-                        <DataTable
-                            ref={dt}
-                            value={products}
-                            selection={selectedProducts}
-                            onSelectionChange={(e: any) => {
-                                if (Array.isArray(e.value)) {
-                                    setSelectedProducts(e.value)
-                                }
-                            }}
-                            dataKey='_id'
-                            paginator
-                            rows={10}
-                            rowsPerPageOptions={[5, 10, 25]}
-                            paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
-                            currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
-                            header={filterSearchForm}
-                            selectionMode='multiple'
-                            showGridlines
-                            cellSelection
-                            emptyMessage='No data found!'
-                            loading={loading}
-                            scrollable
-                        >
-                            {hasEditAccess && (
-                                <Column
-                                    selectionMode='multiple'
-                                    headerStyle={{ width: '3rem' }}
-                                    exportable={false}
-                                    headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
-                                ></Column>
-                            )}
+  return (
+    <div className=''>
+      <div className='ml-4'>
+        <Toolbar
+          className='rounded-none border-none p-0 bg-background'
+          left={leftToolbarTemplate}
+          right={rightToolbarTemplate}
+        ></Toolbar>
+        <div className='mt-2'>
+          <ButtonGroup activeButton={buttonType}
+            onButtonClick={setButtonType} ></ButtonGroup>
+        </div>
+        <TabView
+          activeIndex={activeIndex}
+          onTabChange={(e) => setActiveIndex(e.index)}
+        >
+          {/* 1st tab  */}
+          <TabPanel>
+            <DataTable
+              ref={dt}
+              value={products}
+              selection={selectedProducts}
+              onSelectionChange={(e: any) => {
+                if (Array.isArray(e.value)) {
+                  setSelectedProducts(e.value)
+                }
+              }}
+              dataKey='_id'
+              paginator
+              rows={10}
+              rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
+              currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
+              header={filterSearchForm}
+              selectionMode='multiple'
+              showGridlines
+              cellSelection
+              emptyMessage='No data found!'
+              loading={loading}
+              scrollable
+            >
+              {hasEditAccess && (
+                <Column
+                  selectionMode='multiple'
+                  headerStyle={{ width: '3rem' }}
+                  exportable={false}
+                  headerClassName='bg-[#ffc2c2] text-sm'
+                  bodyClassName='text-sm truncate max-w-xs'
+                ></Column>
+              )}
 
-                            <Column
-                                field='slNo'
-                                header='SL No.'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                className='min-w-[10rem]'
+              <Column
+                field='slNo'
+                header='SL No.'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[10rem]'
 
-                            ></Column>
+              ></Column>
 
 
-                            <Column
-                                field='date'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+              <Column
+                field='date'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[12rem]'
-                                header='Date'
-                            ></Column>
-                            {/* <Column
+                className='min-w-[12rem]'
+                header='Date'
+              ></Column>
+              {/* <Column
                                 field='refNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
@@ -926,560 +927,561 @@ formData.append('approved', approved ? 'true' : 'false');
                                 header='Ref No.'
                             ></Column> */}
 
-                            <Column
-                                field='subjectName'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+              <Column
+                field='subjectName'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
-                                header='File Name/Subject'
-                            ></Column>
-                            <Column
-                                field='types'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[8rem]'
+                header='File Name/Subject'
+              ></Column>
+              <Column
+                field='types'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
-                                header='Type'
-                            ></Column>
-                            <Column
-                                field='description'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[8rem]'
+                header='Type'
+              ></Column>
+              <Column
+                field='description'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
-                                header='Description'
-                            ></Column>
-                            <Column
-                                body={attachmentBodyTemplate}
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                className='min-w-[12rem]'
-                                header='Attachment'
-                            ></Column>
+                className='min-w-[8rem]'
+                header='Description'
+              ></Column>
+              <Column
+                body={attachmentBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[12rem]'
+                header='Attachment'
+              ></Column>
 
-                            <Column
-                                field='remarks'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[12rem]'
-                                header='Remarks'
-                            ></Column>
-
-
-                            <Column
-                                body={actionBodyTemplate}
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                header='Actions'
-                                headerStyle={{ width: '3rem' }}
-                                exportable={false}
-                            ></Column>
-                        </DataTable>
-                    </TabPanel>
-                </TabView>
-            </div>
-            <Dialog
-                visible={bulkDialog}
-                style={{ width: '42rem' }}
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                header='Upload Bulk Data'
-                modal
-                className='p-fluid'
-                footer={productDialogFooter2}
-                onHide={hideDialog2}
-            >
-                <div className='grid grid-cols-2 items-center gap-6'>
-                    <div className='field col-span-2'>
-                        <label htmlFor='bulkUpload' className='font-bold'>
-                            Select File (.xlsx Only):
-                        </label>
-                        <br />
-                        <input
-                            type='file'
-                            id='bulkUpload'
-                            accept='.xlsx'
-                            // @ts-ignore
-                            onChange={handleFileChange2}
-                            disabled={uploading}
-                            className='mt-3'
-                        />
-                        {/* {file && <p>Selected file: {file?.name}</p>} */}
-                        {uploadStatus && (
-                            <p
-                                className={
-                                    uploadStatus.includes('success')
-                                        ? 'text-green-500'
-                                        : 'text-red-500'
-                                }
-                            >
-                                {uploadStatus}
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </Dialog>
-            {/* update data dialog  */}
-            <Dialog
-                visible={updateProductDialog}
-                style={{ width: '60rem' }}
-                header='Update Document'
-                modal
-                className='p-fluid'
-                footer={updateProductDialogFooter}
-                onHide={hideUpdateDialog}
-            >
-                {updatedProduct && (
-                    <div className='grid grid-cols-2 gap-4'>
-
-                        <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
-                            </label>
-                            <InputText
-                                id='description'
-                                value={updatedProduct.description}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        description: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='subjectName' className='font-bold'>
-                                File Name/Subject
-                            </label>
-                            <InputText
-                                id='subjectName'
-                                value={updatedProduct.subjectName}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        subjectName: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
+              <Column
+                field='remarks'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[12rem]'
+                header='Remarks'
+              ></Column>
 
 
-                        <div className='field'>
-                            <label htmlFor='remarks' className='font-bold'>
-                                Remarks
-                            </label>
-                            <InputText
-                                id='remarks'
-                                value={updatedProduct.remarks}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        remarks: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div className='field'>
-                            <label htmlFor='types' className='font-bold'>
-                                Type
-                            </label>
-                            <Dropdown
-                                id='types'
-                                value={updatedProduct.types}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        types: e.value,
-                                    })
-                                }
-                                options={recordTypes}
-                                itemTemplate={itemTemplate}
-                                optionLabel='name'
-                                optionValue='name'
-                                placeholder='Select Type'
-                                className='w-full'
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='contentType' className='font-bold'>
-                                Content Type
-                            </label>
-                            <Dropdown
-                                id='contentType'
-                                value={updatedProduct.contentType}
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        contentType: e.value,
-                                    })
-                                }
-                                options={contentTypes}
-                                itemTemplate={itemTemplate}
-                                optionLabel='name'
-                                optionValue='name'
-                                placeholder='Select Type'
-                                className='w-full'
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='date' className='font-bold'>
-                                Date
-                            </label>
-                            <Calendar
-                                id='date'
-                                value={
-                                    new Date(updatedProduct.date.split('-').reverse().join('-'))
-                                }
-                                onChange={(e) =>
-                                    setUpdatedProduct({
-                                        ...updatedProduct,
-                                        date: e.value ? formatDate(e.value) : '',
-                                    })
-                                }
-                                dateFormat='dd/mm/yy'
-                            />
-
-                        </div>
-                        <div className='col-span-2'>
-                            <h3 className='font-bold mb-2'>Existing Attachments</h3>
-                            <div className='flex flex-wrap gap-3'>
-                                {updatedProduct.attachments.map((attachment) => (
-                                    <div
-                                        key={attachment._id}
-                                        className='flex items-center gap-2 bg-gray-100 p-1 rounded-md'
-                                    >
-                                        <a
-                                            href={attachment.url}
-                                            target='_blank'
-                                            rel='noopener noreferrer'
-                                            className='text-blue-600 hover:underline'
-                                        >
-                                            {attachment.url?.split('/').pop()}
-                                        </a>
-                                        <Button
-                                            icon='pi pi-times text-red-500'
-                                            className='p-button-rounded text-sm text-red-500 ml-2'
-                                            onClick={() => handleRemoveAttachment(attachment._id)}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className='col-span-2'>
-                            <h3 className='font-bold mb-2'>Add New Attachments</h3>
-                            <MultiFileInput onFilesChange={handleNewAttachments} />
-                        </div>
-                    </div>
-                )}
-            </Dialog>
-
-            <Dialog
-                visible={viewProductDialog}
-                style={{ width: '50rem' }}
-                header='File Details'
-                modal
-                className='p-fluid'
-                footer={viewProductDialogFooter}
-                onHide={hideViewDialog}
-            >
-                {selectedProduct && (
-                    <>
-                        <div className='mb-6 border border-gray-200 rounded-lg'>
-                            <div className='bg-gray-50 px-4 py-2 border-b border-gray-200'>
-                                <h3 className='text-gray-700 font-semibold'>
-                                    Document History
-                                </h3>
-                            </div>
-                            <div className='p-4 space-y-4'>
-                                <div className='flex justify-between items-start'>
-                                    <div>
-                                        <h4 className='text-sm font-medium text-gray-500'>
-                                            Created By
-                                        </h4>
-                                        <div className='mt-1'>
-                                            <p className='text-sm text-gray-900'>
-                                                {selectedProduct?.creator || 'N/A'}
-                                            </p>
-                                            {selectedProduct?.creationTimestamp && (
-                                                <p className='text-sm text-gray-600'>
-                                                    <span>
-                                                        Date:{' '}
-                                                        {selectedProduct.creationTimestamp.split(' ')[0]}
-                                                    </span>
-                                                    <span className='mx-1'>•</span>
-                                                    <span>
-                                                        Time:{' '}
-                                                        {selectedProduct.creationTimestamp.split(' ')[1]}
-                                                    </span>
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h4 className='text-sm font-medium text-gray-500'>
-                                            Last Modified By
-                                        </h4>
-                                        <div className='mt-1'>
-                                            <p className='text-sm text-gray-900'>
-                                                {selectedProduct?.updater || 'N/A'}
-                                            </p>
-                                            {selectedProduct?.updatingTimestamp && (
-                                                <p className='text-sm text-gray-600'>
-                                                    <span>
-                                                        Date:{' '}
-                                                        {selectedProduct.updatingTimestamp.split(' ')[0]}
-                                                    </span>
-                                                    <span className='mx-1'>•</span>
-                                                    <span>
-                                                        Time:{' '}
-                                                        {selectedProduct.updatingTimestamp.split(' ')[1]}
-                                                    </span>
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='grid grid-cols-2 gap-4'>
-                            <div>
-                                <h3 className='font-bold'>SL No.</h3>
-                                <p className='break-all'>{selectedProduct.slNo}</p>
-                            </div>
-                            <div>
-                                <h3 className='font-bold'>Date</h3>
-                                <p>{selectedProduct.date}</p>
-                            </div>
-                            <div>
-                                <h3 className='font-bold'>File Name/Subject</h3>
-                                <p className='break-all'>{selectedProduct.subjectName}</p>
-                            </div>
-
-                            <div>
-                                <h3 className='font-bold'>Type</h3>
-                                <p className='break-all'>{selectedProduct.types}</p>
-                            </div>
-
-                            <div>
-                                <h3 className='font-bold'>Remarks</h3>
-                                <p className='break-all'>{selectedProduct.remarks}</p>
-                            </div>
-
-                            {hasEditAccess && (
-                                <div className='col-span-2'>
-                                    <h3 className='font-bold'>Attachments/Download</h3>
-                                    <div className='w-fit mt-2 flex flex-col justify-start'>
-                                        {selectedProduct.attachments.map((attachment, index) => (
-                                            <Button
-                                                key={attachment._id}
-                                                label={`File No. ${index + 1}: ${attachment?.url?.split('/').pop()}`}
-                                                icon='pi pi-file'
-                                                onClick={() => window.open(attachment.url, '_blank')}
-                                                className='hover:text-blue-600/70 px-0 py-2 border rounded-md focus:border-0 focus:ring-0 focus:ring-offset-0'
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </>
-                )}
-            </Dialog>
-
-            <Dialog
-                visible={productDialog}
-                style={{ width: '42rem' }}
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                header='Upload Document'
-                modal
-                className='p-fluid'
-                footer={productDialogFooter}
-                onHide={hideDialog}
-            >
-                <>
-                    <div className='grid grid-cols-2 items-center gap-6'>
-
-                        <div className='field'>
-                            <label htmlFor='subjectName' className='font-bold'>
-                                File Name/Subject
-                            </label>
-                            <InputText
-                                id='subjectName'
-                                onChange={(e) => setSubjectName(e.target.value)}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !subjectName,
-                                })}
-                            />
-                            {submitted && !subjectName && (
-                                <small className='p-error'>File Name/Subject is required.</small>
-                            )}
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='description' className='font-bold'>
-                                Description
-                            </label>
-                            <InputText
-                                id='description'
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="types" className="font-bold">
-                                Type
-                            </label>
-                            <Dropdown
-                                id="types"
-                                value={types}
-                                onChange={(e) => setTypes(e.value)}
-                                options={recordTypes}
-                                optionLabel='name'
-                                optionValue='name'
-                                placeholder="Select Type"
-                                itemTemplate={itemTemplate}
-                                className="w-full"
-                            />
-                        </div>
-                        <div className="field">
-                            <label htmlFor="contentType" className="font-bold">
-                                Content Type
-                            </label>
-                            <Dropdown
-                                id="contentType"
-                                value={contentType}
-                                onChange={(e) => setContentType(e.value)}
-                                options={contentTypes}
-                                optionLabel='name'
-                                optionValue='name'
-                                placeholder="Select Content Type"
-                                itemTemplate={itemTemplate}
-                                className="w-full"
-                            />
-                        </div>
-                        <div className='field'>
-                            <label htmlFor='remarks' className='font-bold'>
-                                Remarks
-                            </label>
-                            <InputText
-                                id='remarks'
-                                onChange={(e) => setRemarks(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor='date' className='font-bold'>
-                                Date
-                            </label>
-                            <div className='border rounded-md'>
-                                <Calendar
-                                    id='date'
-                                    // @ts-ignore
-                                    value={formDate}
-                                    onChange={(e) => setFormDate(e.value)}
-                                    dateFormat='dd/mm/yy'
-                                    inputClassName='border-0 focus:ring-0 cursor-pointer'
-                                    className='focus:ring-0'
-                                    placeholder='Select Date'
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-span-2 mt-2">
-                        <label className="font-bold mb-2 block">Approval</label>
-                        <div className="flex items-center gap-3">
-                            <Checkbox
-                                inputId="approve"
-                                checked={approved}
-                                onChange={(e) => setApproved(!!e.checked)}
-                            />
-                            <label htmlFor="approve" className="text-sm">
-                                Add this document for all
-                            </label>
-                        </div>
-                    </div>
-                    <div className='gap-3 mt-5'>
-                        <label className='block mb-1 font-semibold'>
-                            Upload Document
-                            <span className='text-red-500'>*</span>
-                        </label>
-
-                        <div>
-                            <MultiFileInput onFilesChange={handleFileChange} />
-                        </div>
-                    </div>
-                </>
-            </Dialog>
-
-            <Dialog
-                visible={deleteProductDialog}
-                style={{ width: '32rem' }}
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                header='Confirm'
-                modal
-                footer={deleteProductDialogFooter}
-                onHide={hideDeleteProductDialog}
-            >
-                <div className='confirmation-content'>
-                    <i
-                        className='pi pi-exclamation-triangle mr-3'
-                        style={{ fontSize: '2rem' }}
-                    />
-                    {product && (
-                        <span>
-                            Are you sure you want to delete <b>{product.name}</b>?
-                        </span>
-                    )}
-                </div>
-            </Dialog>
-
-            <Dialog
-                visible={deleteProductsDialog}
-                style={{ width: '42rem' }}
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                header='Confirm'
-                modal
-                footer={deleteProductsDialogFooter}
-                onHide={hideDeleteProductsDialog}
-            >
-                <div className='confirmation-content'>
-                    <i
-                        className='pi pi-exclamation-triangle mr-3'
-                        style={{ fontSize: '3rem' }}
-                    />
-                    {product && (
-                        <span>Are you sure you want to delete the selected products?</span>
-                    )}
-                </div>
-            </Dialog>
-
-            <Dialog
-                visible={deleteMultipleDialog}
-                style={{ width: '32rem' }}
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                header='Confirm Multiple Delete'
-                modal
-                footer={deleteMultipleDialogFooter}
-                onHide={hideDeleteMultipleDialog}
-            >
-                <div className='flex flex-col justify-center'>
-                    <i
-                        className='pi pi-exclamation-triangle mr-3 text-center my-2'
-                        style={{ fontSize: '2rem' }}
-                    />
-                    <span className='text-center'>
-                        Are you sure you want to delete {selectedProducts.length} selected{' '}
-                        {selectedProducts.length === 1 ? 'Document' : 'Documents'}?
-                    </span>
-                </div>
-            </Dialog>
+              <Column
+                body={actionBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                header='Actions'
+                headerStyle={{ width: '3rem' }}
+                exportable={false}
+              ></Column>
+            </DataTable>
+          </TabPanel>
+        </TabView>
+      </div>
+      <Dialog
+        visible={bulkDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Upload Bulk Data'
+        modal
+        className='p-fluid'
+        footer={productDialogFooter2}
+        onHide={hideDialog2}
+      >
+        <div className='grid grid-cols-2 items-center gap-6'>
+          <div className='field col-span-2'>
+            <label htmlFor='bulkUpload' className='font-bold'>
+              Select File (.xlsx Only):
+            </label>
+            <br />
+            <input
+              type='file'
+              id='bulkUpload'
+              accept='.xlsx'
+              // @ts-ignore
+              onChange={handleFileChange2}
+              disabled={uploading}
+              className='mt-3'
+            />
+            {/* {file && <p>Selected file: {file?.name}</p>} */}
+            {uploadStatus && (
+              <p
+                className={
+                  uploadStatus.includes('success')
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }
+              >
+                {uploadStatus}
+              </p>
+            )}
+          </div>
         </div>
-    )
+      </Dialog>
+      {/* update data dialog  */}
+      <Dialog
+        visible={updateProductDialog}
+        style={{ width: '60rem' }}
+        header='Update Document'
+        modal
+        className='p-fluid'
+        footer={updateProductDialogFooter}
+        onHide={hideUpdateDialog}
+      >
+        {updatedProduct && (
+          <div className='grid grid-cols-2 gap-4'>
+
+            <div className='field'>
+              <label htmlFor='description' className='font-bold'>
+                Description
+              </label>
+              <InputText
+                id='description'
+                value={updatedProduct.description}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='subjectName' className='font-bold'>
+                File Name/Subject
+              </label>
+              <InputText
+                id='subjectName'
+                value={updatedProduct.subjectName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    subjectName: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+
+            <div className='field'>
+              <label htmlFor='remarks' className='font-bold'>
+                Remarks
+              </label>
+              <InputText
+                id='remarks'
+                value={updatedProduct.remarks}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    remarks: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div className='field'>
+              <label htmlFor='types' className='font-bold'>
+                Type
+              </label>
+              <Dropdown
+                id='types'
+                value={updatedProduct.types}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    types: e.value,
+                  })
+                }
+                options={recordTypes}
+                itemTemplate={itemTemplate}
+                optionLabel='name'
+                optionValue='name'
+                placeholder='Select Type'
+                className='w-full'
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='contentType' className='font-bold'>
+                Content Type
+              </label>
+              <Dropdown
+                id='contentType'
+                value={updatedProduct.contentType}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    contentType: e.value,
+                  })
+                }
+                options={contentTypes}
+                itemTemplate={itemTemplate}
+                optionLabel='name'
+                optionValue='name'
+                placeholder='Select Type'
+                className='w-full'
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='date' className='font-bold'>
+                Date
+              </label>
+              <Calendar
+                id='date'
+                value={
+                  new Date(updatedProduct.date.split('-').reverse().join('-'))
+                }
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    date: e.value ? formatDate(e.value) : '',
+                  })
+                }
+                dateFormat='dd/mm/yy'
+              />
+
+            </div>
+            <div className='col-span-2'>
+              <h3 className='font-bold mb-2'>Existing Attachments</h3>
+              <div className='flex flex-wrap gap-3'>
+                {updatedProduct.attachments.map((attachment) => (
+                  <div
+                    key={attachment._id}
+                    className='flex items-center gap-2 bg-gray-100 p-1 rounded-md'
+                  >
+                    <a
+                      href={attachment.url}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-blue-600 hover:underline'
+                    >
+                      {attachment.url?.split('/').pop()}
+                    </a>
+                    <Button
+                      icon='pi pi-times text-red-500'
+                      className='p-button-rounded text-sm text-red-500 ml-2'
+                      onClick={() => handleRemoveAttachment(attachment._id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className='col-span-2'>
+              <h3 className='font-bold mb-2'>Add New Attachments</h3>
+              <MultiFileInput onFilesChange={handleNewAttachments} />
+            </div>
+          </div>
+        )}
+      </Dialog>
+
+      <Dialog
+        visible={viewProductDialog}
+        style={{ width: '50rem' }}
+        header='File Details'
+        modal
+        className='p-fluid'
+        footer={viewProductDialogFooter}
+        onHide={hideViewDialog}
+      >
+        {selectedProduct && (
+          <>
+            <div className='mb-6 border border-gray-200 rounded-lg'>
+              <div className='bg-gray-50 px-4 py-2 border-b border-gray-200'>
+                <h3 className='text-gray-700 font-semibold'>
+                  Document History
+                </h3>
+              </div>
+              <div className='p-4 space-y-4'>
+                <div className='flex justify-between items-start'>
+                  <div>
+                    <h4 className='text-sm font-medium text-gray-500'>
+                      Created By
+                    </h4>
+                    <div className='mt-1'>
+                      <p className='text-sm text-gray-900'>
+                        {selectedProduct?.creator || 'N/A'}
+                      </p>
+                      {selectedProduct?.creationTimestamp && (
+                        <p className='text-sm text-gray-600'>
+                          <span>
+                            Date:{' '}
+                            {selectedProduct.creationTimestamp.split(' ')[0]}
+                          </span>
+                          <span className='mx-1'>•</span>
+                          <span>
+                            Time:{' '}
+                            {selectedProduct.creationTimestamp.split(' ')[1]}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className='text-sm font-medium text-gray-500'>
+                      Last Modified By
+                    </h4>
+                    <div className='mt-1'>
+                      <p className='text-sm text-gray-900'>
+                        {selectedProduct?.updater || 'N/A'}
+                      </p>
+                      {selectedProduct?.updatingTimestamp && (
+                        <p className='text-sm text-gray-600'>
+                          <span>
+                            Date:{' '}
+                            {selectedProduct.updatingTimestamp.split(' ')[0]}
+                          </span>
+                          <span className='mx-1'>•</span>
+                          <span>
+                            Time:{' '}
+                            {selectedProduct.updatingTimestamp.split(' ')[1]}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className='grid grid-cols-2 gap-4'>
+              <div>
+                <h3 className='font-bold'>SL No.</h3>
+                <p className='break-all'>{selectedProduct.slNo}</p>
+              </div>
+              <div>
+                <h3 className='font-bold'>Date</h3>
+                <p>{selectedProduct.date}</p>
+              </div>
+              <div>
+                <h3 className='font-bold'>File Name/Subject</h3>
+                <p className='break-all'>{selectedProduct.subjectName}</p>
+              </div>
+
+              <div>
+                <h3 className='font-bold'>Type</h3>
+                <p className='break-all'>{selectedProduct.types}</p>
+              </div>
+
+              <div>
+                <h3 className='font-bold'>Remarks</h3>
+                <p className='break-all'>{selectedProduct.remarks}</p>
+              </div>
+
+              {hasEditAccess && (
+                <div className='col-span-2'>
+                  <h3 className='font-bold'>Attachments/Download</h3>
+                  <div className='w-fit mt-2 flex flex-col justify-start'>
+                    {selectedProduct.attachments.map((attachment, index) => (
+                      <Button
+                        key={attachment._id}
+                        label={`File No. ${index + 1}: ${attachment?.url?.split('/').pop()}`}
+                        icon='pi pi-file'
+                        onClick={() => window.open(attachment.url, '_blank')}
+                        className='hover:text-blue-600/70 px-0 py-2 border rounded-md focus:border-0 focus:ring-0 focus:ring-offset-0'
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </Dialog>
+
+      <Dialog
+        visible={productDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Upload Document'
+        modal
+        className='p-fluid'
+        footer={productDialogFooter}
+        onHide={hideDialog}
+      >
+        <>
+          <div className='grid grid-cols-2 items-center gap-6'>
+
+            <div className='field'>
+              <label htmlFor='subjectName' className='font-bold'>
+                File Name/Subject
+              </label>
+              <InputText
+                id='subjectName'
+                onChange={(e) => setSubjectName(e.target.value)}
+                required
+                autoFocus
+                className={classNames({
+                  'p-invalid': submitted && !subjectName,
+                })}
+              />
+              {submitted && !subjectName && (
+                <small className='p-error'>File Name/Subject is required.</small>
+              )}
+            </div>
+            <div className='field'>
+              <label htmlFor='description' className='font-bold'>
+                Description
+              </label>
+              <InputText
+                id='description'
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="types" className="font-bold">
+                Type
+              </label>
+              <Dropdown
+                id="types"
+                value={types}
+                onChange={(e) => setTypes(e.value)}
+                options={recordTypes}
+                optionLabel='name'
+                optionValue='name'
+                placeholder="Select Type"
+                itemTemplate={itemTemplate}
+                className="w-full"
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="contentType" className="font-bold">
+                Content Type
+              </label>
+              <Dropdown
+                id="contentType"
+                value={contentType}
+                onChange={(e) => setContentType(e.value)}
+                options={contentTypes}
+                optionLabel='name'
+                optionValue='name'
+                placeholder="Select Content Type"
+                itemTemplate={itemTemplate}
+                className="w-full"
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='remarks' className='font-bold'>
+                Remarks
+              </label>
+              <InputText
+                id='remarks'
+                onChange={(e) => setRemarks(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor='date' className='font-bold'>
+                Date
+              </label>
+              <div className='border rounded-md'>
+                <Calendar
+                  id='date'
+                  // @ts-ignore
+                  value={formDate}
+                  onChange={(e) => setFormDate(e.value)}
+                  dateFormat='dd/mm/yy'
+                  inputClassName='border-0 focus:ring-0 cursor-pointer'
+                  className='focus:ring-0'
+                  placeholder='Select Date'
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className='gap-3 mt-5'>
+            <label className='block mb-1 font-semibold'>
+              Upload Document
+              <span className='text-red-500'>*</span>
+            </label>
+
+            <div>
+              <MultiFileInput onFilesChange={handleFileChange} />
+            </div>
+          </div>
+          <div className="col-span-2 mt-2">
+            <label className="font-bold mb-2 block">Approval</label>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                inputId="approve"
+                checked={approved}
+                onChange={(e) => setApproved(!!e.checked)}
+              />
+              <label htmlFor="approve" className="text-sm">
+                Add this document for all
+              </label>
+            </div>
+          </div>
+        </>
+      </Dialog>
+
+      <Dialog
+        visible={deleteProductDialog}
+        style={{ width: '32rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Confirm'
+        modal
+        footer={deleteProductDialogFooter}
+        onHide={hideDeleteProductDialog}
+      >
+        <div className='confirmation-content'>
+          <i
+            className='pi pi-exclamation-triangle mr-3'
+            style={{ fontSize: '2rem' }}
+          />
+          {product && (
+            <span>
+              Are you sure you want to delete <b>{product.name}</b>?
+            </span>
+          )}
+        </div>
+      </Dialog>
+
+      <Dialog
+        visible={deleteProductsDialog}
+        style={{ width: '42rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Confirm'
+        modal
+        footer={deleteProductsDialogFooter}
+        onHide={hideDeleteProductsDialog}
+      >
+        <div className='confirmation-content'>
+          <i
+            className='pi pi-exclamation-triangle mr-3'
+            style={{ fontSize: '3rem' }}
+          />
+          {product && (
+            <span>Are you sure you want to delete the selected products?</span>
+          )}
+        </div>
+      </Dialog>
+
+      <Dialog
+        visible={deleteMultipleDialog}
+        style={{ width: '32rem' }}
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+        header='Confirm Multiple Delete'
+        modal
+        footer={deleteMultipleDialogFooter}
+        onHide={hideDeleteMultipleDialog}
+      >
+        <div className='flex flex-col justify-center'>
+          <i
+            className='pi pi-exclamation-triangle mr-3 text-center my-2'
+            style={{ fontSize: '2rem' }}
+          />
+          <span className='text-center'>
+            Are you sure you want to delete {selectedProducts.length} selected{' '}
+            {selectedProducts.length === 1 ? 'Document' : 'Documents'}?
+          </span>
+        </div>
+      </Dialog>
+    </div>
+  )
 }

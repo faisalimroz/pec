@@ -71,7 +71,7 @@ export async function searchAssetManagement(param: unknown) {
       },
     }
   )
-console.log(response)
+console.log(response.data)
   return response.data
 }
 
@@ -265,7 +265,7 @@ export async function searchITTools(param: unknown) {
       },
     }
   )
-
+console.log(response.data)
   return response.data
 }
 //security monthly report
@@ -317,7 +317,7 @@ export async function searchIpcMonthlyUpdates(param: unknown) {
       },
     }
   )
-console.log(response.data,'ipc')
+console.log(response.data,'ipcc')
   return response.data
 }
 
@@ -335,7 +335,7 @@ export async function searchIpcRecords(param: unknown) {
       },
     }
   )
-
+console.log(response.data,'ipc records')
   return response.data
 }
 export async function searchMonthlyRoster(param: unknown) {
@@ -384,7 +384,7 @@ export async function searchEmployeePersonalProfile(param: unknown) {
       },
     }
   )
-
+console.log(response.data)
   return response.data
 }
 

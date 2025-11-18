@@ -1463,12 +1463,7 @@ const router = createBrowserRouter([
             }),
           },
 
-          {
-            path: 'toll',
-            lazy: async () => ({
-              Component: (await import('@/pages/toll')).default,
-            }),
-          },
+        
           //extra toll 
             {
             path: '/edms/toll/hierarchy',
@@ -1587,6 +1582,12 @@ const router = createBrowserRouter([
           //   }),
           // },
           //toll
+            {
+            path: 'toll',
+            lazy: async () => ({
+              Component: (await import('@/pages/toll/index')).default,
+            }),
+          },
           {
             path: '/toll/hierarchy',
             lazy: async () => ({
@@ -1933,6 +1934,12 @@ const router = createBrowserRouter([
   },
   //rtw
   {
+    path: '/rtw',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw/index')).default,
+    }),
+  },
+  {
     path: 'rtw/project-overview',
     lazy: async () => ({
       Component: (await import('@/pages/rtw/project-overview')).default,
@@ -2148,6 +2155,12 @@ const router = createBrowserRouter([
 
 
   //main bridge pmis
+    {
+    path: '/mb-pmis',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis/index')).default,
+    }),
+  },
   {
     path: '/mb-pmis/project-overview',
     lazy: async () => ({
@@ -2351,6 +2364,7 @@ const router = createBrowserRouter([
       Component: (await import('@/pages/mb-pis-edms/additional-notes/document-revision')).default,
     }),
   },
+  
   //extra edms
 
   {

@@ -23,6 +23,8 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { searchNotice } from '@/api/itsAPIs'
 import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom';
+
 interface Attachment {
     url: string
     _id: string
@@ -51,19 +53,16 @@ export default function MonthlyReport() {
         remarks: '',
         attachments: [],
     }
+     const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
+  
+   
 
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
-        const [approved, setApproved] = useState<boolean>(false);
+  const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+    const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-notice');
+  const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
+    const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -74,21 +73,21 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-     const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    
+
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-     
+
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -97,7 +96,7 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+  
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -118,13 +117,12 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-          
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-           
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -237,9 +235,9 @@ export default function MonthlyReport() {
             setLoading2(true)
             const formData = new FormData()
             formData.append('subjectName', subjectName)
-            formData.append('description', description)    
-               formData.append('approved', approved ? 'true' : 'false');  
-            formData.append('remarks', remarks)           
+            formData.append('description', description)
+            formData.append('approved', approved ? 'true' : 'false');
+            formData.append('remarks', remarks)
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -324,7 +322,7 @@ export default function MonthlyReport() {
             dt.current?.exportCSV()
         }
     }
-    
+
     // multi delete funcs
     const confirmDeleteSelected = () => {
         if (selectedProducts.length > 0) {
@@ -399,7 +397,7 @@ export default function MonthlyReport() {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -413,7 +411,7 @@ export default function MonthlyReport() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                   
+
                     />
                 )}
 
@@ -512,62 +510,64 @@ export default function MonthlyReport() {
       /> */}
         </>
     )
+   
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
 
-  
-     const handleSearch = () => {
-            setLoading(true)
-            const payload = {
-          
-                date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-                searchQuery: searchKey,
-    
-            }
-            console.log(payload, 'hello')
-            searchNotice(payload).then((result) => {
-                setProducts(result?.data || [])
-                setLoading(false)
-            })
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
         }
-    
-        const handleReset = () => {
-            setLoading(true)
-            const payload = {
-    
-                date_range: '',
-                searchQuery: '',
-            }
-    
-            setDate(null)
-            setDate2(null)
-            setSearchKey('')
-          
-    
-            searchNotice(payload).then((result) => {
-                setProducts(result?.data)
-                setLoading(false)
-            })
+      
+        searchNotice(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false)
+        })
+    }
+
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
         }
-    
-        const refetch = () => {
-            setLoading(true)
-    
-            const payload = {
-    
-                date_range: '',
-                searchQuery: '',
-            }
-    
-            searchNotice(payload).then((result) => {
-                setProducts(result?.data)
-                setLoading(false)
-            })
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+
+
+        searchNotice(payload).then((result) => {
+               const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false);
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
         }
-        // initial data load - Internal
-        useEffect(() => {
-            refetch()
-        }, [])
-    
-  
+
+        searchNotice(payload).then((result) => {
+             const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
+
+
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -608,7 +608,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-              
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -686,7 +686,7 @@ export default function MonthlyReport() {
         </>
     )
 
-  
+
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -766,10 +766,10 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -824,7 +824,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -855,7 +855,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -889,7 +889,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1008,7 +1008,7 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1075,7 +1075,7 @@ export default function MonthlyReport() {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1105,7 +1105,7 @@ export default function MonthlyReport() {
                             </div>
                         </div>
                     </div>
-                   
+
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1117,18 +1117,18 @@ export default function MonthlyReport() {
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                                                <label className="font-bold mb-2 block">Approval</label>
-                                                                <div className="flex items-center gap-3">
-                                                                    <Checkbox
-                                                                        inputId="approve"
-                                                                        checked={approved}
-                                                                        onChange={(e) => setApproved(!!e.checked)}
-                                                                    />
-                                                                    <label htmlFor="approve" className="text-sm">
-                                                                        Add this document for all
-                                                                    </label>
-                                                                </div>
-                                                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

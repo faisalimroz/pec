@@ -24,6 +24,7 @@ import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Dropdown } from 'primereact/dropdown'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
   url: string
@@ -56,12 +57,13 @@ export default function AssetManagementTable() {
     attachments: [],
   }
   const { roles, permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-  const hasEditAccess = checkPermission?.edit_authority || false
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
-  )
+  const { pathname } = useLocation();
+       const showAll = pathname.startsWith('/edms');
+ const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+ console.log('adminManagerPermission', adminManagerPermission);
+    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'asset-management');
+    console.log('adminPermission', adminPermission);
+    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
@@ -485,32 +487,7 @@ export default function AssetManagementTable() {
         <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-        {/* {isAdmin && (
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-        {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-        {/* <Button
-          label='Delete'
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected}
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+     
       </div>
     )
   }
@@ -562,7 +539,8 @@ export default function AssetManagementTable() {
       };
 
       searchAssetManagement(payload).then((result) => {
-        setProducts(result?.data);
+        const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
         setLoading(false);
       });
 
@@ -688,7 +666,8 @@ export default function AssetManagementTable() {
       searchQuery: searchKey,
     }
     searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -706,7 +685,8 @@ export default function AssetManagementTable() {
     }
     setLoading(true)
     searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -836,7 +816,8 @@ export default function AssetManagementTable() {
     }
   setButtonType('')
     searchAssetManagement(payload).then((result) => {
-      setProducts(result?.data)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -1243,6 +1224,7 @@ export default function AssetManagementTable() {
                   </div>
                 </div>
               )}
+              
             </div>
           </>
         )}

@@ -13,7 +13,8 @@ import '@/styles/table-style.css'
 import { searchControllersReportRS } from '@/api/roadTrafficAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom';
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
@@ -54,17 +55,15 @@ export default function MonthlyReport() {
         attachments: [],
     }
 
-    const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+    const { pathname } = useLocation();
+ const showAll = pathname.startsWith('/edms');
+const { roles, permissions } = useAuth()
+           const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+    console.log('rtManagerPermission', rtManagerPermission);
+    const roadSafetyPermission = rtManagerPermission?.children?.find(
+        (child) => child.name === 'r&t-road-safety-patrol');
+      
+    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -92,7 +91,8 @@ export default function MonthlyReport() {
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     
 
-    const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
+    
+     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -527,7 +527,8 @@ export default function MonthlyReport() {
                }
                console.log(payload)
                searchControllersReportRS(payload).then((result) => {
-                   setProducts(result?.data || [])
+                    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                    setLoading(false)
                })
            }
@@ -546,7 +547,8 @@ export default function MonthlyReport() {
                setSelectedCode(null)
        
                searchControllersReportRS(payload).then((result) => {
-                   setProducts(result?.data)
+                    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                    setLoading(false)
                })
            }
@@ -561,7 +563,8 @@ export default function MonthlyReport() {
                }
        
                searchControllersReportRS(payload).then((result) => {
-                   setProducts(result?.data)
+                    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                    setLoading(false)
                })
            }

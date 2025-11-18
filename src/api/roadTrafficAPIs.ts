@@ -622,7 +622,7 @@ export async function searchAccidentReportWM(param: unknown) {
       },
     }
   )
-
+console.log(response.data)
   return response.data
 }
 export async function searchMiscellaneousWM(param: unknown) {

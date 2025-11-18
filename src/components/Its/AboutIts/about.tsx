@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Upload, Loader2, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuth } from '@/provider/authProvider'
+import { useLocation } from 'react-router-dom'
 
 interface ProjectLayout {
   _id: string
@@ -30,11 +31,16 @@ interface ApiResponse {
 
 const OrgChart: React.FC = () => {
   const { permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'general-information')
+    const { pathname } = useLocation();
+   const showAll = pathname.startsWith('/edms');
+  const checkRole = permissions.find((p) => p.name === 'its-manager')
   const checkPermission = checkRole?.children.find(
-    (c) => c.name === 'organization-chart'
+    (c) => c.name === 'about-its'
   )
-  const isGeneral = checkPermission?.edit_authority || false
+  const isGeneral = checkPermission?.edit_authority ===true && showAll;
+
+
+
   const [layout, setLayout] = useState<ProjectLayout | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isUploading, setIsUploading] = useState<boolean>(false)

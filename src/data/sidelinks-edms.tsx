@@ -31,28 +31,28 @@ export const administrationLinks: SideLink[] = [
     title: 'Employee Personal Profile',
     label: '',
     href: '/edms/administrative/employee-personal-profile',
-    uName: 'hr',
+    uName: 'employee-personal-profile',
     icon: <FileIcon />,
   },
   {
     title: 'Vehicle Mgt. Record',
     label: '',
     href: '/edms/administrative/vehicle-mgt-record',
-    uName: 'hr',
+    uName: 'vehicle-management',
     icon: <FileIcon />,
   },
   {
     title: 'Asset Management',
     label: '',
     href: '/edms/administrative/asset-management',
-    uName: 'hr',
+    uName: 'asset-management',
     icon: <FileIcon />,
   },
   {
     title: 'Building Maintenance',
     label: '',
     href: '',
-    uName: 'hr',
+    uName: 'building-maintenance',
     icon: <FileIcon />,
     sub: [
       {
@@ -76,7 +76,7 @@ export const administrationLinks: SideLink[] = [
     title: 'Health Center',
     label: '',
     href: '',
-    uName: 'hr',
+    uName: 'health-center',
     icon: <FileIcon />,
     sub: [
       {
@@ -105,7 +105,7 @@ export const administrationLinks: SideLink[] = [
     title: 'Gardening Mgt.',
     label: '',
     href: '',
-    uName: 'hr',
+    uName: 'gardening-mgt',
     icon: <FileIcon />,
     sub: [
       {
@@ -128,7 +128,7 @@ export const administrationLinks: SideLink[] = [
     title: 'Fire Mgt.',
     label: '',
     href: '',
-    uName: 'hr',
+    uName: 'fire-mgt',
     icon: <FileIcon />,
     sub: [
       {
@@ -152,7 +152,7 @@ export const administrationLinks: SideLink[] = [
     title: 'IT Electronics',
     label: '',
     href: '',
-    uName: 'hr',
+    uName: 'it-electronics',
     icon: <FileIcon />,
     sub: [
       {
@@ -176,7 +176,7 @@ export const administrationLinks: SideLink[] = [
     title: 'Security Mgt.',
     label: '',
     href: '',
-    uName: 'hr',
+    uName: 'security-mgt',
     icon: <FileIcon />,
     sub: [
       {
@@ -208,25 +208,31 @@ export const administrationLinks: SideLink[] = [
     title: 'Monthly IPC Updates',
     label: '',
     href: '/edms/administrative/ipc-monthly-updates',
-    uName: 'finance-procurement',
+    uName: 'monthly-ipc-updates',
     icon: <FileIcon />,
   },
   {
     title: 'IPC Records',
     label: '',
     href: '/edms/administrative/ipc-records',
-    uName: 'finance-procurement',
+    uName: 'ipc-records',
     icon: <FileIcon />,
   },
 ]
 
 export const rntLinks: SideLink[] = [
-
+ {
+    title: 'Road & Traffic',
+    label: '',
+    href: '',
+    icon: '',
+    uName: '',
+  },
   {
     title: 'Organization/ Organogram',
     label: '',
     href: '/edms/road-and-traffic/organization-organogram',
-    uName: 'r&t-monthly-roster',
+    uName: 'r&t-organization',
     icon: <FileIcon />,
   },
   {
@@ -240,21 +246,21 @@ export const rntLinks: SideLink[] = [
     title: 'Monthly Report',
     label: '',
     href: '/edms/road-and-traffic/monthly-report',
-    uName: 'monthly-report',
+    uName: 'r&t-monthly-report',
     icon: <ReportIcon />,
   },
   {
     title: 'KEC Letter',
     label: '',
     href: '/edms/road-and-traffic/kec-letter',
-    uName: 'building-maint',
+    uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
   {
     title: 'Road Maintenance Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-road-maintenance',
     icon: <SignalIcon />,
     sub: [
       {
@@ -311,7 +317,7 @@ export const rntLinks: SideLink[] = [
     title: 'Road Safety & Patrol Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-road-safety-patrol',
     icon: <PatrolIcon />,
     sub: [
       {
@@ -375,7 +381,7 @@ export const rntLinks: SideLink[] = [
     title: 'Workshop Maintenance Part',
     label: '',
     href: '',
-    uName: 'drawing',
+    uName: 'r&t-workshop-maintenance',
     icon: <WorkshopIcon />,
     sub: [
       {
@@ -431,7 +437,13 @@ export const rntLinks: SideLink[] = [
 ]
 
 export const itsLinks: SideLink[] = [
-
+ {
+    title: 'ITS',
+    label: '',
+    href: '',
+    icon: '',
+    uName: 'its-manager',
+  },
   {
     title: 'About ITS',
     label: '',
@@ -480,12 +492,18 @@ export const itsLinks: SideLink[] = [
 ]
 
 export const tollLinks: SideLink[] = [
-
+ {
+    title: 'Toll Operation',
+    label: '',
+    href: '',
+    icon: '',
+    uName: '',
+  },
   {
     title: 'Daily Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'toll-daily-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -507,7 +525,7 @@ export const tollLinks: SideLink[] = [
     title: 'Shift Wise Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'toll-shiftwise-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -530,7 +548,7 @@ export const tollLinks: SideLink[] = [
     title: 'WIM Data',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'toll-wim-data',
     icon: <FileIcon />,
     sub: [
 
@@ -553,7 +571,7 @@ export const tollLinks: SideLink[] = [
     title: 'Daily Report',
     label: '',
     href: '/edms/toll/daily-report',
-    uName: 'special-audit',
+    uName: 'toll-daily-report',
     icon: <FileIcon />,
   },
 
@@ -579,32 +597,37 @@ export const tollLinks: SideLink[] = [
     title: 'Employee Personal Report',
     label: '',
     href: '/edms/toll/employee-personal-report',
-    uName: 'toll-monthly-roster',
+    uName: 'toll-employee-report',
     icon: <FileIcon />,
   },
   {
     title: 'Hierarchy',
     label: '',
     href: '/edms/toll/hierarchy',
-    uName: 'toll-monthly-roster',
+    uName: 'toll-hierarchy',
     icon: <FileIcon />,
   },
 ]
-
-
 export const rtwLinks: SideLink[] = [
+   {
+    title: 'RTW',
+    label: '',
+    href: '',
+    icon: '',
+    uName: '',
+  },
   {
     title: 'Project Overview',
     label: '',
     href: '/edms/rtw/project-overview',
-    uName: 'dispatched',
+    uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
   {
     title: 'Technical Documentation',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'rtw-technical-documentation',
     icon: <FileIcon />,
     sub: [
       {
@@ -637,7 +660,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Monitoring & Reporting',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'rtw-monitoring-reporting',
     icon: <FileIcon />,
     sub: [
       {
@@ -658,7 +681,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Quality, Safety',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'rtw-quality-safety',
     icon: <FileIcon />,
     sub: [
       {
@@ -679,7 +702,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Communication & Correspondence',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'rtw-communication-correspondence',
     icon: <FileIcon />,
     sub: [
       {
@@ -700,7 +723,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Financial Documentation',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'rtw-financial-documentation',
     icon: <FileIcon />,
     sub: [
       {
@@ -715,7 +738,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Visual Records',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'rtw-visual-records',
     icon: <FileIcon />,
     sub: [
       {
@@ -730,7 +753,7 @@ export const rtwLinks: SideLink[] = [
     title: 'Additional Notes',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'rtw-additional-notes',
     icon: <FileIcon />,
     sub: [
       {
@@ -755,11 +778,14 @@ export const rtwLinks: SideLink[] = [
   },
 ]
 
-
-
-
-
 export const pmisLinks: SideLink[] = [
+   {
+    title: 'Main Bridge',
+    label: '',
+    href: '',
+    icon: '',
+    uName: '',
+  },
   {
     title: 'Project Overview',
     label: '',

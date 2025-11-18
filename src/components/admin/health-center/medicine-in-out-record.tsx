@@ -24,6 +24,7 @@ import JSZip from 'jszip'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
     url: string
@@ -57,16 +58,13 @@ export default function MedicineInOutRecord() {
     }
 
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'health-center');
+    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+    const [approved, setApproved] = useState<boolean>(false);
 
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-const [approved, setApproved] = useState<boolean>(false);
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -174,7 +172,7 @@ const [approved, setApproved] = useState<boolean>(false);
             }
         })
     }
-    
+
 
     const updateProductDialogFooter = (
         <>
@@ -274,13 +272,13 @@ const [approved, setApproved] = useState<boolean>(false);
         { name: 'IN', code: 'IN' },
         { name: 'OUT', code: 'OUT' },
     ]
-      const itemTemplate = (option: { name: string; code: string }) => (
+    const itemTemplate = (option: { name: string; code: string }) => (
         <div className="flex items-center gap-2">
-          <FileIcon />
-          <span>{option.name}</span>
+            <FileIcon />
+            <span>{option.name}</span>
         </div>
-      )
-    
+    )
+
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -323,7 +321,7 @@ const [approved, setApproved] = useState<boolean>(false);
 
             formData.append('medicineName', medicineName)
             formData.append('refNo', refNo)
-formData.append('approved', approved ? 'true' : 'false');
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('remarks', remarks)
             formData.append('inoutType', inoutType)
             formData.append('date', formatDate(formDate))
@@ -343,7 +341,7 @@ formData.append('approved', approved ? 'true' : 'false');
 
             const response = res
             console.log(response)
-            console.log(response.data,'abc')
+            console.log(response.data, 'abc')
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -599,15 +597,6 @@ formData.append('approved', approved ? 'true' : 'false');
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
@@ -618,7 +607,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchMedicineInOutRecord(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -631,7 +621,8 @@ formData.append('approved', approved ? 'true' : 'false');
             searchQuery: searchKey,
         }
         searchMedicineInOutRecord(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -681,7 +672,7 @@ formData.append('approved', approved ? 'true' : 'false');
                         onChange={(e) => setSelectedCode(e.value)}
                         options={codes}
                         optionLabel='name'
-                        optionValue="code"  
+                        optionValue="code"
                         placeholder='IN/OUT'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                         itemTemplate={itemTemplate}
@@ -767,7 +758,7 @@ formData.append('approved', approved ? 'true' : 'false');
 
     const refetch = () => {
         setLoading(true)
-     
+
         const payload = {
             inoutType: '',
             date_range: '',
@@ -775,7 +766,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchMedicineInOutRecord(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -976,14 +968,14 @@ formData.append('approved', approved ? 'true' : 'false');
                                 value={updatedProduct.inoutType}
                                 options={codes}
                                 optionLabel='name'
-                                 optionValue='code'
+                                optionValue='code'
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
                                         inoutType: e.value,
                                     })
                                 }
-                             
+
                             />
                         </div>
                         <div className='field'>
@@ -1222,7 +1214,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 id='inoutType'
                                 value={inoutType}
                                 options={codes}
-                                optionValue="code"  
+                                optionValue="code"
                                 itemTemplate={itemTemplate}
                                 onChange={(e) => setInOutType(e.value)}
                                 placeholder='Select Type'
@@ -1298,18 +1290,18 @@ formData.append('approved', approved ? 'true' : 'false');
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 

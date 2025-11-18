@@ -22,7 +22,8 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom';
 interface Attachment {
     url: string
     _id: string
@@ -51,18 +52,14 @@ export default function MonthlyReport() {
         remarks: '',
         attachments: [],
     }
-
+const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
+       const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
 
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+    const roadSafetyPermission = rtManagerPermission?.children?.find((child) => child.name === 'r&t-road-maintenance');
+      
+    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -89,7 +86,7 @@ const [approved, setApproved] = useState<boolean>(false);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     
 
-    const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
+     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -524,7 +521,8 @@ const [approved, setApproved] = useState<boolean>(false);
            }
            console.log(payload)
            searchRTMAccident(payload).then((result) => {
-               setProducts(result?.data || [])
+                const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                setLoading(false)
            })
        }
@@ -543,7 +541,8 @@ const [approved, setApproved] = useState<boolean>(false);
            setSelectedCode(null)
    
            searchRTMAccident(payload).then((result) => {
-               setProducts(result?.data)
+                const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                setLoading(false)
            })
        }
@@ -558,7 +557,8 @@ const [approved, setApproved] = useState<boolean>(false);
            }
    
            searchRTMAccident(payload).then((result) => {
-               setProducts(result?.data)
+                const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                setLoading(false)
            })
        }

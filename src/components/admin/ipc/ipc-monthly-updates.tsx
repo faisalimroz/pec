@@ -25,6 +25,7 @@ import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 
 import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
     url: string
@@ -61,16 +62,13 @@ export default function MonthlyReport() {
     }
 const [approved, setApproved] = useState<boolean>(false);
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+    const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
+    const financeManagerPermission = permissions.find((p) => p.name === 'finance-manager');
+    console.log('financeManagerPermission', financeManagerPermission);
+    const financePermission = financeManagerPermission?.children?.find((child) => child.name === 'monthly-ipc-updates');
+    console.log('financePermission', financePermission);
+    const hasEditAccess = financePermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -622,7 +620,9 @@ const [approved, setApproved] = useState<boolean>(false);
         }
 
         searchIpcMonthlyUpdates(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            console.log(products,'products')
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -641,7 +641,8 @@ const [approved, setApproved] = useState<boolean>(false);
         setSelectedCode(null)
 
         searchIpcMonthlyUpdates(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -783,8 +784,8 @@ const [approved, setApproved] = useState<boolean>(false);
              }
      
              searchIpcMonthlyUpdates(payload).then((result) => {
-                 setProducts(result?.data)
-                 console.log(result, "ress")
+                 const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }

@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
 import { adminTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
-import DemoTable from '@/components/admin/hr/em-personal-detail'
+import DemoTable from '@/components/admin/hr/em-personal-profile-table'
 import { useParams } from 'react-router-dom'
 import { useAuth } from '@/provider/authProvider'
 

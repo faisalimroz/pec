@@ -24,7 +24,8 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { searchMBBills } from '@/api/mainBridgeAPIs'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 interface Attachment {
     url: string
     _id: string

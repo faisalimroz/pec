@@ -82,18 +82,15 @@ export default function EmPersonalDetail({
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const pageParam = searchParams.get('page')
-
+   const [approved, setApproved] = useState<boolean>(false);
   // all update dialog func here
   const { roles, permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
+  const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
 
-  const hasEditAccess = checkPermission?.edit_authority || false
-
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
-  )
-
+  const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'employee-personal-profile');
+    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
   const handleProfileImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {

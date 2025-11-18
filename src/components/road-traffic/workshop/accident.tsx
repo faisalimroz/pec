@@ -12,7 +12,8 @@ import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
 import axios from 'axios'
 import { toast } from 'sonner'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom';
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
@@ -54,16 +55,15 @@ export default function MonthlyReport() {
     }
 
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms')
+    
+    const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+    const roadSafetyPermission = rtManagerPermission?.children?.find(
+        (child) => child.name === 'r&t-workshop-maintenance');
+        
+    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
+  
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -82,15 +82,16 @@ export default function MonthlyReport() {
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
     const [approved, setApproved] = useState<boolean>(false);
-    
+
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
 
+
+    
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
@@ -119,13 +120,13 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-          
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-        
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -241,9 +242,9 @@ export default function MonthlyReport() {
             formData.append('subjectName', subjectName)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('description', description)
-            
+
             formData.append('remarks', remarks)
-      
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -402,7 +403,7 @@ export default function MonthlyReport() {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -416,10 +417,10 @@ export default function MonthlyReport() {
                         openNew={openNew}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                     
+
                     />
                 )}
- <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -525,58 +526,61 @@ export default function MonthlyReport() {
         return date.getFullYear()
     }
 
-  
-   const handleSearch = () => {
-          setLoading(true)
-          const payload = {
-  
-              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-              searchQuery: searchKey,
-          }
-          console.log(payload)
-          searchAccidentReportWM(payload).then((result) => {
-              setProducts(result?.data || [])
-              setLoading(false)
-          })
-      }
-  
-      const handleReset = () => {
-          setLoading(true)
-          const payload = {
-  
-              date_range: '',
-              searchQuery: '',
-          }
-  
-          setDate(null)
-          setDate2(null)
-          setSearchKey('')
-          setSelectedCode(null)
-  
-          searchAccidentReportWM(payload).then((result) => {
-              setProducts(result?.data)
-              setLoading(false)
-          })
-      }
-  
-     const refetch = () => {
-             setLoading(true)
-     
-             const payload = {
-     
-                 date_range: '',
-                 searchQuery: '',
-             }
-     
-             searchAccidentReportWM(payload).then((result) => {
-                 setProducts(result?.data)
-                 setLoading(false)
-             })
-         }
-          // initial data load - Internal
-         useEffect(() => {
-             refetch()
-         }, [])
+
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
+        console.log(payload)
+        searchAccidentReportWM(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false)
+        })
+    }
+
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+
+        searchAccidentReportWM(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false)
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchAccidentReportWM(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -618,7 +622,7 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-              
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -696,7 +700,7 @@ export default function MonthlyReport() {
         </>
     )
 
-    
+
 
     // initial data load - Internal
     useEffect(() => {
@@ -784,7 +788,7 @@ export default function MonthlyReport() {
                                 className='min-w-[8rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -839,7 +843,7 @@ export default function MonthlyReport() {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -870,7 +874,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -904,7 +908,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1023,7 +1027,7 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1090,7 +1094,7 @@ export default function MonthlyReport() {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1130,7 +1134,7 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-               <div className="col-span-2 mt-2">
+                    <div className="col-span-2 mt-2">
                         <label className="font-bold mb-2 block">Approval</label>
                         <div className="flex items-center gap-3">
                             <Checkbox

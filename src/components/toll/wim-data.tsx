@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-
 import axios from 'axios'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
@@ -24,6 +23,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import Wim from './limited-wim-data'
 import { searchAllWimData } from '@/api/tollApi'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
     url: string
@@ -61,14 +61,12 @@ export default function AssetManagementTable() {
         attachments: [],
     }
     const { roles, permissions } = useAuth()
-    const checkRole = permissions.find((p) => p.name === 'admin')
-    const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
+        const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
 
-    const hasEditAccess = checkPermission?.edit_authority || false
-
-    const isAdmin = roles.some((role) =>
-        ['superadmin', 'admin'].includes(role.title)
-    )
+    const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
+    const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-wim-data');
+    const hasEditAccess = tollPermission?.edit_authority === true && showAll;
     const locations = [
 
         { label: 'Mawa', value: 'Mawa' },
@@ -588,7 +586,8 @@ export default function AssetManagementTable() {
         }
         console.log(payload, 'hello')
         searchAllWimData(payload).then((result) => {
-            setProducts(result?.data || [])
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -608,7 +607,8 @@ export default function AssetManagementTable() {
         setlocation('')
         setShiftName('')
         searchAllWimData(payload).then((result) => {
-            setProducts(result?.Assets)
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -623,7 +623,8 @@ export default function AssetManagementTable() {
         }
 
         searchAllWimData(payload).then((result) => {
-            setProducts(result?.data)
+              const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -1276,6 +1277,8 @@ export default function AssetManagementTable() {
                                         <div className='border rounded-md'>
                                             <Calendar
                                                 id='date'
+                                                 // @ts-ignore
+                                                value={formDate}
                                                 onChange={(e) => setFormDate(e.value as string)}
                                                 dateFormat='dd/mm/yy'
                                                 inputClassName='border-0 focus:ring-0 cursor-pointer'

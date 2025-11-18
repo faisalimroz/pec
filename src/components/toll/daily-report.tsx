@@ -22,7 +22,7 @@ import pickUp from '@/assets/ai-assets/vehicle/pickup.svg'
 import car from '@/assets/ai-assets/vehicle/car.svg'
 import bike from '@/assets/ai-assets/vehicle/bike.svg'
 import { Dropdown } from 'primereact/dropdown'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { Dialog } from 'primereact/dialog'
@@ -84,18 +84,13 @@ export default function VehicleDetectTollTable() {
     const [loading2, setLoading2] = useState(false)
 
     const [todaysDate, setTodaysDate] = useState('')
-
+     const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
+const [approved, setApproved] = useState<boolean>(false);
     const { roles, permissions } = useAuth()
-    const checkRole = permissions.find((p) => p.name === 'toll-manager')
-    const checkPermission = checkRole?.children.find(
-        (c) => c.name === 'kec-manual-data'
-    )
-
-    const hasEditAccess = checkPermission?.edit_authority || false
-
-    const isToll = roles.some((role) =>
-        ['superadmin', 'toll-manager'].includes(role.title)
-    )
+   const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
+    const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-daily-report');
+    const hasEditAccess = tollPermission?.edit_authority === true && showAll;
     const itemTemplate = (option: { label: string; value: string }) => {
         return (
             <div className="flex items-center gap-2">

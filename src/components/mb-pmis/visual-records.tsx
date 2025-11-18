@@ -23,7 +23,8 @@ import RefreshButton from '@/components/refresh-button'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchMBPictures } from '@/api/mainBridgeAPIs'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
   url: string
@@ -58,17 +59,13 @@ export default function MonthlyReport() {
     attachments: [],
   }
 
-  const { roles, permissions } = useAuth()
-  const clinicPermission = permissions.find((p) => p.name === 'clinic')
-  const treatmentRecordPermission = clinicPermission?.children.find(
-    (c) => c.name === 'treatment-record'
-  )
+ const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
 
-  const hasEditAccess = treatmentRecordPermission?.edit_authority || false
- const [approved, setApproved] = useState<boolean>(false);
-  const isClinic = roles.some((role) =>
-    ['superadmin', 'clinic'].includes(role.title)
-  )
+    const { roles, permissions } = useAuth()
+ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
+    const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'mb-pmis-visual-records');
+    const hasEditAccess = mbPmisPermission?.edit_authority === true && showAll;
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -105,7 +102,7 @@ export default function MonthlyReport() {
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState("")
   const [buttonType, setButtonType] = useState("")
-
+   const [approved, setApproved] = useState<boolean>(false);
   const recordTypes = [
     { name: 'During Survey', code: 'During Survey' },
     { name: 'Construction', code: 'Construction' },
@@ -535,7 +532,7 @@ formData.append('approved', approved ? 'true' : 'false');
       setLoading(true);
 
       const payload = {
-        contentType: buttonValue || "",                                  // <-- key that backend should use
+        contentType: buttonValue || "",                                
         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
         searchQuery: searchKey || "",
         types: selectedCode?.code || '',
@@ -543,7 +540,8 @@ formData.append('approved', approved ? 'true' : 'false');
 
       searchMBPictures(payload)
         .then((result) => {
-          setProducts(result?.data || []);
+           const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
           setLoading(false);
         })
         .catch((error) => {
@@ -668,7 +666,8 @@ formData.append('approved', approved ? 'true' : 'false');
     }
 
     searchMBPictures(payload).then((result) => {
-      setProducts(result?.data || [])
+     const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -689,7 +688,8 @@ formData.append('approved', approved ? 'true' : 'false');
     setButtonType('')
 
     searchMBPictures(payload).then((result) => {
-      setProducts(result?.data)
+    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -701,11 +701,12 @@ formData.append('approved', approved ? 'true' : 'false');
       types: '',
       date_range: '',
       searchQuery: '',
-      contentType: '', // default no filter
+      contentType: '', 
     }
 
     searchMBPictures(payload).then((result) => {
-      setProducts(result?.data)
+    const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }

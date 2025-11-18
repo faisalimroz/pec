@@ -245,7 +245,7 @@ export async function searchMBPictures(param: unknown) {
       },
     }
   )
-
+console.log('response', response.data)
   return response.data
 }
 

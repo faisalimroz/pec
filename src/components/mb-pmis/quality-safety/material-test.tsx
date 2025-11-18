@@ -23,7 +23,8 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { searchMateiralTestReport } from '@/api/mainBridgeAPIs'
-import { Checkbox } from 'primereact/checkbox'
+import { Checkbox } from 'primereact/checkbox';
+import { useLocation } from 'react-router-dom'
 interface Attachment {
     url: string
     _id: string
@@ -53,17 +54,13 @@ export default function KecLetter() {
         attachments: [],
     }
 
+     const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
+
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+      const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
+    const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'mb-pmis-quality-safety');
+    const hasEditAccess = mbPmisPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -629,9 +626,10 @@ formData.append('approved', approved ? 'true' : 'false');
               searchQuery: searchKey,
             
           }
-          console.log(payload,'hello')
+       
           searchMateiralTestReport(payload).then((result) => {
-              setProducts(result?.data || [])
+              const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -650,7 +648,8 @@ formData.append('approved', approved ? 'true' : 'false');
           
   
           searchMateiralTestReport(payload).then((result) => {
-              setProducts(result?.data)
+             const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
               setLoading(false)
           })
       }
@@ -665,7 +664,8 @@ formData.append('approved', approved ? 'true' : 'false');
              }
      
              searchMateiralTestReport(payload).then((result) => {
-                 setProducts(result?.data)
+        const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
                  setLoading(false)
              })
          }

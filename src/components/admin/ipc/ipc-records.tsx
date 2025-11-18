@@ -25,6 +25,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
     url: string
@@ -58,16 +59,13 @@ export default function MonthlyReport() {
     }
 const [approved, setApproved] = useState<boolean>(false);
     const { roles, permissions } = useAuth()
-    const clinicPermission = permissions.find((p) => p.name === 'clinic')
-    const treatmentRecordPermission = clinicPermission?.children.find(
-        (c) => c.name === 'treatment-record'
-    )
-
-    const hasEditAccess = treatmentRecordPermission?.edit_authority || false
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+    const { pathname } = useLocation();
+     const showAll = pathname.startsWith('/edms');
+   const financeManagerPermission = permissions.find((p) => p.name === 'finance-manager');
+   console.log('financeManagerPermission', financeManagerPermission);
+    const financePermission = financeManagerPermission?.children?.find((child) => child.name === 'ipc-records');
+    console.log('financePermission', financePermission);
+    const hasEditAccess = financePermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -487,39 +485,7 @@ formData.append('approved', approved ? 'true' : 'false');
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+         
             </div>
         )
     }
@@ -705,7 +671,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchIpcRecords(payload).then((result) => {
-            setProducts(result?.data)
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -723,7 +690,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchIpcRecords(payload).then((result) => {
-            setProducts(result?.data)
+          const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
@@ -854,8 +822,8 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchIpcRecords(initialPayload).then((result) => {
-            setProducts(result?.data)
-            console.log(result, "ress")
+          const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }

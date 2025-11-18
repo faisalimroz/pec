@@ -95,15 +95,11 @@ export default function EmPersonalProfileTable() {
   }
 
   const { roles, permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'admin')
-  const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
-
-  const hasEditAccess = checkPermission?.edit_authority || false
-
-  const isAdmin = roles.some((role) =>
-    ['superadmin', 'admin'].includes(role.title)
-  )
-
+  const { pathname } = useLocation();
+  const showAll = pathname.startsWith('/edms');
+  const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+  const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'employee-personal-profile');
+  const hasEditAccess = adminPermission?.edit_authority === true && showAll;
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -128,10 +124,10 @@ export default function EmPersonalProfileTable() {
   const [searchDate2, setSearchDate2] = useState<Date | null>(null)
   const [termination, setTermination] = useState<File[]>([])
   const [insuranceClaiming, setInsuranceClaiming] = useState<File[]>([])
-   const [bulkDialog, setBulkDialog] = useState(false);
-    const [file, setFile] = useState<File | null>(null);
-    const [uploading, setUploading] = useState(false);
-    const [uploadStatus, setUploadStatus] = useState("");
+  const [bulkDialog, setBulkDialog] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
     null
   )
@@ -164,7 +160,7 @@ export default function EmPersonalProfileTable() {
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [viewDialogVisible, setViewDialogVisible] = useState<boolean>(false)
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('')
- const uploadFile = async () => {
+  const uploadFile = async () => {
     if (!file) {
       setUploadStatus('Please select a file first.')
       return
@@ -211,23 +207,23 @@ export default function EmPersonalProfileTable() {
     setBulkDialog(true)
   }
 
-   const productDialogFooter2 = (
-      <>
-        <Button
-          label='Cancel'
-          icon='pi pi-times'
-          className='p-button-text'
-          onClick={hideDialog2}
-        />
-        <Button
-          label='Save'
-          icon='pi pi-upload'
-          className='p-button-text'
-          onClick={uploadFile}
-          disabled={!file || uploading}
-        />
-      </>
-    )
+  const productDialogFooter2 = (
+    <>
+      <Button
+        label='Cancel'
+        icon='pi pi-times'
+        className='p-button-text'
+        onClick={hideDialog2}
+      />
+      <Button
+        label='Save'
+        icon='pi pi-upload'
+        className='p-button-text'
+        onClick={uploadFile}
+        disabled={!file || uploading}
+      />
+    </>
+  )
   // Replace current page initialization useEffect
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -329,31 +325,31 @@ export default function EmPersonalProfileTable() {
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch();
-          // Reset form data after successful save
-    setFormData({
-      employeeName: '',
-      employeeId: '',
-      dept: '',
-      firmName: '',
-      position: '',
-      dateOfMobilization: '',
-      dateOfDemobilization: '',
-      remarks: '',
-      salary: '',
-      boqNo: '',
-      location: '',
-      branch: '',
-      mobile: '',
-      address: '',
-      email: '',
-      cvCertificates: [],
-      agreement: [],
-      showcaseLetter: [],
-      warningLetter: [],
-      termination: [],
-      insuranceClaiming: [],
-      profileImg: '',
-    });
+      // Reset form data after successful save
+      setFormData({
+        employeeName: '',
+        employeeId: '',
+        dept: '',
+        firmName: '',
+        position: '',
+        dateOfMobilization: '',
+        dateOfDemobilization: '',
+        remarks: '',
+        salary: '',
+        boqNo: '',
+        location: '',
+        branch: '',
+        mobile: '',
+        address: '',
+        email: '',
+        cvCertificates: [],
+        agreement: [],
+        showcaseLetter: [],
+        warningLetter: [],
+        termination: [],
+        insuranceClaiming: [],
+        profileImg: '',
+      });
 
     } catch (error: any) {
       if (error.response) {
@@ -447,8 +443,8 @@ export default function EmPersonalProfileTable() {
     return (
       <div className=''>
         <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
-                    Document List
-                </div>
+          Document List
+        </div>
         {/* {isAdmin && (
           <button
             onClick={confirmDeleteSelected}
@@ -471,12 +467,12 @@ export default function EmPersonalProfileTable() {
       <>
         {hasEditAccess && (
           <div className='space-x-2 mb-2'>
-           <ButtonGroup
-            selectedProducts={selectedProducts}
-            openNew={openNew}
-            openNew2={openNew2}
-            exportCSV={exportCSV}
-          />
+            <ButtonGroup
+              selectedProducts={selectedProducts}
+              openNew={openNew}
+              openNew2={openNew2}
+              exportCSV={exportCSV}
+            />
           </div>
         )}
         <div className='mb-2'>
@@ -536,7 +532,9 @@ export default function EmPersonalProfileTable() {
     }
 
     searchEmployeePersonalProfile(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+
+      const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -555,7 +553,8 @@ export default function EmPersonalProfileTable() {
     setCurrentPage(0)
 
     searchEmployeePersonalProfile(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+      const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -651,7 +650,7 @@ export default function EmPersonalProfileTable() {
       />
     </>
   )
-const handleFileChange2 = (e: { target: { files: any[] } }) => {
+  const handleFileChange2 = (e: { target: { files: any[] } }) => {
     const selectedFile = e.target.files[0]
     if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
       setFile(selectedFile)
@@ -788,7 +787,8 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
     }
 
     searchEmployeePersonalProfile(initialPayload).then((result) => {
-      setProducts(result?.EmployeePersonals)
+      const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -893,7 +893,7 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
               header='Date of Mobilization'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
               bodyClassName='text-sm truncate max-w-lg'
-              // sortable
+            // sortable
             ></Column>
 
             <Column
@@ -901,7 +901,7 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
               header='Date of Demobilization'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-sm truncate max-w-lg'
-              // sortable
+            // sortable
             ></Column>
 
             <Column
@@ -909,7 +909,7 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
               header='Firm Name'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-sm truncate max-w-lg'
-              // sortable
+            // sortable
             ></Column>
 
             <Column
@@ -947,46 +947,46 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
             ></Column>
           </DataTable>
         </div>
-<Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
+        <Dialog
+          visible={bulkDialog}
+          style={{ width: '42rem' }}
+          breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+          header='Upload Bulk Data'
+          modal
+          className='p-fluid'
+          footer={productDialogFooter2}
+          onHide={hideDialog2}
+        >
+          <div className='grid grid-cols-2 items-center gap-6'>
+            <div className='field col-span-2'>
+              <label htmlFor='bulkUpload' className='font-bold'>
+                Select File (.xlsx Only):
+              </label>
+              <br />
+              <input
+                type='file'
+                id='bulkUpload'
+                accept='.xlsx'
+                // @ts-ignore
+                onChange={handleFileChange2}
+                disabled={uploading}
+                className='mt-3'
+              />
+              {/* {file && <p>Selected file: {file?.name}</p>} */}
+              {uploadStatus && (
+                <p
+                  className={
+                    uploadStatus.includes('success')
+                      ? 'text-green-500'
+                      : 'text-red-500'
+                  }
+                >
+                  {uploadStatus}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-      </Dialog>
+        </Dialog>
         {/* upload data dialog  */}
         <Dialog
           visible={productDialog}
@@ -1282,24 +1282,24 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
                 </div>
               )}
             </div>
-           <div className="col-span-2 mt-2">
-  <label className="font-bold mb-2 block">Approval</label>
-  <div className="flex items-center gap-3">
-    <Checkbox
-      inputId="approve"
-      checked={formData.approved} // Dynamically bind to formData.approved
-      onChange={(e) =>
-        setFormData({
-          ...formData,
-          approved: e.checked, // Update the approved field dynamically
-        })
-      }
-    />
-    <label htmlFor="approve" className="text-sm">
-      Add this document for all
-    </label>
-  </div>
-</div>
+            <div className="col-span-2 mt-2">
+              <label className="font-bold mb-2 block">Approval</label>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="approve"
+                  checked={formData.approved} // Dynamically bind to formData.approved
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      approved: e.checked, // Update the approved field dynamically
+                    })
+                  }
+                />
+                <label htmlFor="approve" className="text-sm">
+                  Add this document for all
+                </label>
+              </div>
+            </div>
           </>
         </Dialog>
 
@@ -1368,7 +1368,7 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
         >
           <div
             className='overflow-y-auto'
-            // style={{ height: 'calc(90vh - 120px)' }}
+          // style={{ height: 'calc(90vh - 120px)' }}
           >
             {selectedEmployeeId && (
               <EmPersonalDetail id={selectedEmployeeId} isDialog={true} />

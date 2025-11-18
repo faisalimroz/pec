@@ -13,6 +13,7 @@ import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import left from '@/assets/left.svg'
 import right from '@/assets/right.svg'
+import { useLocation } from 'react-router-dom'
 
 interface Attachment {
     url: string
@@ -21,7 +22,7 @@ interface Attachment {
 
 interface HierarchyDoc {
     _id?: string
-    images?: Attachment[]           // [{ url }]
+    images?: Attachment[]         
     name?: string
     date?: string
     position?: string
@@ -57,12 +58,13 @@ export default function AssetManagementTable() {
         attachments: [],
     }
     const { roles, permissions } = useAuth()
-    const checkRole = permissions.find((p) => p.name === 'admin')
-    const checkPermission = checkRole?.children.find((c) => c.name === 'hr')
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
+   const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
 
-    const hasEditAccess = checkPermission?.edit_authority || false
-
-    const isAdmin = roles.some((role) => ['superadmin', 'admin'].includes(role.title))
+    const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-hierarchy');
+   
+    const hasEditAccess = tollPermission?.edit_authority === true && showAll;
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [product, setProduct] = useState<any>(emptyProduct)

@@ -119,15 +119,21 @@ export function UserNav() {
       ),
     },
     { separator: true },
-    {
-      template: () => (
-        <CustomMenuItem
-          label='Log out'
-          onClick={() => setToken(null)}
-          className='text-red-600 hover:text-red-700'
-        />
-      ),
-    },
+{
+  template: () => (
+    <CustomMenuItem
+      label='Log out'
+      onClick={() => { 
+        setToken(null)
+        localStorage.removeItem('token')
+        sessionStorage.clear()   
+        navigate('/', { replace: true })    
+        window.location.href = '/' 
+      }}
+      className='text-red-600 hover:text-red-700'
+    />
+  ),
+}
   ]
 
   return (

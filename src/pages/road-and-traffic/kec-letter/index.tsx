@@ -15,6 +15,7 @@ export default function BuildingMaintenance() {
   const userRoles = roles.map((role) => role.title)
 
   const selectedNav = rntTopNav
+  console.log(rntLinks,'rntLinksrntLinksrntLinks')
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
     <>

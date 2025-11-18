@@ -47,6 +47,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
 
     return links.map((link) => {
       const departmentName = link.uName
+      console.log(departmentName,'djfosd')
 
       if (!departmentName) return link
       const excludedDepartments = [
@@ -56,7 +57,9 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         'finance-&-accounts',
         'clinic',
         'ai-dashboard',
-        'notice',
+        'mb-pmis-manager',
+        'rtw-manager',
+        'notice',    
       ]
 
 
@@ -140,6 +143,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
           </Link>
         )}
         {processedLinks.map(({ title, href, isActive, logo: Logo }) => (
+          console.log('Processed Link:', { title, href, isActive }),
           <Link
             key={`${title}-${href}`}
             to={href}
