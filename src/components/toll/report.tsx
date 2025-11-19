@@ -628,7 +628,7 @@ export default function MonthlyReport() {
         }
         console.log(payload, 'hello')
         searchDailyReport(payload).then((result) => {
-             const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+             const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -650,7 +650,7 @@ export default function MonthlyReport() {
         setSelectedLocation(null)
 
         searchDailyReport(payload).then((result) => {
-            const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -667,7 +667,7 @@ export default function MonthlyReport() {
         }
 
         searchDailyReport(payload).then((result) => {
-            const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })

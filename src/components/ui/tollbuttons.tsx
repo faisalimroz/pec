@@ -16,8 +16,11 @@ const TollGroupWithIcons: React.FC<TollGroupWithIconsProps> = ({
 }) => {
   // SVGs for buttons
   const EditIcon = () => (
-   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
-  <path d="M12 2.99632H5C4.46957 2.99632 3.96086 3.20703 3.58579 3.58211C3.21071 3.95718 3 4.46589 3 4.99632V18.9963C3 19.5268 3.21071 20.0355 3.58579 20.4105C3.96086 20.7856 4.46957 20.9963 5 20.9963H19C19.5304 20.9963 20.0391 20.7856 20.4142 20.4105C20.7893 20.0355 21 19.5268 21 18.9963V11.9963M18.375 2.62132C18.7728 2.2235 19.3124 2 19.875 2C20.4376 2 20.9772 2.2235 21.375 2.62132C21.7728 3.01914 21.9963 3.55871 21.9963 4.12132C21.9963 4.68393 21.7728 5.2235 21.375 5.62132L12.362 14.6353C12.1245 14.8726 11.8312 15.0462 11.509 15.1403L8.636 15.9803C8.54995 16.0054 8.45874 16.0069 8.37191 15.9847C8.28508 15.9624 8.20583 15.9173 8.14245 15.8539C8.07907 15.7905 8.03389 15.7112 8.01164 15.6244C7.9894 15.5376 7.9909 15.4464 8.016 15.3603L8.856 12.4873C8.95053 12.1654 9.12453 11.8724 9.362 11.6353L18.375 2.62132Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 29 28" fill="none">
+  <path d="M4 7H6.33333H25" stroke="#FF4141" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22.6654 7.00065V23.334C22.6654 23.9528 22.4195 24.5463 21.9819 24.9839C21.5444 25.4215 20.9509 25.6673 20.332 25.6673H8.66536C8.04653 25.6673 7.45303 25.4215 7.01545 24.9839C6.57786 24.5463 6.33203 23.9528 6.33203 23.334V7.00065M9.83203 7.00065V4.66732C9.83203 4.04848 10.0779 3.45499 10.5154 3.0174C10.953 2.57982 11.5465 2.33398 12.1654 2.33398H16.832C17.4509 2.33398 18.0444 2.57982 18.4819 3.0174C18.9195 3.45499 19.1654 4.04848 19.1654 4.66732V7.00065" stroke="#FF4141" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12.168 12.834V19.834" stroke="#FF4141" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M16.832 12.834V19.834" stroke="#FF4141" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
   );
 
@@ -50,7 +53,7 @@ const TollGroupWithIcons: React.FC<TollGroupWithIconsProps> = ({
         onClick={openNew}
       >
         <EditIcon />
-        Edit Data
+      Delete Data
       </button>
 
       <button

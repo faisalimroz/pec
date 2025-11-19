@@ -379,28 +379,12 @@ export default function PeriodFiltersSection() {
           onChange={(e) => setInfo({ ...info, location: e.value })}
           options={locationType}
           placeholder="Location"
-          optionLabel="value"
+          optionLabel="lable"
+          optionValue='value'
           className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
           itemTemplate={itemTemplate}
         />
-        <Dropdown
-          value={info.vehicleType || null}
-          onChange={(e) => setInfo({ ...info, vehicleType: e.value })}
-          options={vehicleType}
-          optionLabel="value"
-          placeholder="Vehicle Type"
-          className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
-          itemTemplate={itemTemplate}
-        />
-        <Dropdown
-          value={info.payment || null}
-          onChange={(e) => setInfo({ ...info, payment: e.value })}
-          options={paymentOptions}
-          placeholder="Payment Method"
-          optionLabel="value"
-          className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
-          itemTemplate={itemTemplate}
-        />
+   
       </div>
 
       <div className="flex justify-center">
