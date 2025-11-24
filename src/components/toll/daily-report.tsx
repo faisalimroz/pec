@@ -113,7 +113,7 @@ export default function VehicleDetectTollTable() {
     ];
 
     // ---------- helpers ----------
-  function formatDate(dateTime?: any) {
+    function formatDate(dateTime?: any) {
         if (!dateTime) return ''
         const date = new Date(dateTime)
 
@@ -147,7 +147,7 @@ export default function VehicleDetectTollTable() {
         const formData = new FormData();
         formData.append("date", formatDate(formDate));
         formData.append("location", bulkLocation);
-        formData.append("dataType", bulkTraffic); // "Toll" or "Traffic"
+        formData.append("dataType", bulkTraffic);
         formData.append("file", file);
 
         try {
@@ -381,26 +381,17 @@ export default function VehicleDetectTollTable() {
                     />
                 </div>
 
-                {/* search box (optional, currently not used in backend) */}
-                <div className="flex w-fit gap-2 border p-2 rounded-md bg-white ">
-                    <IconField iconPosition="left" className="relative ">
-                        <InputText
-                        type='search'
-                        placeholder='Search'
-                        className='border-none ml-4 focus:ring-0'
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        value={searchKey}
-                    />
-
+                <div className="flex items-center bg-white border p-2"> 
                     <button
                         onClick={() => handleSearch()}
-                        className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+                       
+                        className='border bg-green-500 px-4 py-2.5 rounded-lg cursor-pointer hover:bg-green-600 transition-colors'
                         type='submit'
                     >
                         <svg
                             xmlns='http://www.w3.org/2000/svg'
                             viewBox='0 0 24 24'
-                            fill='white'
+                            fill='white' // Ensure icon is white
                             className='size-6'
                         >
                             <path
@@ -410,7 +401,6 @@ export default function VehicleDetectTollTable() {
                             />
                         </svg>
                     </button>
-                    </IconField>
                 </div>
             </div>
 

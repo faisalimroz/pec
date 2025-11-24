@@ -7,7 +7,7 @@ import { tollLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
 import DemoTable from '@/components/toll/daily-toll-traffic-comparison'
 import { useAuth } from '@/provider/authProvider'
-
+import "../../../styles/table-style.css";
 export default function TollCollectModify() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
