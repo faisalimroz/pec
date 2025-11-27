@@ -12,9 +12,12 @@ import {
 } from 'recharts'
 import { Skeleton } from '@/components/ui/skeleton'
 
+
 interface VehicleData {
-  types: string
-  totalPass: number
+  vehicleType: string
+  label: string         
+  totalVehicles: number
+  totalAmount: number    // This corresponds to 133500
 }
 
 interface ApiResponse {
@@ -26,12 +29,13 @@ const SkeletonLoader = () => (
   <div className='space-y-4'>
     <Skeleton className='h-6 w-3/4 mx-auto' />
     <div className='relative h-[240px] w-full'>
+      {/* ... existing skeleton code ... */}
       <div className='absolute left-0 top-0 bottom-0 w-40 flex flex-col justify-between'>
         {[...Array(10)].map((_, i) => (
           <Skeleton key={i} className='h-4 w-32' />
         ))}
       </div>
-      <div className='absolute left-44 right-0 top-0 bottom-8 rounded'>
+       <div className='absolute left-44 right-0 top-0 bottom-8 rounded'>
         <div className='h-full flex flex-col justify-between py-4'>
           {[...Array(10)].map((_, i) => (
             <div key={i} className='flex items-center space-x-2'>
@@ -40,11 +44,6 @@ const SkeletonLoader = () => (
             </div>
           ))}
         </div>
-      </div>
-      <div className='absolute left-44 right-0 bottom-0 flex justify-between'>
-        {[...Array(6)].map((_, i) => (
-          <Skeleton key={i} className='h-4 w-12' />
-        ))}
       </div>
     </div>
     <p className='text-center text-muted-foreground font-medium'>
@@ -59,7 +58,7 @@ const CustomizedLabel: React.FC<any> = (props) => {
     <text
       x={x + width + 5}
       y={y}
-      dy={4}
+      dy={12} // Adjusted slightly for centering
       fontSize={12}
       fill='hsl(var(--foreground))'
       textAnchor='start'
@@ -97,14 +96,6 @@ export function TollOfTollDash() {
   useEffect(() => {
     fetchData()
   }, [])
-
-  // console.log('TOll Data', data)
-
-  const formatYAxisTick = (value: string) => {
-    return value
-      .replace(/_/g, ' ')
-      .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
-  }
 
   return (
     <div className='w-full rounded-xl overflow-hidden border shadow-md'>
@@ -187,39 +178,44 @@ export function TollOfTollDash() {
               data={data}
               margin={{
                 top: 5,
-                right: 60,
-                left: 10,
+                right: 70, 
+                left: -10,
                 bottom: 5,
               }}
             >
               <CartesianGrid horizontal={false} stroke='hsl(var(--border))' />
+              
               <XAxis
                 type='number'
                 domain={[0, 'dataMax']}
                 tickCount={6}
                 stroke='hsl(var(--foreground))'
               />
+              
+              {/* 2. FIX: Use 'label' instead of 'types' */}
               <YAxis
-                dataKey='types'
+                dataKey='label' 
                 type='category'
-                tickFormatter={formatYAxisTick}
-                tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
-                width={120}
+                // Removed formatYAxisTick because 'label' is already formatted ("Trailer (5 Axle)")
+                tick={{ fontSize:10, fill: 'hsl(var(--foreground))' }}
+                width={170}
                 stroke='hsl(var(--foreground))'
               />
+              
               <Tooltip
                 formatter={(value: number) => [
-                  value.toLocaleString(),
+                  `৳ ${value.toLocaleString()}`,
                   'Total Amount',
                 ]}
-                labelFormatter={(label) => formatYAxisTick(label as string)}
                 contentStyle={{
                   backgroundColor: 'hsl(var(--card))',
                   borderColor: 'hsl(var(--border))',
                   color: 'hsl(var(--foreground))',
                 }}
               />
-              <Bar dataKey='totalAmount' fill='#0EA5E9' barSize={20}>
+              
+              {/* 3. FIX: Ensure this matches your interface 'totalAmount' */}
+              <Bar dataKey='totalAmount' fill='#0EA5E9' barSize={20} radius={[0, 4, 4, 0]}>
                 <LabelList content={<CustomizedLabel />} />
               </Bar>
             </BarChart>

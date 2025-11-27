@@ -185,7 +185,7 @@ export default function NoticeCalender(): JSX.Element {
         <div className='w-[50%]'
         >
           <Card className='flex-1 flex flex-col h-auto md:h-[300px] xl:h-[400px] my-0 overflow-hidden shadow-md'>
-            <div className='bg-[#0a1747] text-white px-4 py-3 flex items-center justify-between'>
+            <div className='bg-[#0a1747] text-white px-4 py-[10px] flex items-center justify-between'>
               <div className='flex items-center'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'

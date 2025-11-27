@@ -35,7 +35,7 @@ const StatCard = ({
         </div>
         <div className='space-y-6'>
           <span className='text-2xl font-semibold '>{label}</span>
-          <p className='text-4xl font-bold tabular-nums pl-2'>
+          <p className='text-3xl font-bold tabular-nums pl-2'>
             {typeof value === 'number' ? value.toLocaleString('en-IN') : value}
           </p>
         </div>
@@ -72,6 +72,7 @@ export function TotalTollTraffic() {
         }
       )
       setData(response.data)
+      console.log(response.data,'dfd')
     } catch (error) {
       console.error('Error fetching data:', error)
     } finally {

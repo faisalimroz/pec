@@ -3,11 +3,11 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { administrationLinks, tollLinks } from '@/data/sidelinks'
+import { tollLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
 import DemoTable from '@/components/toll/shift-wise-toll-comparison'
 import { useAuth } from '@/provider/authProvider'
-
+import "../../../../styles/table-style.css";
 export default function AssetManagement() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 

@@ -6,7 +6,6 @@ import NoticeCalender from './components/notice-calender'
 import TrafficWeather from './components/traffic-weather'
 import AccidentWindy from './components/accident-windy'
 
-// Base topNav configuration
 const topNav = [
   {
     title: 'Administration',
@@ -66,18 +65,17 @@ export default function Dashboard() {
   console.log('permissions==================>> ', permissions)
   console.log('roleTitles==================>> ', roles.map(r => r.title))
 
-  // Map uName to required role/permission
+
   const uNameToAccessMap: { [key: string]: string[] } = {
-    'administration': ['admin'], // Can access if has 'admin' role OR permission
+    'administration': ['admin'], 
     'road-&-traffic': ['r&t-manager'],
     'mb-pmis': ['mb-pmis-manager'],
-    'rtw': ['rtw-manager'], // This is what you're missing!
+    'rtw': ['rtw-manager'], 
     'toll': ['toll-manager'],
     'its': ['its-manager'],
     'edms': ['edms']
   }
 
-  // Filter topNav based on user roles OR permissions
   const filteredTopNav = topNav.filter((navItem) => {
     const requiredAccess = uNameToAccessMap[navItem.uName]
     
@@ -86,10 +84,8 @@ export default function Dashboard() {
       return false
     }
 
-    // Check if user has the required role
-    const hasRole = roles.some(role => requiredAccess.includes(role.title))
     
-    // Check if user has the required permission with authority: true
+    const hasRole = roles.some(role => requiredAccess.includes(role.title))
     const hasPermission = permissions.some(
       permission => requiredAccess.includes(permission.name) && permission.authority === true
     )

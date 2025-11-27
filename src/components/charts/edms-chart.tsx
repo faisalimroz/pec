@@ -7,12 +7,33 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '@/provider/authProvider'
 import WaterLevelCards from '../ui/waterCard'
 
+// 1. UPDATED: Interface for the single data object returned within the API's 'data' array
+interface WaterLevelApiData {
+  _id: string;
+  date: string; // e.g., '27-11-2025'
+  description: string;
+  eightAM: string; 
+  twelvePM: string; 
+  twoPM: string; 
+  sixPM: string; 
+  maximumWaterLevel: string; // The value for the large button
+  location: string;
+  [key: string]: any; 
+}
+
+// 2. UPDATED: Interface for the full API response structure
+interface ApiResponse {
+    success: boolean;
+    message: string;
+    data: WaterLevelApiData[]; // The core data array
+    todayDate: string; // The date string
+}
+
+// 3. Keep the original, simple Letter interface (since the component structure relies on it)
 interface Letter {
   from: string
   name: string
 }
-
-
 
 const SkeletonItem = () => (
   <div className='flex items-center gap-3 py-2.5'>
@@ -28,8 +49,21 @@ const NoLettersFound = () => (
   </div>
 )
 
+// 4. FIX: Define getFormattedDate here (before use)
+const getFormattedDate = (): string => {
+    const date = new Date();
+    return date.toLocaleDateString('en-GB', { 
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).replace(/\//g, '-'); 
+};
+
+
 export function EDMSLettersList() {
+  // 5. MODIFIED: Retain 'letters' state (to preserve original structure) but use a new state for water data
   const [letters, setLetters] = useState<Letter[]>([])
+  const [dailyDataArray, setDailyDataArray] = useState<WaterLevelApiData[]>([])
   const [loading, setLoading] = useState(true)
 
   const { permissions } = useAuth()
@@ -95,20 +129,43 @@ export function EDMSLettersList() {
     )
   }
 
+  // 6. Data extraction for rendering
+  const todayWaterLevelData: WaterLevelApiData | null = dailyDataArray.length > 0 ? dailyDataArray[0] : null;
+
+  const maxWaterLevel = todayWaterLevelData?.maximumWaterLevel || 'N/A';
+  
+  // Display current date if data is missing, otherwise display the date from the fetched record
+  const displayDate = todayWaterLevelData?.date || getFormattedDate(); 
+
+  const buttonText = loading 
+    ? 'Loading...' 
+    : (maxWaterLevel !== 'N/A' ? `${maxWaterLevel} PWD` : 'N/A PWD');
+
+
   const fetchData = async () => {
     try {
       setLoading(true)
-      const response = await axios.get<Letter[]>(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/edms/dispatched/get/dashboard/data`,
+      // 🚨 Fetching the water level data
+      const response = await axios.get<ApiResponse>(
+       `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/daily-water-level-report/data/today-water-level`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       )
-      setLetters(response.data)
+      
+      // Store the water data for use in the card component
+      setDailyDataArray(response.data.data) 
+      
+      // Retain original 'letters' logic if needed, otherwise it's safe to skip this line:
+      // setLetters(response.data) 
+      
+      console.log(response.data.data,'water level')
+
     } catch (error) {
-      console.error('Error fetching letters:', error)
+      console.error('Error fetching water level:', error)
+      setDailyDataArray([])
       setLetters([])
     } finally {
       setLoading(false)
@@ -118,16 +175,7 @@ export function EDMSLettersList() {
   useEffect(() => {
     fetchData()
   }, [])
-const getFormattedDate = (): string => {
-  const date = new Date();
-  
- 
-  return date.toLocaleDateString('en-GB', { 
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).replace(/\//g, '-'); 
-};
+
 
   return (
     <div className='w-full bg-white rounded-xl overflow-hidden border shadow-md h-auto md:h-[300px] xl:h-[400px] '>
@@ -157,7 +205,7 @@ const getFormattedDate = (): string => {
               <path d="M8 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               <path d="M3 10H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <h1 className='text-basae font-bold'>{getFormattedDate()}</h1>
+            <h1 className='text-basae font-bold'>{displayDate}</h1>
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
               <path d="M9.28516 18.5566L15.2852 12.5566L9.28516 6.55664" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
@@ -182,30 +230,16 @@ const getFormattedDate = (): string => {
           <h1 className='text-[20px] font-bold text-white' >Maximum Water Level</h1>
         </div>
         <div>
-          <button className='bg-lightviolet py-3 px-7 text-white rounded-lg'>13388 PWD</button>
+          <button className='bg-lightviolet py-3 px-7 text-white rounded-lg'>
+            {buttonText}
+          </button>
         </div>
 
       </div>
       <div className='bg-white h-[45%] '>
-        <WaterLevelCards></WaterLevelCards>
+        <WaterLevelCards dailyData={todayWaterLevelData} />
       </div>
-      {/* <CardContent className='min-h-[280px] m-0'>
-        {loading ? (
-          <div className='space-y-1'>
-            {[...Array(3)].map((_, index) => (
-              <SkeletonItem key={index} />
-            ))}
-          </div>
-        ) : letters.length > 0 ? (
-          <div className='space-y-4 mt-3'>
-            {letters.slice(0, 3).map((letter, index) => (
-              <LetterItem key={index} name={letter.name} from={letter.from} />
-            ))}
-          </div>
-        ) : (
-          <NoLettersFound />
-        )}
-      </CardContent> */}
+  
     </div>
   )
 }

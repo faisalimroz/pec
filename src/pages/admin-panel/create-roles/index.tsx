@@ -129,6 +129,30 @@ const handleSuperAdminToggle = (next: boolean) => {
 
   // This would be fetched from an API in a real application
   const [permissionsData, setPermissionsData] = useState<ParentPermission[]>([
+        {
+      name: 'edms',
+      authority: false,
+      children: [
+        {
+          name: 'dispatched',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'received',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'others',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+      ],
+    },
     {
       name: 'admin',
       authority: false,
@@ -514,30 +538,7 @@ const handleSuperAdminToggle = (next: boolean) => {
       ],
     },
     
-    {
-      name: 'edms',
-      authority: false,
-      children: [
-        {
-          name: 'dispatched',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'received',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'others',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
+
     {
       name: 'ai-dashboard',
       authority: false,
@@ -640,6 +641,15 @@ const handleSuperAdminToggle = (next: boolean) => {
       const updatedPermissions = [...prevData].map((parent) => {
         if (parent.name === parentName) {
           const updatedChildren = parent.children.map((child) => {
+            // Special handling for EDMS - check write when read is checked
+          if (parentName === 'edms' && checked) {
+            return {
+              ...child,
+              view_authority: true,
+              edit_authority: true,  
+            };
+          }
+          
             return {
               ...child,
               view_authority: checked,

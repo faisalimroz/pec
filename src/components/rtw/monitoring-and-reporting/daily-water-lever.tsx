@@ -94,27 +94,19 @@ export default function MonthlyReport() {
     const [sixPM, setSixPM] = useState('')
     const [description, setDescription] = useState('')
     const [approved, setApproved] = useState<boolean>(false);
-   
-
-
-
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
-
     const [selectedCode, setSelectedCode] = useState<any>(null);
     const [selectedLocation, setSelectedLocation] = useState<any>(null);
     const [chartMode, setChartMode] = useState<'monthly' | 'maximum' | null>(null);
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [location, setLocation] = useState<{ name: string; code: string } | null>(null);
-
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
     const [bulkDialog, setBulkDialog] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
@@ -141,9 +133,10 @@ export default function MonthlyReport() {
     ]
     const year = [
 
+        { name: '2027', code: '2027' },
         { name: '2026', code: '2026' },
         { name: '2025', code: '2025' },
-        { name: '2024', code: '2024' }
+        { name: '2024', code: '2024' },
 
     ]
     const itemTemplate = (option: { name: string; code: string }) => {

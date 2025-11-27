@@ -6,10 +6,11 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import FileIcon from '../icons/FileIcon';
 import TollButtonIcons from '../ui/comparison-button';
-// PDF helpers
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
+import axios from 'axios';
+import "../../styles/table-style.css";
+import RefreshButton from "@/components/refresh-button";
 type PaymentMethod = 'Cash' | 'Card' | 'ETC' | 'Exempt' | 'Discount';
 type VehicleType =
   | 'Trailer (4 Axle)'
@@ -42,9 +43,9 @@ interface ComparisonResult {
 }
 
 const locationType = [
-  { label: 'All Locations', value: 'All' },
-  { label: 'Mawa', value: 'Mawa' },
-  { label: 'Jinjira', value: 'Jinjira' },
+  { name: 'All Locations', value: 'All' },
+  { name: 'Mawa', value: 'Mawa' },
+  { name: 'Jinjira', value: 'Jinjira' },
 ];
 
 const itemTemplate = (option: { name: string; code: string }) => {
@@ -82,8 +83,36 @@ const pctChange = (a: number, b: number) => {
   if (!a) return 'N/A';
   return `${(((b - a) / a) * 100).toFixed(1)}%`;
 };
-
 function buildPaymentBreakdown(total1: number, total2: number) {
+  const totalAll = total1 + total2;
+
+  // ✅ If there is no data, return all zeros
+  if (totalAll === 0) {
+    const rows = (['Cash', 'Exempt', 'Card', 'ETC', 'Discount'] as PaymentMethod[]).map(
+      (m) => ({
+        method: m,
+        p1: 0,
+        p1Pct: 0,
+        p2: 0,
+        p2Pct: 0,
+        changePct: 0,
+      })
+    );
+
+    const totals = {
+      method: 'Total',
+      p1: 0,
+      p1Pct: 0,
+      p2: 0,
+      p2Pct: 0,
+      changePct: 0,
+      _isTotal: true,
+    };
+
+    return { rows, totals };
+  }
+
+  // ✅ Normal logic when there *is* data
   const shares: Record<Exclude<PaymentMethod, 'Discount'>, number> = {
     Cash: 0.43,
     Exempt: 0.24,
@@ -100,28 +129,29 @@ function buildPaymentBreakdown(total1: number, total2: number) {
     return {
       method: m,
       p1,
-      p1Pct: s,
+      p1Pct: total1 ? p1 / total1 : 0,
       p2,
-      p2Pct: s,
+      p2Pct: total2 ? p2 / total2 : 0,
       changePct: p1 ? (p2 - p1) / p1 : 0,
     };
   });
 
+  const sumP1 = rows.reduce((a, r) => a + r.p1, 0);
+  const sumP2 = rows.reduce((a, r) => a + r.p2, 0);
+
   const totals = {
     method: 'Total',
-    p1: rows.reduce((a, r) => a + r.p1, 0),
-    p1Pct: 1,
-    p2: rows.reduce((a, r) => a + r.p2, 0),
-    p2Pct: 1,
-    changePct: rows.reduce((a, r) => a + r.p1, 0)
-      ? (rows.reduce((a, r) => a + r.p2, 0) - rows.reduce((a, r) => a + r.p1, 0)) /
-        rows.reduce((a, r) => a + r.p1, 0)
-      : 0,
+    p1: sumP1,
+    p1Pct: sumP1 ? 1 : 0,
+    p2: sumP2,
+    p2Pct: sumP2 ? 1 : 0,
+    changePct: sumP1 ? (sumP2 - sumP1) / sumP1 : 0,
     _isTotal: true,
   };
 
   return { rows, totals };
 }
+
 
 function buildVehicleBreakdown(total1: number, total2: number) {
   const shares: Record<VehicleType, number> = {
@@ -133,6 +163,7 @@ function buildVehicleBreakdown(total1: number, total2: number) {
     'Big Bus': 0.016,
     'Medium Bus': 0.034,
     'Mini Bus': 0.11,
+    
   };
   const norm = Object.values(shares).reduce((a, b) => a + b, 0);
 
@@ -157,20 +188,31 @@ function buildVehicleBreakdown(total1: number, total2: number) {
   return { rows, totals };
 }
 
+type PresetType = 'week' | 'month' | 'quarter' | null;
+
+const formatDateForApi = (d?: Date | null): string | null => {
+  if (!d) return null;
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
 export default function PeriodFiltersSection() {
-  const paymentTableRef = useRef<DataTable<PeriodFilters[]>>(null);
-  const vehicleTableRef = useRef<DataTable<PeriodFilters[]>>(null);
-  const resultsRef = useRef<HTMLDivElement>(null); // wrap the printable/PDF section
-  const [showGraph, setShowGraph] = useState<boolean>(false); // view graph toggle
+  const paymentTableRef = useRef<DataTable<any>>(null);
+  const vehicleTableRef = useRef<DataTable<any>>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const [showGraph, setShowGraph] = useState<boolean>(false);
 
   const [p1, setP1] = useState<PeriodFilters>({
-    start: new Date('2025-01-01'),
-    end: new Date('2025-01-07'),
-  });
-  const [p2, setP2] = useState<PeriodFilters>({
-    start: new Date('2025-03-01'),
-    end: new Date('2025-03-07'),
-  });
+    start: null,
+    end: null,
+});
+
+const [p2, setP2] = useState<PeriodFilters>({
+    start: null,
+    end: null,
+});
 
   const [info, setInfo] = useState<PeriodFilters>({
     location: 'All',
@@ -180,48 +222,37 @@ export default function PeriodFiltersSection() {
 
   const [result, setResult] = useState<ComparisonResult | null>(null);
 
-  const setQuickRange = (
-    setter: React.Dispatch<React.SetStateAction<PeriodFilters>>,
-    type: 'week' | 'month' | 'quarter'
-  ) => {
+  // which preset is used on which period – to disable the same preset on the other side
+  const [activePreset, setActivePreset] = useState<{ p1: PresetType; p2: PresetType }>({
+    p1: null,
+    p2: null,
+  });
+
+  const setQuickRange = (period: 'p1' | 'p2', preset: 'week' | 'month' | 'quarter') => {
     const now = new Date();
-    let start: Date;
-    if (type === 'week') {
-      start = new Date();
+    let start = new Date();
+
+    if (preset === 'week') {
       start.setDate(now.getDate() - 7);
-    } else if (type === 'month') {
-      start = new Date();
+    } else if (preset === 'month') {
       start.setMonth(now.getMonth() - 1);
     } else {
-      start = new Date();
       start.setMonth(now.getMonth() - 3);
     }
-    setter((prev) => ({ ...prev, start, end: now }));
-  };
 
-  // Mock your API
-  const fetchComparisonData = (_p1: PeriodFilters, _p2: PeriodFilters, _info: PeriodFilters): ComparisonResult => {
-    const chartLabels = ['Jan 1', 'Jan 2', 'Jan 3', 'Jan 4', 'Jan 5', 'Jan 6', 'Jan 7'];
-    const chartData1 = [4000, 3200, 4700, 2800, 1900, 2500, 3400];
-    const chartData2 = [4200, 3300, 4500, 3000, 2100, 2600, 3600];
-
-    const vehicles1 = chartData1.reduce((a, b) => a + b, 0);
-    const vehicles2 = chartData2.reduce((a, b) => a + b, 0);
-
-    const revenue1 = Math.round(vehicles1 * 172);
-    const revenue2 = Math.round(vehicles2 * 172);
-
-    const avgDaily1 = Math.round(vehicles1 / chartData1.length);
-    const avgDaily2 = Math.round(vehicles2 / chartData2.length);
-
-    return { vehicles1, vehicles2, revenue1, revenue2, avgDaily1, avgDaily2, chartLabels, chartData1, chartData2 };
+    if (period === 'p1') {
+      setP1((prev) => ({ ...prev, start, end: now }));
+      setActivePreset((prev) => ({ ...prev, p1: preset }));
+    } else {
+      setP2((prev) => ({ ...prev, start, end: now }));
+      setActivePreset((prev) => ({ ...prev, p2: preset }));
+    }
   };
 
   const exportCSV = () => {
     paymentTableRef.current?.exportCSV();
   };
 
-  // === NEW: Export PDF (results area only) ===
   const exportPDF = async () => {
     if (!resultsRef.current) return;
     const canvas = await html2canvas(resultsRef.current, { scale: 2, useCORS: true });
@@ -250,7 +281,6 @@ export default function PeriodFiltersSection() {
     pdf.save('toll-comparison.pdf');
   };
 
-  // === NEW: Print (results area only) ===
   const handlePrint = () => {
     if (!resultsRef.current) return;
     const printContents = resultsRef.current.innerHTML;
@@ -274,19 +304,63 @@ export default function PeriodFiltersSection() {
     w.print();
     w.close();
   };
-
+const handleReset = () => {
+    setP1({ start: null, end: null }); 
+    setP2({ start: null, end: null });
+    setActivePreset({ p1: null, p2: null });
+    setInfo({ location: 'All', vehicleType: null, payment: null });
+    setResult(null);
+    setShowGraph(false);
+  };
   const toggleGraph = () => setShowGraph((s) => !s);
 
-  const onCompare = () => {
-    const res = fetchComparisonData(p1, p2, info);
-    setResult(res);
+  const onCompare = async () => {
+    const p1Start = formatDateForApi(p1.start);
+    const p1End = formatDateForApi(p1.end);
+    const p2Start = formatDateForApi(p2.start);
+    const p2End = formatDateForApi(p2.end);
+
+    if (!p1Start || !p1End || !p2Start || !p2End) {
+      alert('Please select start and end dates for both time periods.');
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/kecmanual/get/period-comparison`,
+        {
+          p1Start,
+          p1End,
+          p2Start,
+          p2End,
+          location: info.location || 'All',
+          vehicleType: info.vehicleType || null,
+          payment: info.payment || null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+          },
+        }
+      );
+
+      if (res.data?.success && res.data.result) {
+        setResult(res.data.result as ComparisonResult);
+      } else {
+        alert(res.data?.message || 'Failed to fetch comparison data.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error fetching comparison data from server.');
+    }
   };
-
-
 
   return (
     <div className="p-6 bg-white border rounded-lg space-y-6">
-      <h3 className="text-lg font-semibold">Select Time Periods to Compare</h3>
+      <div className='flex justify-between items-center '>
+        <h3 className="text-lg font-semibold">Select Time Periods to Compare</h3>
+      <RefreshButton handleReset={handleReset} />
+      </div>
 
       <div className="grid md:grid-cols-2 gap-8">
         {/* First Time Period */}
@@ -297,13 +371,10 @@ export default function PeriodFiltersSection() {
               value={p1.start || null}
               onChange={(e) => setP1({ ...p1, start: e.value as Date })}
               placeholder="Start Date"
-              inputClassName="border-none rounded-none cursor-pointer focus:ring-0 "
+              inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
               dateFormat="dd/mm/yy"
               showIcon
-              icon={() => (
-                    <i className="pi pi-calendar  " />
-                )}
-              
+              icon={() => <i className="pi pi-calendar" />}
             />
             <Calendar
               value={p1.end || null}
@@ -312,20 +383,29 @@ export default function PeriodFiltersSection() {
               inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
               dateFormat="dd/mm/yy"
               showIcon
-                 icon={() => (
-                    <i className="pi pi-calendar  " />
-                )}
-              
+              icon={() => <i className="pi pi-calendar" />}
             />
           </div>
           <div className="flex gap-2 mt-3">
-            <button onClick={() => setQuickRange(setP1, 'week')} className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold">
+            <button
+              onClick={() => setQuickRange('p1', 'week')}
+              disabled={activePreset.p2 === 'week'}
+              className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold disabled:opacity-60"
+            >
               Last Week
             </button>
-            <button onClick={() => setQuickRange(setP1, 'month')} className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold">
+            <button
+              onClick={() => setQuickRange('p1', 'month')}
+              disabled={activePreset.p2 === 'month'}
+              className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold disabled:opacity-60"
+            >
               Last Month
             </button>
-            <button onClick={() => setQuickRange(setP1, 'quarter')} className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold">
+            <button
+              onClick={() => setQuickRange('p1', 'quarter')}
+              disabled={activePreset.p2 === 'quarter'}
+              className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold disabled:opacity-60"
+            >
               Last Quarter
             </button>
           </div>
@@ -342,9 +422,7 @@ export default function PeriodFiltersSection() {
               dateFormat="dd/mm/yy"
               inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
               showIcon
-                 icon={() => (
-                    <i className="pi pi-calendar  " />
-                )}
+              icon={() => <i className="pi pi-calendar" />}
             />
             <Calendar
               value={p2.end || null}
@@ -353,19 +431,29 @@ export default function PeriodFiltersSection() {
               dateFormat="dd/mm/yy"
               inputClassName="border-none rounded-none cursor-pointer focus:ring-0"
               showIcon
-                 icon={() => (
-                    <i className="pi pi-calendar  " />
-                )}
+              icon={() => <i className="pi pi-calendar" />}
             />
           </div>
           <div className="flex gap-2 mt-3">
-            <button onClick={() => setQuickRange(setP2, 'week')} className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold">
+            <button
+              onClick={() => setQuickRange('p2', 'week')}
+              disabled={activePreset.p1 === 'week'}
+              className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold disabled:opacity-60"
+            >
               Last Week
             </button>
-            <button onClick={() => setQuickRange(setP2, 'month')} className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold">
+            <button
+              onClick={() => setQuickRange('p2', 'month')}
+              disabled={activePreset.p1 === 'month'}
+              className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold disabled:opacity-60"
+            >
               Last Month
             </button>
-            <button onClick={() => setQuickRange(setP2, 'quarter')} className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold">
+            <button
+              onClick={() => setQuickRange('p2', 'quarter')}
+              disabled={activePreset.p1 === 'quarter'}
+              className="px-2 py-3 bg-[#F3F4F6] text-[#374151] text-lg rounded-md font-semibold disabled:opacity-60"
+            >
               Last Quarter
             </button>
           </div>
@@ -379,28 +467,12 @@ export default function PeriodFiltersSection() {
           onChange={(e) => setInfo({ ...info, location: e.value })}
           options={locationType}
           placeholder="Location"
-          optionLabel="value"
+          optionLabel="name"
+          optionValue="value"
           className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
           itemTemplate={itemTemplate}
         />
-        <Dropdown
-          value={info.vehicleType || null}
-          onChange={(e) => setInfo({ ...info, vehicleType: e.value })}
-          options={vehicleType}
-          optionLabel="value"
-          placeholder="Vehicle Type"
-          className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
-          itemTemplate={itemTemplate}
-        />
-        <Dropdown
-          value={info.payment || null}
-          onChange={(e) => setInfo({ ...info, payment: e.value })}
-          options={paymentOptions}
-          placeholder="Payment Method"
-          optionLabel="value"
-          className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB]"
-          itemTemplate={itemTemplate}
-        />
+        {/* If you want filters for vehicleType/payment, add Dropdowns here using vehicleType & paymentOptions */}
       </div>
 
       <div className="flex justify-center">
@@ -409,15 +481,14 @@ export default function PeriodFiltersSection() {
         </button>
       </div>
 
-      {/* === Results Section (wrapped for PDF/Print) === */}
+      {/* Results Section */}
       {result && (
         <div ref={resultsRef} className="space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Comparison Results</h3>
 
-            {/* Your existing toolbar, now wired up */}
             <TollButtonIcons
-              isGraphVisible={showGraph} 
+              isGraphVisible={showGraph}
               openNew={toggleGraph}
               exportCSV={exportCSV}
               exportPDF={exportPDF}
@@ -433,7 +504,8 @@ export default function PeriodFiltersSection() {
                 {fmtNum(result.vehicles1)} → {fmtNum(result.vehicles2)}
               </p>
               <p className="text-sm text-green-600">
-                {pctChange(result.vehicles1, result.vehicles2)} ({fmtNum(result.vehicles2 - result.vehicles1)} more vehicles)
+                {pctChange(result.vehicles1, result.vehicles2)} (
+                {fmtNum(result.vehicles2 - result.vehicles1)} more vehicles)
               </p>
             </div>
             <div className="p-4 border rounded-lg">
@@ -442,7 +514,8 @@ export default function PeriodFiltersSection() {
                 {fmtTk(result.revenue1)} → {fmtTk(result.revenue2)}
               </p>
               <p className="text-sm text-green-600">
-                {pctChange(result.revenue1, result.revenue2)} ({fmtTk(result.revenue2 - result.revenue1)} more revenue)
+                {pctChange(result.revenue1, result.revenue2)} (
+                {fmtTk(result.revenue2 - result.revenue1)} more revenue)
               </p>
             </div>
             <div className="p-4 border rounded-lg">
@@ -451,14 +524,10 @@ export default function PeriodFiltersSection() {
                 {fmtNum(result.avgDaily1)} → {fmtNum(result.avgDaily2)}
               </p>
               <p className="text-sm text-green-600">
-                {pctChange(result.avgDaily1, result.avgDaily2)} ({fmtNum(result.avgDaily2 - result.avgDaily1)} more vehicles/day)
+                {pctChange(result.avgDaily1, result.avgDaily2)} (
+                {fmtNum(result.avgDaily2 - result.avgDaily1)} more vehicles/day)
               </p>
             </div>
-          </div>
-
-          {/* View/Hide Graph toggle button */}
-          <div className="flex justify-end">
-            
           </div>
 
           {/* Chart */}
@@ -500,11 +569,36 @@ export default function PeriodFiltersSection() {
                   emptyMessage="No data found!"
                   rowClassName={(data: any) => (data._isTotal ? 'bg-[#E7F3FF] font-medium' : '')}
                 >
-                  <Column header="Payment Method" field="method" headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                  <Column header="Period 1" body={(r) => fmtNum(r.p1)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                  <Column header="% of Total" body={(r) => pct(r.p1Pct)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                  <Column header="Period 2" body={(r) => fmtNum(r.p2)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                  <Column header="% of Total" body={(r) => pct(r.p2Pct)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
+                  <Column
+                    header="Payment Method"
+                    field="method"
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
+                  <Column
+                    header="Period 1"
+                    body={(r) => fmtNum(r.p1)}
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
+                  <Column
+                    header="% of Total"
+                    body={(r) => pct(r.p1Pct)}
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
+                  <Column
+                    header="Period 2"
+                    body={(r) => fmtNum(r.p2)}
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
+                  <Column
+                    header="% of Total"
+                    body={(r) => pct(r.p2Pct)}
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
                   <Column
                     header="% Change"
                     body={(r) => <span className="text-green-600">{pct(r.changePct)}</span>}
@@ -531,9 +625,24 @@ export default function PeriodFiltersSection() {
                   emptyMessage="No data found!"
                   rowClassName={(data: any) => (data._isTotal ? 'bg-[#E7F3FF] font-medium' : '')}
                 >
-                  <Column header="Vehicle Type" field="type" headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                  <Column header="First Period" body={(r) => fmtNum(r.p1)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                  <Column header="Second Period" body={(r) => fmtNum(r.p2)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
+                  <Column
+                    header="Vehicle Type"
+                    field="type"
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
+                  <Column
+                    header="First Period"
+                    body={(r) => fmtNum(r.p1)}
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
+                  <Column
+                    header="Second Period"
+                    body={(r) => fmtNum(r.p2)}
+                    headerClassName="bg-[#ffc2c2] text-sm"
+                    bodyClassName="text-sm truncate max-w-xs"
+                  />
                   <Column
                     header="Change"
                     body={(r) => <span className="text-green-600">{pct(r.changePct)}</span>}
@@ -551,7 +660,7 @@ export default function PeriodFiltersSection() {
         <h4 className="font-semibold text-[#1E3A8A] mb-3">How to use this dashboard:</h4>
         <ul className="list-disc list-inside space-y-1.5 text-[#1E3A8A]">
           <li>Select two time periods you want to compare using the date fields above</li>
-          <li>Use the preset buttons (Last Week, Last Month) for quick comparisons</li>
+          <li>Use the preset buttons (Last Week, Last Month, Last Quarter) for quick comparisons</li>
           <li>Filter by location, vehicle type, or payment method if needed</li>
           <li>Click "Compare Data" to see the results</li>
           <li>Use the Export or Print buttons to save or print your comparison</li>

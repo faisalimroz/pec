@@ -119,6 +119,90 @@ const UpdateAdmin = () => {
 
   // This would be fetched from an API in a real application
   const [permissionsData, setPermissionsData] = useState<ParentPermission[]>([
+    {
+      name: 'edms',
+      authority: false,
+      children: [
+        {
+          name: 'dispatched',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'received',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'others',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+      ],
+    },
+        {
+      name: 'admin',
+      authority: false,
+      children: [
+        {
+          name: 'employee-personal-profile',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'vehicle-management',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'asset-management',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'building-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'health-center',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'gardening-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'fire-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'it-electronics',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'security-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+      ],
+    },
    {
       name: 'r&t-manager',
       authority: false,
@@ -224,6 +308,61 @@ const UpdateAdmin = () => {
         
       ],
     },
+     {
+      name: 'mb-pmis-manager',
+      authority: false,
+      children: [
+        {
+          name: 'mb-pmis-project-overview',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-technical-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-monitoring-reporting',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-quality-safety',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-communication-correspondence',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-financial-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-visual-records',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-additional-notes',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        
+      ],
+    },
     {
       name: 'its-manager',
       authority: false,
@@ -321,121 +460,8 @@ const UpdateAdmin = () => {
         }
       ],
     },
-    {
-      name: 'mb-pmis-manager',
-      authority: false,
-      children: [
-        {
-          name: 'mb-pmis-project-overview',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mb-pmis-technical-documentation',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mb-pmis-monitoring-reporting',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mb-pmis-quality-safety',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mb-pmis-communication-correspondence',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mb-pmis-financial-documentation',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mb-pmis-visual-records',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mb-pmis-additional-notes',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        
-      ],
-    },
-    {
-      name: 'admin',
-      authority: false,
-      children: [
-        {
-          name: 'employee-personal-profile',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'vehicle-management',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'asset-management',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'building-maintenance',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-         {
-          name: 'health-center',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-         {
-          name: 'gardening-mgt',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-         {
-          name: 'fire-mgt',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-         {
-          name: 'it-electronics',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-         {
-          name: 'security-mgt',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
+   
+
     {
       name: 'finance-manager',
       authority: false,
@@ -455,24 +481,6 @@ const UpdateAdmin = () => {
         },
       ],
     },
-    // {
-    //   name: 'clinic',
-    //   authority: false,
-    //   children: [
-    //     {
-    //       name: 'medicine-record',
-    //       view_authority: false,
-    //       edit_authority: false,
-    //       g_children: [],
-    //     },
-    //     {
-    //       name: 'treatment-record',
-    //       view_authority: false,
-    //       edit_authority: false,
-    //       g_children: [],
-    //     },
-    //   ],
-    // },
     {
       name: 'general-information',
       authority: false,
@@ -515,30 +523,7 @@ const UpdateAdmin = () => {
         },
       ],
     },
-    {
-      name: 'edms',
-      authority: false,
-      children: [
-        {
-          name: 'dispatched',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'received',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'others',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
+    
     {
       name: 'ai-dashboard',
       authority: false,
@@ -666,6 +651,13 @@ const UpdateAdmin = () => {
       const updatedPermissions = [...prevData].map((parent) => {
         if (parent.name === parentName) {
           const updatedChildren = parent.children.map((child) => {
+             if (parentName === 'edms' && checked) {
+              return {
+                ...child,
+                view_authority: true,
+                edit_authority: true,  
+              };
+            }
             return {
               ...child,
               view_authority: checked,

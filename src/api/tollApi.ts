@@ -128,6 +128,7 @@ export const useKecManual = (param: unknown) => {
       return data
     },
   })
+  
 }
 
 // ------------- TanStack Query Funcs End ------------------------
@@ -566,7 +567,7 @@ export async function searchComparison(param: unknown) {
 }
 
 export async function searchKecManual(param: unknown) {
-  // console.log('param', param)
+  console.log('param', param)
 
   const response = await axios.post(
     `${BASE_URL}/api/v1/toll/kecmanual/get/search/data`,
@@ -578,7 +579,23 @@ export async function searchKecManual(param: unknown) {
       },
     }
   )
+console.log(response.data,'fghfghf')
+  return response.data
+}
+export async function searchShiftManual(param: unknown) {
+  console.log('param', param)
 
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/shiftmanual/get/search/data`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+console.log(response.data,'fghfghf')
   return response.data
 }
 
@@ -612,8 +629,9 @@ export async function searchDailyReport(param: unknown) {
         'Content-Type': 'application/json',
       },
     }
+  
   )
-
+  console.log(response.data)
   return response.data
 }
 
