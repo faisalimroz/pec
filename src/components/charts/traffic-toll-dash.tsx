@@ -10,12 +10,13 @@ import {
   LabelList,
   CartesianGrid,
 } from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface VehicleData {
-  types: string
-  totalPass: number
+  vehicleType: string
+  label: string // Updated to match the new `label` structure
+  totalVehicles: number
+  totalAmount: number // Added to match the new data structure
 }
 
 interface ApiResponse {
@@ -42,11 +43,6 @@ const SkeletonLoader = () => (
           ))}
         </div>
       </div>
-      <div className='absolute left-44 right-0 bottom-0 flex justify-between'>
-        {[...Array(6)].map((_, i) => (
-          <Skeleton key={i} className='h-4 w-12' />
-        ))}
-      </div>
     </div>
     <p className='text-center text-muted-foreground font-medium'>
       Graph Data Is Loading. Please Wait...
@@ -60,7 +56,7 @@ const CustomizedLabel: React.FC<any> = (props) => {
     <text
       x={x + width + 5}
       y={y}
-      dy={4}
+      dy={12} // Adjusted slightly for centering
       fontSize={12}
       fill='hsl(var(--foreground))'
       textAnchor='start'
@@ -99,14 +95,6 @@ export function TrafficOfTollDash() {
     fetchData()
   }, [])
 
-  // console.log(data)
-
-  const formatYAxisTick = (value: string) => {
-    return value
-      .replace(/_/g, ' ')
-      .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase())
-  }
-
   return (
     <div className='w-full rounded-xl overflow-hidden border shadow-md'>
       <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-center gap-2'>
@@ -117,10 +105,10 @@ export function TrafficOfTollDash() {
           viewBox='0 0 26 25'
           fill='none'
         >
+          {/* SVG Icon Content */}
           <g clip-path='url(#clip0_177_408)'>
             <mask
               id='mask0_177_408'
-              // style='mask-type:luminance'
               maskUnits='userSpaceOnUse'
               x='0'
               y='0'
@@ -139,26 +127,8 @@ export function TrafficOfTollDash() {
                 stroke-width='1.47832'
                 stroke-miterlimit='10'
               />
-              <path
-                d='M10.7123 15.681V11.106H11.9606L9.48028 7.27997L7 11.106H8.2483V15.681H10.7123Z'
-                fill='white'
-              />
-              <path
-                d='M16.9108 8.98294V13.558H18.1591L15.6788 17.384L13.1985 13.558H14.4468V8.98294H16.9108Z'
-                fill='white'
-              />
             </g>
           </g>
-          <defs>
-            <clipPath id='clip0_177_408'>
-              <rect
-                width='25'
-                height='25'
-                fill='white'
-                transform='translate(0.5)'
-              />
-            </clipPath>
-          </defs>
         </svg>
         <h2 className='text-[20px] font-bold text-center'>
           Traffic Of Toll Plaza: {date}
@@ -174,39 +144,43 @@ export function TrafficOfTollDash() {
               data={data}
               margin={{
                 top: 5,
-                right: 50,
-                left: 10,
+                right: 70,
+                left: -10,
                 bottom: 5,
               }}
             >
               <CartesianGrid horizontal={false} stroke='hsl(var(--border))' />
+
               <XAxis
                 type='number'
                 domain={[0, 'dataMax']}
                 tickCount={6}
                 stroke='hsl(var(--foreground))'
               />
+
+              {/* FIX: Use 'label' instead of 'types' */}
               <YAxis
-                dataKey='types'
+                dataKey='label' // Updated to use `label` for Y-axis
                 type='category'
-                tickFormatter={formatYAxisTick}
-                tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
-                width={120}
+                tick={{ fontSize: 10, fill: 'hsl(var(--foreground))' }}
+                width={170}
                 stroke='hsl(var(--foreground))'
               />
+
               <Tooltip
                 formatter={(value: number) => [
                   value.toLocaleString(),
-                  'Total Pass',
+                  'Total Vehicles',
                 ]}
-                labelFormatter={(label) => formatYAxisTick(label as string)}
                 contentStyle={{
                   backgroundColor: 'hsl(var(--card))',
                   borderColor: 'hsl(var(--border))',
                   color: 'hsl(var(--foreground))',
                 }}
               />
-              <Bar dataKey='totalPass' fill='#059669' barSize={20}>
+
+              {/* FIX: Updated dataKey to 'totalVehicles' */}
+              <Bar dataKey='totalVehicles' fill='#059669' barSize={20}>
                 <LabelList content={<CustomizedLabel />} />
               </Bar>
             </BarChart>

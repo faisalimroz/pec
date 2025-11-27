@@ -12,14 +12,14 @@ import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
 import { toast } from "sonner";
 import axios from "axios";
-
+import "../../styles/table-style.css";
 import RefreshButton from "@/components/refresh-button";
 import TollGroupWithIcons from "../ui/tollbuttons";
 import { useAuth } from "@/provider/authProvider";
 import { searchShiftManual } from "@/api/tollApi";
-
 import { IconField } from "primereact/iconfield";
 import { InputText } from "primereact/inputtext";
+import { useLocation } from "react-router-dom";
 
 interface RowData {
   paymentMethod: string;
@@ -63,12 +63,15 @@ export default function ShiftManualTable() {
 
   const [searchKey, setSearchKey] = useState("");
 
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith("/edms");
   const { permissions } = useAuth();
   const tollManagerPermission = permissions.find((p) => p.name === "toll-manager");
+
   const tollPermission = tollManagerPermission?.children?.find(
-    (child) => child.name === "toll-daily-report"
+    (child) => child.name === "toll-shiftwise-traffic-data"
   );
-  const hasEditAccess = tollPermission?.edit_authority === true;
+  const hasEditAccess = tollPermission?.edit_authority === true && showAll;
 
   const locationOptions = [
     { label: "Mawa", value: "Mawa" },
@@ -76,7 +79,7 @@ export default function ShiftManualTable() {
   ];
 
   const trafficOptions = [
-    { label: "All", value: "" },      // ✅ allow none selection
+    { label: "All", value: "" },
     { label: "Traffic", value: "Traffic" },
     { label: "Toll", value: "Toll" },
   ];
@@ -131,7 +134,7 @@ export default function ShiftManualTable() {
       toDate: date2 ? formatDate(date2) : "",
       lane: selectedLocation || "",
       shift: selectedShift || "",
-      dataType: selectedTraffic || "", // "" => all
+      dataType: selectedTraffic || "", 
     };
     fetchData(payload);
   };
@@ -285,23 +288,26 @@ export default function ShiftManualTable() {
           />
         </div>
 
-        <div className="flex w-fit gap-2 border p-2 rounded-md bg-white">
-          <IconField iconPosition="left" className="relative">
-            <InputText
-              type="search"
-              placeholder="Search"
-              className="border-none ml-4 focus:ring-0"
-              onChange={(e) => setSearchKey(e.target.value)}
-              value={searchKey}
-            />
-            <button
-              onClick={handleSearch}
-              className="absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg"
-              type="submit"
+        <div className="flex items-center bg-white border p-2">
+          <button
+            onClick={() => handleSearch()}
+
+            className='border bg-green-500 px-4 py-2.5 rounded-lg cursor-pointer hover:bg-green-600 transition-colors'
+            type='submit'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='white'
+              className='size-6'
             >
-              ▶
-            </button>
-          </IconField>
+              <path
+                fillRule='evenodd'
+                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -310,16 +316,38 @@ export default function ShiftManualTable() {
       </h1>
     </div>
   );
+  const Dates = new Date().toLocaleDateString();
 
+  const totalSummary = (
+    <div className="font-bold flex justify-between items-center bg-gray-100 p-4 rounded ">
+      <div>
+        <span className="font-bold text-lg">Total: </span>{" "}
+        {overallTotals.grandTotal}
+      </div>
+      <div>
+        <span className="font-bold text-lg">Data Showing For Date:</span>{" "}
+        {Dates}
+      </div>
+      {/* <div>
+                <span className="font-bold text-lg">Total Toll Collection</span>{" "}
+                {totalTollCollection}
+            </div> */}
+    </div>
+  );
   const headerGroup = (
     <ColumnGroup>
       <Row>
-        <Column header="Payment Method" frozen />
-        <Column header="3rd-2" />
-        <Column header="1st" />
-        <Column header="2nd" />
-        <Column header="3rd-1" />
-        <Column header="Total" frozen />
+        <Column header="Payment Method" frozen style={{ backgroundColor: '#ffc2c2' }} />
+        <Column
+          header="3rd-2 (00:00-06:00)"
+          style={{ backgroundColor: '#ffc2c2' }}
+        />
+        <Column
+          header="1st"
+          style={{ backgroundColor: '#ffc2c2' }} />
+        <Column header="2nd" style={{ backgroundColor: '#ffc2c2' }} />
+        <Column header="3rd-1" style={{ backgroundColor: '#ffc2c2' }} />
+        <Column header="Total" frozen style={{ backgroundColor: '#ffc2c2' }} />
       </Row>
     </ColumnGroup>
   );
@@ -345,7 +373,7 @@ export default function ShiftManualTable() {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         />
-
+        {totalSummary}
         <DataTable
           ref={dt}
           value={products}
@@ -364,8 +392,12 @@ export default function ShiftManualTable() {
           scrollHeight="600px"
         >
           <Column field="paymentMethod" frozen />
-          {/* ✅ correct keys */}
-          <Column field="third2" />
+    
+          <Column field="third2" 
+            headerStyle={{ backgroundColor: '#ffc2c2'}} 
+            headerClassName='text-sm'   
+            bodyClassName='text-sm truncate max-w-xs'
+            className='min-w-[10rem]' />
           <Column field="first" />
           <Column field="second" />
           <Column field="third1" />

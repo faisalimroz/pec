@@ -65,7 +65,7 @@ export default function VehicleDetectTollTable() {
 
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
     const [selectedTraffic, setSelectedTraffic] = useState<string | null>(null);
-
+  const [summaryTotal, setSummaryTotal] = useState<number>(0);
     // NEW: for bulk upload form
     const [bulkLocation, setBulkLocation] = useState<string | null>(null);
     const [bulkTraffic, setBulkTraffic] = useState<string | null>(null);
@@ -111,7 +111,7 @@ export default function VehicleDetectTollTable() {
         { label: "Toll", value: "Toll" },
         { label: "Traffic", value: "Traffic" },
     ];
-
+       
     // ---------- helpers ----------
     function formatDate(dateTime?: any) {
         if (!dateTime) return ''
@@ -291,24 +291,30 @@ export default function VehicleDetectTollTable() {
             </div>
         </>
     );
+const handleSearch = () => {
+    setLoading(true);
 
-    const handleSearch = () => {
-        setLoading(true);
-        const payload = {
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            lane: selectedLocation || "",
-            dataType: selectedTraffic || "",
-        };
-
-        searchKecManual(payload).then((result) => {
-            setProducts(result?.laneData || []);
-            setTotalOverallVehicles(result?.overallTotals?.totalOverallVehicles || 0);
-            setTotalTollCollection(result?.overallTotals?.totalOverallAmount || 0);
-            setAllData(result?.overallTotals || {});
-            setTodaysDate(result?.date || "");
-            setLoading(false);
-        });
+    const payload = {
+        date_range:
+            date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+        lane: selectedLocation || "",
+        dataType: selectedTraffic || "", // "Toll" | "Traffic" | ""
     };
+
+    searchKecManual(payload).then((result) => {
+        const overallTotals = result?.overallTotals || {};
+
+        // still keep the raw totals if you need them
+        setProducts(result?.laneData || []);
+        setTotalOverallVehicles(overallTotals?.totalOverallVehicles || 0);
+        setTotalTollCollection(overallTotals?.totalOverallAmount || 0);
+        setAllData(overallTotals.totalAmount);
+        setTodaysDate(result?.date || "");
+
+        // 👉 Decide what to show in the "Total:" line
+        setLoading(false);
+    });
+};
 
     const handleReset = () => {
         const payload = {
@@ -391,7 +397,7 @@ export default function VehicleDetectTollTable() {
                         <svg
                             xmlns='http://www.w3.org/2000/svg'
                             viewBox='0 0 24 24'
-                            fill='white' // Ensure icon is white
+                            fill='white'
                             className='size-6'
                         >
                             <path
@@ -418,34 +424,51 @@ export default function VehicleDetectTollTable() {
 
     const { data, isLoading, error, refetch } = useKecManual(payload);
 
-    useEffect(() => {
-        if (data) {
-            setProducts(data?.laneData || []);
-            setTotalOverallVehicles(data?.overallTotals?.totalOverallVehicles || 0);
-            setTotalTollCollection(data?.overallTotals?.totalOverallAmount || 0);
-            setAllData(data?.overallTotals || {});
-            setTodaysDate(data?.date || "");
+  useEffect(() => {
+    if (data) {
+        const overallTotals = data?.overallTotals || {};
+
+        setProducts(data?.laneData || []);
+        setTotalOverallVehicles(overallTotals?.totalOverallVehicles || 0);
+        setTotalTollCollection(overallTotals?.totalOverallAmount || 0);
+        setAllData(overallTotals);
+        setTodaysDate(data?.date || "");
+
+        // selectedTraffic is null/"" on first load -> treat as "All"
+        let totalForSummary = 0;
+
+        if (selectedTraffic === "Toll") {
+            totalForSummary = overallTotals.totalOverallAmount ?? 0;
+        } else if (selectedTraffic === "Traffic") {
+            totalForSummary = overallTotals.totalOverallVehicles ?? 0;
+        } else {
+            totalForSummary =
+                overallTotals.totalAmount ??
+                ((overallTotals.totalOverallAmount || 0) +
+                    (overallTotals.totalOverallVehicles || 0));
         }
-    }, [data]);
+
+        setSummaryTotal(totalForSummary);
+    }
+}, [data, selectedTraffic]);
 
     const Dates = new Date().toLocaleDateString();
 
     const totalSummary = (
-        <div className="font-bold flex justify-between items-center bg-gray-100 p-4 rounded ">
-            <div>
-                <span className="font-bold text-lg">Total: </span>{" "}
-                {totalOverallVehicles}
-            </div>
-            <div>
-                <span className="font-bold text-lg">Data Showing For Date:</span>{" "}
-                {Dates}
-            </div>
-            {/* <div>
-                <span className="font-bold text-lg">Total Toll Collection</span>{" "}
-                {totalTollCollection}
-            </div> */}
+    <div className="font-bold flex justify-between items-center bg-gray-100 p-4 rounded ">
+        <div>
+            <span className="font-bold text-lg">Total: </span>{" "}
+            {summaryTotal}
         </div>
-    );
+        <div>
+            <span className="font-bold text-lg">Data Showing For Date:</span>{" "}
+            {Dates}
+        </div>
+        {/* If you ever want to show both, you still have: 
+            totalOverallVehicles & totalTollCollection
+        */}
+    </div>
+);
 
     const vehicleHeaderTemplate = (image: string, label: string) => (
         <div className="flex flex-col items-center">
@@ -459,9 +482,10 @@ export default function VehicleDetectTollTable() {
             <Row>
                 <Column
                     header="Payment Method"
-                    headerClassName="min-w-[10rem]"
+                    headerClassName="min-w-[12rem]"
                     rowSpan={2}
                     frozen
+                    
                 />
                 <Column
                     header={vehicleHeaderTemplate(trailer5axle, "Trailer (Above 4Axle)")}
@@ -553,7 +577,7 @@ export default function VehicleDetectTollTable() {
                 <Column footer={allData?.totalpickup ?? 0} />
                 <Column footer={allData?.totalcar ?? 0} />
                 <Column footer={allData?.totalbike ?? 0} />
-                <Column footer={allData?.totalOverallVehicles ?? 0} />
+                <Column footer={allData?.totalVehicles ?? 0} />
             </Row>
         </ColumnGroup>
     );
@@ -645,16 +669,6 @@ export default function VehicleDetectTollTable() {
                         />
                     </div>
 
-                    {/* <div>
-                        <label className="font-bold">Toll / Traffic</label>
-                        <Dropdown
-                            value={bulkTraffic}
-                            onChange={(e) => setBulkTraffic(e.value)}
-                            options={trafficOptions}
-                            placeholder="Select Type"
-                            className="mt-2 w-full"
-                        />
-                    </div> */}
 
                     <div className="field col-span-2">
                         <label htmlFor="bulkUpload" className="font-bold">
