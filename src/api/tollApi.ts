@@ -122,7 +122,23 @@ export const useKecManual = (param: unknown) => {
     queryKey: createQueryKey('kecManual', param),
     queryFn: async () => {
       const { data } = await api.post(
-        'api/v1/toll/kecmanual/get/search/data',
+        '/api/v1/toll/kecmanual/get/search/data',
+        param
+      )
+       console.log(data,'dfsdddfdfdff')
+      return data
+      
+    },
+  })
+ 
+  
+}
+export const useShiftKecManual = (param: unknown) => {
+  return useQuery({
+    queryKey: createQueryKey('shiftManual', param),
+    queryFn: async () => {
+      const { data } = await api.post(
+        'api/v1/toll/shiftmanual/search/data',
         param
       )
       return data
@@ -130,6 +146,7 @@ export const useKecManual = (param: unknown) => {
   })
   
 }
+
 
 // ------------- TanStack Query Funcs End ------------------------
 
@@ -443,7 +460,7 @@ export async function searchMainBridgeBills(param: unknown) {
       },
     }
   )
-
+console.log(response.data)
   return response.data
 }
 
@@ -586,7 +603,7 @@ export async function searchShiftManual(param: unknown) {
   console.log('param', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/toll/shiftmanual/get/search/data`,
+    `${BASE_URL}/api/v1/toll/shiftmanual/search/data`,
     param,
     {
       headers: {

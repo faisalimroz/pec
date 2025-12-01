@@ -112,7 +112,6 @@ function buildPaymentBreakdown(total1: number, total2: number) {
     return { rows, totals };
   }
 
-  // ✅ Normal logic when there *is* data
   const shares: Record<Exclude<PaymentMethod, 'Discount'>, number> = {
     Cash: 0.43,
     Exempt: 0.24,
@@ -222,7 +221,6 @@ const [p2, setP2] = useState<PeriodFilters>({
 
   const [result, setResult] = useState<ComparisonResult | null>(null);
 
-  // which preset is used on which period – to disable the same preset on the other side
   const [activePreset, setActivePreset] = useState<{ p1: PresetType; p2: PresetType }>({
     p1: null,
     p2: null,
@@ -249,9 +247,7 @@ const [p2, setP2] = useState<PeriodFilters>({
     }
   };
 
-  const exportCSV = () => {
-    paymentTableRef.current?.exportCSV();
-  };
+
 
   const exportPDF = async () => {
     if (!resultsRef.current) return;
@@ -386,7 +382,7 @@ const handleReset = () => {
               icon={() => <i className="pi pi-calendar" />}
             />
           </div>
-          <div className="flex gap-2 mt-3">
+          {/* <div className="flex gap-2 mt-3">
             <button
               onClick={() => setQuickRange('p1', 'week')}
               disabled={activePreset.p2 === 'week'}
@@ -408,7 +404,7 @@ const handleReset = () => {
             >
               Last Quarter
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Second Time Period */}
@@ -434,7 +430,7 @@ const handleReset = () => {
               icon={() => <i className="pi pi-calendar" />}
             />
           </div>
-          <div className="flex gap-2 mt-3">
+          {/* <div className="flex gap-2 mt-3">
             <button
               onClick={() => setQuickRange('p2', 'week')}
               disabled={activePreset.p1 === 'week'}
@@ -456,7 +452,7 @@ const handleReset = () => {
             >
               Last Quarter
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -481,7 +477,7 @@ const handleReset = () => {
         </button>
       </div>
 
-      {/* Results Section */}
+    
       {result && (
         <div ref={resultsRef} className="space-y-6">
           <div className="flex items-center justify-between">
@@ -490,13 +486,12 @@ const handleReset = () => {
             <TollButtonIcons
               isGraphVisible={showGraph}
               openNew={toggleGraph}
-              exportCSV={exportCSV}
               exportPDF={exportPDF}
               handlePrint={handlePrint}
             />
           </div>
 
-          {/* Cards */}
+   
           <div className="grid md:grid-cols-3 gap-6">
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium">Total Vehicles</h4>
@@ -530,7 +525,6 @@ const handleReset = () => {
             </div>
           </div>
 
-          {/* Chart */}
           {showGraph && (
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">Daily Traffic Volume Comparison</h4>
@@ -554,7 +548,7 @@ const handleReset = () => {
             </div>
           )}
 
-          {/* Payment Method Comparison Table */}
+          
           <div className="p-4 border rounded-lg">
             <h4 className="font-medium mb-3">Payment Method Comparison</h4>
             {(() => {
@@ -610,7 +604,7 @@ const handleReset = () => {
             })()}
           </div>
 
-          {/* Vehicle Type Comparison Table */}
+      
           <div className="p-4 border rounded-lg">
             <h4 className="font-medium mb-3">Vehicle Type Comparison</h4>
             {(() => {
@@ -660,8 +654,8 @@ const handleReset = () => {
         <h4 className="font-semibold text-[#1E3A8A] mb-3">How to use this dashboard:</h4>
         <ul className="list-disc list-inside space-y-1.5 text-[#1E3A8A]">
           <li>Select two time periods you want to compare using the date fields above</li>
-          <li>Use the preset buttons (Last Week, Last Month, Last Quarter) for quick comparisons</li>
-          <li>Filter by location, vehicle type, or payment method if needed</li>
+          {/* <li>Use the preset buttons (Last Week, Last Month, Last Quarter) for quick comparisons</li> */}
+          <li>Filter by Location, Date method if needed</li>
           <li>Click "Compare Data" to see the results</li>
           <li>Use the Export or Print buttons to save or print your comparison</li>
         </ul>

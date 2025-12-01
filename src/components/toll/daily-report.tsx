@@ -8,8 +8,6 @@ import "../../styles/table-style.css";
 import { searchKecManual, useKecManual } from "@/api/tollApi";
 import { ColumnGroup } from "primereact/columngroup";
 import { Row } from "primereact/row";
-
-// Icons
 import trailer5axle from "@/assets/ai-assets/vehicle/trailer-5axle.svg";
 import trailer4axle from "@/assets/ai-assets/vehicle/trailer-4axle.svg";
 import trailer3axle from "@/assets/ai-assets/vehicle/truck-3axle.svg";
@@ -23,7 +21,6 @@ import microBus from "@/assets/ai-assets/vehicle/micro-bus.svg";
 import pickUp from "@/assets/ai-assets/vehicle/pickup.svg";
 import car from "@/assets/ai-assets/vehicle/car.svg";
 import bike from "@/assets/ai-assets/vehicle/bike.svg";
-
 import { Dropdown } from "primereact/dropdown";
 import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
@@ -33,7 +30,6 @@ import RefreshButton from "@/components/refresh-button";
 import { useAuth } from "@/provider/authProvider";
 import TollGroupWithIcons from "../ui/tollbuttons";
 
-// Interface matches the Backend 'VEHICLE_FIELD_MAP' keys
 interface Product {
     paymentMethod: string;
     trailer5xl: number;
@@ -49,40 +45,31 @@ interface Product {
     pickup: number;
     car: number;
     bike: number;
-    total: number; // Dynamic Row Total
+    total: number;
 }
 
 export default function VehicleDetectTollTable() {
     const [products, setProducts] = useState<Product[]>([]);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
     const dt = useRef<DataTable<Product>>(null);
-
-    // Filter States
     const [date, setDate] = useState<string>("");
     const [date2, setDate2] = useState<string>("");
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
     const [selectedTraffic, setSelectedTraffic] = useState<string | null>(null);
-
+    const [footerTotal, setFooterTotal] = useState<number>(0); // New state for dynamic footer
     const [loading, setLoading] = useState<boolean>(false);
-
-    // Data States
-    const [allData, setAllData] = useState<any>({}); // Holds Footer Totals
-    const [summaryTotal, setSummaryTotal] = useState<number>(0); // Dynamic Grand Total for Card
+    const [allData, setAllData] = useState<any>({});
+    const [summaryTotal, setSummaryTotal] = useState<number>(0);
     const [todaysDate, setTodaysDate] = useState("");
-
-    // Bulk Upload States
     const [bulkLocation, setBulkLocation] = useState<string | null>(null);
     const [bulkDialog, setBulkDialog] = useState(false);
     const [file, setFile] = useState<any>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
     const [formDate, setFormDate] = useState<string>("");
-
-    // Delete States
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [deleteDate, setDeleteDate] = useState("");
     const [loading2, setLoading2] = useState(false);
-
     const { pathname } = useLocation();
     const showAll = pathname.startsWith("/edms");
     const { permissions } = useAuth();
@@ -90,9 +77,8 @@ export default function VehicleDetectTollTable() {
     const tollPermission = tollManagerPermission?.children?.find((child) => child.name === "toll-daily-report");
     const hasEditAccess = tollPermission?.edit_authority === true && showAll;
 
-    // Dropdown Options
     const locationOptions = [
-        { label: "All Locations", value: "All" },
+        { label: "All", value: "All" },
         { label: "Mawa", value: "Mawa" },
         { label: "Jinjira", value: "Jinjira" },
     ];
@@ -108,7 +94,6 @@ export default function VehicleDetectTollTable() {
         </div>
     );
 
-    // --- Helpers ---
     function formatDate(dateTime?: any) {
         if (!dateTime) return '';
         const date = new Date(dateTime);
@@ -118,59 +103,139 @@ export default function VehicleDetectTollTable() {
         return `${day}-${month}-${year}`;
     }
 
-    // --- API Calls ---
+  useEffect(() => {
+    // Fetch today's data on initial load
+    fetchTodaysData();
+  }, []);
 
-    const handleSearch = async () => {
-        setLoading(true);
-        try {
-            const payload = {
-                date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
-                lane: selectedLocation || "",
-                dataType: selectedTraffic || "", // "Toll", "Traffic", or "" (All)
-            };
+  const fetchTodaysData = async () => {
+    setLoading(true);
+    try {
+      // Get today's date
+      const today = new Date();
+      const todayFormatted = formatDate(today);
 
-            const result = await searchKecManual(payload);
+      const payload = {
+        date_range: `${todayFormatted} to ${todayFormatted}`,
+        lane: selectedLocation || "",
+        dataType: selectedTraffic || "",
+      };
 
-            // 1. Table Data (Rows)
-            setProducts(result?.laneData || []);
+      const result = await searchKecManual(payload);
 
-            // 2. Footer Data (Column Totals)
-            const overallTotals = result?.overallTotals || {};
-            setAllData(overallTotals);
+      // 1. Table Data
+      setProducts(result?.laneData || []);
 
-            // 3. Summary Card Data
-            // 'totalAmount' from backend holds the dynamic sum of whatever is shown in the grid
-            setSummaryTotal(overallTotals.totalAmount || 0);
-            
-            setTodaysDate(result?.date || "");
+      // 2. Footer Data
+      const overallTotals = result?.overallTotals || {};
+      setAllData(overallTotals);
 
-        } catch (error) {
-            console.error("Search failed:", error);
-        } finally {
-            setLoading(false);
+      if (selectedTraffic === "Toll") {
+        setSummaryTotal(overallTotals.totalOverallAmount || 0);
+        setFooterTotal(overallTotals.totalOverallAmount || 0);
+      } else {
+        setSummaryTotal(overallTotals.totalOverallVehicles || 0);
+        setFooterTotal(overallTotals.totalOverallVehicles || 0);
+      }
+
+      setTodaysDate(result?.date || "");
+
+      // Set initial dates to today
+      setDate(today);
+      setDate2(today);
+
+    } catch (error) {
+      console.error("Initial fetch failed:", error);
+      toast.error("Failed to fetch today's data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+        const payload = {
+            date_range:
+                date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+            lane: selectedLocation || "",
+            dataType: selectedTraffic || "",
+        };
+
+        const result = await searchKecManual(payload);
+
+        // Table rows
+        setProducts(result?.laneData || []);
+
+        // Footer
+        const overallTotals = result?.overallTotals || {};
+        setAllData(overallTotals);
+
+        // Dynamic total (Traffic → vehicles, Toll → money)
+        if (selectedTraffic === "Toll") {
+            setSummaryTotal(overallTotals.totalOverallSum || 0);
+            setFooterTotal(overallTotals.totalOverallSum || 0);
+        } else {
+            setSummaryTotal(overallTotals.totalOverallVehicles || 0);
+            setFooterTotal(overallTotals.totalOverallVehicles || 0);
         }
+
+        // Shown at top
+        setTodaysDate(result?.date || "");
+    } catch (error) {
+        console.error("Search failed:", error);
+    } finally {
+        setLoading(false);
+    }
+};
+
+const handleReset = async () => {
+    const today = new Date();
+
+    // Reset filters
+    setDate(today);
+    setDate2(today);
+    setSelectedTraffic(null);
+    setSelectedLocation(null);
+
+    // Today's date range
+    const payload = {
+        date_range: `${formatDate(today)} to ${formatDate(today)}`,
+        lane: "",
+        dataType: "",
     };
 
-    const handleReset = async () => {
-        const payload = { date_range: "", lane: "", dataType: "" };
-        setDate("");
-        setDate2("");
-        setSelectedTraffic(null);
-        setSelectedLocation(null);
+    setLoading(true);
+    try {
+        const result = await searchKecManual(payload);
 
-        setLoading(true);
-        try {
-            const result = await searchKecManual(payload);
-            setProducts(result?.laneData || []);
-            setAllData(result?.overallTotals || {});
-            setSummaryTotal(result?.overallTotals?.totalAmount || 0);
-            setTodaysDate(result?.date || "");
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
+        // Table Data
+        setProducts(result?.laneData || []);
+
+        // Footer Data
+        const overallTotals = result?.overallTotals || {};
+        setAllData(overallTotals);
+
+        // SAME LOGIC AS handleSearch
+        if (selectedTraffic === "Toll") {
+            setSummaryTotal(overallTotals.totalOverallSum || 0);
+            setFooterTotal(overallTotals.totalOverallSum || 0);
+        } else {
+            // Default = Traffic
+            setSummaryTotal(overallTotals.totalOverallVehicles || 0);
+            setFooterTotal(overallTotals.totalOverallVehicles || 0);
         }
-    };
+
+        // Today's Date
+        setTodaysDate(result?.date || "");
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     const uploadFile = async () => {
         if (!file || !formDate || !bulkLocation || bulkLocation === "All") {
@@ -182,7 +247,6 @@ export default function VehicleDetectTollTable() {
         const formData = new FormData();
         formData.append("date", formatDate(formDate));
         formData.append("location", bulkLocation);
-        // No dataType needed here, backend splits it automatically
         formData.append("file", file);
 
         try {
@@ -194,7 +258,7 @@ export default function VehicleDetectTollTable() {
             toast.success("File uploaded successfully!");
             setFile(null);
             setUploadStatus("");
-            handleReset(); // Refresh data
+            handleReset(); 
             hideDialog2();
         } catch (error: any) {
             console.error("Upload error:", error);
@@ -222,7 +286,6 @@ export default function VehicleDetectTollTable() {
         }
     };
 
-    // --- Dialog Management ---
     const hideDialog2 = () => { setBulkDialog(false); setFile(null); setUploadStatus(""); setFormDate(""); setBulkLocation(null); };
     const hideDialog3 = () => { setDeleteDialog(false); setDeleteDate(""); };
     const openNew2 = () => setBulkDialog(true);
@@ -247,8 +310,6 @@ export default function VehicleDetectTollTable() {
         if (f && f.name.endsWith(".xlsx")) { setFile(f); setUploadStatus(""); }
         else { setFile(null); setUploadStatus("Please select a valid .xlsx file."); }
     };
-
-    // --- Templates ---
     const vehicleHeaderTemplate = (image: string, label: string) => (
         <div className="flex flex-col items-center">
             <img src={image} alt={label} className="mb-2" />
@@ -259,7 +320,7 @@ export default function VehicleDetectTollTable() {
     const headerGroup = (
         <ColumnGroup>
             <Row>
-                <Column header="Payment Method" headerClassName="min-w-[12rem]" rowSpan={2} frozen />
+                <Column header="Payment Method" headerClassName="min-w-[12rem]" rowSpan={2}  />
                 <Column header={vehicleHeaderTemplate(trailer5axle, "Trailer (>4 Axle)")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(trailer4axle, "Trailer (4 Axle)")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(trailer3axle, "Trailer (3 Axle)")} headerClassName="min-w-[10rem]" />
@@ -273,7 +334,7 @@ export default function VehicleDetectTollTable() {
                 <Column header={vehicleHeaderTemplate(pickUp, "Pickup")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(car, "Car/Jeep")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(bike, "Motorcycle")} headerClassName="min-w-[10rem]" />
-                <Column header="Total" headerClassName="min-w-[10rem]" rowSpan={2} frozen />
+                <Column header="Total" headerClassName="min-w-[10rem]" rowSpan={2}  />
             </Row>
         </ColumnGroup>
     );
@@ -295,8 +356,8 @@ export default function VehicleDetectTollTable() {
                 <Column footer={allData?.totalpickup ?? 0} />
                 <Column footer={allData?.totalcar ?? 0} />
                 <Column footer={allData?.totalbike ?? 0} />
-                {/* Dynamic Grand Total from Backend */}
-                <Column footer={allData?.totalAmount ?? 0} /> 
+              
+                <Column footer={footerTotal} />
             </Row>
         </ColumnGroup>
     );
@@ -304,7 +365,7 @@ export default function VehicleDetectTollTable() {
     const totalSummary = (
         <div className="font-bold flex justify-between items-center bg-gray-100 p-4 rounded mb-4">
             <div>
-                <span className="font-bold text-lg">Total: </span> {summaryTotal}
+                <span className="font-bold text-lg">Total: </span> {footerTotal}
             </div>
             <div>
                 <span className="font-bold text-lg">Data Showing For:</span> {todaysDate || new Date().toLocaleDateString()}
@@ -328,14 +389,38 @@ export default function VehicleDetectTollTable() {
     );
 
     const filterSearchForm = (
-        <div className="flex flex-wrap justify-center gap-2">
-            <div className="flex w-fit gap-2 border p-2 rounded-md bg-white ">
-                <Calendar value={date as any} onChange={(e) => setDate(e.value as any)} dateFormat="dd/mm/yy" placeholder="Start Date" showIcon />
-                <Calendar value={date2 as any} onChange={(e) => setDate2(e.value as any)} dateFormat="dd/mm/yy" placeholder="End Date" showIcon />
-                <Dropdown value={selectedLocation} onChange={(e) => setSelectedLocation(e.value)} options={locationOptions} placeholder="Location" className="w-40" />
-                <Dropdown value={selectedTraffic} onChange={(e) => setSelectedTraffic(e.value)} options={trafficOptions} placeholder="Type" className="w-40" />
+        <div className="flex flex-wrap justify-center">
+            <div className="flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white">
+                <Calendar
+                    value={date as any}
+                    onChange={(e) => setDate(e.value as any)}
+                    dateFormat="dd/mm/yy"
+                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                    placeholder="Start Date"
+                    showIcon
+                    icon={() => <i className='pi pi-angle-down' />} />
+                <Calendar
+                 value={date2 as any}
+                    onChange={(e) => setDate2(e.value as any)}
+                    dateFormat="dd/mm/yy"
+                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                    showIcon
+                    placeholder='End Date'
+                    icon={() => <i className='pi pi-angle-down' />} />
+                <Dropdown value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.value)}
+                    options={locationOptions}
+                    placeholder="Location"
+                     className="border-none ml-4 focus:ring-0"
+                    itemTemplate={itemTemplate} />
+                <Dropdown value={selectedTraffic}
+                    onChange={(e) => setSelectedTraffic(e.value)}
+                    options={trafficOptions}
+                    placeholder="Type"
+                    className="border-none ml-4 focus:ring-0"
+                    itemTemplate={itemTemplate} />
             </div>
-            <div className="flex items-center bg-white border p-2 ml-2">
+            <div className="flex items-center bg-white border p-2 ">
                 <button onClick={handleSearch} className='border bg-green-500 px-4 py-2.5 rounded-lg text-white hover:bg-green-600'>
                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' className='size-6'>
                         <path fillRule='evenodd' d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z' clipRule='evenodd' />
@@ -361,8 +446,10 @@ export default function VehicleDetectTollTable() {
 
     return (
         <div className="ml-4">
-            <Toolbar className="rounded-none border-none p-0 bg-background" left={leftToolbarTemplate} right={rightToolbarTemplate} />
-            
+            <Toolbar className="rounded-none border-none p-0 bg-background"
+             left={leftToolbarTemplate} 
+             right={rightToolbarTemplate} />
+
             {totalSummary}
 
             <div className="card">
@@ -382,7 +469,7 @@ export default function VehicleDetectTollTable() {
                     scrollable
                     scrollHeight="600px"
                 >
-                    <Column field="paymentMethod" frozen />
+                    <Column field="paymentMethod"  />
                     {/* Vehicle Columns */}
                     <Column field="trailer5xl" />
                     <Column field="trailer4xl" />
@@ -397,16 +484,16 @@ export default function VehicleDetectTollTable() {
                     <Column field="pickup" />
                     <Column field="car" />
                     <Column field="bike" />
-                    <Column field="total" frozen />
+                    <Column field="total" />
                 </DataTable>
             </div>
 
             {/* Upload Dialog */}
             <Dialog visible={bulkDialog} style={{ width: "42rem" }} header="Upload Bulk Data" modal footer={productDialogFooter2} onHide={hideDialog2}>
                 <div className="grid grid-cols-2 gap-6">
-                     <div><label className="font-bold">Date</label><Calendar value={formDate as any} onChange={(e) => setFormDate(e.value as any)} dateFormat="dd/mm/yy" className="w-full" /></div>
-                     <div><label className="font-bold">Location</label><Dropdown value={bulkLocation} onChange={(e) => setBulkLocation(e.value)} options={locationOptions.filter(x=>x.value!=='All')} className="w-full" /></div>
-                     <div className="col-span-2"><input type="file" accept=".xlsx" onChange={handleFileChange} className="mt-3 w-full border p-2" />{uploadStatus && <p className={uploadStatus.includes("success")?"text-green-500":"text-red-500"}>{uploadStatus}</p>}</div>
+                    <div><label className="font-bold">Date</label><Calendar value={formDate as any} onChange={(e) => setFormDate(e.value as any)} dateFormat="dd/mm/yy" className="w-full" /></div>
+                    <div><label className="font-bold">Location</label><Dropdown value={bulkLocation} onChange={(e) => setBulkLocation(e.value)} options={locationOptions.filter(x => x.value !== 'All')} className="w-full" /></div>
+                    <div className="col-span-2"><input type="file" accept=".xlsx" onChange={handleFileChange} className="mt-3 w-full border p-2" />{uploadStatus && <p className={uploadStatus.includes("success") ? "text-green-500" : "text-red-500"}>{uploadStatus}</p>}</div>
                 </div>
             </Dialog>
 

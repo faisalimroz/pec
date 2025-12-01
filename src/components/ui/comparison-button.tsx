@@ -3,7 +3,6 @@ import React from "react";
 type TollButtonIconsProps = {
     selectedProducts?: any[];
     openNew: () => void;
-    exportCSV: () => void;
     exportPDF: () => void;
     handlePrint: () => void;
     isGraphVisible: boolean;
@@ -12,7 +11,6 @@ type TollButtonIconsProps = {
 const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
     selectedProducts,
     openNew,
-    exportCSV,
     exportPDF,
     handlePrint,
     isGraphVisible
@@ -61,7 +59,7 @@ const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
                 Export PDF 
             </button>
 
-            <button
+            {/* <button
                 className={`flex items-center gap-2 text-[#0B1F8F] bg-white border border-[#E5E7EB] px-2 py-2 rounded-md font-semibold        
                     }`}
                 onClick={exportCSV}
@@ -69,7 +67,7 @@ const TollButtonIcons: React.FC<TollButtonIconsProps> = ({
             >
                 <Export />
                 Export Excel 
-            </button>
+            </button> */}
 
             <button
                 className="flex items-center gap-2  border border-[#E5E7EB] bg-white text-[#0B1F8F] px-2 py-2 rounded-md font-semibold"

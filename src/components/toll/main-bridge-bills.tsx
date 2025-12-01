@@ -40,6 +40,7 @@ interface Product {
     location: string
     date: string
     remarks: string
+    approved: boolean;
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -58,12 +59,13 @@ export default function MonthlyReport() {
         date: '',
         remarks: '',
         attachments: [],
+        approved: false,
     }
 
     const { roles, permissions } = useAuth()
-       const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
- const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
+    const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
     const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-monthly-roster');
     const hasEditAccess = tollPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
@@ -205,6 +207,7 @@ export default function MonthlyReport() {
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -631,7 +634,7 @@ export default function MonthlyReport() {
         }
         console.log(payload, 'hello')
         searchMainBridgeBills(payload).then((result) => {
-           const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -653,7 +656,7 @@ export default function MonthlyReport() {
         setSelectedLocation(null)
 
         searchMainBridgeBills(payload).then((result) => {
-            const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -670,7 +673,7 @@ export default function MonthlyReport() {
         }
 
         searchMainBridgeBills(payload).then((result) => {
-           const rows = Array.isArray(result?.EmployeePersonals) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -1135,6 +1138,26 @@ export default function MonthlyReport() {
                                 ))}
                             </div>
                         </div>
+                    
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+                                    // Make sure 'approved' exists in your updatedProduct state object
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
+                        </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
@@ -1371,7 +1394,7 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                     <div className="col-span-2 mt-2">
+                    <div className="col-span-2 mt-2">
                         <label className="font-bold mb-2 block">Approval</label>
                         <div className="flex items-center gap-3">
                             <Checkbox
