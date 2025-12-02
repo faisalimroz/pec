@@ -535,7 +535,7 @@ export const tollLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Shift Wise Toll & Traffic',
+        title: 'Shift Wise Toll & Traffic Comparison',
         label: '',
         href: '/edms/toll/shift/shift-wise-toll-traffic-comparison',
         icon: '',
