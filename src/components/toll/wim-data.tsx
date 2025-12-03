@@ -126,31 +126,7 @@ export default function AssetManagementTable() {
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
-    // Fetch data based on active tab
-    // const refetch = async () => {
-    //     setLoading(true);
-    //     if (activeTab === 'all') {
-    //         const payload = {
-    //             location: '',
-    //             shiftName:'',
-    //             date_range: '',
-    //             searchQuery: '',
-    //         };
-    //         try {
-    //             const result = await searchAllWimData(payload);
-    //             setProducts(result?.Assets || []);
-    //         } catch (error) {
-    //             console.error("Error fetching data:", error);
-    //             setProducts([]);
-    //         }
-    //     } else if (activeTab === 'wim') {
-    //         // For WIM Data - set empty for now
-    //         setProducts([]);
-    //     }
-    //     setLoading(false);
-    // };
 
-    // Initial data load
     useEffect(() => {
         refetch();
     }, [activeTab]);

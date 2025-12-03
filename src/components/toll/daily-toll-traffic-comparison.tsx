@@ -11,17 +11,17 @@ import html2canvas from 'html2canvas';
 import axios from 'axios';
 import { toast } from 'sonner';
 import "../../styles/table-style.css";
-// --- UPDATED INTERFACES BASED ON YOUR DATA ---
+import RefreshButton from '@/components/refresh-button'
 
 interface PeriodData {
-  totalRevenue: number;  // Changed from amount
-  totalVehicles: number; // Changed from vehicles
-  // paymentMap and vehicleMap are in your log but seemingly unused for the table rows
+  totalRevenue: number;  
+  totalVehicles: number; 
+  
 }
 
 interface PaymentComparisonItem {
   key: string;
-  label?: string; // Optional as it might not be in the raw data
+  label?: string; 
   p1: PeriodData;
   p2: PeriodData;
   changes: {
@@ -97,7 +97,7 @@ const itemTemplate = (option: { name: string; code: string }) => (
 );
 
 const fmtNum = (n: number) => n?.toLocaleString() || '0';
-const fmtTk = (n: number) => `৳ ${n?.toLocaleString() || '0'}`;
+const fmtTk = (n: number) => `${n?.toLocaleString() || '0'}`;
 const fmtPct = (n: number) => `${n?.toFixed(2)}%`;
 
 const formatDateForApi = (d?: Date | null): string | null => {
@@ -114,7 +114,7 @@ const getMethodAmount = (
   result: any
 ) => {
   if (isTotalRow) {
-    // For TOTAL row we return overall period total
+
     if (period === "p1") return result?.period1?.totalAmount || 0;
     return result?.period2?.totalAmount || 0;
   }
@@ -204,7 +204,7 @@ export default function PeriodFiltersSection() {
     const imgHeight = (canvas.height * pageWidth) / canvas.width;
     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    // Simple check to add new page if image is too long (basic implementation)
+
     if (imgHeight > pdfHeight) {
       pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pdfHeight);
       pdf.addPage();
@@ -246,14 +246,13 @@ export default function PeriodFiltersSection() {
 
   const diffs = getDiffs();
 
-  // --- Table Data Preparation ---
+
   const paymentTableData = result ? Object.values(result.paymentComparison) : [];
 
-  // Create Total Row
-  // Note: We use the period totals from result.period1/2 because row summations might differ slightly if data is missing
+  
   const totalRow = result
     ? {
-      key: "TOTAL", // Key for rendering
+      key: "TOTAL", 
       label: "TOTAL",
       p1: { totalRevenue: result.period1.totalAmount, totalVehicles: result.period1.totalVehicles },
       p2: { totalRevenue: result.period2.totalAmount, totalVehicles: result.period2.totalVehicles },
@@ -269,7 +268,7 @@ export default function PeriodFiltersSection() {
   const finalPaymentData = result && totalRow ? [...paymentTableData, totalRow] : paymentTableData;
   const vehicleTableData = result?.vehicleComparison ? Object.values(result.vehicleComparison) : [];
 
-  // Helper to calculate share percentage dynamically if it's not in the row data
+ 
   const calculateShare = (amount: number, total: number) => {
     if (!total || total === 0) return 0;
     return (amount / total) * 100;
@@ -280,67 +279,103 @@ export default function PeriodFiltersSection() {
 
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-[#0A2472]">Toll Comparison</h3>
-        <button onClick={handleReset} className="px-3 py-2 text-sm font-semibold bg-gray-100 rounded hover:bg-gray-200 transition">Reset Filters</button>
+        <RefreshButton handleReset={handleReset} />
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <h4 className="text-sm font-bold text-gray-600 mb-2">Period 1 (Baseline)</h4>
+          <h4 className="text-sm font-bold text-gray-600 mb-2">Period 1</h4>
           <div className="flex gap-2">
-            <Calendar value={p1.start} onChange={(e) => setP1({ ...p1, start: e.value as Date })} placeholder="Start" showIcon className="w-full" dateFormat="dd/mm/yy" />
-            <Calendar value={p1.end} onChange={(e) => setP1({ ...p1, end: e.value as Date })} placeholder="End" showIcon className="w-full" dateFormat="dd/mm/yy" />
+            <Calendar
+              value={p1.start}
+              onChange={(e) => setP1({ ...p1, start: e.value as Date })}
+              placeholder="Start"
+              showIcon
+              className="p-inputtext-sm border rounded-md shadow-sm h-10"
+              inputClassName="border-none rounded-none bg-transparent text-sm"
+              icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy" />
+            <Calendar value={p1.end} onChange={(e) => setP1({ ...p1, end: e.value as Date })}
+              placeholder="End"
+              showIcon
+
+              className="p-inputtext-sm border rounded-md shadow-sm h-10"
+              inputClassName="border-none rounded-none bg-transparent text-sm"
+              icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy" />
           </div>
         </div>
         <div>
-          <h4 className="text-sm font-bold text-gray-600 mb-2">Period 2 (Comparison)</h4>
+          <h4 className="text-sm font-bold text-gray-600 mb-2">Period 2 </h4>
           <div className="flex gap-2">
-            <Calendar value={p2.start} onChange={(e) => setP2({ ...p2, start: e.value as Date })} placeholder="Start" showIcon className="w-full" dateFormat="dd/mm/yy" />
-            <Calendar value={p2.end} onChange={(e) => setP2({ ...p2, end: e.value as Date })} placeholder="End" showIcon className="w-full" dateFormat="dd/mm/yy" />
+            <Calendar value={p2.start} onChange={(e) => setP2({ ...p2, start: e.value as Date })}
+              placeholder="Start"
+              showIcon
+              className="p-inputtext-sm border rounded-md shadow-sm h-10"
+              inputClassName="border-none rounded-none bg-transparent text-sm"
+              icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy" />
+            <Calendar value={p2.end} onChange={(e) => setP2({ ...p2, end: e.value as Date })}
+              placeholder="End"
+              showIcon
+              className="p-inputtext-sm border rounded-md shadow-sm h-10"
+              inputClassName="border-none rounded-none bg-transparent text-sm"
+              icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy" />
           </div>
         </div>
       </div>
 
       <div className="flex justify-center items-center gap-4 pt-2">
-        <Dropdown value={location} onChange={(e) => setLocation(e.value)} options={locationType} optionLabel="name" optionValue="value" placeholder="Location" className="w-48" itemTemplate={itemTemplate} />
-        <button onClick={onCompare} disabled={loading} className="px-6 py-3 bg-[#0B1F8F] text-white rounded-lg font-bold hover:bg-blue-900 transition disabled:opacity-50">
+        <Dropdown value={location} onChange={(e) => setLocation(e.value)}
+          options={locationType}
+          optionLabel="name"
+          optionValue="value"
+          placeholder="Location"
+          className="w-48"
+          itemTemplate={itemTemplate} />
+
+      </div>
+      <div className="flex justify-center">
+        <button onClick={onCompare} disabled={loading} className="px-6 py-3 bg-[#0B1F8F]   text-white rounded-lg font-bold hover:bg-blue-900 transition disabled:opacity-50">
           {loading ? 'Comparing...' : 'Compare Data'}
         </button>
       </div>
-
       {result && result.period1 && (
         <div ref={resultsRef} className="space-y-8 mt-8 animate-fade-in">
 
           <div className="flex justify-between items-center border-b pb-4">
             <h3 className="text-xl font-bold text-gray-800">Comparison Report</h3>
-            <TollButtonIcons isGraphVisible={showGraph} openNew={toggleGraph} exportPDF={exportPDF} handlePrint={handlePrint} />
+            <TollButtonIcons isGraphVisible={showGraph}
+            openNew={toggleGraph}
+            exportPDF={exportPDF}
+            handlePrint={handlePrint} />
           </div>
 
-          {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Revenue */}
-            <div className="p-5 border border-blue-100 bg-blue-50 rounded-xl shadow-sm">
-              <h4 className="text-blue-900 font-semibold mb-2">Total Revenue</h4>
+            <div className="p-5 border border-blue-100 bg-white rounded-xl shadow-sm">
+              <h4 className="text-blue-900 font-semibold mb-2">Total Toll</h4>
               <div className="flex justify-between items-end">
                 <div><p className="text-sm text-gray-500">Period 1</p><p className="text-xl font-bold text-gray-800">{fmtTk(result.period1.totalAmount)}</p></div>
                 <div className="text-right"><p className="text-sm text-gray-500">Period 2</p><p className="text-xl font-bold text-blue-700">{fmtTk(result.period2.totalAmount)}</p></div>
               </div>
-              <div className="mt-3 pt-3 border-t border-blue-200 flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-600">Diff:</span>
+              <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-600">Difference:</span>
                 <span className={`font-bold ${diffs.amountDiff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {diffs.amountDiff >= 0 ? '+' : ''}{fmtTk(diffs.amountDiff)} <span className="text-xs ml-1">({diffs.amountPct}%)</span>
                 </span>
               </div>
             </div>
 
-            {/* Traffic */}
-            <div className="p-5 border border-purple-100 bg-purple-50 rounded-xl shadow-sm">
-              <h4 className="text-purple-900 font-semibold mb-2">Total Traffic</h4>
+         
+            <div className="p-5 border border-gray-200 bg-white rounded-xl shadow-sm">
+              <h4 className="text-blue-900 font-semibold mb-2">Total Traffic</h4>
               <div className="flex justify-between items-end">
                 <div><p className="text-sm text-gray-500">Period 1</p><p className="text-xl font-bold text-gray-800">{fmtNum(result.period1.totalVehicles)}</p></div>
-                <div className="text-right"><p className="text-sm text-gray-500">Period 2</p><p className="text-xl font-bold text-purple-700">{fmtNum(result.period2.totalVehicles)}</p></div>
+                <div className="text-right"><p className="text-sm text-gray-500">Period 2</p><p className="text-xl font-bold text-blue-700">{fmtNum(result.period2.totalVehicles)}</p></div>
               </div>
               <div className="mt-3 pt-3 border-t border-purple-200 flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-600">Diff:</span>
+                <span className="text-sm font-medium text-gray-600">Difference:</span>
                 <span className={`font-bold ${diffs.vehicleDiff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {diffs.vehicleDiff >= 0 ? '+' : ''}{fmtNum(diffs.vehicleDiff)} <span className="text-xs ml-1">({diffs.vehiclePct}%)</span>
                 </span>
@@ -348,7 +383,7 @@ export default function PeriodFiltersSection() {
             </div>
           </div>
 
-          {/* Chart */}
+      
           {showGraph && result.chartData && (
             <div className="p-4 border rounded-lg">
               <h4 className="font-bold text-gray-700 mb-4">Vehicle Count Trend</h4>
@@ -364,13 +399,13 @@ export default function PeriodFiltersSection() {
             </div>
           )}
 
-          {/* Payment Table */}
+        
           <div className="border rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-50 px-4 py-3 border-b"><h4 className="font-bold text-gray-700">Payment Method Analysis (Revenue)</h4></div>
             <DataTable
               value={finalPaymentData}
               rowClassName={(data) =>
-                (data as any)._isTotal ? "bg-gray-100 font-bold border-t-2" : ""
+                (data as any)._isTotal ? "bg-blue-100 font-bold border-t-2" : ""
               }
               showGridlines
               stripedRows
@@ -385,10 +420,10 @@ export default function PeriodFiltersSection() {
                       ? r.label
                       : PAYMENT_METHODS[r.key] || r.key
                 }
-                headerClassName="bg-gray-100"
+                headerClassName="bg-red-200"
               />
 
-              {/* P1 Revenue */}
+             
               <Column
                 header="P1 Revenue"
                 body={(r: any) => {
@@ -396,10 +431,10 @@ export default function PeriodFiltersSection() {
                   const amount = getMethodAmount(r, "p1", isTotal, result);
                   return fmtTk(amount);
                 }}
-                headerClassName="bg-blue-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* P1 Share */}
+            
               <Column
                 header="P1 Share"
                 body={(r: any) => {
@@ -408,10 +443,10 @@ export default function PeriodFiltersSection() {
                   const pct = getMethodShare(r, "p1", false, result);
                   return fmtPct(pct);
                 }}
-                headerClassName="bg-blue-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* P2 Revenue */}
+              
               <Column
                 header="P2 Revenue"
                 body={(r: any) => {
@@ -419,10 +454,10 @@ export default function PeriodFiltersSection() {
                   const amount = getMethodAmount(r, "p2", isTotal, result);
                   return fmtTk(amount);
                 }}
-                headerClassName="bg-green-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* P2 Share */}
+           
               <Column
                 header="P2 Share"
                 body={(r: any) => {
@@ -431,19 +466,19 @@ export default function PeriodFiltersSection() {
                   const pct = getMethodShare(r, "p2", false, result);
                   return fmtPct(pct);
                 }}
-                headerClassName="bg-green-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* Share Change (P2 share – P1 share, in percentage points) */}
+           
               <Column
                 header="Share Change"
-                headerClassName="bg-gray-100"
+                headerClassName="bg-red-200"
                 body={(r: any) => {
                   if (r?._isTotal) return "-";
 
                   const p1Share = getMethodShare(r, "p1", false, result);
                   const p2Share = getMethodShare(r, "p2", false, result);
-                  const val = p2Share - p1Share; // percentage points
+                  const val = p2Share - p1Share; 
                   const displayVal = val.toFixed(2);
 
                   const color =
@@ -461,19 +496,19 @@ export default function PeriodFiltersSection() {
 
           </div>
 
-          {/* Vehicle Table */}
+
           <div className="border rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-50 px-4 py-3 border-b"><h4 className="font-bold text-gray-700">Vehicle Class Comparison (Traffic)</h4></div>
             <DataTable value={vehicleTableData} showGridlines stripedRows>
-              <Column header="Vehicle Type" body={(r: any) => VEHICLE_LABELS[r.key] || r.key} headerClassName="bg-gray-100" />
-              <Column field="p1" header="P1 Count" body={(r: any) => fmtNum(r.p1)} headerClassName="bg-blue-50" />
-              <Column field="p2" header="P2 Count" body={(r: any) => fmtNum(r.p2)} headerClassName="bg-green-50" />
+              <Column header="Vehicle Type" body={(r: any) => VEHICLE_LABELS[r.key] || r.key} headerClassName="bg-red-200" />
+              <Column field="p1" header="P1 Count" body={(r: any) => fmtNum(r.p1)} headerClassName="bg-red-200" />
+              <Column field="p2" header="P2 Count" body={(r: any) => fmtNum(r.p2)} headerClassName="bg-red-200" />
               <Column header="Diff" body={(r: any) => (
                 <span className={r.diff > 0 ? 'text-green-600' : r.diff < 0 ? 'text-red-600' : ''}>
                   {r.diff > 0 ? '+' : ''}{fmtNum(r.diff)}
                 </span>
-              )} headerClassName="bg-gray-100" />
-              <Column header="% Change" headerClassName="bg-gray-100" body={(r: any) => {
+              )} headerClassName="bg-red-200" />
+              <Column header="% Change" headerClassName="bg-red-200" body={(r: any) => {
                 const val = r.pctChange;
                 const color = val > 0 ? 'text-green-600' : val < 0 ? 'text-red-600' : 'text-gray-400';
                 return <span className={`font-bold ${color}`}>{val > 0 ? '+' : ''}{val}%</span>;

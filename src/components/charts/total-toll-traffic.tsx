@@ -28,14 +28,23 @@ const StatCard = ({
   <Card
     className={`${bgColor} rounded-[8px] overflow-hidden text-white h-[150px]`}
   >
-    <div className='p-6'>
-      <div className='flex items-start gap-3 mb-4'>
-        <div className='bg-white/20 p-2.5 rounded-full'>
-          <Icon className='w-6 h-6' />
+    <div className='p-2'>
+      <div className='  mb-4'>
+        <div className='flex flex items-start gap-5'>
+          <div className='bg-white/20 p-2.5 rounded-full'>
+            <Icon className='w-6 h-6' />
+          </div>
+          <div className='space-y-6'>
+            <span className='text-2xl font-semibold '>{label}</span>
+
+          </div>
         </div>
-        <div className='space-y-6'>
-          <span className='text-2xl font-semibold '>{label}</span>
-          <p className='text-3xl font-bold tabular-nums pl-2'>
+
+
+
+
+        <div>
+          <p className='text-3xl font-bold tabular-nums p-2'>
             {typeof value === 'number' ? value.toLocaleString('en-IN') : value}
           </p>
         </div>
@@ -72,7 +81,7 @@ export function TotalTollTraffic() {
         }
       )
       setData(response.data)
-      console.log(response.data,'dfd')
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching data:', error)
     } finally {
@@ -111,13 +120,13 @@ export function TotalTollTraffic() {
           {data?.date ? data?.date : new Date().toISOString().split("T")[0]}
         </h2>
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4 '>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-3 p-4 '>
         <StatCard
           icon={TrafficIcon}
           label='TRAFFIC'
           value={data?.totalPass ?? 0}
           bgColor='bg-[#059669]'
-          
+
         />
         <StatCard
           icon={TakaIcon}
@@ -134,8 +143,8 @@ const TrafficIcon = () => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      width='34'
-      height='34'
+      width='20'
+      height='20'
       viewBox='0 0 34 34'
       fill='none'
     >
@@ -162,8 +171,8 @@ const TrafficIcon = () => {
 const TakaIcon = () => {
   return (
     <svg
-      width='36'
-      height='36'
+      width='20'
+      height='20'
       viewBox='0 0 36 36'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'

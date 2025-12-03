@@ -11,8 +11,8 @@ import html2canvas from 'html2canvas';
 import axios from 'axios';
 import { toast } from 'sonner';
 import "../../styles/table-style.css";
+import RefreshButton from '@/components/refresh-button'
 
-// ---------- TYPES MATCHING YOUR SHIFT RESPONSE ----------
 
 interface PaymentPeriodData {
   key: string;
@@ -60,8 +60,6 @@ interface ComparisonResult {
   };
 }
 
-// ---------- CONSTANTS ----------
-
 const locationType = [
   { name: 'All', value: 'All' },
   { name: 'Mawa', value: 'Mawa' },
@@ -87,7 +85,7 @@ const itemTemplate = (option: { name: string; code: string }) => (
 );
 
 const fmtNum = (n: number) => (n ?? 0).toLocaleString();
-const fmtTk = (n: number) => `৳ ${(n ?? 0).toLocaleString()}`;
+const fmtTk = (n: number) => `${(n ?? 0).toLocaleString()}`;
 const fmtPct = (n: number) => `${(n ?? 0).toFixed(2)}%`;
 
 const formatDateForApi = (d?: Date | null): string | null => {
@@ -98,13 +96,7 @@ const formatDateForApi = (d?: Date | null): string | null => {
   return `${day}-${month}-${year}`;
 };
 
-// ---------- HELPERS FOR TABLE VALUES ----------
 
-/**
- * Get revenue amount for a payment method in a given period.
- * - For normal rows: row.p1.amount / row.p2.amount
- * - For TOTAL row: period1.totalAmount / period2.totalAmount
- */
 const getMethodAmount = (
   row: any,
   period: "p1" | "p2",
@@ -275,7 +267,7 @@ export default function PeriodFiltersSection() {
 
   const diffs = getDiffs();
 
-  // ---------- TABLE DATA PREP ----------
+
 
   const paymentTableData = result
     ? Object.values(result.paymentComparison)
@@ -326,7 +318,7 @@ export default function PeriodFiltersSection() {
   const finalPaymentData =
     result && totalRow ? [...paymentTableData, totalRow] : paymentTableData;
 
-  // second table uses shiftComparison from the response
+
   const shiftTableData = result?.shiftComparison
     ? Object.values(result.shiftComparison)
     : [];
@@ -337,19 +329,14 @@ export default function PeriodFiltersSection() {
         <h3 className="text-lg font-semibold text-[#0A2472]">
           Toll Comparison (Shift-wise)
         </h3>
-        <button
-          onClick={handleReset}
-          className="px-3 py-2 text-sm font-semibold bg-gray-100 rounded hover:bg-gray-200 transition"
-        >
-          Reset Filters
-        </button>
+         <RefreshButton handleReset={handleReset} />
       </div>
 
-      {/* Period pickers */}
+     
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <h4 className="text-sm font-bold text-gray-600 mb-2">
-            Period 1 (Baseline)
+            Period 1 
           </h4>
           <div className="flex gap-2">
             <Calendar
@@ -358,8 +345,10 @@ export default function PeriodFiltersSection() {
                 setP1({ ...p1, start: e.value as Date })
               }
               placeholder="Start"
-              showIcon
-              className="w-full"
+            showIcon
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
               dateFormat="dd/mm/yy"
             />
             <Calendar
@@ -368,15 +357,17 @@ export default function PeriodFiltersSection() {
                 setP1({ ...p1, end: e.value as Date })
               }
               placeholder="End"
-              showIcon
-              className="w-full"
+            showIcon
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
               dateFormat="dd/mm/yy"
             />
           </div>
         </div>
         <div>
           <h4 className="text-sm font-bold text-gray-600 mb-2">
-            Period 2 (Comparison)
+            Period 2 
           </h4>
           <div className="flex gap-2">
             <Calendar
@@ -385,8 +376,10 @@ export default function PeriodFiltersSection() {
                 setP2({ ...p2, start: e.value as Date })
               }
               placeholder="Start"
-              showIcon
-              className="w-full"
+          showIcon
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
               dateFormat="dd/mm/yy"
             />
             <Calendar
@@ -396,14 +389,16 @@ export default function PeriodFiltersSection() {
               }
               placeholder="End"
               showIcon
-              className="w-full"
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
               dateFormat="dd/mm/yy"
             />
           </div>
         </div>
       </div>
 
-      {/* Filters */}
+      
       <div className="flex justify-center items-center gap-4 pt-2">
         <Dropdown
           value={location}
@@ -415,15 +410,18 @@ export default function PeriodFiltersSection() {
           className="w-48"
           itemTemplate={itemTemplate}
         />
-        <button
+       
+      </div>
+<div className="flex justify-center items-center gap-4 pt-2">
+       <button
           onClick={onCompare}
           disabled={loading}
           className="px-6 py-3 bg-[#0B1F8F] text-white rounded-lg font-bold hover:bg-blue-900 transition disabled:opacity-50"
         >
           {loading ? 'Comparing...' : 'Compare Data'}
         </button>
+       
       </div>
-
       {result && result.period1 && (
         <div
           ref={resultsRef}
@@ -441,12 +439,12 @@ export default function PeriodFiltersSection() {
             />
           </div>
 
-          {/* Summary Cards */}
+      
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Revenue */}
-            <div className="p-5 border border-blue-100 bg-blue-50 rounded-xl shadow-sm">
+           
+            <div className="p-5 border border-gray-100 bg-white rounded-xl shadow-sm">
               <h4 className="text-blue-900 font-semibold mb-2">
-                Total Revenue
+                Total Toll
               </h4>
               <div className="flex justify-between items-end">
                 <div>
@@ -464,7 +462,7 @@ export default function PeriodFiltersSection() {
               </div>
               <div className="mt-3 pt-3 border-t border-blue-200 flex justify-between items-center">
                 <span className="text-sm font-medium text-gray-600">
-                  Diff:
+                  Difference:
                 </span>
                 <span
                   className={`font-bold ${
@@ -482,9 +480,9 @@ export default function PeriodFiltersSection() {
               </div>
             </div>
 
-            {/* Traffic */}
-            <div className="p-5 border border-purple-100 bg-purple-50 rounded-xl shadow-sm">
-              <h4 className="text-purple-900 font-semibold mb-2">
+            
+            <div className="p-5 border border-gray-100 bg-white rounded-xl shadow-sm">
+              <h4 className="text-blue-900 font-semibold mb-2">
                 Total Traffic
               </h4>
               <div className="flex justify-between items-end">
@@ -503,7 +501,7 @@ export default function PeriodFiltersSection() {
               </div>
               <div className="mt-3 pt-3 border-t border-purple-200 flex justify-between items-center">
                 <span className="text-sm font-medium text-gray-600">
-                  Diff:
+                  Difference:
                 </span>
                 <span
                   className={`font-bold ${
@@ -522,7 +520,7 @@ export default function PeriodFiltersSection() {
             </div>
           </div>
 
-          {/* Chart (Shift-wise) */}
+    
           {showGraph && result.chartData && (
             <div className="p-4 border rounded-lg">
               <h4 className="font-bold text-gray-700 mb-4">
@@ -532,7 +530,7 @@ export default function PeriodFiltersSection() {
                 <Chart
                   type="bar"
                   data={{
-                    labels: result.chartData.labels, // "1ST Shift", "2ND Shift", ...
+                    labels: result.chartData.labels, 
                     datasets: [
                       {
                         label: 'Period 1',
@@ -555,11 +553,11 @@ export default function PeriodFiltersSection() {
             </div>
           )}
 
-          {/* Payment Method Table */}
+       
           <div className="border rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-50 px-4 py-3 border-b">
               <h4 className="font-bold text-gray-700">
-                Payment Method Analysis (Revenue)
+                Payment Method Analysis
               </h4>
             </div>
             <DataTable
@@ -582,11 +580,10 @@ export default function PeriodFiltersSection() {
                     ? r.label
                     : PAYMENT_METHODS[r.key] || r.key
                 }
-                headerClassName="bg-gray-100"
+                headerClassName="bg-red-200  "
               />
 
-              {/* P1 Revenue */}
-              <Column
+               <Column
                 header="P1 Revenue"
                 body={(r: any) => {
                   const isTotal = !!r._isTotal;
@@ -598,10 +595,10 @@ export default function PeriodFiltersSection() {
                   );
                   return fmtTk(amount);
                 }}
-                headerClassName="bg-blue-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* P1 Share */}
+      
               <Column
                 header="P1 Share"
                 body={(r: any) => {
@@ -615,10 +612,10 @@ export default function PeriodFiltersSection() {
                   );
                   return fmtPct(pct);
                 }}
-                headerClassName="bg-blue-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* P2 Revenue */}
+         
               <Column
                 header="P2 Revenue"
                 body={(r: any) => {
@@ -631,10 +628,10 @@ export default function PeriodFiltersSection() {
                   );
                   return fmtTk(amount);
                 }}
-                headerClassName="bg-green-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* P2 Share */}
+     
               <Column
                 header="P2 Share"
                 body={(r: any) => {
@@ -648,13 +645,13 @@ export default function PeriodFiltersSection() {
                   );
                   return fmtPct(pct);
                 }}
-                headerClassName="bg-green-50"
+                headerClassName="bg-red-200"
               />
 
-              {/* Share Change (P2 share – P1 share) */}
+         
               <Column
                 header="Share Change"
-                headerClassName="bg-gray-100"
+                headerClassName="bg-red-200"
                 body={(r: any) => {
                   if (r?._isTotal) return '-';
 
@@ -701,19 +698,19 @@ export default function PeriodFiltersSection() {
               <Column
                 header="Shift"
                 body={(r: any) => r.key}
-                headerClassName="bg-gray-100"
+                headerClassName="bg-red-200"
               />
               <Column
                 field="p1"
                 header="P1 Count"
                 body={(r: any) => fmtNum(r.p1)}
-                headerClassName="bg-blue-50"
+                headerClassName="bg-red-200"
               />
               <Column
                 field="p2"
                 header="P2 Count"
                 body={(r: any) => fmtNum(r.p2)}
-                headerClassName="bg-green-50"
+                headerClassName="bg-red-200"
               />
               <Column
                 header="Diff"
@@ -731,11 +728,11 @@ export default function PeriodFiltersSection() {
                     {fmtNum(r.diff)}
                   </span>
                 )}
-                headerClassName="bg-gray-100"
+                headerClassName="bg-red-200"
               />
               <Column
                 header="% Change"
-                headerClassName="bg-gray-100"
+                headerClassName="bg-red-200"
                 body={(r: any) => {
                   const val = r.pctChange;
                   const color =

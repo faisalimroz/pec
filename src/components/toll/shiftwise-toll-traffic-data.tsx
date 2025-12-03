@@ -296,13 +296,13 @@ export default function VehicleDetectTollTable() {
   const headerGroup = (
     <ColumnGroup>
       <Row>
-        <Column header="Payment Method" headerClassName="min-w-[12rem]" rowSpan={2} frozen />
+        <Column header="Payment Method" headerClassName="min-w-[12rem] bg-red-200" rowSpan={2} frozen />
         {/* SHIFT COLUMNS */}
-        <Column header="3rd-2 (00:00-06:00)" headerClassName="min-w-[10rem]" />
-        <Column header="1st (06:00-14:00)" headerClassName="min-w-[10rem]" />
-        <Column header="2nd (14:00-22:00)" headerClassName="min-w-[10rem]" />
-        <Column header="3rd-1 (22:00-00:00)" headerClassName="min-w-[10rem]" />
-        <Column header="Total" headerClassName="min-w-[10rem]" rowSpan={2} frozen />
+        <Column header="3rd-2 (00:00-06:00)" headerClassName="min-w-[10rem] bg-red-200" />
+        <Column header="1st (06:00-14:00)" headerClassName="min-w-[10rem] bg-red-200" />
+        <Column header="2nd (14:00-22:00)" headerClassName="min-w-[10rem] bg-red-200" />
+        <Column header="3rd-1 (22:00-00:00)" headerClassName="min-w-[10rem] bg-red-200" />
+        <Column header="Total" headerClassName="min-w-[10rem] bg-red-200" rowSpan={2} frozen />
       </Row>
     </ColumnGroup>
   );
