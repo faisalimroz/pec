@@ -6,623 +6,753 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import FileIcon from '../icons/FileIcon';
 import TollButtonIcons from '../ui/comparison-button';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import axios from 'axios';
+import { toast } from 'sonner';
+import "../../styles/table-style.css";
 import RefreshButton from '@/components/refresh-button'
-import { searchTreatmentRecord } from '@/api/adminAPIs';
-type PaymentMethod = 'Cash' | 'Card' | 'Exempt' | 'Credit' | 'EPTAG';
-type VehicleType =
-  | 'Trailer (4 Axle)'
-  | 'Truck (3 Axle)'
-  | 'Medium Truck (8-11)'
-  | 'Medium Truck (5-8)'
-  | 'Mini Truck'
-  | 'Big Bus'
-  | 'Medium Bus'
-  | 'Mini Bus';
 
-interface PeriodFilters {
-  start?: Date | null;
-  end?: Date | null;
-  location?: string | null;
-  vehicleType?: VehicleType | null;
-  payment?: PaymentMethod | null;
+
+interface PaymentPeriodData {
+  key: string;
+  amount: number;
+  vehicles: number;
+  amountPct: number;
+  vehiclesPct: number;
+}
+
+interface PaymentComparisonItem {
+  key: string;
+  label?: string;
+  p1: PaymentPeriodData;
+  p2: PaymentPeriodData;
+  changes: {
+    amountPctChange: number;
+    vehiclesDiff: number;
+    vehiclesPctChange: number | null;
+  };
+}
+
+interface ShiftComparisonItem {
+  key: string;
+  p1: number;
+  p2: number;
+  diff: number;
+  pctChange: number;
+}
+
+interface PeriodTotal {
+  totalAmount: number;
+  totalVehicles: number;
 }
 
 interface ComparisonResult {
-  vehicles1: number;
-  vehicles2: number;
-  revenue1: number;
-  revenue2: number;
-  avgDaily1: number;
-  avgDaily2: number;
-  chartLabels: string[];
-  chartData1: number[];
-  chartData2: number[];
+  meta: any;
+  period1: PeriodTotal;
+  period2: PeriodTotal;
+  paymentComparison: Record<string, PaymentComparisonItem>;
+  shiftComparison: Record<string, ShiftComparisonItem>;
+  chartData?: {
+    labels: string[];
+    dataset1: number[];
+    dataset2: number[];
+  };
 }
 
 const locationType = [
-  { name: 'All Locations', value: 'All' },
+  { name: 'All', value: 'All' },
   { name: 'Mawa', value: 'Mawa' },
   { name: 'Jinjira', value: 'Jinjira' },
 ];
 
-const itemTemplate = (option: { name: string; code: string }) => {
-  return (
-    <div className="flex items-center gap-2">
-      <FileIcon />
-      <span>{option.name}</span>
-    </div>
-  );
+const PAYMENT_METHODS: Record<string, string> = {
+  cash: "Cash",
+  exempt: "Exempt",
+  credit: "Credit",
+  office: "Office",
+  eptag: "EP Tag",
+  eltag: "EL Tag",
+  epcard: "EP Card",
+  elcard: "EL Card",
 };
 
-const vehicleType = [
-  { name: 'Trailer (4 Axle)', value: 'Trailer (4 Axle)' },
-  { name: 'Truck (3 Axle)', value: 'Truck (3 Axle)' },
-  { name: 'Medium Truck (8-11)', value: 'Medium Truck (8-11)' },
-  { name: 'Medium Truck (5-8)', value: 'Medium Truck (5-8)' },
-  { name: 'Mini Truck', value: 'Mini Truck' },
-  { name: 'Big Bus', value: 'Big Bus' },
-  { name: 'Medium Bus', value: 'Medium Bus' },
-  { name: 'Mini Bus', value: 'Mini Bus' },
-];
+const itemTemplate = (option: { name: string; code: string }) => (
+  <div className="flex items-center gap-2">
+    <FileIcon />
+    <span>{option.name}</span>
+  </div>
+);
 
-const paymentOptions = [
-  { name: 'Cash', value: 'Cash' },
-  { name: 'Card', value: 'Card' },
-  { name: 'Credit', value: 'Credit' },
-  { name: 'Exempt', value: 'Exempt' },
-  { name: 'Discount', value: 'Discount' },
-];
+const fmtNum = (n: number) => (n ?? 0).toLocaleString();
+const fmtTk = (n: number) => `${(n ?? 0).toLocaleString()}`;
+const fmtPct = (n: number) => `${(n ?? 0).toFixed(2)}%`;
 
-const fmtNum = (n: number) => n.toLocaleString();
-const fmtTk = (n: number) => `৳ ${n.toLocaleString()}`;
-const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
-const pctChange = (a: number, b: number) => {
-  if (!a) return 'N/A';
-  return `${(((b - a) / a) * 100).toFixed(1)}%`;
+const formatDateForApi = (d?: Date | null): string | null => {
+  if (!d) return null;
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
 };
 
-function buildPaymentBreakdown(total1: number, total2: number) {
-  const shares: Record<Exclude<PaymentMethod, 'Discount'>, number> = {
-    Cash: 0.43,
-    Exempt: 0.24,
-    Credit: 0.23,
-    EPTAG: 0.1,
-  };
-  const sumKnown = Object.values(shares).reduce((a, b) => a + b, 0);
-  const discountShare = Math.max(0, 1 - sumKnown);
 
-  const rows = (['Cash', 'Exempt', 'Credit', 'EPTAG'] as PaymentMethod[]).map((m) => {
-    const s = m === 'Discount' ? discountShare : shares[m as Exclude<PaymentMethod, 'Discount'>];
-    const p1 = Math.round(total1 * s);
-    const p2 = Math.round(total2 * s);
-    return {
-      method: m,
-      p1,
-      p1Pct: s,
-      p2,
-      p2Pct: s,
-      changePct: p1 ? (p2 - p1) / p1 : 0,
-    };
-  });
+const getMethodAmount = (
+  row: any,
+  period: "p1" | "p2",
+  isTotalRow: boolean,
+  result: ComparisonResult | null
+) => {
+  if (!result) return 0;
 
-  const totals = {
-    method: 'Total',
-    p1: rows.reduce((a, r) => a + r.p1, 0),
-    p1Pct: 1,
-    p2: rows.reduce((a, r) => a + r.p2, 0),
-    p2Pct: 1,
-    changePct: rows.reduce((a, r) => a + r.p1, 0)
-      ? (rows.reduce((a, r) => a + r.p2, 0) - rows.reduce((a, r) => a + r.p1, 0)) /
-      rows.reduce((a, r) => a + r.p1, 0)
-      : 0,
-    _isTotal: true,
-  };
+  if (isTotalRow) {
+    return period === "p1"
+      ? result.period1.totalAmount || 0
+      : result.period2.totalAmount || 0;
+  }
 
-  return { rows, totals };
-}
+  const amount = row?.[period]?.amount ?? 0;
+  return amount;
+};
 
-function buildVehicleBreakdown(total1: number, total2: number) {
-  const shares: Record<VehicleType, number> = {
-    'Trailer (4 Axle)': 0.091,
-    'Truck (3 Axle)': 0.14,
-    'Medium Truck (8-11)': 0.022,
-    'Medium Truck (5-8)': 0.14,
-    'Mini Truck': 0.044,
-    'Big Bus': 0.016,
-    'Medium Bus': 0.034,
-    'Mini Bus': 0.11,
-  };
-  const norm = Object.values(shares).reduce((a, b) => a + b, 0);
+/**
+ * Get share (%) of this method in the given period.
+ * Uses method amount / period totalAmount * 100.
+ */
+const getMethodShare = (
+  row: any,
+  period: "p1" | "p2",
+  _isTotalRow: boolean,
+  result: ComparisonResult | null
+) => {
+  if (!result) return 0;
 
-  const rows = (Object.keys(shares) as VehicleType[]).map((k) => {
-    const s = shares[k] / norm;
-    const p1 = Math.round(total1 * s);
-    const p2 = Math.round(total2 * s);
-    return { type: k, p1, p2, changePct: p1 ? (p2 - p1) / p1 : 0 };
-  });
+  const total =
+    period === "p1"
+      ? result.period1.totalAmount || 0
+      : result.period2.totalAmount || 0;
 
-  const totals = {
-    type: 'Total (All Vehicles)',
-    p1: rows.reduce((a, r) => a + r.p1, 0),
-    p2: rows.reduce((a, r) => a + r.p2, 0),
-    changePct: rows.reduce((a, r) => a + r.p1, 0)
-      ? (rows.reduce((a, r) => a + r.p2, 0) - rows.reduce((a, r) => a + r.p1, 0)) /
-      rows.reduce((a, r) => a + r.p1, 0)
-      : 0,
-    _isTotal: true,
-  };
+  if (!total) return 0;
 
-  return { rows, totals };
-}
+  const amount = getMethodAmount(row, period, false, result);
+  return (amount / total) * 100;
+};
+
+// ---------- COMPONENT ----------
 
 export default function PeriodFiltersSection() {
-  const paymentTableRef = useRef<DataTable<PeriodFilters[]>>(null);
-  const vehicleTableRef = useRef<DataTable<PeriodFilters[]>>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
-  const [showGraph, setShowGraph] = useState<boolean>(false);
 
-  const [p1, setP1] = useState<PeriodFilters>({
-    start: new Date('2025-01-01'),
-    end: new Date('2025-01-07'),
+  const [p1, setP1] = useState<{ start: Date | null; end: Date | null }>({
+    start: null,
+    end: null,
   });
-  const [p2, setP2] = useState<PeriodFilters>({
-    start: new Date('2025-03-01'),
-    end: new Date('2025-03-07'),
+  const [p2, setP2] = useState<{ start: Date | null; end: Date | null }>({
+    start: null,
+    end: null,
   });
-
-  const [info, setInfo] = useState<PeriodFilters>({
-    location: 'All',
-    vehicleType: null,
-    payment: null,
-  });
-
+  const [location, setLocation] = useState<string>('All');
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ComparisonResult | null>(null);
+  const [showGraph, setShowGraph] = useState(false);
 
-  const setQuickRange = (
-    setter: React.Dispatch<React.SetStateAction<PeriodFilters>>,
-    type: 'week' | 'month' | 'quarter'
-  ) => {
-    const now = new Date();
-    let start: Date;
-    if (type === 'week') {
-      start = new Date();
-      start.setDate(now.getDate() - 7);
-    } else if (type === 'month') {
-      start = new Date();
-      start.setMonth(now.getMonth() - 1);
-    } else {
-      start = new Date();
-      start.setMonth(now.getMonth() - 3);
+  const handleReset = () => {
+    setP1({ start: null, end: null });
+    setP2({ start: null, end: null });
+    setLocation('All');
+    setResult(null);
+    setShowGraph(false);
+  };
+
+  const toggleGraph = () => setShowGraph(!showGraph);
+
+  const onCompare = async () => {
+    const p1Start = formatDateForApi(p1.start);
+    const p1End = formatDateForApi(p1.end);
+    const p2Start = formatDateForApi(p2.start);
+    const p2End = formatDateForApi(p2.end);
+
+    if (!p1Start || !p1End || !p2Start || !p2End) {
+      toast.warning('Please select start and end dates for both periods.');
+      return;
     }
-    setter((prev) => ({ ...prev, start, end: now }));
+
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/shiftmanual/get/shift-comparison`,
+        {
+          p1Start,
+          p1End,
+          p2Start,
+          p2End,
+          location: location === 'All' ? '' : location,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+
+      if (res.data?.success) {
+        setResult(res.data.result);
+        console.log("SHIFT COMPARISON RESULT:", res.data.result);
+        toast.success('Comparison data fetched!');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to fetch comparison data.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Mock your API
-  const fetchComparisonData = (_p1: PeriodFilters, _p2: PeriodFilters, _info: PeriodFilters): ComparisonResult => {
-    const chartLabels = ['Jan 1', 'Jan 2', 'Jan 3', 'Jan 4', 'Jan 5', 'Jan 6', 'Jan 7'];
-    const chartData1 = [4000, 3200, 4700, 2800, 1900, 2500, 3400];
-    const chartData2 = [4200, 3300, 4500, 3000, 2100, 2600, 3600];
-
-    const vehicles1 = chartData1.reduce((a, b) => a + b, 0);
-    const vehicles2 = chartData2.reduce((a, b) => a + b, 0);
-
-    const revenue1 = Math.round(vehicles1 * 172);
-    const revenue2 = Math.round(vehicles2 * 172);
-
-    const avgDaily1 = Math.round(vehicles1 / chartData1.length);
-    const avgDaily2 = Math.round(vehicles2 / chartData2.length);
-
-    return { vehicles1, vehicles2, revenue1, revenue2, avgDaily1, avgDaily2, chartLabels, chartData1, chartData2 };
-  };
-
-  const exportCSV = () => {
-    paymentTableRef.current?.exportCSV();
-  };
-
-  // === NEW: Export PDF (results area only) ===
   const exportPDF = async () => {
     if (!resultsRef.current) return;
-    const canvas = await html2canvas(resultsRef.current, { scale: 2, useCORS: true });
+    const canvas = await html2canvas(resultsRef.current, {
+      scale: 2,
+      useCORS: true,
+    });
     const imgData = canvas.toDataURL('image/png');
-
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+    const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
+    if (imgHeight > pdfHeight) {
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pdfHeight);
       pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      pdf.addImage(imgData, 'PNG', 0, -pdfHeight, pageWidth, imgHeight);
+    } else {
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
     }
 
     pdf.save('toll-comparison.pdf');
   };
 
-  // === NEW: Print (results area only) ===
   const handlePrint = () => {
     if (!resultsRef.current) return;
     const printContents = resultsRef.current.innerHTML;
-    const w = window.open('', 'PRINT', 'height=700,width=900,top=50,left=50');
-    if (!w) return;
-    w.document.write(`
-      <html>
-        <head>
-          <title>Toll & Traffic Comparison</title>
-          <style>
-            body { font-family: Inter, Arial, sans-serif; padding: 16px; }
-            .border { border: 1px solid #e5e7eb; }
-            .rounded-lg { border-radius: 0.5rem; }
-          </style>
-        </head>
-        <body>${printContents}</body>
-      </html>
-    `);
-    w.document.close();
-    w.focus();
-    w.print();
-    w.close();
+    const w = window.open('', 'PRINT', 'height=700,width=900');
+    if (w) {
+      w.document.write(
+        `<html><head><title>Comparison</title><style>body{font-family:sans-serif;padding:20px;}.border{border:1px solid #ddd;}.p-4{padding:1rem;}.grid{display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);}</style></head><body>${printContents}</body></html>`
+      );
+      w.document.close();
+      w.focus();
+      w.print();
+      w.close();
+    }
   };
 
-  const toggleGraph = () => setShowGraph((s) => !s);
+  const getDiffs = () => {
+    if (!result)
+      return { amountDiff: 0, amountPct: '0', vehicleDiff: 0, vehiclePct: '0' };
 
-  const onCompare = () => {
-    const res = fetchComparisonData(p1, p2, info);
-    setResult(res);
+    const p1Amt = result.period1.totalAmount;
+    const p2Amt = result.period2.totalAmount;
+    const amountDiff = p2Amt - p1Amt;
+    const amountPct =
+      p1Amt > 0 ? ((amountDiff / p1Amt) * 100).toFixed(2) : '0';
+
+    const p1Veh = result.period1.totalVehicles;
+    const p2Veh = result.period2.totalVehicles;
+    const vehicleDiff = p2Veh - p1Veh;
+    const vehiclePct =
+      p1Veh > 0 ? ((vehicleDiff / p1Veh) * 100).toFixed(2) : '0';
+
+    return { amountDiff, amountPct, vehicleDiff, vehiclePct };
   };
 
-  const handleReset = () => {
-    setP1({ start: null, end: null})
-    setP2({ start: null, end: null})
-    setInfo({ location: 'All', vehicleType: null, payment: null })
+  const diffs = getDiffs();
 
 
 
-    // const payload = {
+  const paymentTableData = result
+    ? Object.values(result.paymentComparison)
+    : [];
 
-    //   date_range: '',
-    //   searchQuery: '',
-    // }
+  const totalRow = result
+    ? {
+        key: 'TOTAL',
+        label: 'TOTAL',
+        p1: {
+          key: 'TOTAL',
+          amount: result.period1.totalAmount,
+          vehicles: result.period1.totalVehicles,
+          amountPct: 100,
+          vehiclesPct: 100,
+        },
+        p2: {
+          key: 'TOTAL',
+          amount: result.period2.totalAmount,
+          vehicles: result.period2.totalVehicles,
+          amountPct: result.period1.totalAmount
+            ? (result.period2.totalAmount / result.period1.totalAmount) * 100
+            : 0,
+          vehiclesPct: result.period1.totalVehicles
+            ? (result.period2.totalVehicles / result.period1.totalVehicles) *
+              100
+            : 0,
+        },
+        changes: {
+          amountPctChange:
+            result.period1.totalAmount > 0
+              ? ((result.period2.totalAmount - result.period1.totalAmount) /
+                  result.period1.totalAmount) *
+                100
+              : 0,
+          vehiclesDiff: result.period2.totalVehicles - result.period1.totalVehicles,
+          vehiclesPctChange:
+            result.period1.totalVehicles > 0
+              ? ((result.period2.totalVehicles - result.period1.totalVehicles) /
+                  result.period1.totalVehicles) *
+                100
+              : null,
+        },
+        _isTotal: true,
+      }
+    : null;
 
-    // searchTreatmentRecord(payload).then((result) => {
-    //   setProducts(result?.data)
-    //   setLoading(false)
-    // })
-  }
+  const finalPaymentData =
+    result && totalRow ? [...paymentTableData, totalRow] : paymentTableData;
+
+
+  const shiftTableData = result?.shiftComparison
+    ? Object.values(result.shiftComparison)
+    : [];
 
   return (
-    <>
-      <div className='flex justify-between'>
-        <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-        Shift Wise Toll & Traffic Data Comparison
-      </h1>
-      <RefreshButton handleReset={handleReset} />
+    <div className="p-6 bg-white border rounded-lg space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-[#0A2472]">
+          Toll Comparison (Shift-wise)
+        </h3>
+         <RefreshButton handleReset={handleReset} />
       </div>
 
-      <div className="p-6 bg-white border rounded-lg space-y-6">
-        <h3 className="text-lg font-semibold">Select Time Periods to Compare</h3>
+     
+      <div className="grid md:grid-cols-2 gap-8">
+        <div>
+          <h4 className="text-sm font-bold text-gray-600 mb-2">
+            Period 1 
+          </h4>
+          <div className="flex gap-2">
+            <Calendar
+              value={p1.start}
+              onChange={(e) =>
+                setP1({ ...p1, start: e.value as Date })
+              }
+              placeholder="Start"
+            showIcon
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy"
+            />
+            <Calendar
+              value={p1.end}
+              onChange={(e) =>
+                setP1({ ...p1, end: e.value as Date })
+              }
+              placeholder="End"
+            showIcon
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy"
+            />
+          </div>
+        </div>
+        <div>
+          <h4 className="text-sm font-bold text-gray-600 mb-2">
+            Period 2 
+          </h4>
+          <div className="flex gap-2">
+            <Calendar
+              value={p2.start}
+              onChange={(e) =>
+                setP2({ ...p2, start: e.value as Date })
+              }
+              placeholder="Start"
+          showIcon
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy"
+            />
+            <Calendar
+              value={p2.end}
+              onChange={(e) =>
+                setP2({ ...p2, end: e.value as Date })
+              }
+              placeholder="End"
+              showIcon
+                  className="p-inputtext-sm border rounded-md shadow-sm h-10"
+                  inputClassName="border-none rounded-none bg-transparent text-sm"
+                  icon={() => <i className="pi pi-calendar" />}
+              dateFormat="dd/mm/yy"
+            />
+          </div>
+        </div>
+      </div>
 
-        <div className="grid md:grid-cols-2 gap-8 ">
+      
+      <div className="flex justify-center items-center gap-4 pt-2">
+        <Dropdown
+          value={location}
+          onChange={(e) => setLocation(e.value)}
+          options={locationType}
+          optionLabel="name"
+          optionValue="value"
+          placeholder="Location"
+          className="w-48"
+          itemTemplate={itemTemplate}
+        />
+       
+      </div>
+<div className="flex justify-center items-center gap-4 pt-2">
+       <button
+          onClick={onCompare}
+          disabled={loading}
+          className="px-6 py-3 bg-[#0B1F8F] text-white rounded-lg font-bold hover:bg-blue-900 transition disabled:opacity-50"
+        >
+          {loading ? 'Comparing...' : 'Compare Data'}
+        </button>
+       
+      </div>
+      {result && result.period1 && (
+        <div
+          ref={resultsRef}
+          className="space-y-8 mt-8 animate-fade-in"
+        >
+          <div className="flex justify-between items-center border-b pb-4">
+            <h3 className="text-xl font-bold text-gray-800">
+              Comparison Report
+            </h3>
+            <TollButtonIcons
+              isGraphVisible={showGraph}
+              openNew={toggleGraph}
+              exportPDF={exportPDF}
+              handlePrint={handlePrint}
+            />
+          </div>
 
-          <div>
-            <h4 className="text-sm font-medium text-[#0A2472] mb-2">First Time Period</h4>
-            <div className="flex gap-4">
-
-
-              <div className="flex flex-col gap-2">
-
-                <span className="text-sm font-semibold text-gray-700">Start Date</span>
-
-                <Calendar
-                  value={p1.start || null}
-                  onChange={(e) => setP1({ ...p1, start: e.value as Date })}
-                  placeholder="01/01/2025"
-                  dateFormat="dd/mm/yy"
-                  showIcon
-                  className='p-inputtext-sm border rounded-md shadow-sm h-10'
-                  inputClassName="border-none rounded-none cursor-pointer focus:ring-0 bg-transparent text-sm py-1"
-                  icon={() => (
-                    <i className="pi pi-calendar" />
-                  )}
-                />
+      
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+           
+            <div className="p-5 border border-gray-100 bg-white rounded-xl shadow-sm">
+              <h4 className="text-blue-900 font-semibold mb-2">
+                Total Toll
+              </h4>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-sm text-gray-500">Period 1</p>
+                  <p className="text-xl font-bold text-gray-800">
+                    {fmtTk(result.period1.totalAmount)}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-gray-500">Period 2</p>
+                  <p className="text-xl font-bold text-blue-700">
+                    {fmtTk(result.period2.totalAmount)}
+                  </p>
+                </div>
               </div>
-
-
-              <div className="flex flex-col gap-2">
-
-                <span className="text-sm font-semibold text-gray-700">End Date</span>
-
-                <Calendar
-                  value={p1.end || null}
-                  onChange={(e) => setP1({ ...p1, end: e.value as Date })}
-                  placeholder="01/07/2025"
-                  dateFormat="dd/mm/yy"
-                  showIcon
-
-                  className='p-inputtext-sm border rounded-md shadow-sm h-10'
-
-                  inputClassName="border-none rounded-none cursor-pointer focus:ring-0 bg-transparent text-sm py-1"
-                  icon={() => (
-                    <i className="pi pi-calendar" />
-                  )}
-                />
+              <div className="mt-3 pt-3 border-t border-blue-200 flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-600">
+                  Difference:
+                </span>
+                <span
+                  className={`font-bold ${
+                    diffs.amountDiff >= 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  }`}
+                >
+                  {diffs.amountDiff >= 0 ? '+' : ''}
+                  {fmtTk(diffs.amountDiff)}{' '}
+                  <span className="text-xs ml-1">
+                    ({diffs.amountPct}%)
+                  </span>
+                </span>
               </div>
             </div>
-            <div className="flex gap-2 mt-3">
-              <button onClick={() => setQuickRange(setP1, 'week')} className="px-2 py-2 bg-[#F3F4F6] text-[#374151] text-sm rounded-md font-semibold">
-                Last Week
-              </button>
-              <button onClick={() => setQuickRange(setP1, 'month')} className="px-2 py-2 bg-[#F3F4F6] text-[#374151] text-sm rounded-md font-semibold">
-                Last Month
-              </button>
-              <button onClick={() => setQuickRange(setP1, 'quarter')} className="px-2 py-2 bg-[#F3F4F6] text-[#374151] text-sm rounded-md font-semibold">
-                Last Quarter
-              </button>
+
+            
+            <div className="p-5 border border-gray-100 bg-white rounded-xl shadow-sm">
+              <h4 className="text-blue-900 font-semibold mb-2">
+                Total Traffic
+              </h4>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-sm text-gray-500">Period 1</p>
+                  <p className="text-xl font-bold text-gray-800">
+                    {fmtNum(result.period1.totalVehicles)}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-gray-500">Period 2</p>
+                  <p className="text-xl font-bold text-purple-700">
+                    {fmtNum(result.period2.totalVehicles)}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-purple-200 flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-600">
+                  Difference:
+                </span>
+                <span
+                  className={`font-bold ${
+                    diffs.vehicleDiff >= 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  }`}
+                >
+                  {diffs.vehicleDiff >= 0 ? '+' : ''}
+                  {fmtNum(diffs.vehicleDiff)}{' '}
+                  <span className="text-xs ml-1">
+                    ({diffs.vehiclePct}%)
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
 
-
-          <div className='justify-self-end'>
-            <h4 className="text-sm font-medium text-[#0A2472] mb-2">Second Time Period</h4>
-            <div className="flex gap-4">
-
-
-              <div className="flex flex-col gap-2">
-
-                <span className="text-sm font-semibold text-gray-700">Start Date</span>
-
-                <Calendar
-                  value={p2.start || null}
-                  onChange={(e) => setP2({ ...p2, start: e.value as Date })}
-                  placeholder="Start Date"
-                  dateFormat="dd/mm/yy"
-                  showIcon
-
-                  className='p-inputtext-sm border rounded-md shadow-sm h-10'
-
-                  inputClassName="border-none rounded-none cursor-pointer focus:ring-0 bg-transparent text-sm py-1"
-                  icon={() => (
-                    <i className="pi pi-calendar" />
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-
-                <span className="text-sm font-semibold text-gray-700">End Date</span>
-
-                <Calendar
-                  value={p2.end || null}
-                  onChange={(e) => setP2({ ...p2, end: e.value as Date })}
-                  placeholder="End Date"
-                  dateFormat="dd/mm/yy"
-                  showIcon
-
-                  className='p-inputtext-sm border rounded-md shadow-sm h-10'
-
-                  inputClassName="border-none rounded-none cursor-pointer focus:ring-0 bg-transparent text-sm py-1"
-                  icon={() => (
-                    <i className="pi pi-calendar" />
-                  )}
-                />
-              </div>
-            </div>
-            <div className="flex gap-2 mt-3">
-              <button onClick={() => setQuickRange(setP2, 'week')} className="px-2 py-2 bg-[#F3F4F6] text-[#374151] text-sm rounded-md font-semibold">
-                Last Week
-              </button>
-              <button onClick={() => setQuickRange(setP2, 'month')} className="px-2 py-2 bg-[#F3F4F6] text-[#374151] text-sm rounded-md font-semibold">
-                Last Month
-              </button>
-              <button onClick={() => setQuickRange(setP2, 'quarter')} className="px-2 py-2 bg-[#F3F4F6] text-[#374151] text-sm rounded-md font-semibold">
-                Last Quarter
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="flex justify-center items-center gap-5">
-          <Dropdown
-            value={info.location || 'All'}
-            onChange={(e) => setInfo({ ...info, location: e.value })}
-            options={locationType}
-            placeholder="Location"
-            optionLabel="name"
-            className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB] text-sm"
-            itemTemplate={itemTemplate}
-          />
-          <Dropdown
-            value={info.vehicleType || null}
-            onChange={(e) => setInfo({ ...info, vehicleType: e.value })}
-            options={vehicleType}
-            optionLabel="name"
-            placeholder="Vehicle Type"
-            className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB] text-sm"
-            itemTemplate={itemTemplate}
-          />
-          <Dropdown
-            value={info.payment || null}
-            onChange={(e) => setInfo({ ...info, payment: e.value })}
-            options={paymentOptions}
-            placeholder="Payment Method"
-            optionLabel="name"
-            className="w-[300px] bg-[#EFEFEF] border border-[#D1D5DB] text-sm"
-            itemTemplate={itemTemplate}
-          />
-        </div>
-
-        <div className="flex justify-center">
-          <button onClick={onCompare} className="px-6 bg-[#0B1F8F] rounded-md py-2 text-white">
-            Compare Data
-          </button>
-        </div>
-
-        {/* === Results Section (wrapped for PDF/Print) === */}
-        {result && (
-          <div ref={resultsRef} className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Comparison Results</h3>
-
-              {/* Your existing toolbar, now wired up */}
-              <TollButtonIcons
-                isGraphVisible={showGraph}
-                openNew={toggleGraph}
-                exportCSV={exportCSV}
-                exportPDF={exportPDF}
-                handlePrint={handlePrint}
-              />
-            </div>
-
-            {/* Cards */}
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium">Total Vehicles</h4>
-
-                <p className="text-xl font-bold">
-                  {fmtNum(result.vehicles1)} → {fmtNum(result.vehicles2)}
-                </p>
-
-                <p className="text-sm text-green-600">
-                  {pctChange(result.vehicles1, result.vehicles2)} ({fmtNum(result.vehicles2 - result.vehicles1)} more vehicles)
-                </p>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium">Total Revenue</h4>
-                <p className="text-xl font-bold">
-                  {fmtTk(result.revenue1)} → {fmtTk(result.revenue2)}
-                </p>
-                <p className="text-sm text-green-600">
-                  {pctChange(result.revenue1, result.revenue2)} ({fmtTk(result.revenue2 - result.revenue1)} more revenue)
-                </p>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium">Average Daily Traffic</h4>
-                <p className="text-xl font-bold">
-                  {fmtNum(result.avgDaily1)} → {fmtNum(result.avgDaily2)}
-                </p>
-                <p className="text-sm text-green-600">
-                  {pctChange(result.avgDaily1, result.avgDaily2)} ({fmtNum(result.avgDaily2 - result.avgDaily1)} more vehicles/day)
-                </p>
-              </div>
-            </div>
-
-            {/* View/Hide Graph toggle button */}
-            <div className="flex justify-end">
-
-            </div>
-
-            {/* Chart */}
-            {showGraph && (
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2">Daily Traffic Volume Comparison</h4>
+    
+          {showGraph && result.chartData && (
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-bold text-gray-700 mb-4">
+                Shift-wise Traffic Comparison
+              </h4>
+              <div className="h-80">
                 <Chart
                   type="bar"
                   data={{
-                    labels: result.chartLabels,
+                    labels: result.chartData.labels, 
                     datasets: [
-                      { label: 'First Period', data: result.chartData1, backgroundColor: '#1E3A8A' },
-                      { label: 'Second Period', data: result.chartData2, backgroundColor: '#60A5FA' },
+                      {
+                        label: 'Period 1',
+                        data: result.chartData.dataset1,
+                        backgroundColor: '#1E3A8A',
+                      },
+                      {
+                        label: 'Period 2',
+                        data: result.chartData.dataset2,
+                        backgroundColor: '#60A5FA',
+                      },
                     ],
                   }}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
                   }}
-                  style={{ height: 360 }}
                 />
               </div>
-            )}
-
-            {/* Payment Method Comparison Table */}
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-medium mb-3">Payment Method Comparison</h4>
-              {(() => {
-                const { rows, totals } = buildPaymentBreakdown(result.vehicles1, result.vehicles2);
-                const tableData = [...rows, totals];
-
-                return (
-                  <DataTable
-                    value={tableData}
-                    ref={paymentTableRef as any}
-                    rows={12}
-                    emptyMessage="No data found!"
-                    rowClassName={(data: any) => (data._isTotal ? 'bg-[#E7F3FF] font-medium' : '')}
-                  >
-                    <Column header="Payment Method" field="method" headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column header="Period 1" body={(r) => fmtNum(r.p1)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column header="% of Total" body={(r) => pct(r.p1Pct)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column header="Period 2" body={(r) => fmtNum(r.p2)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column header="% of Total" body={(r) => pct(r.p2Pct)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column
-                      header="% Change"
-                      body={(r) => <span className="text-green-600">{pct(r.changePct)}</span>}
-                      headerClassName="bg-[#ffc2c2] text-sm"
-                      bodyClassName="text-sm truncate max-w-xs"
-                    />
-                  </DataTable>
-                );
-              })()}
             </div>
+          )}
 
-            {/* Vehicle Type Comparison Table */}
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-medium mb-3">Vehicle Type Comparison</h4>
-              {(() => {
-                const { rows, totals } = buildVehicleBreakdown(result.vehicles1, result.vehicles2);
-                const tableData = [...rows, totals];
-
-                return (
-                  <DataTable
-                    value={tableData}
-                    ref={vehicleTableRef as any}
-                    rows={12}
-                    emptyMessage="No data found!"
-                    rowClassName={(data: any) => (data._isTotal ? 'bg-[#E7F3FF] font-medium' : '')}
-                  >
-                    <Column header="Vehicle Type" field="type" headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column header="First Period" body={(r) => fmtNum(r.p1)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column header="Second Period" body={(r) => fmtNum(r.p2)} headerClassName="bg-[#ffc2c2] text-sm" bodyClassName="text-sm truncate max-w-xs" />
-                    <Column
-                      header="Change"
-                      body={(r) => <span className="text-green-600">{pct(r.changePct)}</span>}
-                      headerClassName="bg-[#ffc2c2] text-sm"
-                      bodyClassName="text-sm truncate max-w-xs"
-                    />
-                  </DataTable>
-                );
-              })()}
+       
+          <div className="border rounded-lg overflow-hidden shadow-sm">
+            <div className="bg-gray-50 px-4 py-3 border-b">
+              <h4 className="font-bold text-gray-700">
+                Payment Method Analysis
+              </h4>
             </div>
+            <DataTable
+              value={finalPaymentData}
+              rowClassName={(data) =>
+                (data as any)._isTotal
+                  ? 'bg-gray-100 font-bold border-t-2'
+                  : ''
+              }
+              showGridlines
+              stripedRows
+            >
+              <Column
+                field="key"
+                header="Method"
+                body={(r: any) =>
+                  r._isTotal
+                    ? 'TOTAL'
+                    : r.label
+                    ? r.label
+                    : PAYMENT_METHODS[r.key] || r.key
+                }
+                headerClassName="bg-red-200  "
+              />
+
+               <Column
+                header="P1 Revenue"
+                body={(r: any) => {
+                  const isTotal = !!r._isTotal;
+                  const amount = getMethodAmount(
+                    r,
+                    'p1',
+                    isTotal,
+                    result
+                  );
+                  return fmtTk(amount);
+                }}
+                headerClassName="bg-red-200"
+              />
+
+      
+              <Column
+                header="P1 Share"
+                body={(r: any) => {
+                  const isTotal = !!r._isTotal;
+                  if (isTotal) return '100.00%';
+                  const pct = getMethodShare(
+                    r,
+                    'p1',
+                    false,
+                    result
+                  );
+                  return fmtPct(pct);
+                }}
+                headerClassName="bg-red-200"
+              />
+
+         
+              <Column
+                header="P2 Revenue"
+                body={(r: any) => {
+                  const isTotal = !!r._isTotal;
+                  const amount = getMethodAmount(
+                    r,
+                    'p2',
+                    isTotal,
+                    result
+                  );
+                  return fmtTk(amount);
+                }}
+                headerClassName="bg-red-200"
+              />
+
+     
+              <Column
+                header="P2 Share"
+                body={(r: any) => {
+                  const isTotal = !!r._isTotal;
+                  if (isTotal) return '100.00%';
+                  const pct = getMethodShare(
+                    r,
+                    'p2',
+                    false,
+                    result
+                  );
+                  return fmtPct(pct);
+                }}
+                headerClassName="bg-red-200"
+              />
+
+         
+              <Column
+                header="Share Change"
+                headerClassName="bg-red-200"
+                body={(r: any) => {
+                  if (r?._isTotal) return '-';
+
+                  const p1Share = getMethodShare(
+                    r,
+                    'p1',
+                    false,
+                    result
+                  );
+                  const p2Share = getMethodShare(
+                    r,
+                    'p2',
+                    false,
+                    result
+                  );
+                  const val = p2Share - p1Share;
+                  const displayVal = val.toFixed(2);
+                  const color =
+                    val > 0
+                      ? 'text-green-600'
+                      : val < 0
+                      ? 'text-red-600'
+                      : 'text-gray-400';
+
+                  return (
+                    <span className={`font-bold ${color}`}>
+                      {val > 0 ? '+' : ''}
+                      {displayVal}% pts
+                    </span>
+                  );
+                }}
+              />
+            </DataTable>
           </div>
-        )}
 
-        <div className="bg-blue-50 p-6 rounded-lg border border-[#EFF6FF]">
-          <h4 className="font-semibold text-[#1E3A8A] mb-3">How to use this dashboard:</h4>
-          <ul className="list-disc list-inside space-y-1.5 text-[#1E3A8A]">
-            <li>Select two time periods you want to compare using the date fields above</li>
-            <li>Use the preset buttons (Last Week, Last Month) for quick comparisons</li>
-            <li>Filter by location, vehicle type, or payment method if needed</li>
-            <li>Click "Compare Data" to see the results</li>
-            <li>Use the Export or Print buttons to save or print your comparison</li>
-          </ul>
+          {/* Shift Traffic Table */}
+          <div className="border rounded-lg overflow-hidden shadow-sm">
+            <div className="bg-gray-50 px-4 py-3 border-b">
+              <h4 className="font-bold text-gray-700">
+                Shift-wise Traffic Comparison
+              </h4>
+            </div>
+            <DataTable value={shiftTableData} showGridlines stripedRows>
+              <Column
+                header="Shift"
+                body={(r: any) => r.key}
+                headerClassName="bg-red-200"
+              />
+              <Column
+                field="p1"
+                header="P1 Count"
+                body={(r: any) => fmtNum(r.p1)}
+                headerClassName="bg-red-200"
+              />
+              <Column
+                field="p2"
+                header="P2 Count"
+                body={(r: any) => fmtNum(r.p2)}
+                headerClassName="bg-red-200"
+              />
+              <Column
+                header="Diff"
+                body={(r: any) => (
+                  <span
+                    className={
+                      r.diff > 0
+                        ? 'text-green-600'
+                        : r.diff < 0
+                        ? 'text-red-600'
+                        : ''
+                    }
+                  >
+                    {r.diff > 0 ? '+' : ''}
+                    {fmtNum(r.diff)}
+                  </span>
+                )}
+                headerClassName="bg-red-200"
+              />
+              <Column
+                header="% Change"
+                headerClassName="bg-red-200"
+                body={(r: any) => {
+                  const val = r.pctChange;
+                  const color =
+                    val > 0
+                      ? 'text-green-600'
+                      : val < 0
+                      ? 'text-red-600'
+                      : 'text-gray-400';
+                  return (
+                    <span className={`font-bold ${color}`}>
+                      {val > 0 ? '+' : ''}
+                      {val}%
+                    </span>
+                  );
+                }}
+              />
+            </DataTable>
+          </div>
         </div>
-      </div>
-    </>
-
+      )}
+    </div>
   );
 }

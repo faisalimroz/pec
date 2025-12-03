@@ -53,13 +53,13 @@ export default function MonthlyReport() {
         attachments: [],
     }
 
-  
-const { roles, permissions } = useAuth()
- const { pathname } = useLocation();
- const showAll = pathname.startsWith('/edms');
-  const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+
+    const { roles, permissions } = useAuth()
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
+    const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
     const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-organization');
-    const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
+    const hasEditAccess = itsPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -231,6 +231,7 @@ const { roles, permissions } = useAuth()
     const saveProduct = async () => {
         try {
             setLoading2(true)
+            hideDialog()
             const formData = new FormData()
             formData.append('subjectName', subjectName)
             formData.append('description', description)
@@ -257,6 +258,7 @@ const { roles, permissions } = useAuth()
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
+           
         } catch (error: any) {
             if (error.response) {
                 const { message } = error.response.data
@@ -520,7 +522,7 @@ const { roles, permissions } = useAuth()
         }
         console.log(payload, 'hello')
         searchOrganization(payload).then((result) => {
-             const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
         })
     }
@@ -539,7 +541,7 @@ const { roles, permissions } = useAuth()
 
 
         searchOrganization(payload).then((result) => {
-       const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false);
         })
@@ -555,7 +557,7 @@ const { roles, permissions } = useAuth()
         }
 
         searchOrganization(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -1043,7 +1045,9 @@ const { roles, permissions } = useAuth()
                 footer={productDialogFooter}
                 onHide={hideDialog}
             >
+                {productDialog && (
                 <>
+                
                     <div className='grid grid-cols-2 items-center gap-6'>
 
                         <div className='field'>
@@ -1103,7 +1107,7 @@ const { roles, permissions } = useAuth()
                             </div>
                         </div>
                     </div>
-                   
+
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1115,19 +1119,20 @@ const { roles, permissions } = useAuth()
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                            <label className="font-bold mb-2 block">Approval</label>
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    inputId="approve"
-                                                    checked={approved}
-                                                    onChange={(e) => setApproved(!!e.checked)}
-                                                />
-                                                <label htmlFor="approve" className="text-sm">
-                                                    Add this document for all
-                                                </label>
-                                            </div>
-                                        </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
+                )}
             </Dialog>
 
             <Dialog
