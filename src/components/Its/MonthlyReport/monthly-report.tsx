@@ -41,6 +41,7 @@ interface Product {
     creator?: string
     creationTimestamp?: string
     updater?: string
+    approved: boolean;
     updatingTimestamp?: string
 }
 
@@ -51,17 +52,19 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         monthName: '',
+
         date: '',
         remarks: '',
+        approved: false,
         attachments: [],
     }
 
-  const { pathname } = useLocation();
- const showAll = pathname.startsWith('/edms');
-const { roles, permissions } = useAuth()
-  const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
+    const { roles, permissions } = useAuth()
+    const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
     const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-monthly-report');
- const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
+    const hasEditAccess = itsPermission?.edit_authority === true && showAll;
 
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
@@ -111,12 +114,12 @@ const { roles, permissions } = useAuth()
         { name: "November", code: "November" },
         { name: "December", code: "December" }
     ];
-      const itemTemplate = (option: { name: string; code: string }) => (
-            <div className="flex items-center gap-2">
-                <FileIcon />
-                <span>{option.name}</span>
-            </div>
-        )
+    const itemTemplate = (option: { name: string; code: string }) => (
+        <div className="flex items-center gap-2">
+            <FileIcon />
+            <span>{option.name}</span>
+        </div>
+    )
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -139,7 +142,7 @@ const { roles, permissions } = useAuth()
 
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -259,7 +262,7 @@ const { roles, permissions } = useAuth()
             formData.append('description', description)
             formData.append('monthName', monthName)
             formData.append('remarks', remarks)
- formData.append('approved', approved ? 'true' : 'false');
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -418,7 +421,7 @@ const { roles, permissions } = useAuth()
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -532,65 +535,65 @@ const { roles, permissions } = useAuth()
         </>
     )
 
- const handleSearch = () => {
-    setLoading(true)
-    const payload = {
-        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-        searchQuery: searchKey,
-    }
-   
-    searchMonthlyReport(payload).then((result) => {
-        const rows = Array.isArray(result?.data) ? result.data : [];
-        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-        setLoading(false); // This is correct
-    }).catch((error) => {
-        console.error('Search error:', error);
-        setLoading(false); // Also set loading false on error
-    })
-}
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
 
-const handleReset = () => {
-    setLoading(true)
-    const payload = {
-        date_range: '',
-        searchQuery: '',
+        searchMonthlyReport(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false); // This is correct
+        }).catch((error) => {
+            console.error('Search error:', error);
+            setLoading(false); // Also set loading false on error
+        })
     }
 
-    setDate(null)
-    setDate2(null)
-    setSearchKey('')
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+            date_range: '',
+            searchQuery: '',
+        }
 
-    searchMonthlyReport(payload).then((result) => {
-        const rows = Array.isArray(result?.data) ? result.data : [];
-        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-        setLoading(false); // This is correct
-    }).catch((error) => {
-        console.error('Reset error:', error);
-        setLoading(false);
-    })
-}
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
 
-const refetch = () => {
-    setLoading(true)
-    const payload = {
-        date_range: '',
-        searchQuery: '',
+        searchMonthlyReport(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false); // This is correct
+        }).catch((error) => {
+            console.error('Reset error:', error);
+            setLoading(false);
+        })
     }
 
-    searchMonthlyReport(payload).then((result) => {
-        const rows = Array.isArray(result?.data) ? result.data : [];
-        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-        setLoading(false); // ✅ ADD THIS - was missing!
-    }).catch((error) => {
-        console.error('Refetch error:', error);
-        setLoading(false);
-    })
-}
+    const refetch = () => {
+        setLoading(true)
+        const payload = {
+            date_range: '',
+            searchQuery: '',
+        }
 
-// initial data load - Internal
-useEffect(() => {
-    refetch()
-}, [])
+        searchMonthlyReport(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false); // ✅ ADD THIS - was missing!
+        }).catch((error) => {
+            console.error('Refetch error:', error);
+            setLoading(false);
+        })
+    }
+
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -920,29 +923,29 @@ useEffect(() => {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                          
+
                         </div>
-                          <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month Name
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    placeholder='Select a Month'
-                                    className='w-full'
-                                    optionLabel='name'
-                                    optionValue='name'
-                                    itemTemplate={itemTemplate}
-                                />
-                            </div>
+                        <div className='field'>
+                            <label htmlFor='monthName' className='font-bold'>
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id='monthName'
+                                value={updatedProduct.monthName}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        monthName: e.value,
+                                    })
+                                }
+                                options={months}
+                                placeholder='Select a Month'
+                                className='w-full'
+                                optionLabel='name'
+                                optionValue='name'
+                                itemTemplate={itemTemplate}
+                            />
+                        </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
                             <div className='flex flex-wrap gap-3'>
@@ -971,6 +974,25 @@ useEffect(() => {
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
+                        </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -1175,7 +1197,7 @@ useEffect(() => {
                             </div>
                         </div>
                     </div>
-                   
+
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1187,18 +1209,18 @@ useEffect(() => {
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                            <label className="font-bold mb-2 block">Approval</label>
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    inputId="approve"
-                                                    checked={approved}
-                                                    onChange={(e) => setApproved(!!e.checked)}
-                                                />
-                                                <label htmlFor="approve" className="text-sm">
-                                                    Add this document for all
-                                                </label>
-                                            </div>
-                                        </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

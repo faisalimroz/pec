@@ -30,15 +30,14 @@ export default function MonthlyReport() {
           className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 ${isCollapsed ? 'md:ml-14' : 'md:ml-52'} h-full`}
         >
           <Layout>
-            {/* ===== Top Heading ===== */}
+
             <LayoutHeader>
               <TopNav links={filteredNavLinks} />
               <div className='ml-auto flex items-center space-x-4'>
                 <UserNav />
               </div>
             </LayoutHeader>
-
-            {/* ===== Main ===== */}
+            
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>

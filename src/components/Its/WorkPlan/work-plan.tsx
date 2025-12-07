@@ -23,7 +23,6 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox';
-
 import FileIcon from '@/components/icons/FileIcon'
 import { useLocation } from 'react-router-dom';
 interface Attachment {
@@ -38,11 +37,13 @@ interface Product {
     monthName: string;
     date: string
     remarks: string
+    approved: boolean;
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
     updater?: string
     updatingTimestamp?: string
+    
 }
 
 export default function MonthlyReport() {
@@ -55,18 +56,19 @@ export default function MonthlyReport() {
         date: '',
         remarks: '',
         attachments: [],
+         approved: false,
     }
 
     const { pathname } = useLocation();
     const showAll = pathname.startsWith('/edms');
     const isEdms = pathname.startsWith('/edms');
     const { roles, permissions } = useAuth()
-  const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
-    console.log('itsManagerPermission ', itsManagerPermission );
+    const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
+    console.log('itsManagerPermission ', itsManagerPermission);
     const itsPermission = itsManagerPermission?.children?.find(
         (child) => child.name === 'its-work-plan');
-      
-    const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
+
+    const hasEditAccess = itsPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -145,7 +147,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -336,7 +338,6 @@ export default function MonthlyReport() {
             formData.append('subjectName', subjectName)
             formData.append('description', description)
             formData.append('approved', approved ? 'true' : 'false');
-
             formData.append('remarks', remarks)
             formData.append('monthName', monthName)
             formData.append('date', formatDate(formDate))
@@ -1093,6 +1094,25 @@ export default function MonthlyReport() {
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
+                        </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+                                    
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all 
+                                </label>
+                            </div>
                         </div>
                     </div>
                 )}

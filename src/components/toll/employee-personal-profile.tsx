@@ -25,7 +25,7 @@ import { Checkbox } from 'primereact/checkbox'
 interface Product {
   _id: string
   employeeName: string
-  approved: string
+  // approved: string
   employeeId: string
   dept: string
   firmName: string
@@ -37,6 +37,7 @@ interface Product {
   mobile?: string
   address?: string
   email?: string
+  approved: boolean;
   dateOfMobilization: string
   dateOfDemobilization: string
   remarks: string
@@ -71,7 +72,7 @@ export default function EmPersonalProfileTable() {
   let emptyProduct: Product = {
     _id: '',
     employeeName: '',
-    approved: '',
+    approved: false,
     employeeId: '',
     firmName: '',
     dept: '',
@@ -964,6 +965,7 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
               </p>
             )}
           </div>
+          
         </div>
       </Dialog>
         {/* upload data dialog  */}

@@ -42,6 +42,7 @@ interface Product {
   creator?: string
   creationTimestamp?: string
   updater?: string
+  approved: boolean;
   updatingTimestamp?: string
 }
 
@@ -55,17 +56,18 @@ export default function MonthlyReport() {
     types: '',
     date: '',
     remarks: '',
+    approved: false,
     attachments: [],
   }
 
-  
-  const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
 
-    const { roles, permissions } = useAuth()
+  const { pathname } = useLocation();
+  const showAll = pathname.startsWith('/edms');
+
+  const { roles, permissions } = useAuth()
   const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
-    const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-visual-records');
-    const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
+  const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-visual-records');
+  const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -144,7 +146,7 @@ export default function MonthlyReport() {
     try {
       setLoading2(true)
       const formData = new FormData()
-
+      formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       formData.append('subjectName', updatedProduct.subjectName)
       formData.append('description', updatedProduct.description)
       formData.append('remarks', updatedProduct.remarks)
@@ -533,7 +535,7 @@ export default function MonthlyReport() {
       setLoading(true);
 
       const payload = {
-        contentType: buttonValue || "",                               
+        contentType: buttonValue || "",
         date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
         searchQuery: searchKey || "",
         types: selectedCode?.code || '',
@@ -541,8 +543,8 @@ export default function MonthlyReport() {
 
       searchPictures(payload)
         .then((result) => {
-        const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+          const rows = Array.isArray(result?.data) ? result.data : [];
+          setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
           setLoading(false);
         })
         .catch((error) => {
@@ -666,8 +668,8 @@ export default function MonthlyReport() {
     }
 
     searchPictures(payload).then((result) => {
-    const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -689,7 +691,7 @@ export default function MonthlyReport() {
 
     searchPictures(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -705,8 +707,8 @@ export default function MonthlyReport() {
     }
 
     searchPictures(payload).then((result) => {
-   const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -918,14 +920,6 @@ export default function MonthlyReport() {
                 className='min-w-[12rem]'
                 header='Date'
               ></Column>
-              {/* <Column
-                                field='refNo'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-
-                                className='min-w-[12rem]'
-                                header='Ref No.'
-                            ></Column> */}
 
               <Column
                 field='subjectName'
@@ -1171,6 +1165,26 @@ export default function MonthlyReport() {
             <div className='col-span-2'>
               <h3 className='font-bold mb-2'>Add New Attachments</h3>
               <MultiFileInput onFilesChange={handleNewAttachments} />
+            </div>
+
+            <div className="col-span-2 mt-2">
+              <label className="font-bold mb-2 block">Approval</label>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="update-approve"
+
+                  checked={updatedProduct.approved}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      approved: !!e.checked,
+                    })
+                  }
+                />
+                <label htmlFor="update-approve" className="text-sm">
+                  Add this document for all (Approve)
+                </label>
+              </div>
             </div>
           </div>
         )}

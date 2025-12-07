@@ -40,13 +40,13 @@ export default function ProtectedRoute() {
       permission.authority === true
     )
 
-    console.log("EDMS access check:", {
-      hasEDMSAccess,
-      permissions: permissions.map(p => ({
-        name: p.name,
-        authority: p.authority
-      }))
-    })
+    // console.log("EDMS access check:", {
+    //   hasEDMSAccess,
+    //   permissions: permissions.map(p => ({
+    //     name: p.name,
+    //     authority: p.authority
+    //   }))
+    // })
 
     if (!hasEDMSAccess) {
       console.log("No EDMS access, redirecting to dashboard")

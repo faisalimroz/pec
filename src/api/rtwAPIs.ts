@@ -92,7 +92,7 @@ export async function searchSurveyReport(param: unknown) {
       },
     }
   )
-
+console.log(response.data)
   return response.data
 }
 export async function searchTechMaintenanceManual(param: unknown) {
@@ -107,8 +107,9 @@ export async function searchTechMaintenanceManual(param: unknown) {
         'Content-Type': 'application/json',
       },
     }
+    
   )
-
+console.log(response.data)
   return response.data
 }
 // monitoring and reporting
@@ -175,7 +176,7 @@ export async function searchTechMateiralTestReport(param: unknown) {
       },
     }
   )
-  
+  console.log(response.data)
   return response.data
 
 }

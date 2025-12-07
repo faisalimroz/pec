@@ -37,6 +37,7 @@ interface Product {
   date: string
   description: string
   remarks: string
+  approved: boolean
   type: string
   attachments: Attachment[]
   creator?: string
@@ -51,6 +52,7 @@ export default function AssetManagementTable() {
     slNo: '',
     fileName: '',
     type: '',
+    approved: false,
     date: '',
     description: '',
     remarks: '',
@@ -58,12 +60,12 @@ export default function AssetManagementTable() {
   }
   const { roles, permissions } = useAuth()
   const { pathname } = useLocation();
-       const showAll = pathname.startsWith('/edms');
- const adminManagerPermission = permissions.find((p) => p.name === 'admin');
- console.log('adminManagerPermission', adminManagerPermission);
-    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'asset-management');
-    console.log('adminPermission', adminPermission);
-    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+  const showAll = pathname.startsWith('/edms');
+  const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+  console.log('adminManagerPermission', adminManagerPermission);
+  const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'asset-management');
+  console.log('adminPermission', adminPermission);
+  const hasEditAccess = adminPermission?.edit_authority === true && showAll;
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
@@ -100,7 +102,7 @@ export default function AssetManagementTable() {
   const [buttonType, setButtonType] = useState("");
   // all update dialog func here
   const alltypes = [
-    
+
     { name: "Service Area 1", value: "Service Area 1" },
     { name: "Service Area 2", value: "Service Area 2" },
     { name: "Service Area 3", value: "Service Area 3" },
@@ -137,6 +139,8 @@ export default function AssetManagementTable() {
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
       formData.append('type', updatedProduct.type);
+
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
       })
@@ -323,7 +327,7 @@ export default function AssetManagementTable() {
       formData.append('description', description)
       formData.append('remarks', remarks)
       formData.append('date', formatDate(formDate))
-       formData.append('approved', approved ? 'true' : 'false');
+      formData.append('approved', approved ? 'true' : 'false');
       formData.append('type', type)
       filesInput.forEach((file) => {
         formData.append('attachments', file)
@@ -339,8 +343,12 @@ export default function AssetManagementTable() {
         }
       )
 
-      const response = res
-      
+     setDescription('')
+     setRemarks('')
+    
+     setApproved(false);
+     setType('');
+
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()
@@ -349,7 +357,7 @@ export default function AssetManagementTable() {
         const { message } = error.response.data
         toast.error(message)
       } else {
-       
+
       }
     } finally {
       setLoading2(false)
@@ -485,9 +493,9 @@ export default function AssetManagementTable() {
     return (
       <div className=''>
         <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
-                    Document List
-                </div>
-     
+          Document List
+        </div>
+
       </div>
     )
   }
@@ -519,7 +527,7 @@ export default function AssetManagementTable() {
 
 
     const buttons = [
-    
+
       { label: "Service Area 1", value: "Service Area 1" },
       { label: "Service Area 2", value: "Service Area 2" },
       { label: "Service Area 3", value: "Service Area 3" },
@@ -540,7 +548,7 @@ export default function AssetManagementTable() {
 
       searchAssetManagement(payload).then((result) => {
         const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
         setLoading(false);
       });
 
@@ -667,7 +675,7 @@ export default function AssetManagementTable() {
     }
     searchAssetManagement(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -676,7 +684,7 @@ export default function AssetManagementTable() {
     setDate(null)
     setDate2(null)
     setSearchKey('')
-       setButtonType('') 
+    setButtonType('')
 
     const payload = {
       type: '',
@@ -686,7 +694,7 @@ export default function AssetManagementTable() {
     setLoading(true)
     searchAssetManagement(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -814,10 +822,10 @@ export default function AssetManagementTable() {
       date_range: '',
       searchQuery: '',
     }
-  setButtonType('')
+    setButtonType('')
     searchAssetManagement(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -876,7 +884,7 @@ export default function AssetManagementTable() {
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-             className='min-w-[10rem]'
+            className='min-w-[10rem]'
           ></Column>
 
 
@@ -885,7 +893,7 @@ export default function AssetManagementTable() {
             field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-             className='min-w-[10rem]'
+            className='min-w-[10rem]'
             header='File Name/Subject'
           ></Column>
 
@@ -894,7 +902,7 @@ export default function AssetManagementTable() {
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
             // sortable
-              className='min-w-[10rem]'
+            className='min-w-[10rem]'
             header='Date'
           ></Column>
 
@@ -902,7 +910,7 @@ export default function AssetManagementTable() {
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-             className='min-w-[10rem]'
+            className='min-w-[10rem]'
             header='Description'
           ></Column>
 
@@ -1066,6 +1074,26 @@ export default function AssetManagementTable() {
               <h3 className='font-bold mb-2'>Add New Attachments</h3>
               <MultiFileInput onFilesChange={handleNewAttachments} />
             </div>
+            <div className="col-span-2 mt-2">
+              <label className="font-bold mb-2 block">Approval</label>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="update-approve"
+
+                  checked={updatedProduct.approved}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      approved: !!e.checked,
+                    })
+                  }
+                />
+                <label htmlFor="update-approve" className="text-sm">
+                  Add this document for all (Approve)
+                </label>
+              </div>
+            </div>
+
           </div>
         )}
       </Dialog>
@@ -1224,7 +1252,7 @@ export default function AssetManagementTable() {
                   </div>
                 </div>
               )}
-              
+
             </div>
           </>
         )}
@@ -1301,7 +1329,7 @@ export default function AssetManagementTable() {
                   id='date'
                   // @ts-ignore
                   value={formDate}
-                                    onChange={(e) => setFormDate(e.value)}
+                  onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -1333,18 +1361,18 @@ export default function AssetManagementTable() {
             </div>
           </div>
           <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
-                        </div>
+            <label className="font-bold mb-2 block">Approval</label>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                inputId="approve"
+                checked={approved}
+                onChange={(e) => setApproved(!!e.checked)}
+              />
+              <label htmlFor="approve" className="text-sm">
+                Add this document for all
+              </label>
+            </div>
+          </div>
         </>
       </Dialog>
 

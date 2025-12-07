@@ -140,6 +140,7 @@ export default function EmPersonalProfileTable() {
     position: '',
     dateOfMobilization: '',
     dateOfDemobilization: '',
+    approved: false,
     remarks: '',
     salary: '',
     boqNo: '',
@@ -155,7 +156,7 @@ export default function EmPersonalProfileTable() {
     termination: [],
     insuranceClaiming: [],
     profileImg: '',
-    approved: approved,
+   
   })
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
   const [viewDialogVisible, setViewDialogVisible] = useState<boolean>(false)

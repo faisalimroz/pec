@@ -34,9 +34,10 @@ interface Product {
   _id: string | null
   slNo: string
   subjectName: string
+  approved: boolean
   description: string
   date: string
-  type:string
+  type: string
   remarks: string
   attachments: Attachment[]
   creator?: string
@@ -51,25 +52,26 @@ export default function MonthlyReport() {
     slNo: '',
     subjectName: '',
     description: '',
-    type:'',
+    type: '',
+    approved: false,
     date: '',
     remarks: '',
     attachments: [],
   }
-const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+  const { pathname } = useLocation();
+  const showAll = pathname.startsWith('/edms');
 
   const { roles, permissions } = useAuth()
 
 
-   const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
-    console.log('rtManagerPermission', rtManagerPermission);
-    const roadSafetyPermission = rtManagerPermission?.children?.find(
-        (child) => child.name === 'r&t-monthly-roster');
-        console.log('roadSafetyPermission', roadSafetyPermission);
-    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;;
-const [approved, setApproved] = useState<boolean>(false);
-  
+  const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+  console.log('rtManagerPermission', rtManagerPermission);
+  const roadSafetyPermission = rtManagerPermission?.children?.find(
+    (child) => child.name === 'r&t-monthly-roster');
+  console.log('roadSafetyPermission', roadSafetyPermission);
+  const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;;
+  const [approved, setApproved] = useState<boolean>(false);
+
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -80,21 +82,21 @@ const [approved, setApproved] = useState<boolean>(false);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
   const dt = useRef<DataTable<Product[]>>(null)
- const [date, setDate] = useState<Date | null>(null)
+  const [date, setDate] = useState<Date | null>(null)
   const [date2, setDate2] = useState<Date | null>(null)
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
   const [subjectName, setSubjectName] = useState('')
   const [description, setDescription] = useState('')
-  
+
   const [remarks, setRemarks] = useState('')
- 
+
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [selectedCode, setSelectedCode] = useState(null)
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
- 
+
 
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -104,21 +106,21 @@ const [approved, setApproved] = useState<boolean>(false);
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
- const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [selectedType, setSelectedType] = useState<string | null>(null)
   const [type, setType] = useState<string>("");
-   const [buttonType, setButtonType] = useState("");
+  const [buttonType, setButtonType] = useState("");
   // all update dialog func here
-   const alltypes = [
+  const alltypes = [
     { name: "Plan", value: "Plan" },
     { name: "Actual", value: "Actual" },
 
   ];
-   const itemTemplate = (option: { name: string; value: string }) => (
-      <div className="flex items-center gap-2">
-        <FileIcon />
-        <span>{option.name}</span>
-      </div>
-    )
+  const itemTemplate = (option: { name: string; value: string }) => (
+    <div className="flex items-center gap-2">
+      <FileIcon />
+      <span>{option.name}</span>
+    </div>
+  )
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
@@ -140,6 +142,7 @@ const [approved, setApproved] = useState<boolean>(false);
       formData.append('subjectName', updatedProduct.subjectName)
       formData.append('description', updatedProduct.description)
       formData.append('type', updatedProduct.type)
+      formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
 
@@ -254,7 +257,7 @@ const [approved, setApproved] = useState<boolean>(false);
     try {
       setLoading2(true)
       const formData = new FormData()
-  formData.append('approved', approved ? 'true' : 'false');
+      formData.append('approved', approved ? 'true' : 'false');
       formData.append('subjectName', subjectName)
       formData.append('description', description)
       formData.append('type', type)
@@ -417,39 +420,7 @@ const [approved, setApproved] = useState<boolean>(false);
         <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
           Document List
         </div>
-        {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
 
-        {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-        {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-        {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
       </div>
     )
   }
@@ -463,45 +434,45 @@ const [approved, setApproved] = useState<boolean>(false);
             openNew={openNew}
             exportCSV={exportCSV}
             confirmDeleteSelected={confirmDeleteSelected}
-         
+
           />
         )}
 
-       <RefreshButton handleReset={handleReset} />
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }
-   interface ButtonGroupProps {
+  interface ButtonGroupProps {
     activeButton: string;
     onButtonClick: (value: string) => void;
 
   }
-const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
+  const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
 
     const buttons = [
       { label: 'Plan', value: 'Plan' },
       { label: 'Actual', value: 'Actual' },
-      
+
     ]
 
-      const handleButtonClick = (buttonValue: string) => {
-    
-          setSelectedType(buttonValue);
-          onButtonClick(buttonValue)
-          setLoading(true);
-          const payload = {
-            type: buttonValue || "",
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
-            searchQuery: searchKey || "",
-          };
-    
-          searchRTMonthlyRoaster(payload).then((result) => {
-            const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-            setLoading(false);
-          });
-    
-        };
+    const handleButtonClick = (buttonValue: string) => {
+
+      setSelectedType(buttonValue);
+      onButtonClick(buttonValue)
+      setLoading(true);
+      const payload = {
+        type: buttonValue || "",
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+        searchQuery: searchKey || "",
+      };
+
+      searchRTMonthlyRoaster(payload).then((result) => {
+        const rows = Array.isArray(result?.data) ? result.data : [];
+        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setLoading(false);
+      });
+
+    };
 
     return (
       <>
@@ -618,19 +589,19 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
     </>
   )
 
-  
-// search/reset/refetch
+
+  // search/reset/refetch
   const handleSearch = () => {
     setLoading(true)
     const payload = {
-       type: selectedType || '',
+      type: selectedType || '',
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
- console.log(payload)
+    console.log(payload)
     searchRTMonthlyRoaster(payload).then((result) => {
-       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -639,8 +610,8 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
     setDate(null)
     setDate2(null)
     setSearchKey('')
-     setButtonType('')
-  
+    setButtonType('')
+
     const payload = {
       type: '',
       date_range: '',
@@ -648,8 +619,8 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
     }
     setLoading(true)
     searchRTMonthlyRoaster(payload).then((result) => {
-       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -663,8 +634,8 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
     }
     setButtonType('')
     searchRTMonthlyRoaster(payload).then((result) => {
-       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -800,7 +771,7 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
     </>
   )
 
-  
+
 
   const attachmentBodyTemplate = (rowData: any) => {
     return <div>{rowData?.attachments?.length}</div>
@@ -816,7 +787,7 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-       <div className='mt-2'>
+        <div className='mt-2'>
           <ButtonGroup activeButton={buttonType}
             onButtonClick={setButtonType} ></ButtonGroup>
         </div>
@@ -1015,6 +986,25 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
               <h3 className='font-bold mb-2'>Add New Attachments</h3>
               <MultiFileInput onFilesChange={handleNewAttachments} />
             </div>
+            <div className="col-span-2 mt-2">
+              <label className="font-bold mb-2 block">Approval</label>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="update-approve"
+
+                  checked={updatedProduct.approved}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      approved: !!e.checked,
+                    })
+                  }
+                />
+                <label htmlFor="update-approve" className="text-sm">
+                  Add this document for all (Approve)
+                </label>
+              </div>
+            </div>
           </div>
         )}
       </Dialog>
@@ -1166,21 +1156,21 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
               />
             </div>
             <div className="field">
-                          <label htmlFor="type" className="font-bold">
-                            Type
-                          </label>
-                          <Dropdown
-                            id="type"
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                            options={alltypes}
-                            optionLabel='name'
-                            optionValue='name'
-                            itemTemplate={itemTemplate}
-                            placeholder="Select type"
-                            className="w-full"
-                          />
-                        </div>
+              <label htmlFor="type" className="font-bold">
+                Type
+              </label>
+              <Dropdown
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                itemTemplate={itemTemplate}
+                placeholder="Select type"
+                className="w-full"
+              />
+            </div>
 
             <div>
               <label htmlFor='date' className='font-bold'>
@@ -1191,7 +1181,7 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
                   id='date'
                   // @ts-ignore
                   value={formDate}
-                                    onChange={(e) => setFormDate(e.value)}
+                  onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -1210,19 +1200,19 @@ const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
               <MultiFileInput onFilesChange={handleFileChange} />
             </div>
           </div>
-           <div className="col-span-2 mt-2">
-                        <label className="font-bold mb-2 block">Approval</label>
-                        <div className="flex items-center gap-3">
-                            <Checkbox
-                                inputId="approve"
-                                checked={approved}
-                                onChange={(e) => setApproved(!!e.checked)}
-                            />
-                            <label htmlFor="approve" className="text-sm">
-                                Add this document for all
-                            </label>
-                        </div>
-                    </div>
+          <div className="col-span-2 mt-2">
+            <label className="font-bold mb-2 block">Approval</label>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                inputId="approve"
+                checked={approved}
+                onChange={(e) => setApproved(!!e.checked)}
+              />
+              <label htmlFor="approve" className="text-sm">
+                Add this document for all
+              </label>
+            </div>
+          </div>
         </>
       </Dialog>
 

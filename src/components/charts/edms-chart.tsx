@@ -157,6 +157,7 @@ export function EDMSLettersList() {
       
       // Store the water data for use in the card component
       setDailyDataArray(response.data.data) 
+      console.log(response.data.data,'hello water') 
       
       // Retain original 'letters' logic if needed, otherwise it's safe to skip this line:
       // setLetters(response.data) 
