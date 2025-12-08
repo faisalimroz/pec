@@ -54,7 +54,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         approved: false,
-        approved: false,
+        
         monthName: '',
         date: '',
         remarks: '',
@@ -316,51 +316,74 @@ export default function MonthlyReport() {
     const hideDeleteProductsDialog = () => {
         setDeleteProductsDialog(false)
     }
+const saveProduct = async () => {
 
+    const requiredFields = [
+      { value: subjectName, name: 'File Name/Subject' },
+      { value: description, name: 'Description' },
+      { value: remarks, name: 'Remarks' },
+      { value: monthName, name: 'Month Name' },
+      { value: formDate, name: 'Date' }
+    ];
 
-    const saveProduct = async () => {
-        try {
-            setLoading2(true)
-            const formData = new FormData()
-
-            formData.append('subjectName', subjectName)
-            formData.append('description', description)
-            formData.append('remarks', remarks)
-            formData.append('monthName', monthName)
-            formData.append('date', formatDate(formDate))
-             formData.append('approved', approved ? 'true' : 'false');
-            
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
-            const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/create`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            )
-
-            const response = res
-            console.log(response)
-
-            hideDialog()
-            toast.success('Data Saved Successfully')
-            refetch()
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
-        }
+    for (const field of requiredFields) {
+      if (!field.value) {
+        toast.warning(`${field.name} is required!`);
+        return; 
+      }
     }
+
+    try {
+      setLoading2(true)
+      const formData = new FormData()
+
+      formData.append('subjectName', subjectName)
+      formData.append('description', description)
+      formData.append('remarks', remarks)
+      formData.append('monthName', monthName)
+      formData.append('date', formatDate(formDate))
+      formData.append('approved', approved ? 'true' : 'false');
+      
+      if (filesInput && filesInput.length > 0) {
+        filesInput.forEach((file) => {
+            formData.append('attachments', file)
+        })
+      }
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/create`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+
+      setSubjectName('')
+      setDescription('')
+      setRemarks('')
+      setMonthName('')
+      setFormDate('')
+      setApproved(false)
+      setFilesInput([])
+
+      hideDialog()
+      toast.success('Data Saved Successfully')
+      refetch()
+    } catch (error: any) {
+      if (error.response) {
+        const { message } = error.response.data
+        toast.error(message)
+      } else {
+        // Optional: Handle generic errors here
+      }
+    } finally {
+      setLoading2(false)
+    }
+  }
 
     const editProduct = (product: Product) => {
         setProduct({ ...product })
@@ -906,7 +929,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column

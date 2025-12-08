@@ -310,19 +310,39 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+   const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: description, name: 'Description' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-         formData.append('approved', approved ? 'true' : 'false');
             formData.append('remarks', remarks)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/admin/it-electronics/tools/create`,
                 formData,
@@ -334,8 +354,13 @@ export default function MonthlyReport() {
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setDescription('')
+            setRemarks('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -351,7 +376,6 @@ export default function MonthlyReport() {
             setLoading2(false)
         }
     }
-
     const editProduct = (product: Product) => {
         setProduct({ ...product })
         setProductDialog(true)

@@ -324,10 +324,28 @@ export default function MonthlyReport() {
     setSubmitted(false)
     setProductDialog(false)
   }
+const saveProduct = async () => {
+    // --- 1. VALIDATION SHORTCUT ---
+    const requiredFields = [
+      { value: vehicleName, name: 'Vehicle Name' },
+      { value: taxTokenReport, name: 'Tax Token Report' },
+      { value: regNo, name: 'Reg No' },
+      { value: remarks, name: 'Remarks' },
+      { value: vehicleClass, name: 'Vehicle Class' },
+      { value: status, name: 'Status' },
+      { value: taxExpiryDate, name: 'Tax Expiry Date' },
+      { value: fitnessDuration, name: 'Fitness Duration' }
+    ];
 
-  const saveProduct = async () => {
-    // guard: ensure proper range string before posting
-    if (!fitnessDuration || !fitnessDuration.includes(' - ')) {
+    for (const field of requiredFields) {
+      if (!field.value) {
+        toast.warning(`${field.name} is required!`);
+        return;
+      }
+    }
+
+    // Specific validation for Fitness Duration range
+    if (!fitnessDuration.includes(' - ')) {
       toast.error('Please select a valid Fitness Duration range.')
       return
     }
@@ -335,27 +353,46 @@ export default function MonthlyReport() {
     try {
       setLoading2(true)
       const formData = new FormData()
+
       formData.append('vehicleName', vehicleName)
       formData.append('taxTokenReport', taxTokenReport)
       formData.append('regNo', regNo)
       formData.append('remarks', remarks)
       formData.append('vehicleClass', vehicleClass)
       formData.append('approved', approved ? 'true' : 'false');
-      formData.append('status', status) // string like "Exemption"
+      formData.append('status', status)
       formData.append('taxExpiryDate', formatDate(taxExpiryDate))
       formData.append('fitnessDuration', fitnessDuration)
-      filesInput.forEach((file) => formData.append('attachments', file))
 
-      // IMPORTANT: no manual Content-Type here
-      await axios.post(
+      // Append files only if they exist
+      if (filesInput && filesInput.length > 0) {
+        filesInput.forEach((file) => {
+          formData.append('attachments', file)
+        })
+      }
+
+      const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/create`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data', // Kept as per standard layout
           },
         }
       )
+
+      // --- 2. RESET ALL FIELDS HERE ---
+      setVehicleName('')
+      setTaxTokenReport('')
+      setRegNo('')
+      setRemarks('')
+      setVehicleClass('')
+      setApproved(false)
+      setStatus('')
+      setTaxExpiryDate(null)
+      setFitnessDuration('')
+      setFilesInput([])
 
       hideDialog()
       toast.success('Data Saved Successfully')
