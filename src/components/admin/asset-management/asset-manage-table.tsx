@@ -319,6 +319,22 @@ export default function AssetManagementTable() {
   }
 
   const saveProduct = async () => {
+    const requiredFields = [
+      { value: fileName, name: 'File Name/Subject' },
+      { value: formDate, name: 'date' },
+      { value: description, name: 'Description' },
+      { value: remarks, name: 'Remarks' },
+      { value: type, name: 'Type' }
+    ];
+
+    for (const field of requiredFields) {
+      if (!field.value) {
+        toast.warning(`${field.name} is required!`);
+        return; 
+      }
+    }
+
+    
     try {
       setLoading2(true)
       const formData = new FormData()
@@ -329,9 +345,7 @@ export default function AssetManagementTable() {
       formData.append('date', formatDate(formDate))
       formData.append('approved', approved ? 'true' : 'false');
       formData.append('type', type)
-      filesInput.forEach((file) => {
-        formData.append('attachments', file)
-      })
+      
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/create`,
         formData,
@@ -345,10 +359,10 @@ export default function AssetManagementTable() {
 
      setDescription('')
      setRemarks('')
-    
+     setfileName('')
      setApproved(false);
      setType('');
-
+      setFormDate('')
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()
