@@ -1206,7 +1206,7 @@ export default function EmPersonalProfileTable() {
               </div>
             </div>
 
-            <div className='gap-3 mt-5'>
+            {/* <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Agreements Files
               </label>
@@ -1254,7 +1254,7 @@ export default function EmPersonalProfileTable() {
               <div>
                 <MultiFileInput onFilesChange={handleInsuranceClaiming} />
               </div>
-            </div>
+            </div> */}
 
             <div className='field col-span-2'>
               <label htmlFor='profileImg' className='block mb-1 font-semibold'>

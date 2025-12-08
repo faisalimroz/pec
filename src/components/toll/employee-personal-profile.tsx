@@ -1144,7 +1144,7 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
                 <MultiFileInput onFilesChange={handleCvCertificates} />
               </div>
             </div>
-
+{/* 
             <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Agreements Files
@@ -1192,8 +1192,8 @@ const handleFileChange2 = (e: { target: { files: any[] } }) => {
 
               <div>
                 <MultiFileInput onFilesChange={handleInsuranceClaiming} />
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
 
             <div className='field col-span-2'>
               <label htmlFor='profileImg' className='block mb-1 font-semibold'>

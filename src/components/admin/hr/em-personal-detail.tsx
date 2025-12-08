@@ -1053,7 +1053,7 @@ export default function EmPersonalDetail({
                 onFilesChange={(files) => setNewCertificates(files)}
               />
             </div>
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label className='block font-bold mb-2'>
                 Existing Certificates
               </label>
@@ -1072,9 +1072,9 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className='mb-3'>
+            {/* <div className='mb-3'>
               <label htmlFor='newAgreements' className='block font-bold mb-2'>
                 New Agreements
               </label>
@@ -1102,9 +1102,9 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className='field mb-3'>
+            {/* <div className='field mb-3'>
               <label
                 htmlFor='newShowcaseLetters'
                 className='block font-bold mb-2'
@@ -1166,17 +1166,17 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className='field mb-2'>
+            {/* <div className='field mb-2'>
               <label htmlFor='newTerminations' className='block font-bold mb-2'>
                 New Resignation or Termination
               </label>
               <MultiFileInput
                 onFilesChange={(files) => setNewTerminations(files)}
               />
-            </div>
-            <div className='field'>
+            </div> */}
+            {/* <div className='field'>
               <label className='block font-bold mb-2'>
                 Existing Resignation or Termination
               </label>
@@ -1227,7 +1227,7 @@ export default function EmPersonalDetail({
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
             <div className="col-span-2 mt-2">
                                         <label className="font-bold mb-2 block">Approval</label>
                                         <div className="flex items-center gap-3">
