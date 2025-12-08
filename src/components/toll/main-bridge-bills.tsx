@@ -300,7 +300,7 @@ export default function MonthlyReport() {
     );
 
     const locations = [
-        { name: 'All', code: 'All' },
+  
         { name: 'Mawa', code: 'Mawa' },
         { name: 'Jinjira', code: 'Jinjira' },
     ]
@@ -339,7 +339,24 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+  const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: description, name: 'Description' },
+            { value: location, name: 'Location' },
+            { value: monthName, name: 'Month Name' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
@@ -349,11 +366,15 @@ export default function MonthlyReport() {
             formData.append('location', location)
             formData.append('remarks', remarks)
             formData.append('monthName', monthName)
-            formData.append('date', formatDate(formDate))
             formData.append('approved', approved ? 'true' : 'false');
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+            formData.append('date', formatDate(formDate))
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
 
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/toll/main-bridge/create`,
@@ -366,8 +387,15 @@ export default function MonthlyReport() {
                 }
             )
 
-            const response = res
-            console.log(response.data)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setDescription('')
+            setlocation('')
+            setRemarks('')
+            setMonthName('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -383,7 +411,6 @@ export default function MonthlyReport() {
             setLoading2(false)
         }
     }
-
     const editProduct = (product: Product) => {
         setProduct({ ...product })
         setProductDialog(true)

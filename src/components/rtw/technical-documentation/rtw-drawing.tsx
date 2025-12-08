@@ -329,7 +329,23 @@ const uploadFile = async () => {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+   const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: sender, name: 'Sender' },
+            { value: docNo, name: 'Doc No' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
@@ -338,11 +354,15 @@ const uploadFile = async () => {
             formData.append('sender', sender)
             formData.append('docNo', docNo)
             formData.append('remarks', remarks)
-         
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-drawing/create`,
                 formData,
@@ -354,8 +374,13 @@ const uploadFile = async () => {
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setSender('')
+            setDocNo('')
+            setRemarks('')
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -371,7 +396,6 @@ const uploadFile = async () => {
             setLoading2(false)
         }
     }
-
     const editProduct = (product: Product) => {
         setProduct({ ...product })
         setProductDialog(true)

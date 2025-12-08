@@ -366,21 +366,41 @@ export default function MonthlyReport() {
     }
 
     const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: location, name: 'Location' },
+            { value: eightAM, name: '8 AM Reading' },
+            { value: twelvePM, name: '12 PM Reading' },
+            { value: twoPM, name: '2 PM Reading' },
+            { value: sixPM, name: '6 PM Reading' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
+
+            // Calculate Max/Min inside the try block
             const maximumWaterLevel = Math.max(
                 Number(eightAM),
                 Number(twelvePM),
                 Number(twoPM),
                 Number(sixPM)
             );
-              const minimumWaterLevel = Math.min(
+            const minimumWaterLevel = Math.min(
                 Number(eightAM),
                 Number(twelvePM),
                 Number(twoPM),
                 Number(sixPM)
             );
+
             formData.append('eightAM', eightAM)
             formData.append('twelvePM', twelvePM)
             formData.append('twoPM', twoPM)
@@ -388,13 +408,16 @@ export default function MonthlyReport() {
             formData.append('description', description)
             formData.append('maximumWaterLevel', maximumWaterLevel.toString())
             formData.append('minimumWaterLevel', minimumWaterLevel.toString())
-          
-            formData.append('location', location ? location.name : '')
-
+            formData.append('location', location ? location.name : '') // Handle object
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/daily-water-level-report/create`,
                 formData,
@@ -406,8 +429,15 @@ export default function MonthlyReport() {
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setEightAM('')
+            setTwelvePM('')
+            setTwoPM('')
+            setSixPM('')
+            setDescription('')
+            setLocation(null)
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')

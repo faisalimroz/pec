@@ -393,7 +393,7 @@ const saveProduct = async () => {
       setTaxExpiryDate(null)
       setFitnessDuration('')
       setFilesInput([])
-
+      setFitnessRange([])
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch()

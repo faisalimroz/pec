@@ -326,20 +326,43 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+  const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: sender, name: 'Sender' },
+            { value: refNo, name: 'Reference No' },
+            { value: type, name: 'Type' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
-formData.append('approved', approved ? 'true' : 'false');
+
             formData.append('subjectName', subjectName)
             formData.append('sender', sender)
             formData.append('refNo', refNo)
             formData.append('remarks', remarks)
             formData.append('type', type)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/technical-documentation-survey-report/create`,
                 formData,
@@ -351,8 +374,15 @@ formData.append('approved', approved ? 'true' : 'false');
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setSender('')
+            setRefNo('')
+            setRemarks('')
+            setType('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -368,7 +398,6 @@ formData.append('approved', approved ? 'true' : 'false');
             setLoading2(false)
         }
     }
-
     const editProduct = (product: Product) => {
         setProduct({ ...product })
         setProductDialog(true)

@@ -84,7 +84,7 @@ export default function MedicineInOutRecord() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [fileName, setMedicineName] = useState('')
+    const [fileName, setFileName] = useState('')
     const [refNo, setRefNo] = useState('')
     const [description, setDescription] = useState('')
     const [approved, setApproved] = useState<boolean>(false);
@@ -327,21 +327,45 @@ export default function MedicineInOutRecord() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+   const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: fileName, name: 'File Name' },
+            { value: refNo, name: 'Reference No' },
+            { value: description, name: 'Description' },
+            { value: sender, name: 'Sender' },
+            { value: remarks, name: 'Remarks' },
+            { value: statusType, name: 'Status Type' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
-            formData.append('approved', approved ? 'true' : 'false');
+
             formData.append('fileName', fileName)
             formData.append('refNo', refNo)
             formData.append('description', description)
             formData.append('sender', sender)
             formData.append('remarks', remarks)
             formData.append('statusType', statusType)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/letter-and-official-correspondence/create`,
                 formData,
@@ -353,8 +377,17 @@ export default function MedicineInOutRecord() {
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setFileName('')
+            setRefNo('')
+            setDescription('')
+            setSender('')
+            setRemarks('')
+            setInOutType('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
+
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -1345,7 +1378,7 @@ export default function MedicineInOutRecord() {
                             </label>
                             <InputText
                                 id='fileName'
-                                onChange={(e) => setMedicineName(e.target.value)}
+                                onChange={(e) => setFileName(e.target.value)}
                                 required
                                 autoFocus
                                 className={classNames({

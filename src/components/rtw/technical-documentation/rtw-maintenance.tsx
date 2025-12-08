@@ -302,7 +302,23 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+   const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: description, name: 'Description' },
+            { value: docNo, name: 'Doc No' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
@@ -311,11 +327,16 @@ export default function MonthlyReport() {
             formData.append('description', description)
             formData.append('docNo', docNo)
             formData.append('remarks', remarks)
-formData.append('approved', approved ? 'true' : 'false');
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/technical-documentation-maintanence-manual/create`,
                 formData,
@@ -327,8 +348,14 @@ formData.append('approved', approved ? 'true' : 'false');
                 }
             )
 
-            const response = res
-            console.log(response.data)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setDescription('')
+            setDocNo('')
+            setRemarks('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')

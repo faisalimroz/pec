@@ -249,49 +249,74 @@ export default function MonthlyReport() {
   }
 
   const saveProduct = async () => {
-    try {
-      setLoading2(true)
-      const formData = new FormData()
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: description, name: 'Description' },
+            { value: remarks, name: 'Remarks' },
+            { value: monthName, name: 'Month Name' },
+            { value: formDate, name: 'Date' }
+        ];
 
-      formData.append('subjectName', subjectName)
-      formData.append('description', description)
-
-      formData.append('remarks', remarks)
-      formData.append('monthName', monthName)
-      formData.append('approved', approved ? 'true' : 'false');
-      formData.append('date', formatDate(formDate))
-      filesInput.forEach((file) => {
-        formData.append('attachments', file)
-      })
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
         }
-      )
 
-      const response = res
-      console.log(response.data)
+        try {
+            setLoading2(true)
+            const formData = new FormData()
 
-      hideDialog()
-      toast.success('Data Saved Successfully')
-      refetch()
-    } catch (error: any) {
-      if (error.response) {
-        const { message } = error.response.data
-        toast.error(message)
-      } else {
-        console.log(error)
-      }
-    } finally {
-      setLoading2(false)
+            formData.append('subjectName', subjectName)
+            formData.append('description', description)
+            formData.append('remarks', remarks)
+            formData.append('monthName', monthName)
+            formData.append('approved', approved ? 'true' : 'false');
+            formData.append('date', formatDate(formDate))
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
+            const res = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/create`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setDescription('')
+            setRemarks('')
+            setMonthName('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
+
+            hideDialog()
+            toast.success('Data Saved Successfully')
+            refetch()
+        } catch (error: any) {
+            if (error.response) {
+                const { message } = error.response.data
+                toast.error(message)
+            } else {
+                console.log(error)
+            }
+        } finally {
+            setLoading2(false)
+        }
     }
-  }
-
   const editProduct = (product: Product) => {
     setProduct({ ...product })
     setProductDialog(true)
