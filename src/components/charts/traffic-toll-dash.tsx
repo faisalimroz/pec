@@ -71,25 +71,32 @@ export function TrafficOfTollDash() {
   const [loading, setLoading] = useState(true)
   const [date, setDate] = useState<string>('')
 
-  const fetchData = async () => {
-    try {
-      setLoading(true)
-      const response = await axios.get<ApiResponse>(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/traffic/data`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      )
-      setData(response.data?.result)
-      setDate(response.data?.date)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    } finally {
-      setLoading(false)
-    }
+const fetchData = async () => {
+  try {
+    setLoading(true);
+    const response = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/traffic/data`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
+
+    // If your backend returns { success, date, result, ... }
+    const payload = response.data;
+    const result = Array.isArray(payload.result) ? payload.result : [];
+  
+    setData(result);
+    setDate(payload.date || '');
+     console.log(result)
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    setLoading(false);
   }
+};
+
 
   useEffect(() => {
     fetchData()

@@ -37,8 +37,9 @@ interface Product {
     description: string
     monthName: string;
     date: string
-    remarks: string
     attachments: Attachment[]
+    remarks: string
+    approved?: boolean
     creator?: string
     creationTimestamp?: string
     updater?: string
@@ -51,7 +52,7 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-
+approved: false,
         monthName: '',
 
         date: '',
@@ -227,7 +228,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-
+formData.append('approved', updatedProduct.approved ? 'true' : 'false');
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
@@ -1123,9 +1124,28 @@ formData.append('approved', approved ? 'true' : 'false');
                                 ))}
                             </div>
                         </div>
-                        <div className='col-span-2'>
+                       <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
+                        </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
                         </div>
                     </div>
                 )}

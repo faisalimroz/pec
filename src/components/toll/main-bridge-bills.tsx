@@ -41,6 +41,7 @@ interface Product {
     date: string
     remarks: string
     approved: boolean;
+
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -57,9 +58,10 @@ export default function MonthlyReport() {
         location: '',
         monthName: '',
         date: '',
+         approved: false,
         remarks: '',
         attachments: [],
-        approved: false,
+       
     }
 
     const { roles, permissions } = useAuth()
@@ -205,9 +207,10 @@ export default function MonthlyReport() {
             formData.append('description', updatedProduct.description)
             formData.append('location', updatedProduct.location)
             formData.append('remarks', updatedProduct.remarks)
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('date', updatedProduct.date)
             formData.append('monthName', updatedProduct.monthName);
-            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
+            
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -1144,7 +1147,7 @@ export default function MonthlyReport() {
                             <div className="flex items-center gap-3">
                                 <Checkbox
                                     inputId="update-approve"
-                                    // Make sure 'approved' exists in your updatedProduct state object
+                                    
                                     checked={updatedProduct.approved}
                                     onChange={(e) =>
                                         setUpdatedProduct({
@@ -1154,7 +1157,7 @@ export default function MonthlyReport() {
                                     }
                                 />
                                 <label htmlFor="update-approve" className="text-sm">
-                                    Add this document for all (Approve)
+                                    Add this document for all 
                                 </label>
                             </div>
                         </div>

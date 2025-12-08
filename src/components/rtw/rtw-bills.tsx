@@ -39,6 +39,7 @@ interface Product {
     creator?: string
     creationTimestamp?: string
     updater?: string
+     approved: boolean;
     updatingTimestamp?: string
 }
 
@@ -50,6 +51,7 @@ export default function KecLetter() {
         description: '',
         date: '',
         remarks: '',
+        approved: false,
         attachments: [],
     }
 
@@ -119,7 +121,7 @@ export default function KecLetter() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+  formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
 
@@ -1082,6 +1084,25 @@ formData.append('approved', approved ? 'true' : 'false');
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
+                        </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
                         </div>
                     </div>
                 )}

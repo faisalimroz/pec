@@ -76,6 +76,7 @@ export function TotalTollTraffic() {
         `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/total/data`,
         {
           headers: {
+              
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }

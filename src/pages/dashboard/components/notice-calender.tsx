@@ -87,7 +87,7 @@ export default function NoticeCalender(): JSX.Element {
   } = useQuery<ApiResponse>({
     queryKey: ['notices', formatDateForApi(date)],
     queryFn: async () => {
-      console.log('Fetching notices for date:', formatDateForApi(date))
+      // console.log('Fetching notices for date:', formatDateForApi(date))
 
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/notice/search/data/dashbord`,

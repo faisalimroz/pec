@@ -33,13 +33,14 @@ interface Product {
     _id: string | null
     slNo: string
     subjectName: string
-    materialType: string  
+    materialType: string
     date: string
     remarks: string
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
     updater?: string
+    approved: boolean;
     updatingTimestamp?: string
 }
 
@@ -50,12 +51,13 @@ export default function KecLetter() {
         subjectName: '',
         materialType: '',
         date: '',
+        approved: false,
         remarks: '',
         attachments: [],
     }
-const [approved, setApproved] = useState<boolean>(false);
-   const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+    const [approved, setApproved] = useState<boolean>(false);
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
 
     const { roles, permissions } = useAuth()
     const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
@@ -71,19 +73,19 @@ const [approved, setApproved] = useState<boolean>(false);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-   const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [materialType, setMaterialType] = useState('')
-   
+
     const [remarks, setRemarks] = useState('')
-   
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
- const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
+    const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -91,10 +93,10 @@ const [approved, setApproved] = useState<boolean>(false);
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-  const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -114,13 +116,13 @@ const [approved, setApproved] = useState<boolean>(false);
         try {
             setLoading2(true)
             const formData = new FormData()
-     
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('materialType', updatedProduct.materialType)
-     
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -169,81 +171,81 @@ const [approved, setApproved] = useState<boolean>(false);
             }
         })
     }
-const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/quality-material-test-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/rtw/quality-material-test-report/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     const updateProductDialogFooter = (
         <>
@@ -307,12 +309,12 @@ const uploadFile = async () => {
         try {
             setLoading2(true)
             const formData = new FormData()
-formData.append('approved', approved ? 'true' : 'false');
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('subjectName', subjectName)
             formData.append('materialType', materialType)
-          
+
             formData.append('remarks', remarks)
-            
+
             formData.append('date', formatDate(formDate))
             filesInput.forEach((file) => {
                 formData.append('attachments', file)
@@ -519,11 +521,11 @@ formData.append('approved', approved ? 'true' : 'false');
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -619,61 +621,61 @@ formData.append('approved', approved ? 'true' : 'false');
         </>
     )
 
-   const handleSearch = () => {
-          setLoading(true)
-          const payload = {
-              typesofDrawings: selectedCode?.code || '',
-              date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-              searchQuery: searchKey,
-            
-          }
-          console.log(payload,'hello')
-          searchMaterialsList(payload).then((result) => {
-             const rows = Array.isArray(result?.data) ? result.data : [];
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+            typesofDrawings: selectedCode?.code || '',
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+
+        }
+        console.log(payload, 'hello')
+        searchMaterialsList(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-              setLoading(false)
-          })
-      }
-  
-      const handleReset = () => {
-          setLoading(true)
-          const payload = {
-  
-              date_range: '',
-              searchQuery: '',
-          }
-  
-          setDate(null)
-          setDate2(null)
-          setSearchKey('')
-          setSelectedCode(null)
-  
-          searchMaterialsList(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            setLoading(false)
+        })
+    }
+
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+
+        searchMaterialsList(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-              setLoading(false)
-          })
-      }
-  
-     const refetch = () => {
-             setLoading(true)
-     
-             const payload = {
-     
-                 date_range: '',
-                 searchQuery: '',
-             }
-     
-             searchMaterialsList(payload).then((result) => {
-             const rows = Array.isArray(result?.data) ? result.data : [];
+            setLoading(false)
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchMaterialsList(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-                 setLoading(false)
-             })
-         }
-          // initial data load - Internal
-         useEffect(() => {
-             refetch()
-         }, [])
+            setLoading(false)
+        })
+    }
+    // initial data load - Internal
+    useEffect(() => {
+        refetch()
+    }, [])
 
 
     const filterSearchForm = (
@@ -803,7 +805,7 @@ formData.append('approved', approved ? 'true' : 'false');
         </>
     )
 
-   
+
 
     const attachmentBodyTemplate = (rowData: any) => {
         return <div>{rowData?.attachments?.length}</div>
@@ -886,7 +888,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 className='min-w-[8rem]'
                                 header='File Name'
                             ></Column>
-                           
+
                             <Column
                                 field='materialType'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -928,46 +930,46 @@ formData.append('approved', approved ? 'true' : 'false');
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -980,7 +982,7 @@ formData.append('approved', approved ? 'true' : 'false');
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='materialType' className='font-bold'>
                                 Material Type
@@ -996,7 +998,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 }
                             />
                         </div>
-                                                            {/* <div className="field">
+                        {/* <div className="field">
                                                                 <label htmlFor="location" className="font-bold">
                                                                     Location
                                                                 </label>
@@ -1031,7 +1033,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1065,7 +1067,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1095,6 +1097,25 @@ formData.append('approved', approved ? 'true' : 'false');
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
+                        </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -1179,7 +1200,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 <h3 className='font-bold'>Date</h3>
                                 <p>{selectedProduct.date}</p>
                             </div>
-                            
+
                             <div>
                                 <h3 className='font-bold'>File Name</h3>
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
@@ -1188,7 +1209,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 <h3 className='font-bold'>Material Type</h3>
                                 <p className='break-all'>{selectedProduct.materialType}</p>
                             </div>
-                           {/* <div className="field">
+                            {/* <div className="field">
                                         <label htmlFor="shiftName" className="font-bold">
                                             Shift Name
                                         </label>
@@ -1277,7 +1298,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1307,7 +1328,7 @@ formData.append('approved', approved ? 'true' : 'false');
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1319,18 +1340,18 @@ formData.append('approved', approved ? 'true' : 'false');
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                            <label className="font-bold mb-2 block">Approval</label>
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    inputId="approve"
-                                                    checked={approved}
-                                                    onChange={(e) => setApproved(!!e.checked)}
-                                                />
-                                                <label htmlFor="approve" className="text-sm">
-                                                    Add this document for all
-                                                </label>
-                                            </div>
-                                        </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

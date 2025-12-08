@@ -45,6 +45,7 @@ interface Product {
   attachments: Attachment[]
   creator?: string
   creationTimestamp?: string
+  approved?: boolean
   updater?: string
   updatingTimestamp?: string
 }
@@ -58,6 +59,7 @@ export default function MonthlyReport() {
     vehicleClass: '',
     regNo: '',
     status: '',
+    approved: false,
     taxExpiryDate: '',
     remarks: '',
     fitnessDuration: '',
@@ -66,12 +68,12 @@ export default function MonthlyReport() {
 
   const { roles, permissions } = useAuth()
   const { pathname } = useLocation();
-       const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
-     console.log('adminManagerPermission', adminManagerPermission);
-    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'vehicle-management');
+  const showAll = pathname.startsWith('/edms');
+  const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+  console.log('adminManagerPermission', adminManagerPermission);
+  const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'vehicle-management');
 
-    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+  const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<Product[]>([])
@@ -87,7 +89,7 @@ export default function MonthlyReport() {
   const [date, setDate] = useState<Date | null>(null)
   const [date2, setDate2] = useState<Date | null>(null)
   const [taxExpiryDate, setTaxExpiryDate] = useState<Date | null>(null)
-const [approved, setApproved] = useState<boolean>(false);
+  const [approved, setApproved] = useState<boolean>(false);
   const [searchKey, setSearchKey] = useState('')
   const [loading, setLoading] = useState(false)
   const [loading2, setLoading2] = useState(false)
@@ -197,6 +199,8 @@ const [approved, setApproved] = useState<boolean>(false);
       formData.append('remarks', updatedProduct.remarks)
       formData.append('taxExpiryDate', updatedProduct.taxExpiryDate)
       formData.append('status', updatedProduct.status)
+
+      formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       formData.append('vehicleClass', updatedProduct.vehicleClass)
       formData.append('fitnessDuration', updatedProduct.fitnessDuration)
 
@@ -336,7 +340,7 @@ const [approved, setApproved] = useState<boolean>(false);
       formData.append('regNo', regNo)
       formData.append('remarks', remarks)
       formData.append('vehicleClass', vehicleClass)
-       formData.append('approved', approved ? 'true' : 'false');
+      formData.append('approved', approved ? 'true' : 'false');
       formData.append('status', status) // string like "Exemption"
       formData.append('taxExpiryDate', formatDate(taxExpiryDate))
       formData.append('fitnessDuration', fitnessDuration)
@@ -456,8 +460,8 @@ const [approved, setApproved] = useState<boolean>(false);
   const leftToolbarTemplate = () => (
     <div className='flex items-center gap-3'>
       <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
-                    Document List
-                </div>
+        Document List
+      </div>
     </div>
   )
 
@@ -541,10 +545,10 @@ const [approved, setApproved] = useState<boolean>(false);
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
- 
+
     searchVehicleMgtRecord(payload).then((result) => {
-     const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -562,8 +566,8 @@ const [approved, setApproved] = useState<boolean>(false);
     }
     setLoading(true)
     searchVehicleMgtRecord(payload).then((result) => {
-   const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -577,7 +581,7 @@ const [approved, setApproved] = useState<boolean>(false);
     }
     searchVehicleMgtRecord(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -893,6 +897,25 @@ const [approved, setApproved] = useState<boolean>(false);
               <h3 className='font-bold mb-2'>Add New Attachments</h3>
               <MultiFileInput onFilesChange={handleNewAttachments} />
             </div>
+            <div className="col-span-2 mt-2">
+              <label className="font-bold mb-2 block">Approval</label>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="update-approve"
+
+                  checked={updatedProduct.approved}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      approved: !!e.checked,
+                    })
+                  }
+                />
+                <label htmlFor="update-approve" className="text-sm">
+                  Add this document for all (Approve)
+                </label>
+              </div>
+            </div>
           </div>
         )}
       </Dialog>
@@ -989,7 +1012,7 @@ const [approved, setApproved] = useState<boolean>(false);
               <div><h3 className='font-bold'>Vehicle Class</h3><p className='break-all'>{selectedProduct.vehicleClass}</p></div>
               <div><h3 className='font-bold'>Status</h3><p className='break-all'>{selectedProduct.status}</p></div>
               <div><h3 className='font-bold'>Registration Number</h3><p className='break-all'>{selectedProduct.regNo}</p></div>
-              <div><h3 className='font-bold'>Fitness Duration</h3><p className='break-all'>{selectedProduct.fitnessDuration }</p></div>
+              <div><h3 className='font-bold'>Fitness Duration</h3><p className='break-all'>{selectedProduct.fitnessDuration}</p></div>
               <div><h3 className='font-bold'>Remarks</h3><p className='break-all'>{selectedProduct.remarks}</p></div>
 
               {hasEditAccess && (
@@ -1122,18 +1145,18 @@ const [approved, setApproved] = useState<boolean>(false);
             </div>
           </div>
           <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
-                        </div>
+            <label className="font-bold mb-2 block">Approval</label>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                inputId="approve"
+                checked={approved}
+                onChange={(e) => setApproved(!!e.checked)}
+              />
+              <label htmlFor="approve" className="text-sm">
+                Add this document for all
+              </label>
+            </div>
+          </div>
         </>
       </Dialog>
 

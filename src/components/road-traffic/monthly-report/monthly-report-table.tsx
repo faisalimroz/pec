@@ -37,6 +37,7 @@ interface Product {
   description: string
   monthName: string;
   date: string
+  approved: boolean
   remarks: string
   attachments: Attachment[]
   creator?: string
@@ -51,21 +52,22 @@ export default function MonthlyReport() {
     slNo: '',
     subjectName: '',
     description: '',
+    approved: false,
     monthName: '',
     date: '',
     remarks: '',
     attachments: [],
   }
-const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+  const { pathname } = useLocation();
+  const showAll = pathname.startsWith('/edms');
 
   const { roles, permissions } = useAuth()
-       const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
-    console.log('rtManagerPermission', rtManagerPermission);
-    const roadSafetyPermission = rtManagerPermission?.children?.find(
-        (child) => child.name === 'r&t-monthly-report');
-        console.log('roadSafetyPermission', roadSafetyPermission);
-    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
+  const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+  console.log('rtManagerPermission', rtManagerPermission);
+  const roadSafetyPermission = rtManagerPermission?.children?.find(
+    (child) => child.name === 'r&t-monthly-report');
+  console.log('roadSafetyPermission', roadSafetyPermission);
+  const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
   const [approved, setApproved] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
@@ -140,6 +142,7 @@ const { pathname } = useLocation();
       formData.append('subjectName', updatedProduct.subjectName)
       formData.append('description', updatedProduct.description)
       formData.append('remarks', updatedProduct.remarks)
+      formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       formData.append('date', updatedProduct.date)
       formData.append('monthName', updatedProduct.monthName);
       newAttachments.forEach((file) => {
@@ -255,7 +258,7 @@ const { pathname } = useLocation();
 
       formData.append('remarks', remarks)
       formData.append('monthName', monthName)
-  formData.append('approved', approved ? 'true' : 'false');
+      formData.append('approved', approved ? 'true' : 'false');
       formData.append('date', formatDate(formDate))
       filesInput.forEach((file) => {
         formData.append('attachments', file)
@@ -595,10 +598,10 @@ const { pathname } = useLocation();
       date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
-       console.log(payload)
+    console.log(payload)
     searchRTMonthlyReport(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -756,7 +759,7 @@ const { pathname } = useLocation();
     setLoading(true)
 
     const payload = {
-      month:'',
+      month: '',
       date_range: '',
       searchQuery: '',
     }
@@ -908,23 +911,7 @@ const { pathname } = useLocation();
       >
         {updatedProduct && (
           <div className='grid grid-cols-2 gap-4'>
-            {/* <div className='field'>
-              <label htmlFor='patientType' className='font-bold'>
-                Patient Type
-              </label>
-              <Dropdown
-                id='patientType'
-                value={updatedProduct.patientType}
-                options={['Internal', 'Outside']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    patientType: e.target.value,
-                  })
-                }
-                placeholder='Select Patient Type'
-              />
-            </div> */}
+
             <div className='field'>
               <label htmlFor='description' className='font-bold'>
                 Description
@@ -1041,6 +1028,25 @@ const { pathname } = useLocation();
             <div className='col-span-2'>
               <h3 className='font-bold mb-2'>Add New Attachments</h3>
               <MultiFileInput onFilesChange={handleNewAttachments} />
+            </div>
+            <div className="col-span-2 mt-2">
+              <label className="font-bold mb-2 block">Approval</label>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="update-approve"
+
+                  checked={updatedProduct.approved}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      approved: !!e.checked,
+                    })
+                  }
+                />
+                <label htmlFor="update-approve" className="text-sm">
+                  Add this document for all (Approve)
+                </label>
+              </div>
             </div>
           </div>
         )}
@@ -1236,7 +1242,7 @@ const { pathname } = useLocation();
                   id='date'
                   // @ts-ignore
                   value={formDate}
-                                    onChange={(e) => setFormDate(e.value)}
+                  onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -1255,19 +1261,19 @@ const { pathname } = useLocation();
               <MultiFileInput onFilesChange={handleFileChange} />
             </div>
           </div>
-           <div className="col-span-2 mt-2">
-                        <label className="font-bold mb-2 block">Approval</label>
-                        <div className="flex items-center gap-3">
-                            <Checkbox
-                                inputId="approve"
-                                checked={approved}
-                                onChange={(e) => setApproved(!!e.checked)}
-                            />
-                            <label htmlFor="approve" className="text-sm">
-                                Add this document for all
-                            </label>
-                        </div>
-                    </div>
+          <div className="col-span-2 mt-2">
+            <label className="font-bold mb-2 block">Approval</label>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                inputId="approve"
+                checked={approved}
+                onChange={(e) => setApproved(!!e.checked)}
+              />
+              <label htmlFor="approve" className="text-sm">
+                Add this document for all
+              </label>
+            </div>
+          </div>
         </>
       </Dialog>
 

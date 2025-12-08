@@ -12,6 +12,7 @@ import { Calendar } from 'primereact/calendar'
 import { useAuth } from '@/provider/authProvider'
 import { useLocation } from 'react-router-dom'
 import jsPDF from 'jspdf'
+import { Checkbox } from '@radix-ui/react-checkbox'
 
 interface EmployeeData {
   _id: string
@@ -288,6 +289,7 @@ export default function EmPersonalDetail({
       formData.append('mobile', updatedEmployee.mobile || '')
       formData.append('address', updatedEmployee.address || '')
       formData.append('email', updatedEmployee.email || '')
+      formData.append('approved', updatedEmployee.approved ? 'true' : 'false');
       if (!newProfileImage) {
         formData.append('profileImg', '')
       } else {
@@ -1226,6 +1228,25 @@ export default function EmPersonalDetail({
                 </div>
               ))}
             </div>
+            <div className="col-span-2 mt-2">
+                                        <label className="font-bold mb-2 block">Approval</label>
+                                        <div className="flex items-center gap-3">
+                                            <Checkbox
+                                                inputId="update-approve"
+            
+                                                checked={updatedEmployee.approved}
+                                                onChange={(e) =>
+                                                    setUpdatedEmployee({
+                                                        ...updatedEmployee,
+                                                        approved: !!e.checked,
+                                                    })
+                                                }
+                                            />
+                                            <label htmlFor="update-approve" className="text-sm">
+                                                Add this document for all (Approve)
+                                            </label>
+                                        </div>
+                                    </div>
           </>
         )}
       </Dialog>

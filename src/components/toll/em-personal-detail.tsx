@@ -563,7 +563,7 @@ export default function EmPersonalDetail({
     const fetchEmployeeData = async () => {
       try {
         const response = await axios.get<EmployeeData>(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/get/${id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/toll/employee-personal-profile/get/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,

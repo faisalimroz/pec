@@ -43,6 +43,7 @@ interface Product {
     creator?: string
     creationTimestamp?: string
     updater?: string
+    approved: boolean;
     updatingTimestamp?: string
 }
 
@@ -57,14 +58,15 @@ export default function MedicineInOutRecord() {
         statusType: '',
         date: '',
         remarks: '',
+        approved: false,
         attachments: [],
     }
 
-   const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
 
     const { roles, permissions } = useAuth()
- const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
+    const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
     const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-additional-notes');
     const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
@@ -129,6 +131,7 @@ export default function MedicineInOutRecord() {
             formData.append('fileName', updatedProduct.fileName)
             formData.append('refNo', updatedProduct.refNo)
             formData.append('description', updatedProduct.description)
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('sender', updatedProduct.sender)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
@@ -328,7 +331,7 @@ export default function MedicineInOutRecord() {
         try {
             setLoading2(true)
             const formData = new FormData()
-formData.append('approved', approved ? 'true' : 'false');
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('fileName', fileName)
             formData.append('refNo', refNo)
             formData.append('description', description)
@@ -619,7 +622,7 @@ formData.append('approved', approved ? 'true' : 'false');
         }
         console.log(payload, 'hello')
         searchOfficialLetters(payload).then((result) => {
-    const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -639,7 +642,7 @@ formData.append('approved', approved ? 'true' : 'false');
         setSelectedCode(null)
 
         searchOfficialLetters(payload).then((result) => {
-        const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -655,7 +658,7 @@ formData.append('approved', approved ? 'true' : 'false');
         }
 
         searchOfficialLetters(payload).then((result) => {
-       const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -710,7 +713,7 @@ formData.append('approved', approved ? 'true' : 'false');
                         value={selectedCode}
                         onChange={(e) => setSelectedCode(e.value)}
                         options={codes}
-                        optionLabel='name'          
+                        optionLabel='name'
                         placeholder='Status'
                         className='border-none rounded-none ml-4 cursor-pointer ring-0'
                         itemTemplate={itemTemplate}
@@ -878,7 +881,7 @@ formData.append('approved', approved ? 'true' : 'false');
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
- 
+
                                 className='min-w-[8rem]'
                                 header='Description'
                             ></Column>
@@ -1129,6 +1132,26 @@ formData.append('approved', approved ? 'true' : 'false');
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
                 )}
             </Dialog>
@@ -1364,7 +1387,7 @@ formData.append('approved', approved ? 'true' : 'false');
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
@@ -1376,18 +1399,18 @@ formData.append('approved', approved ? 'true' : 'false');
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                            <label className="font-bold mb-2 block">Approval</label>
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    inputId="approve"
-                                                    checked={approved}
-                                                    onChange={(e) => setApproved(!!e.checked)}
-                                                />
-                                                <label htmlFor="approve" className="text-sm">
-                                                    Add this document for all
-                                                </label>
-                                            </div>
-                                        </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

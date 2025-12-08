@@ -48,6 +48,7 @@ interface Product {
     creator?: string
     creationTimestamp?: string
     updater?: string
+approved: boolean;
     updatingTimestamp?: string
 }
 
@@ -64,6 +65,7 @@ export default function MonthlyReport() {
         sixPM: '',
         description: '',
         date: '',
+        approved: false,
         attachments: [],
     }
 
@@ -257,6 +259,7 @@ export default function MonthlyReport() {
             formData.append('twoPM', updatedProduct.twoPM)
             formData.append('sixPM', updatedProduct.sixPM)
             formData.append('description', updatedProduct.description)
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('minimumWaterLevel', minimumWaterLevel)
             formData.append('maximumWaterLevel', maximumWaterLevel)
             formData.append('date', updatedProduct.date)
@@ -1299,6 +1302,25 @@ export default function MonthlyReport() {
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
+                        </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
                         </div>
                     </div>
                 )}

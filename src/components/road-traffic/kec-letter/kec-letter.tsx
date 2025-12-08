@@ -36,6 +36,7 @@ interface Product {
     date: string
     remarks: string
     attachments: Attachment[]
+    approved: boolean
     creator?: string
     creationTimestamp?: string
     updater?: string
@@ -48,6 +49,7 @@ export default function KecLetter() {
         slNo: '',
         subjectName: '',
         description: '',
+        approved: false,
         date: '',
         remarks: '',
         attachments: [],
@@ -117,7 +119,7 @@ const { pathname } = useLocation();
       
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-
+           formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
            
@@ -254,8 +256,7 @@ const { pathname } = useLocation();
             )
 
             const response = res
-            console.log(response)
-
+    
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -396,39 +397,7 @@ const { pathname } = useLocation();
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+               
             </div>
         )
     }
@@ -465,7 +434,7 @@ const { pathname } = useLocation();
         const zip = new JSZip()
         const folder = zip.folder('attachments')
 
-        console.log('dataaaaaaaaaaaaaa===> ', attachments)
+
 
         for (const attachment of attachments) {
             try {
@@ -572,7 +541,8 @@ const { pathname } = useLocation();
       setSelectedCode(null)
   
       searchRTKec(payload).then((result) => {
-        setProducts(result?.data)
+       const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
         setLoading(false)
       })
     }
@@ -585,7 +555,8 @@ const refetch = () => {
     }
 
     searchRTKec(payload).then((result) => {
-      setProducts(result?.data)
+     const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
@@ -716,8 +687,6 @@ const refetch = () => {
         </>
     )
 
-    
-
     // initial data load - Internal
     useEffect(() => {
         refetch()
@@ -727,7 +696,7 @@ const refetch = () => {
         return <div>{rowData?.attachments?.length}</div>
     }
 
-    // console.log(products)
+
 
     return (
         <div className=''>
@@ -954,6 +923,25 @@ const refetch = () => {
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
+                        </div>
+                        <div className="col-span-2 mt-2">
+                            <label className="font-bold mb-2 block">Approval</label>
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    inputId="update-approve"
+
+                                    checked={updatedProduct.approved}
+                                    onChange={(e) =>
+                                        setUpdatedProduct({
+                                            ...updatedProduct,
+                                            approved: !!e.checked,
+                                        })
+                                    }
+                                />
+                                <label htmlFor="update-approve" className="text-sm">
+                                    Add this document for all (Approve)
+                                </label>
+                            </div>
                         </div>
                     </div>
                 )}
