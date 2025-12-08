@@ -65,9 +65,7 @@ export default function MonthlyReport() {
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'fire-mgt');
     const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
+   
     const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
@@ -315,20 +313,39 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+  const saveProduct = async () => {
+      
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name/File' },
+            { value: description, name: 'Description' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-       
             formData.append('remarks', remarks)
-       formData.append('approved', approved ? 'true' : 'false');
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+           
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/admin/fire/tools/create`,
                 formData,
@@ -340,8 +357,13 @@ export default function MonthlyReport() {
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setDescription('')
+            setRemarks('')
+            setApproved(false)
+            setFormDate('') // Kept as requested
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -855,7 +877,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                            

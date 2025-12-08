@@ -317,20 +317,38 @@ const [approved, setApproved] = useState<boolean>(false);
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+ const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        // Description is NOT here, so it is optional
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' },
+            { value: formDate, name: 'Description' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
 
             formData.append('subjectName', subjectName)
-            formData.append('description', description)
-      
+            formData.append('description', description) 
             formData.append('remarks', remarks)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/admin/fire/monthly-activity/create`,
                 formData,
@@ -342,8 +360,12 @@ const [approved, setApproved] = useState<boolean>(false);
                 }
             )
 
-            const response = res
-            console.log(response)
+            setSubjectName('')
+            setDescription('')
+            setRemarks('')
+            setApproved(false)
+            setFormDate('') 
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -864,7 +886,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
 

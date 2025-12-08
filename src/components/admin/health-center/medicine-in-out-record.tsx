@@ -315,7 +315,23 @@ export default function MedicineInOutRecord() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+ const saveProduct = async () => {
+    
+        const requiredFields = [
+            { value: medicineName, name: 'Medicine Name' },
+            { value: refNo, name: 'Reference No' },
+            { value: inoutType, name: 'In/Out Type' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
@@ -326,9 +342,14 @@ export default function MedicineInOutRecord() {
             formData.append('remarks', remarks)
             formData.append('inoutType', inoutType)
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+     
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/create`,
                 formData,
@@ -340,9 +361,15 @@ export default function MedicineInOutRecord() {
                 }
             )
 
-            const response = res
-            console.log(response)
-            console.log(response.data, 'abc')
+            
+            setMedicineName('')
+            setRefNo('')
+            setApproved(false)
+            setRemarks('')
+            setInOutType('')
+            setFormDate('')
+            setFilesInput([])
+
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -357,7 +384,6 @@ export default function MedicineInOutRecord() {
             setLoading2(false)
         }
     }
-
     const editProduct = (product: Product) => {
         setProduct({ ...product })
         setProductDialog(true)

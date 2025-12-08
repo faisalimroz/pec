@@ -36,7 +36,7 @@ interface Product {
     description: string
     date: string
     remarks: string
-  approved: boolean
+    approved: boolean
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -58,8 +58,8 @@ export default function MedicalEquipment() {
 
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-         const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'health-center');
     const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
@@ -88,8 +88,8 @@ export default function MedicalEquipment() {
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-  
-const [approved, setApproved] = useState<boolean>(false);
+
+    const [approved, setApproved] = useState<boolean>(false);
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
@@ -98,10 +98,10 @@ const [approved, setApproved] = useState<boolean>(false);
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
-      const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -121,12 +121,12 @@ const [approved, setApproved] = useState<boolean>(false);
         try {
             setLoading2(true)
             const formData = new FormData()
-         
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('approved', updatedProduct.approved ? 'true' : 'false')           
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('remarks', updatedProduct.remarks)
-            formData.append('date', updatedProduct.date)       
+            formData.append('date', updatedProduct.date)
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -175,7 +175,7 @@ const [approved, setApproved] = useState<boolean>(false);
             }
         })
     }
-   
+
     const updateProductDialogFooter = (
         <>
             <Button
@@ -193,80 +193,80 @@ const [approved, setApproved] = useState<boolean>(false);
         </>
     )
     const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-equipment-record/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-equipment-record/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
+
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
 
     // ending all update dialog funcs
 
@@ -310,6 +310,21 @@ const [approved, setApproved] = useState<boolean>(false);
     }
 
     const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: description, name: 'Description' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
@@ -319,9 +334,14 @@ const [approved, setApproved] = useState<boolean>(false);
             formData.append('remarks', remarks)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-equipment-record/create`,
                 formData,
@@ -333,8 +353,13 @@ const [approved, setApproved] = useState<boolean>(false);
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setDescription('')
+            setRemarks('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -476,7 +501,7 @@ const [approved, setApproved] = useState<boolean>(false);
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -484,18 +509,18 @@ const [approved, setApproved] = useState<boolean>(false);
     const rightToolbarTemplate = () => {
         return (
             <>
-               {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -583,7 +608,7 @@ const [approved, setApproved] = useState<boolean>(false);
                 outlined
                 onClick={hideViewDialog}
             />
-           
+
         </>
     )
 
@@ -598,35 +623,35 @@ const [approved, setApproved] = useState<boolean>(false);
     }
 
     const handleSearch = () => {
-       setLoading(true)
+        setLoading(true)
         const payload = {
-        
+
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
 
         searchMedicalEquipment(payload).then((result) => {
-          const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-         setLoading(true)
+        setLoading(true)
         const payload = {
-       
-               date_range: '',
-      searchQuery: '',
+
+            date_range: '',
+            searchQuery: '',
         }
 
-                  setDate(null)
-            setDate2(null)
-            setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
         setSelectedCode(null)
 
         searchMedicalEquipment(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -672,7 +697,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -752,15 +777,15 @@ const [approved, setApproved] = useState<boolean>(false);
 
     const refetch = () => {
         setLoading(true)
-     
+
         const payload = {
-        
+
             date_range: '',
             searchQuery: '',
         }
 
         searchMedicalEquipment(payload).then((result) => {
-          const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -852,7 +877,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 className='min-w-[8rem]'
                                 header='Subject'
                             ></Column>
-                         
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -894,46 +919,46 @@ const [approved, setApproved] = useState<boolean>(false);
                     </TabPanel>
                 </TabView>
             </div>
-   <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -946,7 +971,7 @@ const [approved, setApproved] = useState<boolean>(false);
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                    
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -977,7 +1002,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 }
                             />
                         </div>
-                    
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1010,7 +1035,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1147,8 +1172,8 @@ const [approved, setApproved] = useState<boolean>(false);
                                 <h3 className='font-bold'>Subject</h3>
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
-                       
-                            
+
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
@@ -1187,7 +1212,7 @@ const [approved, setApproved] = useState<boolean>(false);
             >
                 <>
                     <div className='grid grid-cols-2 items-center gap-6'>
-                       
+
                         <div className='field'>
                             <label htmlFor='subjectName' className='font-bold'>
                                 Subject
@@ -1215,7 +1240,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 required
                             />
                         </div>
-                       
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1256,18 +1281,18 @@ const [approved, setApproved] = useState<boolean>(false);
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 

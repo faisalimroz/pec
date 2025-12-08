@@ -321,7 +321,7 @@ export default function AssetManagementTable() {
   const saveProduct = async () => {
     const requiredFields = [
       { value: fileName, name: 'File Name/Subject' },
-      { value: formDate, name: 'date' },
+      { value: formDate, name: 'Date' },
       { value: description, name: 'Description' },
       { value: remarks, name: 'Remarks' },
       { value: type, name: 'Type' }
