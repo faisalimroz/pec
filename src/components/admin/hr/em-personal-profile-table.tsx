@@ -471,7 +471,7 @@ export default function EmPersonalProfileTable() {
             <ButtonGroup
               selectedProducts={selectedProducts}
               openNew={openNew}
-              openNew2={openNew2}
+              // openNew2={openNew2}
               exportCSV={exportCSV}
             />
           </div>
@@ -597,7 +597,7 @@ export default function EmPersonalProfileTable() {
         />
       </div>
 
-      <div>
+      {/* <div>
         <Dropdown
           value={selectedType}
           onChange={(e) => setSelectedType(e.value)}
@@ -606,7 +606,7 @@ export default function EmPersonalProfileTable() {
           placeholder='Select Type'
           className='border-none rounded-none ml-4 cursor-pointer ring-0'
         />
-      </div>
+      </div> */}
 
       <IconField iconPosition='left' className='relative w-fit'>
         <InputIcon className='pi pi-search' />

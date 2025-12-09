@@ -643,7 +643,7 @@ export default function EmPersonalDetail({
           <div>
             <button
               type='button'
-              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400 hover:text-white m-3'
+              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400  m-3'
               onClick={() => openUpdateDialog(employeeData)}
             >
               Edit Profile Details
@@ -651,7 +651,7 @@ export default function EmPersonalDetail({
 
             <button
               onClick={downloadEmployeePDF}
-              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400 hover:text-white m-3'
+              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400  m-3'
             >
               <i className='pi pi-download' /> Download PDF
             </button>
@@ -1047,15 +1047,15 @@ export default function EmPersonalDetail({
 
             <div className='field mb-3'>
               <label htmlFor='newCertificates' className='block font-bold mb-2'>
-                New Certificates
+                Add CV
               </label>
               <MultiFileInput
                 onFilesChange={(files) => setNewCertificates(files)}
               />
             </div>
-            {/* <div className='field mb-3'>
+            <div className='field mb-3'>
               <label className='block font-bold mb-2'>
-                Existing Certificates
+                Existing CV
               </label>
               {updatedEmployee.cvCertificates.map((attachment) => (
                 <div key={attachment._id} className='flex items-center'>
@@ -1068,11 +1068,12 @@ export default function EmPersonalDetail({
                   </a>
                   <Button
                     icon='pi pi-times text-red-500'
+                    type="button"
                     onClick={() => removeCertificates(attachment._id)}
                   />
                 </div>
               ))}
-            </div> */}
+            </div>
 
             {/* <div className='mb-3'>
               <label htmlFor='newAgreements' className='block font-bold mb-2'>
@@ -1228,7 +1229,7 @@ export default function EmPersonalDetail({
                 </div>
               ))}
             </div> */}
-            <div className="col-span-2 mt-2">
+            {/* <div className="col-span-2 mt-2">
                                         <label className="font-bold mb-2 block">Approval</label>
                                         <div className="flex items-center gap-3">
                                             <Checkbox
@@ -1246,7 +1247,7 @@ export default function EmPersonalDetail({
                                                 Add this document for all (Approve)
                                             </label>
                                         </div>
-                                    </div>
+                                    </div> */}
           </>
         )}
       </Dialog>

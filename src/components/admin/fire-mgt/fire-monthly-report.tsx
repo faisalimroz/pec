@@ -324,7 +324,7 @@ const [approved, setApproved] = useState<boolean>(false);
             { value: subjectName, name: 'Subject Name' },
             { value: remarks, name: 'Remarks' },
             { value: formDate, name: 'Date' },
-            { value: formDate, name: 'Description' }
+            { value: description, name: 'Description' }
         ];
 
         for (const field of requiredFields) {

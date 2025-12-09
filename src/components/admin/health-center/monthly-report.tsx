@@ -417,7 +417,7 @@ const [approved, setApproved] = useState<boolean>(false);
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/monthly-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -467,7 +467,7 @@ const [approved, setApproved] = useState<boolean>(false);
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/monthly-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

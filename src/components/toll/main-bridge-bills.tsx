@@ -672,6 +672,12 @@ export default function MonthlyReport() {
 
     const handleReset = () => {
         setLoading(true)
+          setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+        setSelectedLocation(null)
+
         const payload = {
             monthName: selectedCode?.code || '',
             location: selectedLocation?.code || '',
@@ -679,12 +685,7 @@ export default function MonthlyReport() {
             searchQuery: '',
         }
 
-        setDate(null)
-        setDate2(null)
-        setSearchKey('')
-        setSelectedCode(null)
-        setSelectedLocation(null)
-
+      
         searchMainBridgeBills(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
@@ -932,7 +933,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column

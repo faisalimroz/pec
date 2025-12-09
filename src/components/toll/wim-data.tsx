@@ -1270,7 +1270,7 @@ export default function AssetManagementTable() {
                                         )}
                                     </div>
 
-                                    <div className='field'>
+                                    <div className='field hidden'>
                                         <label htmlFor='total' className='font-bold'>
                                             Total (Auto)
                                         </label>

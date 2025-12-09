@@ -56,15 +56,15 @@ export default function MonthlyReport() {
         description: '',
         location: '',
         monthName: '',
-         approved: false,
+        approved: false,
         date: '',
         remarks: '',
         attachments: [],
     }
 
     const { roles, permissions } = useAuth()
-        const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
     const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
     const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-daily-report');
     const hasEditAccess = tollPermission?.edit_authority === true && showAll;
@@ -207,7 +207,7 @@ export default function MonthlyReport() {
             formData.append('location', updatedProduct.location)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-                formData.append('approved', updatedProduct.approved ? 'true' : 'false')
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('monthName', updatedProduct.monthName);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
@@ -297,7 +297,7 @@ export default function MonthlyReport() {
         </div>
     );
 
-   
+
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -333,7 +333,7 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-   const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
@@ -658,7 +658,7 @@ export default function MonthlyReport() {
         }
         console.log(payload, 'hello')
         searchDailyReport(payload).then((result) => {
-             const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -666,6 +666,11 @@ export default function MonthlyReport() {
 
     const handleReset = () => {
         setLoading(true)
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+        setSelectedLocation(null)
         const payload = {
             monthName: selectedCode?.code || '',
             location: selectedLocation?.code || '',
@@ -673,11 +678,7 @@ export default function MonthlyReport() {
             searchQuery: '',
         }
 
-        setDate(null)
-        setDate2(null)
-        setSearchKey('')
-        setSelectedCode(null)
-        setSelectedLocation(null)
+
 
         searchDailyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
@@ -748,7 +749,7 @@ export default function MonthlyReport() {
                     icon={() => <i className='pi pi-angle-down' />}
                 />
 
-           
+
 
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
@@ -906,7 +907,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column
@@ -1041,7 +1042,7 @@ export default function MonthlyReport() {
                                 }
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1125,22 +1126,22 @@ export default function MonthlyReport() {
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                         <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="update-approve"
-                                    // Make sure 'approved' exists in your updatedProduct state object
-                                    checked={updatedProduct.approved}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            approved: !!e.checked,
-                                        })
-                                    }
-                                />
-                                <label htmlFor="update-approve" className="text-sm">
-                                    Add this document for all (Approve)
-                                </label>
-                            </div>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="update-approve"
+                                // Make sure 'approved' exists in your updatedProduct state object
+                                checked={updatedProduct.approved}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        approved: !!e.checked,
+                                    })
+                                }
+                            />
+                            <label htmlFor="update-approve" className="text-sm">
+                                Add this document for all (Approve)
+                            </label>
+                        </div>
                     </div>
                 )}
             </Dialog>
@@ -1319,7 +1320,7 @@ export default function MonthlyReport() {
                                 itemTemplate={itemTemplate}
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1358,19 +1359,19 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                     <div className="col-span-2 mt-2">
-                                            <label className="font-bold mb-2 block">Approval</label>
-                                            <div className="flex items-center gap-3">
-                                                <Checkbox
-                                                    inputId="approve"
-                                                    checked={approved}
-                                                    onChange={(e) => setApproved(!!e.checked)}
-                                                />
-                                                <label htmlFor="approve" className="text-sm">
-                                                    Add this document for all
-                                                </label>
-                                            </div>
-                                        </div>
+                    <div className="col-span-2 mt-2">
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

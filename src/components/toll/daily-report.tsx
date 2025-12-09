@@ -56,19 +56,25 @@ export default function VehicleDetectTollTable() {
     const [date2, setDate2] = useState<string>("");
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
     const [selectedTraffic, setSelectedTraffic] = useState<string | null>(null);
-    const [footerTotal, setFooterTotal] = useState<number>(0); // New state for dynamic footer
+    const [footerTotal, setFooterTotal] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [allData, setAllData] = useState<any>({});
     const [summaryTotal, setSummaryTotal] = useState<number>(0);
     const [todaysDate, setTodaysDate] = useState("");
+    
+    // Bulk Upload States
     const [bulkLocation, setBulkLocation] = useState<string | null>(null);
     const [bulkDialog, setBulkDialog] = useState(false);
     const [file, setFile] = useState<any>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
     const [formDate, setFormDate] = useState<string>("");
+
+    // Delete States
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [deleteDate, setDeleteDate] = useState("");
+    const [deleteLocation, setDeleteLocation] = useState<string | null>(null); // New State for Delete Location
+    
     const [loading2, setLoading2] = useState(false);
     const { pathname } = useLocation();
     const showAll = pathname.startsWith("/edms");
@@ -103,139 +109,111 @@ export default function VehicleDetectTollTable() {
         return `${day}-${month}-${year}`;
     }
 
-  useEffect(() => {
-    // Fetch today's data on initial load
-    fetchTodaysData();
-  }, []);
+    useEffect(() => {
+        fetchTodaysData();
+    }, []);
 
-  const fetchTodaysData = async () => {
-    setLoading(true);
-    try {
-      // Get today's date
-      const today = new Date();
-      const todayFormatted = formatDate(today);
+    const fetchTodaysData = async () => {
+        setLoading(true);
+        try {
+            const today = new Date();
+            const todayFormatted = formatDate(today);
 
-      const payload = {
-        date_range: `${todayFormatted} to ${todayFormatted}`,
-        lane: selectedLocation || "",
-        dataType: selectedTraffic || "",
-      };
+            const payload = {
+                date_range: `${todayFormatted} to ${todayFormatted}`,
+                lane: selectedLocation || "",
+                dataType: selectedTraffic || "",
+            };
 
-      const result = await searchKecManual(payload);
+            const result = await searchKecManual(payload);
 
-      // 1. Table Data
-      setProducts(result?.laneData || []);
+            setProducts(result?.laneData || []);
+            const overallTotals = result?.overallTotals || {};
+            setAllData(overallTotals);
 
-      // 2. Footer Data
-      const overallTotals = result?.overallTotals || {};
-      setAllData(overallTotals);
+            if (selectedTraffic === "Toll") {
+                setSummaryTotal(overallTotals.totalOverallAmount || 0);
+                setFooterTotal(overallTotals.totalOverallAmount || 0);
+            } else {
+                setSummaryTotal(overallTotals.totalOverallVehicles || 0);
+                setFooterTotal(overallTotals.totalOverallVehicles || 0);
+            }
 
-      if (selectedTraffic === "Toll") {
-        setSummaryTotal(overallTotals.totalOverallAmount || 0);
-        setFooterTotal(overallTotals.totalOverallAmount || 0);
-      } else {
-        setSummaryTotal(overallTotals.totalOverallVehicles || 0);
-        setFooterTotal(overallTotals.totalOverallVehicles || 0);
-      }
+            setTodaysDate(result?.date || "");
+            setDate(today as any);
+            setDate2(today as any);
 
-      setTodaysDate(result?.date || "");
-
-      // Set initial dates to today
-      setDate(today);
-      setDate2(today);
-
-    } catch (error) {
-      console.error("Initial fetch failed:", error);
-      toast.error("Failed to fetch today's data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearch = async () => {
-    setLoading(true);
-    try {
-        const payload = {
-            date_range:
-                date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
-            lane: selectedLocation || "",
-            dataType: selectedTraffic || "",
-        };
-
-        const result = await searchKecManual(payload);
-
-        // Table rows
-        setProducts(result?.laneData || []);
-
-        // Footer
-        const overallTotals = result?.overallTotals || {};
-        setAllData(overallTotals);
-
-        // Dynamic total (Traffic → vehicles, Toll → money)
-        if (selectedTraffic === "Toll") {
-            setSummaryTotal(overallTotals.totalOverallSum || 0);
-            setFooterTotal(overallTotals.totalOverallSum || 0);
-        } else {
-            setSummaryTotal(overallTotals.totalOverallVehicles || 0);
-            setFooterTotal(overallTotals.totalOverallVehicles || 0);
+        } catch (error) {
+            console.error("Initial fetch failed:", error);
+            toast.error("Failed to fetch today's data");
+        } finally {
+            setLoading(false);
         }
-
-        // Shown at top
-        setTodaysDate(result?.date || "");
-    } catch (error) {
-        console.error("Search failed:", error);
-    } finally {
-        setLoading(false);
-    }
-};
-
-const handleReset = async () => {
-    const today = new Date();
-
-    // Reset filters
-    setDate(today);
-    setDate2(today);
-    setSelectedTraffic(null);
-    setSelectedLocation(null);
-
-    // Today's date range
-    const payload = {
-        date_range: `${formatDate(today)} to ${formatDate(today)}`,
-        lane: "",
-        dataType: "",
     };
 
-    setLoading(true);
-    try {
-        const result = await searchKecManual(payload);
+    const handleSearch = async () => {
+        setLoading(true);
+        try {
+            const payload = {
+                date_range:
+                    date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+                lane: selectedLocation || "",
+                dataType: selectedTraffic || "",
+            };
 
-        // Table Data
-        setProducts(result?.laneData || []);
-
-        // Footer Data
-        const overallTotals = result?.overallTotals || {};
-        setAllData(overallTotals);
-
-        // SAME LOGIC AS handleSearch
-        if (selectedTraffic === "Toll") {
-            setSummaryTotal(overallTotals.totalOverallSum || 0);
-            setFooterTotal(overallTotals.totalOverallSum || 0);
-        } else {
-            // Default = Traffic
-            setSummaryTotal(overallTotals.totalOverallVehicles || 0);
-            setFooterTotal(overallTotals.totalOverallVehicles || 0);
+            const result = await searchKecManual(payload);
+            setProducts(result?.laneData || []);
+            const overallTotals = result?.overallTotals || {};
+            setAllData(overallTotals);
+            if (selectedTraffic === "Toll") {
+                setSummaryTotal(overallTotals.totalOverallSum || 0);
+                setFooterTotal(overallTotals.totalOverallSum || 0);
+            } else {
+                setSummaryTotal(overallTotals.totalOverallVehicles || 0);
+                setFooterTotal(overallTotals.totalOverallVehicles || 0);
+            }
+            setTodaysDate(result?.date || "");
+        } catch (error) {
+            console.error("Search failed:", error);
+        } finally {
+            setLoading(false);
         }
+    };
 
-        // Today's Date
-        setTodaysDate(result?.date || "");
+    const handleReset = async () => {
+        const today = new Date();
+        setDate(today as any);
+        setDate2(today as any);
+        setSelectedTraffic(null);
+        setSelectedLocation(null);
 
-    } catch (error) {
-        console.error(error);
-    } finally {
-        setLoading(false);
-    }
-};
+        const payload = {
+            date_range: `${formatDate(today)} to ${formatDate(today)}`,
+            lane: "",
+            dataType: "",
+        };
 
+        setLoading(true);
+        try {
+            const result = await searchKecManual(payload);
+            setProducts(result?.laneData || []);
+            const overallTotals = result?.overallTotals || {};
+            setAllData(overallTotals);
+
+            if (selectedTraffic === "Toll") {
+                setSummaryTotal(overallTotals.totalOverallSum || 0);
+                setFooterTotal(overallTotals.totalOverallSum || 0);
+            } else {
+                setSummaryTotal(overallTotals.totalOverallVehicles || 0);
+                setFooterTotal(overallTotals.totalOverallVehicles || 0);
+            }
+            setTodaysDate(result?.date || "");
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const uploadFile = async () => {
         if (!file || !formDate || !bulkLocation || bulkLocation === "All") {
@@ -258,7 +236,7 @@ const handleReset = async () => {
             toast.success("File uploaded successfully!");
             setFile(null);
             setUploadStatus("");
-            handleReset(); 
+            handleReset();
             hideDialog2();
         } catch (error: any) {
             console.error("Upload error:", error);
@@ -271,9 +249,13 @@ const handleReset = async () => {
     const deleteData = async () => {
         try {
             setLoading2(true);
+            // Ensure your backend supports receiving 'location' in the delete body
             await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/toll/kecmanual/delete/using/date`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-                data: { date: formatDate(deleteDate) },
+                data: { 
+                    date: formatDate(deleteDate),
+                    location: deleteLocation 
+                },
             });
             window.location.reload();
             toast.success("Data Deleted Successfully");
@@ -283,11 +265,19 @@ const handleReset = async () => {
             setLoading2(false);
             setDeleteDialog(false);
             setDeleteDate("");
+            setDeleteLocation(null);
         }
     };
 
     const hideDialog2 = () => { setBulkDialog(false); setFile(null); setUploadStatus(""); setFormDate(""); setBulkLocation(null); };
-    const hideDialog3 = () => { setDeleteDialog(false); setDeleteDate(""); };
+    
+    // Updated to clear delete location as well
+    const hideDialog3 = () => { 
+        setDeleteDialog(false); 
+        setDeleteDate(""); 
+        setDeleteLocation(null); 
+    };
+    
     const openNew2 = () => setBulkDialog(true);
     const openNew3 = () => setDeleteDialog(true);
 
@@ -301,7 +291,13 @@ const handleReset = async () => {
     const productDialogFooter3 = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog3} />
-            <Button label="Delete" icon="pi pi-trash" className="p-button-text" onClick={deleteData} disabled={!deleteDate || loading2} />
+            <Button 
+                label="Delete" 
+                icon="pi pi-trash" 
+                className="p-button-text" 
+                onClick={deleteData} 
+                disabled={!deleteDate || !deleteLocation || loading2} // Disable if location is missing
+            />
         </>
     );
 
@@ -310,6 +306,7 @@ const handleReset = async () => {
         if (f && f.name.endsWith(".xlsx")) { setFile(f); setUploadStatus(""); }
         else { setFile(null); setUploadStatus("Please select a valid .xlsx file."); }
     };
+
     const vehicleHeaderTemplate = (image: string, label: string) => (
         <div className="flex flex-col items-center">
             <img src={image} alt={label} className="mb-2" />
@@ -320,7 +317,7 @@ const handleReset = async () => {
     const headerGroup = (
         <ColumnGroup>
             <Row>
-                <Column header="Payment Method" headerClassName="min-w-[12rem]" rowSpan={2}  />
+                <Column header="Payment Method" headerClassName="min-w-[12rem]" rowSpan={2} />
                 <Column header={vehicleHeaderTemplate(trailer5axle, "Trailer (>4 Axle)")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(trailer4axle, "Trailer (4 Axle)")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(trailer3axle, "Trailer (3 Axle)")} headerClassName="min-w-[10rem]" />
@@ -334,7 +331,7 @@ const handleReset = async () => {
                 <Column header={vehicleHeaderTemplate(pickUp, "Pickup")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(car, "Car/Jeep")} headerClassName="min-w-[10rem]" />
                 <Column header={vehicleHeaderTemplate(bike, "Motorcycle")} headerClassName="min-w-[10rem]" />
-                <Column header="Total" headerClassName="min-w-[10rem]" rowSpan={2}  />
+                <Column header="Total" headerClassName="min-w-[10rem]" rowSpan={2} />
             </Row>
         </ColumnGroup>
     );
@@ -356,7 +353,6 @@ const handleReset = async () => {
                 <Column footer={allData?.totalpickup ?? 0} />
                 <Column footer={allData?.totalcar ?? 0} />
                 <Column footer={allData?.totalbike ?? 0} />
-              
                 <Column footer={footerTotal} />
             </Row>
         </ColumnGroup>
@@ -400,7 +396,7 @@ const handleReset = async () => {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />} />
                 <Calendar
-                 value={date2 as any}
+                    value={date2 as any}
                     onChange={(e) => setDate2(e.value as any)}
                     dateFormat="dd/mm/yy"
                     inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
@@ -411,7 +407,7 @@ const handleReset = async () => {
                     onChange={(e) => setSelectedLocation(e.value)}
                     options={locationOptions}
                     placeholder="Location"
-                     className="border-none ml-4 focus:ring-0"
+                    className="border-none ml-4 focus:ring-0"
                     itemTemplate={itemTemplate} />
                 <Dropdown value={selectedTraffic}
                     onChange={(e) => setSelectedTraffic(e.value)}
@@ -430,9 +426,8 @@ const handleReset = async () => {
         </div>
     );
 
-    // Initial Data Load
-    const [payload] = useState<any>({ date: "", lane: "", dataType: "" });
-    const { data, isLoading } = useKecManual(payload);
+    const [payloadState] = useState<any>({ date: "", lane: "", dataType: "" });
+    const { data, isLoading } = useKecManual(payloadState);
 
     useEffect(() => {
         if (data) {
@@ -447,8 +442,8 @@ const handleReset = async () => {
     return (
         <div className="ml-4">
             <Toolbar className="rounded-none border-none p-0 bg-background"
-             left={leftToolbarTemplate} 
-             right={rightToolbarTemplate} />
+                left={leftToolbarTemplate}
+                right={rightToolbarTemplate} />
 
             {totalSummary}
 
@@ -469,7 +464,7 @@ const handleReset = async () => {
                     scrollable
                     scrollHeight="600px"
                 >
-                    <Column field="paymentMethod"  />
+                    <Column field="paymentMethod" />
                     {/* Vehicle Columns */}
                     <Column field="trailer5xl" />
                     <Column field="trailer4xl" />
@@ -498,8 +493,29 @@ const handleReset = async () => {
             </Dialog>
 
             {/* Delete Dialog */}
-            <Dialog visible={deleteDialog} style={{ width: "42rem" }} header="Delete By Date" modal footer={productDialogFooter3} onHide={hideDialog3}>
-                <div className="flex justify-center"><Calendar value={deleteDate as any} onChange={(e) => setDeleteDate(e.value as any)} dateFormat="dd/mm/yy" placeholder="Select Date to Delete" /></div>
+            <Dialog visible={deleteDialog} style={{ width: "42rem" }} header="Delete By Date & Location" modal footer={productDialogFooter3} onHide={hideDialog3}>
+                <div className="grid grid-cols-2 gap-6">
+                    <div>
+                        <label className="font-bold block mb-2">Date</label>
+                        <Calendar 
+                            value={deleteDate as any} 
+                            onChange={(e) => setDeleteDate(e.value as any)} 
+                            dateFormat="dd/mm/yy" 
+                            placeholder="Select Date" 
+                            className="w-full"
+                        />
+                    </div>
+                    <div>
+                        <label className="font-bold block mb-2">Location</label>
+                        <Dropdown 
+                            value={deleteLocation} 
+                            onChange={(e) => setDeleteLocation(e.value)} 
+                            options={locationOptions.filter(x => x.value !== 'All')} 
+                            placeholder="Select Location"
+                            className="w-full"
+                        />
+                    </div>
+                </div>
             </Dialog>
         </div>
     );
