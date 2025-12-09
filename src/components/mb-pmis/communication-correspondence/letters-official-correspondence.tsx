@@ -328,21 +328,45 @@ const uploadFile = async () => {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+ const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: fileName, name: 'File Name' },
+            { value: refNo, name: 'Reference No' },
+            { value: description, name: 'Description' },
+            { value: sender, name: 'Sender' },
+            { value: remarks, name: 'Remarks' },
+            { value: statusType, name: 'Status Type' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
-formData.append('approved', approved ? 'true' : 'false');
+
             formData.append('fileName', fileName)
             formData.append('refNo', refNo)
             formData.append('description', description)
             formData.append('sender', sender)
             formData.append('remarks', remarks)
             formData.append('statusType', statusType)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/letter-and-official-correspondence/create`,
                 formData,
@@ -354,8 +378,17 @@ formData.append('approved', approved ? 'true' : 'false');
                 }
             )
 
-            const response = res
-            console.log(response)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setFileName('')
+            setRefNo('')
+            setDescription('')
+            setSender('')
+            setRemarks('')
+            setStatusType('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
+
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -1396,7 +1429,7 @@ formData.append('approved', approved ? 'true' : 'false');
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            <span className='text-red-500'>*</span>
+                            
                         </label>
 
                         <div>

@@ -235,46 +235,74 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
   }
 
   const saveProduct = async () => {
-    try {
-      setLoading2(true)
-      const formData = new FormData()
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: type, name: 'Type' },
+            { value: description, name: 'Description' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
 
-      formData.append('subjectName', subjectName)
-      formData.append('type', type)
-      formData.append('approved', approved ? 'true' : 'false');
-      formData.append('description', description)
-      formData.append('remarks', remarks)
-      formData.append('date', formatDate(formDate))
-      filesInput.forEach((file) => {
-        formData.append('attachments', file)
-      })
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/its/operation-manual/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
         }
-      )
 
-      const response = res
-      console.log(response, 'hello')
-      hideDialog()
-      toast.success('Data Saved Successfully')
-      refetch()
-    } catch (error: any) {
-      if (error.response) {
-        const { message } = error.response.data
-        toast.error(message)
-      } else {
-        console.log(error)
-      }
-    } finally {
-      setLoading2(false)
+        try {
+            setLoading2(true)
+            const formData = new FormData()
+
+            formData.append('subjectName', subjectName)
+            formData.append('type', type)
+            formData.append('description', description)
+            formData.append('remarks', remarks)
+            formData.append('approved', approved ? 'true' : 'false');
+            formData.append('date', formatDate(formDate))
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
+            const res = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/its/operation-manual/create`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            // --- 2. RESET ALL FIELDS HERE ---
+            setsubjectName('')
+            setType('')
+            setDescription('')
+            setRemarks('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
+
+            hideDialog()
+            toast.success('Data Saved Successfully')
+            refetch()
+        } catch (error: any) {
+            if (error.response) {
+                const { message } = error.response.data
+                toast.error(message)
+            } else {
+                console.log(error)
+            }
+        } finally {
+            setLoading2(false)
+        }
     }
-  }
 
   const confirmDeleteProduct = (product: Product) => {
     setProduct(product)

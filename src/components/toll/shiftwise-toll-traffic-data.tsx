@@ -45,6 +45,7 @@ export default function VehicleDetectTollTable() {
   const [summaryTotal, setSummaryTotal] = useState<number>(0); // Dynamic Grand Total
   const [todaysDate, setTodaysDate] = useState("");
   const [footerTotal, setFooterTotal] = useState<number>(0);
+  
   // Upload & Delete States
   const [bulkLocation, setBulkLocation] = useState<string | null>(null);
   const [bulkDialog, setBulkDialog] = useState(false);
@@ -52,8 +53,12 @@ export default function VehicleDetectTollTable() {
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
   const [formDate, setFormDate] = useState<string>("");
+  
+  // Delete States (UPDATED)
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [deleteDate, setDeleteDate] = useState("");
+  const [deleteLocation, setDeleteLocation] = useState<string | null>(null); // New Location State for Delete
+  
   const [loading2, setLoading2] = useState(false);
 
   // Auth & Perms
@@ -128,8 +133,8 @@ export default function VehicleDetectTollTable() {
       setTodaysDate(result?.date || "");
 
       // Set initial dates to today
-      setDate(today);
-      setDate2(today);
+      setDate(today as any);
+      setDate2(today as any);
 
     } catch (error) {
       console.error("Initial fetch failed:", error);
@@ -178,8 +183,8 @@ export default function VehicleDetectTollTable() {
  const handleReset = async () => {
     const today = new Date();
 
-    setDate(today);
-    setDate2(today);
+    setDate(today as any);
+    setDate2(today as any);
     setSelectedTraffic(null);
     setSelectedLocation(null);
 
@@ -251,9 +256,13 @@ export default function VehicleDetectTollTable() {
   const deleteData = async () => {
     try {
       setLoading2(true);
+      // Ensure backend handles 'location' field
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/toll/shiftmanual/delete/using/date`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        data: { date: formatDate(deleteDate) },
+        data: { 
+            date: formatDate(deleteDate),
+            location: deleteLocation // Send location to backend
+        },
       });
       window.location.reload();
       toast.success("Data Deleted Successfully");
@@ -263,12 +272,19 @@ export default function VehicleDetectTollTable() {
       setLoading2(false);
       setDeleteDialog(false);
       setDeleteDate("");
+      setDeleteLocation(null);
     }
   };
 
   // --- Dialogs ---
   const hideDialog2 = () => { setBulkDialog(false); setFile(null); setUploadStatus(""); setFormDate(""); setBulkLocation(null); };
-  const hideDialog3 = () => { setDeleteDialog(false); setDeleteDate(""); };
+  
+  const hideDialog3 = () => { 
+      setDeleteDialog(false); 
+      setDeleteDate(""); 
+      setDeleteLocation(null); // Reset location on close
+  };
+  
   const openNew2 = () => setBulkDialog(true);
   const openNew3 = () => setDeleteDialog(true);
 
@@ -282,7 +298,13 @@ export default function VehicleDetectTollTable() {
   const productDialogFooter3 = (
     <>
       <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog3} />
-      <Button label="Delete" icon="pi pi-trash" className="p-button-text" onClick={deleteData} disabled={!deleteDate || loading2} />
+      <Button 
+        label="Delete" 
+        icon="pi pi-trash" 
+        className="p-button-text" 
+        onClick={deleteData} 
+        disabled={!deleteDate || !deleteLocation || loading2} // Disable if location missing
+      />
     </>
   );
 
@@ -388,9 +410,8 @@ export default function VehicleDetectTollTable() {
     </div>
   );
 
-  // Initial Load
-  const [payload] = useState<any>({ date: "", lane: "", dataType: "" });
-  const { data, isLoading } = useShiftKecManual(payload);
+  const [payloadState] = useState<any>({ date: "", lane: "", dataType: "" });
+  const { data, isLoading } = useShiftKecManual(payloadState);
 
   useEffect(() => {
     if (data) {
@@ -444,9 +465,30 @@ export default function VehicleDetectTollTable() {
         </div>
       </Dialog>
 
-      {/* Delete Dialog */}
-      <Dialog visible={deleteDialog} style={{ width: "42rem" }} header="Delete By Date" modal footer={productDialogFooter3} onHide={hideDialog3}>
-        <div className="flex justify-center"><Calendar value={deleteDate as any} onChange={(e) => setDeleteDate(e.value as any)} dateFormat="dd/mm/yy" placeholder="Select Date" /></div>
+      {/* Delete Dialog with Location Field */}
+      <Dialog visible={deleteDialog} style={{ width: "42rem" }} header="Delete By Date & Location" modal footer={productDialogFooter3} onHide={hideDialog3}>
+        <div className="grid grid-cols-2 gap-6">
+            <div>
+                <label className="font-bold block mb-2">Date</label>
+                <Calendar 
+                    value={deleteDate as any} 
+                    onChange={(e) => setDeleteDate(e.value as any)} 
+                    dateFormat="dd/mm/yy" 
+                    placeholder="Select Date"
+                    className="w-full"
+                />
+            </div>
+            <div>
+                <label className="font-bold block mb-2">Location</label>
+                <Dropdown 
+                    value={deleteLocation} 
+                    onChange={(e) => setDeleteLocation(e.value)} 
+                    options={locationOptions.filter(x => x.value !== 'All')} 
+                    placeholder="Select Location"
+                    className="w-full"
+                />
+            </div>
+        </div>
       </Dialog>
     </div>
   );

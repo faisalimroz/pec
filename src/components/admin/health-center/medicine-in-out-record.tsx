@@ -628,7 +628,7 @@ export default function MedicineInOutRecord() {
     const handleSearch = () => {
         setLoading(true)
         const payload = {
-            inoutType: selectedCode?.code || '',
+            inoutType: selectedCode || '',
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
@@ -640,13 +640,26 @@ export default function MedicineInOutRecord() {
         })
     }
 
-    const handleReset = () => {
+   const handleReset = () => {
         setLoading(true)
+
+        // 1. Clear the visual UI state (this happens asynchronously)
+        setMedicineName('')
+        setInOutType('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null) // Assuming you have this state for the dropdown
+
+        // 2. Create a CLEAN payload manually
+        // Do NOT use state variables here because they still hold the old values during this execution
         const payload = {
-            inoutType: selectedCode?.code || '',
-            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-            searchQuery: searchKey,
+            inoutType: '',
+            date_range: '',
+            searchQuery: '',
         }
+
+        // 3. Call the API with the clean payload
         searchMedicineInOutRecord(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
@@ -1328,7 +1341,7 @@ export default function MedicineInOutRecord() {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            <span className='text-red-500'>*</span>
+                            
                         </label>
 
                         <div>

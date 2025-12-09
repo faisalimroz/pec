@@ -471,7 +471,7 @@ export default function EmPersonalProfileTable() {
             <ButtonGroup
               selectedProducts={selectedProducts}
               openNew={openNew}
-              openNew2={openNew2}
+              // openNew2={openNew2}
               exportCSV={exportCSV}
             />
           </div>
@@ -597,7 +597,7 @@ export default function EmPersonalProfileTable() {
         />
       </div>
 
-      <div>
+      {/* <div>
         <Dropdown
           value={selectedType}
           onChange={(e) => setSelectedType(e.value)}
@@ -606,7 +606,7 @@ export default function EmPersonalProfileTable() {
           placeholder='Select Type'
           className='border-none rounded-none ml-4 cursor-pointer ring-0'
         />
-      </div>
+      </div> */}
 
       <IconField iconPosition='left' className='relative w-fit'>
         <InputIcon className='pi pi-search' />
@@ -1206,7 +1206,7 @@ export default function EmPersonalProfileTable() {
               </div>
             </div>
 
-            <div className='gap-3 mt-5'>
+            {/* <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Agreements Files
               </label>
@@ -1254,7 +1254,7 @@ export default function EmPersonalProfileTable() {
               <div>
                 <MultiFileInput onFilesChange={handleInsuranceClaiming} />
               </div>
-            </div>
+            </div> */}
 
             <div className='field col-span-2'>
               <label htmlFor='profileImg' className='block mb-1 font-semibold'>

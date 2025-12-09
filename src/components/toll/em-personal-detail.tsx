@@ -258,7 +258,7 @@ export default function EmPersonalDetail({
 
       if (updatedEmployee.profileImg === '') {
         await axios.delete(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/delete/profile-img/${id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/toll/employee-personal-profile/delete/profile-img/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -337,7 +337,7 @@ export default function EmPersonalDetail({
       })
 
       const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/update/${id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/employee-personal-profile/update/${id}`,
         formData,
         {
           headers: {
@@ -593,16 +593,16 @@ export default function EmPersonalDetail({
     { label: 'Position', value: employeeData.position },
     // { label: 'Salary', value: employeeData.salary },
 
-    
+
     { label: 'BOQ NO.', value: employeeData.boqNo },
     // { label: 'Branch', value: employeeData.branch },
- 
+
     { label: 'Date of Mobilization', value: employeeData.dateOfMobilization },
     {
       label: 'Date of Demobilization',
       value: employeeData.dateOfDemobilization,
     },
-    
+
   ]
 
   const contactInfo = [
@@ -643,7 +643,7 @@ export default function EmPersonalDetail({
           <div>
             <button
               type='button'
-              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400 hover:text-white m-3'
+              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400  m-3'
               onClick={() => openUpdateDialog(employeeData)}
             >
               Edit Profile Details
@@ -651,7 +651,7 @@ export default function EmPersonalDetail({
 
             <button
               onClick={downloadEmployeePDF}
-              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400 hover:text-white m-3'
+              className='text-lg font-semibold py-2 px-4 border border-gray-300 rounded-md text-gray-800 hover:border-gray-400 hover:bg-gray-400  m-3'
             >
               <i className='pi pi-download' /> Download PDF
             </button>
@@ -662,7 +662,7 @@ export default function EmPersonalDetail({
       <div className='p-4'>
         <Card className='mb-4'>
           <div className='flex flex-col md:flex-row items-start gap-6 p-6 bg-white  rounded-lg'>
-       
+
             <div className='flex-shrink-0'>
               <img
                 src={
@@ -674,7 +674,7 @@ export default function EmPersonalDetail({
               />
             </div>
 
-       
+
             <div className='flex-grow'>
               <h2 className='text-xl font-bold mb-4 bg-red-200 p-2 rounded'>
                 Employee Personal Profile
@@ -911,7 +911,7 @@ export default function EmPersonalDetail({
                 }
               />
             </div> */}
-{/* 
+            {/* 
             <div className='field mb-3'>
               <label htmlFor='firmName' className='block font-bold mb-2'>
                 Firm Name
@@ -1045,8 +1045,16 @@ export default function EmPersonalDetail({
               />
             </div>
             <div className='field mb-3'>
+              <label htmlFor='newCertificates' className='block font-bold mb-2'>
+                Add CV
+              </label>
+              <MultiFileInput
+                onFilesChange={(files) => setNewCertificates(files)}
+              />
+            </div>
+            <div className='field mb-3'>
               <label className='block font-bold mb-2'>
-                Existing Certificates
+                Existing CV
               </label>
               {updatedEmployee.cvCertificates.map((attachment) => (
                 <div key={attachment._id} className='flex items-center'>
@@ -1059,6 +1067,7 @@ export default function EmPersonalDetail({
                   </a>
                   <Button
                     icon='pi pi-times text-red-500'
+                    type="button"
                     onClick={() => removeCertificates(attachment._id)}
                   />
                 </div>

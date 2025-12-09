@@ -18,7 +18,6 @@ export interface NavLink {
 export interface SideLink extends NavLink {
   sub?: NavLink[]
 }
-
 export const administrationLinks: SideLink[] = [
   {
     title: 'Administrative',
@@ -221,14 +220,15 @@ export const administrationLinks: SideLink[] = [
 ]
 
 export const rntLinks: SideLink[] = [
- {
+  {
     title: 'Road & Traffic',
     label: '',
     href: '',
     icon: '',
     uName: '',
   },
-  {
+  
+    {
     title: 'Organization/ Organogram',
     label: '',
     href: '/edms/road-and-traffic/organization-organogram',
@@ -256,6 +256,7 @@ export const rntLinks: SideLink[] = [
     uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
+
   {
     title: 'Road Maintenance Part',
     label: '',
@@ -270,21 +271,15 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Requisition Form',
-        label: '',
-        href: '/edms/road-and-traffic/road-and-maintanance/requisition-form',
-        icon: '',
-      },
-      {
         title: 'Completion Form',
         label: '',
         href: '/edms/road-and-traffic/road-and-maintanance/completion-form',
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
+        title: 'Drawing',
         label: '',
-        href: '/edms/road-and-traffic/road-and-maintanance/reciving-materials-form',
+        href: '/edms/road-and-traffic/road-and-maintanance/drawing',
         icon: '',
       },
       {
@@ -300,15 +295,21 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Drawing',
-        label: '',
-        href: '/edms/road-and-traffic/road-and-maintanance/drawing',
-        icon: '',
-      },
-      {
         title: 'Miscellaneous',
         label: '',
         href: '/edms/road-and-traffic/road-and-maintanance/miscellaneous',
+        icon: '',
+      },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/edms/road-and-traffic/road-and-maintanance/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/edms/road-and-traffic/road-and-maintanance/requisition-form',
         icon: '',
       },
     ],
@@ -327,27 +328,9 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Requisition Form',
-        label: '',
-        href: '/edms/road-and-traffic/road-and-patrol/requisition-form',
-        icon: '',
-      },
-      {
         title: 'Completion Form',
         label: '',
         href: '/edms/road-and-traffic/road-and-patrol/completion-form',
-        icon: '',
-      },
-      {
-        title: 'Reciving Materials From',
-        label: '',
-        href: '/edms/road-and-traffic/road-and-patrol/reciving-materials-form',
-        icon: '',
-      },
-      {
-        title: 'Inspection Report',
-        label: '',
-        href: '/edms/road-and-traffic/road-and-patrol/inspection-report',
         icon: '',
       },
       {
@@ -357,15 +340,21 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Letter Attachment',
-        label: '',
-        href: '/edms/road-and-traffic/road-and-patrol/letter-attachment',
-        icon: '',
-      },
-      {
         title: 'Drawing',
         label: '',
         href: '/edms/road-and-traffic/road-and-patrol/drawing',
+        icon: '',
+      },
+      {
+        title: 'Inspection Report',
+        label: '',
+        href: '/edms/road-and-traffic/road-and-patrol/inspection-report',
+        icon: '',
+      },
+      {
+        title: 'Letter Attachment',
+        label: '',
+        href: '/edms/road-and-traffic/road-and-patrol/letter-attachment',
         icon: '',
       },
       {
@@ -374,9 +363,20 @@ export const rntLinks: SideLink[] = [
         href: '/edms/road-and-traffic/road-and-patrol/miscellaneous',
         icon: '',
       },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/edms/road-and-traffic/road-and-patrol/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/edms/road-and-traffic/road-and-patrol/requisition-form',
+        icon: '',
+      },
     ],
   },
-
   {
     title: 'Workshop Maintenance Part',
     label: '',
@@ -391,21 +391,15 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Requisition Form',
-        label: '',
-        href: '/edms/road-and-traffic/workshop/requisition-form',
-        icon: '',
-      },
-      {
         title: 'Completion Form',
         label: '',
         href: '/edms/road-and-traffic/workshop/completion-form',
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
+        title: 'Drawing',
         label: '',
-        href: '/edms/road-and-traffic/workshop/reciving-materials-form',
+        href: '/edms/road-and-traffic/workshop/drawing',
         icon: '',
       },
       {
@@ -421,15 +415,21 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Drawing',
-        label: '',
-        href: '/edms/road-and-traffic/workshop/drawing',
-        icon: '',
-      },
-      {
         title: 'Miscellaneous',
         label: '',
         href: '/edms/road-and-traffic/workshop/miscellaneous',
+        icon: '',
+      },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/edms/road-and-traffic/workshop/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/edms/road-and-traffic/workshop/requisition-form',
         icon: '',
       },
     ],
@@ -437,7 +437,7 @@ export const rntLinks: SideLink[] = [
 ]
 
 export const itsLinks: SideLink[] = [
- {
+  {
     title: 'ITS',
     label: '',
     href: '',
@@ -462,7 +462,6 @@ export const itsLinks: SideLink[] = [
     href: '/edms/its/workplan',
     icon: <FileIcon />,
   },
-
   {
     title: 'Notice',
     label: '',
@@ -475,24 +474,24 @@ export const itsLinks: SideLink[] = [
     href: '/edms/its/system-configure',
     icon: <FileIcon />,
   },
+
   {
     title: 'Operation Manual',
     label: '',
     href: '/edms/its/operation-manual',
     icon: <FileIcon />,
   },
-
-  {
+   
+ {
     title: 'Monthly Report',
     label: '',
     href: '/edms/its/monthly-report',
     icon: <FileIcon />,
   },
-
 ]
 
 export const tollLinks: SideLink[] = [
- {
+  {
     title: 'Toll Operation',
     label: '',
     href: '',
@@ -520,7 +519,7 @@ export const tollLinks: SideLink[] = [
       },
 
     ],
-  },
+  }, 
   {
     title: 'Shift Wise Toll & Traffic Data',
     label: '',
@@ -574,7 +573,6 @@ export const tollLinks: SideLink[] = [
     uName: 'toll-daily-report',
     icon: <FileIcon />,
   },
-
   {
     title: 'Monthly Roster',
     label: '',
@@ -593,7 +591,7 @@ export const tollLinks: SideLink[] = [
     ],
   },
 
-  {
+ {
     title: 'Employee Personal Report',
     label: '',
     href: '/edms/toll/employee-personal-report',
@@ -607,9 +605,10 @@ export const tollLinks: SideLink[] = [
     uName: 'toll-hierarchy',
     icon: <FileIcon />,
   },
+
 ]
 export const rtwLinks: SideLink[] = [
-   {
+  {
     title: 'RTW',
     label: '',
     href: '',
@@ -624,36 +623,66 @@ export const rtwLinks: SideLink[] = [
     icon: <FileIcon />,
   },
   {
-    title: 'Technical Documentation',
+    title: 'Additional Notes',
     label: '',
     href: '',
-    uName: 'rtw-technical-documentation',
+    uName: 'rtw-additional-notes',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'RTW Drawings',
+        title: 'Backup Frequency',
         label: '',
-        href: '/edms/rtw/rtw-drawings',
+        href: '/edms/rtw/additional-notes/backup-frequency',
         icon: '',
       },
       {
-        title: 'Materials & Equipment List',
+        title: 'Document Control Manager',
         label: '',
-        href: '/edms/rtw/material-and-equipment',
+        href: '/edms/rtw/additional-notes/document-control-manager',
         icon: '',
       },
       {
-        title: 'Survey Reports',
+        title: 'Document Revision Log',
         label: '',
-        href: '/edms/rtw/survey-reports',
+        href: '/edms/rtw/additional-notes/document-revision-log',
+        icon: '',
+      },
+    ],
+  },
+  {
+    title: 'Communication & Correspondence',
+    label: '',
+    href: '',
+    uName: 'rtw-communication-correspondence',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'All RTW-related Letters & Official Correspondence',
+        label: '',
+        href: '/edms/rtw/letter-and-official-correspondence',
         icon: '',
       },
       {
-        title: 'RTW Maintenance Manual',
+        title: 'Meeting Minutes',
         label: '',
-        href: '/edms/rtw/rtw-maintenance-manual',
+        href: '/edms/rtw/meeting-minutes',
         icon: '',
-      },
+      }
+    ],
+  },
+  {
+    title: 'Financial Documentation',
+    label: '',
+    href: '',
+    uName: 'rtw-financial-documentation',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'RTW Bills',
+        label: '',
+        href: '/edms/rtw/rtw-bills',
+        icon: '',
+      }
     ],
   },
   {
@@ -699,41 +728,41 @@ export const rtwLinks: SideLink[] = [
     ],
   },
   {
-    title: 'Communication & Correspondence',
+    title: 'Technical Documentation',
     label: '',
     href: '',
-    uName: 'rtw-communication-correspondence',
+    uName: 'rtw-technical-documentation',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'All RTW-related Letters & Official Correspondence',
+        title: 'RTW Drawings',
         label: '',
-        href: '/edms/rtw/letter-and-official-correspondence',
+        href: '/edms/rtw/rtw-drawings',
         icon: '',
       },
       {
-        title: 'Meeting Minutes',
+        title: 'Materials & Equipment List',
         label: '',
-        href: '/edms/rtw/meeting-minutes',
+        href: '/edms/rtw/material-and-equipment',
         icon: '',
-      }
-    ],
-  },
-  {
-    title: 'Financial Documentation',
-    label: '',
-    href: '',
-    uName: 'rtw-financial-documentation',
-    icon: <FileIcon />,
-    sub: [
+      },
       {
-        title: 'RTW Bills',
+        title: 'Survey Reports',
         label: '',
-        href: '/edms/rtw/rtw-bills',
+        href: '/edms/rtw/survey-reports',
         icon: '',
-      }
+      },
+      {
+        title: 'RTW Maintenance Manual',
+        label: '',
+        href: '/edms/rtw/rtw-maintenance-manual',
+        icon: '',
+      },
     ],
   },
+
+
+
   {
     title: 'Visual Records',
     label: '',
@@ -749,37 +778,11 @@ export const rtwLinks: SideLink[] = [
       }
     ],
   },
-  {
-    title: 'Additional Notes',
-    label: '',
-    href: '',
-    uName: 'rtw-additional-notes',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Backup Frequency',
-        label: '',
-        href: '/edms/rtw/additional-notes/backup-frequency',
-        icon: '',
-      },
-      {
-        title: 'Document Control Manager',
-        label: '',
-        href: '/edms/rtw/additional-notes/document-control-manager',
-        icon: '',
-      },
-      {
-        title: 'Document Revision Log',
-        label: '',
-        href: '/edms/rtw/additional-notes/document-revision-log',
-        icon: '',
-      },
-    ],
-  },
+
 ]
 
 export const pmisLinks: SideLink[] = [
-   {
+  {
     title: 'Main Bridge',
     label: '',
     href: '',
@@ -793,7 +796,7 @@ export const pmisLinks: SideLink[] = [
     uName: 'dispatched',
     icon: <FileIcon />,
   },
-  {
+    {
     title: 'Technical Documentation',
     label: '',
     href: '',
@@ -833,14 +836,34 @@ export const pmisLinks: SideLink[] = [
       },
     ],
   },
+
+ 
+ 
   {
+    title: 'Financial Documentation',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Main Bridge Bills',
+        label: '',
+        href: '/edms/mb-pmis/main-bridge-bills',
+        icon: '',
+      }
+    ],
+  },
+ 
+
+
+   {
     title: 'Monitoring & Reporting',
     label: '',
     href: '/edms/mb-pmis/monitoring-and-reporting',
     uName: 'dispatched',
     icon: <FileIcon />,
   },
-
   {
     title: 'Quality, Safety',
     label: '',
@@ -862,7 +885,7 @@ export const pmisLinks: SideLink[] = [
       },
     ],
   },
-  {
+ {
     title: 'Communication & Correspondence',
     label: '',
     href: '',
@@ -883,37 +906,7 @@ export const pmisLinks: SideLink[] = [
       }
     ],
   },
-  {
-    title: 'Financial Documentation',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Main Bridge Bills',
-        label: '',
-        href: '/edms/mb-pmis/main-bridge-bills',
-        icon: '',
-      }
-    ],
-  },
-  {
-    title: 'Visual Records',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Pictures and Videos',
-        label: '',
-        href: '/edms/mb-pmis/picture-and-videos',
-        icon: '',
-      }
-    ],
-  },
-  {
+   {
     title: 'Additional Notes',
     label: '',
     href: '',
@@ -940,4 +933,20 @@ export const pmisLinks: SideLink[] = [
       },
     ],
   },
+  {
+    title: 'Visual Records',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Pictures and Videos',
+        label: '',
+        href: '/edms/mb-pmis/picture-and-videos',
+        icon: '',
+      }
+    ],
+  },
+
 ]

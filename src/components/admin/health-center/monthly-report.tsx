@@ -417,7 +417,7 @@ const [approved, setApproved] = useState<boolean>(false);
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/monthly-report/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -467,7 +467,7 @@ const [approved, setApproved] = useState<boolean>(false);
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/medicine-in-out/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/healthcare/monthly-report/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -928,7 +928,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column
@@ -1374,7 +1374,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            <span className='text-red-500'>*</span>
+                            
                         </label>
 
                         <div>

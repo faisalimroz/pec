@@ -262,22 +262,47 @@ export default function AssetManagementTable() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+ const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: location, name: 'Location' },
+            { value: shiftName, name: 'Shift Name' },
+            { value: pass, name: 'Pass' },
+            { value: violation, name: 'Violation' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
+
+            // Calculate Total
             const total = String(Number(pass || 0) + Number(violation || 0))
+
             formData.append('location', location)
             formData.append('shiftName', shiftName)
             formData.append('pass', pass)
             formData.append('violation', violation)
-            formData.append('approved', approved ? 'true' : 'false');
             formData.append('total', total)
             formData.append('remarks', remarks)
+            formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/toll/all-wim-data/create`,
                 formData,
@@ -288,7 +313,17 @@ export default function AssetManagementTable() {
                     },
                 }
             )
-            console.log(remarks, violation)
+
+            // --- 2. RESET ALL FIELDS HERE ---
+            setlocation('')
+            setShiftName('')
+            setPass('')
+            setViolation('')
+            setRemarks('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
+
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -840,7 +875,7 @@ export default function AssetManagementTable() {
                                     field='total'
                                     headerClassName='bg-[#ffc2c2] text-sm'
                                     bodyClassName='text-sm truncate max-w-xs'
-                                    sortable
+                                  
                                     header='Total'
                                 ></Column>
                                 {/* <Column
@@ -1235,7 +1270,7 @@ export default function AssetManagementTable() {
                                         )}
                                     </div>
 
-                                    <div className='field'>
+                                    <div className='field hidden'>
                                         <label htmlFor='total' className='font-bold'>
                                             Total (Auto)
                                         </label>

@@ -27,13 +27,13 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
-   {
-        title: 'Employee Personal Profile',
-        label: '',
-        href: '/administrative/employee-personal-profile',
-        uName: 'employee-personal-profile',
-        icon: <FileIcon />,
-      },
+  {
+    title: 'Employee Personal Profile',
+    label: '',
+    href: '/administrative/employee-personal-profile',
+    uName: 'employee-personal-profile',
+    icon: <FileIcon />,
+  },
   {
     title: 'Vehicle Mgt. Record',
     label: '',
@@ -48,14 +48,14 @@ export const administrationLinks: SideLink[] = [
     uName: 'asset-management',
     icon: <FileIcon />,
   },
-    {
+  {
     title: 'Building Maintenance',
     label: '',
     href: '',
     uName: 'building-maintenance',
     icon: <FileIcon />,
     sub: [
-       {
+      {
         title: 'Monthly Maintenance Report',
         label: '',
         href: '/administrative/building-maintenance-report',
@@ -67,18 +67,18 @@ export const administrationLinks: SideLink[] = [
         href: '/administrative/building-maintenance-tools',
         icon: '',
       }
-     
-      
+
+
     ],
   },
-    {
+  {
     title: 'Health Center',
     label: '',
     href: '',
     uName: 'health-center',
     icon: <FileIcon />,
     sub: [
-       {
+      {
         title: 'Monthly Report',
         label: '',
         href: '/administrative/health-center-monthly-report',
@@ -96,18 +96,18 @@ export const administrationLinks: SideLink[] = [
         href: '/administrative/health-center-monthly-equipment-record',
         icon: '',
       },
-     
-      
+
+
     ],
   },
-    {
+  {
     title: 'Gardening Mgt.',
     label: '',
     href: '',
     uName: 'gardening-mgt',
     icon: <FileIcon />,
     sub: [
-       {
+      {
         title: 'Monthly Activity',
         label: '',
         href: '/administrative/gardening-monthly-activity',
@@ -119,18 +119,18 @@ export const administrationLinks: SideLink[] = [
         href: '/administrative/gardening-tools',
         icon: '',
       },
-     
-      
+
+
     ],
   },
-    {
+  {
     title: 'Fire Mgt.',
     label: '',
     href: '',
     uName: 'fire-mgt',
     icon: <FileIcon />,
     sub: [
-       {
+      {
         title: 'Monthly Activity',
         label: '',
         href: '/administrative/fire-mgt-monthly-report',
@@ -142,11 +142,11 @@ export const administrationLinks: SideLink[] = [
         href: '/administrative/fire-mgt-tools',
         icon: '',
       },
-     
-      
+
+
     ],
   },
- 
+
   {
     title: 'IT Electronics',
     label: '',
@@ -154,7 +154,7 @@ export const administrationLinks: SideLink[] = [
     uName: 'it-electronics',
     icon: <FileIcon />,
     sub: [
-       {
+      {
         title: 'Monthly Report',
         label: '',
         href: '/administrative/it-electronics-communication-report',
@@ -166,11 +166,11 @@ export const administrationLinks: SideLink[] = [
         href: '/administrative/it-electronics-communication-tools',
         icon: '',
       }
-     
-      
+
+
     ],
   },
- 
+
   {
     title: 'Security Mgt.',
     label: '',
@@ -178,7 +178,7 @@ export const administrationLinks: SideLink[] = [
     uName: 'security-mgt',
     icon: <FileIcon />,
     sub: [
-       {
+      {
         title: 'Monthly Report',
         label: '',
         href: '/administrative/security-mgt-monthly-report',
@@ -190,11 +190,11 @@ export const administrationLinks: SideLink[] = [
         href: '/administrative/security-mgt-tools',
         icon: '',
       }
-     
-      
+
+
     ],
   },
- 
+
 
   // start of finance links
   {
@@ -211,7 +211,7 @@ export const administrationLinks: SideLink[] = [
     uName: 'monthly-ipc-updates',
     icon: <FileIcon />,
   },
-   {
+  {
     title: 'IPC Records',
     label: '',
     href: '/finance/ipc-records',
@@ -219,7 +219,6 @@ export const administrationLinks: SideLink[] = [
     icon: <FileIcon />,
   },
 ]
-
 export const genInfoLinks: SideLink[] = [
   {
     title: 'General Status',
@@ -266,15 +265,14 @@ export const genInfoLinks: SideLink[] = [
 ]
 
 export const rntLinks: SideLink[] = [
-   {
+  {
     title: 'Road & Traffic',
     label: '',
-    href: '', 
-    icon: '', 
-    uName: '', 
+    href: '',
+    icon: '',
+    uName: '',
   },
-
-    {
+ {
     title: 'Organization/ Organogram',
     label: '',
     href: '/road-and-traffic/organization-organogram',
@@ -295,14 +293,15 @@ export const rntLinks: SideLink[] = [
     uName: 'r&t-monthly-report',
     icon: <ReportIcon />,
   },
-  {
+    {
     title: 'KEC Letter',
     label: '',
     href: '/road-and-traffic/kec-letter',
     uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
-   {
+ 
+  {
     title: 'Road Maintenance Part',
     label: '',
     href: '',
@@ -316,21 +315,15 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Requisition Form',
-        label: '',
-        href: '/road-and-traffic/road-and-maintanance/requisition-form',
-        icon: '',
-      },
-      {
         title: 'Completion Form',
         label: '',
         href: '/road-and-traffic/road-and-maintanance/completion-form',
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
+        title: 'Drawing',
         label: '',
-        href: '/road-and-traffic/road-and-maintanance/reciving-materials-form',
+        href: '/road-and-traffic/road-and-maintanance/drawing',
         icon: '',
       },
       {
@@ -346,20 +339,26 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Drawing',
-        label: '',
-        href: '/road-and-traffic/road-and-maintanance/drawing',
-        icon: '',
-      },
-      {
         title: 'Miscellaneous',
         label: '',
         href: '/road-and-traffic/road-and-maintanance/miscellaneous',
         icon: '',
       },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/road-and-traffic/road-and-maintanance/requisition-form',
+        icon: '',
+      },
     ],
   },
-   {
+  {
     title: 'Road Safety & Patrol Part',
     label: '',
     href: '',
@@ -373,39 +372,15 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Requisition Form',
-        label: '',
-        href: '/road-and-traffic/road-and-patrol/requisition-form',
-        icon: '',
-      },
-      {
         title: 'Completion Form',
         label: '',
         href: '/road-and-traffic/road-and-patrol/completion-form',
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
-        label: '',
-        href: '/road-and-traffic/road-and-patrol/reciving-materials-form',
-        icon: '',
-      },
-      {
-        title: 'Inspection Report',
-        label: '',
-        href: '/road-and-traffic/road-and-patrol/inspection-report',
-        icon: '',
-      },
-       {
         title: 'Controller’s Report',
         label: '',
         href: '/road-and-traffic/road-and-patrol/controllers-report',
-        icon: '',
-      },
-      {
-        title: 'Letter Attachment',
-        label: '',
-        href: '/road-and-traffic/road-and-patrol/letter-attachment',
         icon: '',
       },
       {
@@ -415,14 +390,37 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
+        title: 'Inspection Report',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/inspection-report',
+        icon: '',
+      },
+      {
+        title: 'Letter Attachment',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/letter-attachment',
+        icon: '',
+      },
+      {
         title: 'Miscellaneous',
         label: '',
         href: '/road-and-traffic/road-and-patrol/miscellaneous',
         icon: '',
       },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/road-and-traffic/road-and-patrol/requisition-form',
+        icon: '',
+      },
     ],
   },
-  
   {
     title: 'Workshop Maintenance Part',
     label: '',
@@ -437,21 +435,15 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Requisition Form',
-        label: '',
-        href: '/road-and-traffic/workshop/requisition-form',
-        icon: '',
-      },
-      {
         title: 'Completion Form',
         label: '',
         href: '/road-and-traffic/workshop/completion-form',
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
+        title: 'Drawing',
         label: '',
-        href: '/road-and-traffic/workshop/reciving-materials-form',
+        href: '/road-and-traffic/workshop/drawing',
         icon: '',
       },
       {
@@ -467,15 +459,21 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Drawing',
-        label: '',
-        href: '/road-and-traffic/workshop/drawing',
-        icon: '',
-      },
-      {
         title: 'Miscellaneous',
         label: '',
         href: '/road-and-traffic/workshop/miscellaneous',
+        icon: '',
+      },
+      {
+        title: 'Reciving Materials From',
+        label: '',
+        href: '/road-and-traffic/workshop/reciving-materials-form',
+        icon: '',
+      },
+      {
+        title: 'Requisition Form',
+        label: '',
+        href: '/road-and-traffic/workshop/requisition-form',
         icon: '',
       },
     ],
@@ -483,72 +481,78 @@ export const rntLinks: SideLink[] = [
 ]
 
 export const itsLinks: SideLink[] = [
-   {
+  {
     title: 'ITS',
     label: '',
-    href: '', 
-    icon: '', 
-    uName: 'its-manager', 
+    href: '',
+    icon: '',
+    uName: 'its-manager',
   },
- 
+
+  {
+    title: 'About ITS',
+    label: '',
+    href: '/its/about-its',
+    icon: <AboutIcon />,
+  },
+  {
+    title: 'Organization',
+    label: '',
+    href: '/its/organization',
+    icon: <FileIcon />,
+  },
+  
    {
-        title: 'About ITS',
-        label: '',
-        href: '/its/about-its',
-        icon: <AboutIcon/>,
-      },
-       {
-        title: 'Organization',
-        label: '',
-        href: '/its/organization',
-        icon: <FileIcon/>,
-      },
-        {
-        title: 'Work Plan',
-        label: '',
-        href: '/its/work-plan',
-        icon: <FileIcon/>,
-      },
-     
-       {
-        title: 'Notice',
-        label: '',
-        href: '/its/notice',
-        icon: <FileIcon/>,
-      },
-        {
-        title: 'System configure',
-        label: '',
-        href: '/its/system-configure',
-        icon: <FileIcon/>,
-      },
-       {
-        title: 'Operation Manual',
-        label: '',
-        href: '/its/operation-manual',
-        icon: <FileIcon/>,
-      },
-      
-        {
-        title: 'Monthly Report',
-        label: '',
-        href: '/its/monthly-report',
-        icon: <FileIcon/>,
-      },
-      
-      
+    title: 'Work Plan',
+    label: '',
+    href: '/its/work-plan',
+    icon: <FileIcon />,
+  },
+
  
+  {
+    title: 'Notice',
+    label: '',
+    href: '/its/notice',
+    icon: <FileIcon />,
+  },
+  
+
+
+  {
+    title: 'System configure',
+    label: '',
+    href: '/its/system-configure',
+    icon: <FileIcon />,
+  },
+
+
+
+  {
+    title: 'Operation Manual',
+    label: '',
+    href: '/its/operation-manual',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Monthly Report',
+    label: '',
+    href: '/its/monthly-report',
+    icon: <FileIcon />,
+  },
+
+
 ]
 
 export const tollLinks: SideLink[] = [
   {
     title: 'TOLL Operation',
     label: '',
-    href: '', 
-    icon: '', 
-    uName: '', 
+    href: '',
+    icon: '',
+    uName: '',
   },
-   {
+  {
     title: 'Daily Toll & Traffic Data',
     label: '',
     href: '',
@@ -567,9 +571,12 @@ export const tollLinks: SideLink[] = [
         href: '/toll/daily-data-comparisons',
         icon: '',
       },
-      
+
     ],
   },
+
+ 
+ 
   {
     title: 'Shift Wise Toll & Traffic Data',
     label: '',
@@ -583,24 +590,25 @@ export const tollLinks: SideLink[] = [
         href: '/toll/shift/shift-wise-toll-traffic-data',
         icon: '',
       },
-       {
+      {
         title: 'Shift Wise Toll & Traffic Comparison',
         label: '',
         href: '/toll/shift/shift-wise-toll-traffic-comparison',
         icon: '',
       },
 
-      
+
     ],
   },
-   {
+
+  {
     title: 'WIM Data',
     label: '',
     href: '',
     uName: 'toll-wim-data',
     icon: <FileIcon />,
     sub: [
-     
+
       {
         title: 'Represent WIM data',
         label: '',
@@ -613,61 +621,63 @@ export const tollLinks: SideLink[] = [
         href: '/toll/wim-data/wim-data-comparisons',
         icon: '',
       },
-      
+
     ],
   },
-   {
+    {
     title: 'Daily Report',
     label: '',
     href: '/toll/daily-report',
-    uName:  'toll-daily-report',
+    uName: 'toll-daily-report',
     icon: <FileIcon />,
   },
-  {
+ {
     title: 'Monthly Roster',
     label: '',
     href: '',
     uName: 'toll-monthly-roster',
     icon: <FileIcon />,
     sub: [
-     {
-    title: 'Main Bridge Bills',
-    label: '',
-    href: '/toll/monthly-roster/main-bridge-bills',
-    icon: <FileIcon />,
-  }
-      
+      {
+        title: 'Main Bridge Bills',
+        label: '',
+        href: '/toll/monthly-roster/main-bridge-bills',
+        icon: <FileIcon />,
+      }
+
     ],
   },
-   
-   {
+
+ {
     title: 'Employee Personal Report',
     label: '',
     href: '/toll/employee-personal-report',
     uName: 'toll-monthly-roster',
     icon: <FileIcon />,
   },
-    {
+  {
     title: 'Hierarchy',
     label: '',
     href: '/toll/hierarchy',
     uName: 'toll-hierarchy',
     icon: <FileIcon />,
   },
+
+
 ]
 
 export const edmsLinks: SideLink[] = [
-  
+
 ]
 
 export const rtwLinks: SideLink[] = [
-   {
+  {
     title: 'RTW',
     label: '',
-    href: '', 
-    icon: '', 
-    uName: '', 
-  }, 
+    href: '',
+    icon: '',
+    uName: '',
+  },
   {
     title: 'Project Overview',
     label: '',
@@ -675,83 +685,34 @@ export const rtwLinks: SideLink[] = [
     uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
-
-   {
-    title: 'Technical Documentation',
-    label: '',
-    href: '',
-    uName: 'rtw-technical-documentation',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'RTW Drawings',
-        label: '',
-        href: '/rtw/rtw-drawings',
-        icon: '',
-      },  
-       {
-        title: 'Materials & Equipment List',
-        label: '',
-        href: '/rtw/material-and-equipment',
-        icon: '',
-      },  
-       {
-        title: 'Survey Reports',
-        label: '',
-        href: '/rtw/survey-reports',
-        icon: '',
-      },  
-       {
-        title: 'RTW Maintenance Manual',
-        label: '',
-        href: '/rtw/rtw-maintenance-manual',
-        icon: '',
-      },  
-    ],
-  },
   {
-    title: 'Monitoring & Reporting',
+    title: 'Additional Notes',
     label: '',
     href: '',
-    uName: 'rtw-monitoring-reporting',
+    uName: 'rtw-additional-notes',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'Daily Water Level Records',
+        title: 'Backup Frequency',
         label: '',
-        href: '/rtw/monitoring-and-reporting/daily-water-level-records',
+        href: '/rtw/additional-notes/backup-frequency',
         icon: '',
-      },  
-       {
-        title: 'RTW Monthly Reports',
-        label: '',
-        href: '/rtw/monitoring-and-reporting/monthly-reports',
-        icon: '',
-      }
-    ],
-  },
-    {
-    title: 'Quality, Safety',
-    label: '',
-    href: '',
-    uName: 'rtw-quality-safety',
-    icon: <FileIcon />,
-    sub: [
+      },
       {
-        title: 'Material Test Report',
+        title: 'Document Control Manager',
         label: '',
-        href: '/rtw/material-test-report',
+        href: '/rtw/additional-notes/document-control-manager',
         icon: '',
-      },  
-       {
-        title: 'Safety',
+      },
+      {
+        title: 'Document Revision Log',
         label: '',
-        href: '/rtw/safety',
+        href: '/rtw/additional-notes/document-revision-log',
         icon: '',
       },
     ],
   },
-   {
+  {
     title: 'Communication & Correspondence',
     label: '',
     href: '',
@@ -763,8 +724,8 @@ export const rtwLinks: SideLink[] = [
         label: '',
         href: '/rtw/letter-and-official-correspondence',
         icon: '',
-      },  
-       {
+      },
+      {
         title: 'Meeting Minutes',
         label: '',
         href: '/rtw/meeting-minutes',
@@ -787,6 +748,85 @@ export const rtwLinks: SideLink[] = [
       }
     ],
   },
+
+
+  {
+    title: 'Monitoring & Reporting',
+    label: '',
+    href: '',
+    uName: 'rtw-monitoring-reporting',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Daily Water Level Records',
+        label: '',
+        href: '/rtw/monitoring-and-reporting/daily-water-level-records',
+        icon: '',
+      },
+      {
+        title: 'RTW Monthly Reports',
+        label: '',
+        href: '/rtw/monitoring-and-reporting/monthly-reports',
+        icon: '',
+      }
+    ],
+  },
+  {
+    title: 'Technical Documentation',
+    label: '',
+    href: '',
+    uName: 'rtw-technical-documentation',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'RTW Drawings',
+        label: '',
+        href: '/rtw/rtw-drawings',
+        icon: '',
+      },
+      {
+        title: 'Materials & Equipment List',
+        label: '',
+        href: '/rtw/material-and-equipment',
+        icon: '',
+      },
+      {
+        title: 'Survey Reports',
+        label: '',
+        href: '/rtw/survey-reports',
+        icon: '',
+      },
+      {
+        title: 'RTW Maintenance Manual',
+        label: '',
+        href: '/rtw/rtw-maintenance-manual',
+        icon: '',
+      },
+    ],
+  },
+  {
+    title: 'Quality, Safety',
+    label: '',
+    href: '',
+    uName: 'rtw-quality-safety',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Material Test Report',
+        label: '',
+        href: '/rtw/material-test-report',
+        icon: '',
+      },
+      {
+        title: 'Safety',
+        label: '',
+        href: '/rtw/safety',
+        icon: '',
+      },
+    ],
+  },
+
+
   {
     title: 'Visual Records',
     label: '',
@@ -802,33 +842,7 @@ export const rtwLinks: SideLink[] = [
       }
     ],
   },
-   {
-    title: 'Additional Notes',
-    label: '',
-    href: '',
-    uName: 'rtw-additional-notes',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Backup Frequency',
-        label: '',
-        href: '/rtw/additional-notes/backup-frequency',
-        icon: '',
-      },  
-       {
-        title: 'Document Control Manager',
-        label: '',
-        href: '/rtw/additional-notes/document-control-manager',
-        icon: '',
-      },
-       {
-        title: 'Document Revision Log',
-        label: '',
-        href: '/rtw/additional-notes/document-revision-log',
-        icon: '',
-      },
-    ],
-  },
+
 ]
 
 
@@ -836,110 +850,22 @@ export const rtwLinks: SideLink[] = [
 
 
 export const pmisLinks: SideLink[] = [
-   {
+  {
     title: 'MAIN BRIDGE',
     label: '',
-    href: '', 
-    icon: '', 
-    uName: '', 
+    href: '',
+    icon: '',
+    uName: '',
   },
- {
+  {
     title: 'Project Overview',
     label: '',
     href: '/mb-pmis/project-overview',
     uName: 'mb-pmis-project-overview',
     icon: <FileIcon />,
   },
-   {
-    title: 'Technical Documentation',
-    label: '',
-    href: '',
-    uName: 'mb-pmis-technical-documentation',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Main Bridge Drawings',
-        label: '',
-        href: '/mb-pmis/technical-documentation/main-bridge-drawings',
-        icon: '',
-      },  
-        {
-        title: 'Materials & Equipment List ',
-        label: '',
-        href: '/mb-pmis/technical-documentation/materials-and-equipment',
-        icon: '',
-      },  
-      
-       {
-        title: 'Survey Reports',
-        label: '',
-        href: '/mb-pmis/technical-documentation/survey-reports',
-        icon: '',
-      },  
-       {
-        title: 'Main Bridge Maintenance Manual',
-        label: '',
-        href: '/mb-pmis/technical-documentation/maintenance-manual',
-        icon: '',
-      },  
-        {
-        title: 'Other',
-        label: '',
-        href: '/mb-pmis/technical-documentation/other',
-        icon: '',
-      }, 
-    ],
-  },
-  {
-    title: 'Monitoring & Reporting',
-    label: '',
-    href: '/mb-pmis/monitoring-and-reporting',
-    uName: 'mb-pmis-monitoring-reporting',
-    icon: <FileIcon />,
-  },
- 
-    {
-    title: 'Quality, Safety',
-    label: '',
-    href: '',
-    uName: 'mb-pmis-quality-safety',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Material Test Report',
-        label: '',
-        href: '/mb-pmis/quality-and-safety/material-test-report',
-        icon: '',
-      },  
-       {
-        title: 'Safety',
-        label: '',
-        href: '/mb-pmis/quality-and-safety/safety',
-        icon: '',
-      },
-    ],
-  },
-   {
-    title: 'Communication & Correspondence',
-    label: '',
-    href: '',
-    uName: 'mb-pmis-communication-correspondence',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'All RTW-related Letters & Official Correspondence',
-        label: '',
-        href: '/mb-pmis/letter-and-official-correspondence',
-        icon: '',
-      },  
-       {
-        title: 'Meeting Minutes',
-        label: '',
-        href: '/mb-pmis/meeting-minutes',
-        icon: '',
-      }
-    ],
-  },
+  
+
   {
     title: 'Financial Documentation',
     label: '',
@@ -955,6 +881,126 @@ export const pmisLinks: SideLink[] = [
       }
     ],
   },
+   {
+    title: 'Technical Documentation',
+    label: '',
+    href: '',
+    uName: 'mb-pmis-technical-documentation',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Main Bridge Drawings',
+        label: '',
+        href: '/mb-pmis/technical-documentation/main-bridge-drawings',
+        icon: '',
+      },
+      {
+        title: 'Materials & Equipment List ',
+        label: '',
+        href: '/mb-pmis/technical-documentation/materials-and-equipment',
+        icon: '',
+      },
+
+      {
+        title: 'Survey Reports',
+        label: '',
+        href: '/mb-pmis/technical-documentation/survey-reports',
+        icon: '',
+      },
+      {
+        title: 'Main Bridge Maintenance Manual',
+        label: '',
+        href: '/mb-pmis/technical-documentation/maintenance-manual',
+        icon: '',
+      },
+      {
+        title: 'Other',
+        label: '',
+        href: '/mb-pmis/technical-documentation/other',
+        icon: '',
+      },
+    ],
+  },
+  {
+    title: 'Monitoring & Reporting',
+    label: '',
+    href: '/mb-pmis/monitoring-and-reporting',
+    uName: 'mb-pmis-monitoring-reporting',
+    icon: <FileIcon />,
+  },
+ 
+
+
+  {
+    title: 'Quality, Safety',
+    label: '',
+    href: '',
+    uName: 'mb-pmis-quality-safety',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Material Test Report',
+        label: '',
+        href: '/mb-pmis/quality-and-safety/material-test-report',
+        icon: '',
+      },
+      {
+        title: 'Safety',
+        label: '',
+        href: '/mb-pmis/quality-and-safety/safety',
+        icon: '',
+      },
+    ],
+  },
+ {
+    title: 'Communication & Correspondence',
+    label: '',
+    href: '',
+    uName: 'mb-pmis-communication-correspondence',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'All RTW-related Letters & Official Correspondence',
+        label: '',
+        href: '/mb-pmis/letter-and-official-correspondence',
+        icon: '',
+      },
+      {
+        title: 'Meeting Minutes',
+        label: '',
+        href: '/mb-pmis/meeting-minutes',
+        icon: '',
+      }
+    ],
+  },
+  {
+    title: 'Additional Notes',
+    label: '',
+    href: '',
+    uName: 'mb-pmis-additional-notes',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Backup Frequency',
+        label: '',
+        href: '/mb-pmis/additional-notes/backup-frequency',
+        icon: '',
+      },
+      {
+        title: 'Document Control Manager',
+        label: '',
+        href: '/mb-pmis/additional-notes/document-control-manager',
+        icon: '',
+      },
+      {
+        title: 'Document Revision Log',
+        label: '',
+        href: '/mb-pmis/additional-notes/document-revision-log',
+        icon: '',
+      },
+    ],
+  },
+ 
   {
     title: 'Visual Records',
     label: '',
@@ -970,31 +1016,5 @@ export const pmisLinks: SideLink[] = [
       }
     ],
   },
-     {
-    title: 'Additional Notes',
-    label: '',
-    href: '',
-    uName: 'mb-pmis-additional-notes',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Backup Frequency',
-        label: '',
-        href: '/mb-pmis/additional-notes/backup-frequency',
-        icon: '',
-      },  
-       {
-        title: 'Document Control Manager',
-        label: '',
-        href: '/mb-pmis/additional-notes/document-control-manager',
-        icon: '',
-      },
-       {
-        title: 'Document Revision Log',
-        label: '',
-        href: '/mb-pmis/additional-notes/document-revision-log',
-        icon: '',
-      },
-    ],
-  },
+
 ]

@@ -300,7 +300,7 @@ export default function MonthlyReport() {
     );
 
     const locations = [
-        { name: 'All', code: 'All' },
+  
         { name: 'Mawa', code: 'Mawa' },
         { name: 'Jinjira', code: 'Jinjira' },
     ]
@@ -339,7 +339,24 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-    const saveProduct = async () => {
+  const saveProduct = async () => {
+        // --- 1. VALIDATION SHORTCUT ---
+        const requiredFields = [
+            { value: subjectName, name: 'Subject Name' },
+            { value: description, name: 'Description' },
+            { value: location, name: 'Location' },
+            { value: monthName, name: 'Month Name' },
+            { value: remarks, name: 'Remarks' },
+            { value: formDate, name: 'Date' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
+        }
+
         try {
             setLoading2(true)
             const formData = new FormData()
@@ -349,11 +366,15 @@ export default function MonthlyReport() {
             formData.append('location', location)
             formData.append('remarks', remarks)
             formData.append('monthName', monthName)
-            formData.append('date', formatDate(formDate))
             formData.append('approved', approved ? 'true' : 'false');
-            filesInput.forEach((file) => {
-                formData.append('attachments', file)
-            })
+            formData.append('date', formatDate(formDate))
+
+            // Append files only if they exist
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
 
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/v1/toll/main-bridge/create`,
@@ -366,8 +387,15 @@ export default function MonthlyReport() {
                 }
             )
 
-            const response = res
-            console.log(response.data)
+            // --- 2. RESET ALL FIELDS HERE ---
+            setSubjectName('')
+            setDescription('')
+            setlocation('')
+            setRemarks('')
+            setMonthName('')
+            setApproved(false)
+            setFormDate('')
+            setFilesInput([])
 
             hideDialog()
             toast.success('Data Saved Successfully')
@@ -383,7 +411,6 @@ export default function MonthlyReport() {
             setLoading2(false)
         }
     }
-
     const editProduct = (product: Product) => {
         setProduct({ ...product })
         setProductDialog(true)
@@ -645,6 +672,12 @@ export default function MonthlyReport() {
 
     const handleReset = () => {
         setLoading(true)
+          setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+        setSelectedLocation(null)
+
         const payload = {
             monthName: selectedCode?.code || '',
             location: selectedLocation?.code || '',
@@ -652,12 +685,7 @@ export default function MonthlyReport() {
             searchQuery: '',
         }
 
-        setDate(null)
-        setDate2(null)
-        setSearchKey('')
-        setSelectedCode(null)
-        setSelectedLocation(null)
-
+      
         searchMainBridgeBills(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
@@ -905,7 +933,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column
@@ -939,7 +967,7 @@ export default function MonthlyReport() {
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
+                            
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
@@ -1390,7 +1418,7 @@ export default function MonthlyReport() {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            <span className='text-red-500'>*</span>
+                            
                         </label>
 
                         <div>

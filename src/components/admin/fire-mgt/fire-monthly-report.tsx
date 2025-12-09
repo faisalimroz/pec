@@ -324,7 +324,7 @@ const [approved, setApproved] = useState<boolean>(false);
             { value: subjectName, name: 'Subject Name' },
             { value: remarks, name: 'Remarks' },
             { value: formDate, name: 'Date' },
-            { value: formDate, name: 'Description' }
+            { value: description, name: 'Description' }
         ];
 
         for (const field of requiredFields) {
@@ -1286,7 +1286,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            <span className='text-red-500'>*</span>
+                            
                         </label>
 
                         <div>
