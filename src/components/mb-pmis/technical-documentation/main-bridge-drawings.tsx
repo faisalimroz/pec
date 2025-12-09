@@ -960,7 +960,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
-                                className='min-w-[8rem]'
+                                className='min-w-[12rem]'
                                 header='Type Of Drawings'
                             ></Column>
 
@@ -1418,7 +1418,7 @@ export default function MonthlyReport() {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            <span className='text-red-500'>*</span>
+                            
                         </label>
 
                         <div>

@@ -1166,7 +1166,7 @@ export default function AccommodationFacilityTable() {
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Accomandation File Upload
-              <span className='text-red-500 ml-1'>*</span>
+              
             </label>
 
             <div>
@@ -1177,7 +1177,7 @@ export default function AccommodationFacilityTable() {
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Eviction File Upload
-              <span className='text-red-500 ml-1'>*</span>
+              
             </label>
 
             <div>

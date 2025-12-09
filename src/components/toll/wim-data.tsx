@@ -875,7 +875,7 @@ export default function AssetManagementTable() {
                                     field='total'
                                     headerClassName='bg-[#ffc2c2] text-sm'
                                     bodyClassName='text-sm truncate max-w-xs'
-                                    sortable
+                                  
                                     header='Total'
                                 ></Column>
                                 {/* <Column

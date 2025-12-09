@@ -1426,7 +1426,7 @@ export default function MonthlyReport() {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            <span className='text-red-500'>*</span>
+                            
                         </label>
 
                         <div>

@@ -1175,7 +1175,7 @@ const saveProduct = async () => {
 
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
-              Upload Document <span className='text-red-500'>*</span>
+              Upload Document 
             </label>
             <div>
               <MultiFileInput onFilesChange={setFilesInput} />
