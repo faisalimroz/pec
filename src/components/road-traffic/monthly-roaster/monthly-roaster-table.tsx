@@ -253,75 +253,75 @@ export default function MonthlyReport() {
     return `${day}-${month}-${year}`
   }
 
- const saveProduct = async () => {
-        // --- 1. VALIDATION SHORTCUT ---
-        const requiredFields = [
-            { value: subjectName, name: 'Subject Name' },
-            { value: description, name: 'Description' },
-            { value: type, name: 'Type' },
-            { value: remarks, name: 'Remarks' },
-            { value: formDate, name: 'Date' }
-        ];
+  const saveProduct = async () => {
+    // --- 1. VALIDATION SHORTCUT ---
+    const requiredFields = [
+      { value: subjectName, name: 'Subject Name' },
+      { value: description, name: 'Description' },
+      { value: type, name: 'Type' },
+      { value: remarks, name: 'Remarks' },
+      { value: formDate, name: 'Date' }
+    ];
 
-        for (const field of requiredFields) {
-            if (!field.value) {
-                toast.warning(`${field.name} is required!`);
-                return;
-            }
-        }
-
-        try {
-            setLoading2(true)
-            const formData = new FormData()
-
-            formData.append('subjectName', subjectName)
-            formData.append('description', description)
-            formData.append('type', type)
-            formData.append('remarks', remarks)
-            formData.append('approved', approved ? 'true' : 'false');
-            formData.append('date', formatDate(formDate))
-
-            // Append files only if they exist
-            if (filesInput && filesInput.length > 0) {
-                filesInput.forEach((file) => {
-                    formData.append('attachments', file)
-                })
-            }
-
-            const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/upload`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            )
-
-            // --- 2. RESET ALL FIELDS HERE ---
-            setSubjectName('')
-            setDescription('')
-            setType('')
-            setRemarks('')
-            setApproved(false)
-            setFormDate('')
-            setFilesInput([])
-
-            hideDialog()
-            toast.success('Data Saved Successfully')
-            refetch()
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
-        }
+    for (const field of requiredFields) {
+      if (!field.value) {
+        toast.warning(`${field.name} is required!`);
+        return;
+      }
     }
+
+    try {
+      setLoading2(true)
+      const formData = new FormData()
+
+      formData.append('subjectName', subjectName)
+      formData.append('description', description)
+      formData.append('type', type)
+      formData.append('remarks', remarks)
+      formData.append('approved', approved ? 'true' : 'false');
+      formData.append('date', formatDate(formDate))
+
+      // Append files only if they exist
+      if (filesInput && filesInput.length > 0) {
+        filesInput.forEach((file) => {
+          formData.append('attachments', file)
+        })
+      }
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      // --- 2. RESET ALL FIELDS HERE ---
+      setSubjectName('')
+      setDescription('')
+      setType('')
+      setRemarks('')
+      setApproved(false)
+      setFormDate('')
+      setFilesInput([])
+
+      hideDialog()
+      toast.success('Data Saved Successfully')
+      refetch()
+    } catch (error: any) {
+      if (error.response) {
+        const { message } = error.response.data
+        toast.error(message)
+      } else {
+        console.log(error)
+      }
+    } finally {
+      setLoading2(false)
+    }
+  }
   const editProduct = (product: Product) => {
     setProduct({ ...product })
     setProductDialog(true)
@@ -875,7 +875,14 @@ export default function MonthlyReport() {
                 className='min-w-[12rem]'
                 header='Date'
               ></Column>
+              <Column
+                field='subjectName'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
+                className='min-w-[12rem]'
+                header='File Name/Subject'
+              ></Column>
 
               <Column
                 field='description'
@@ -961,6 +968,21 @@ export default function MonthlyReport() {
                   setUpdatedProduct({
                     ...updatedProduct,
                     remarks: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='subjectName' className='font-bold'>
+                File Name/ Subject
+              </label>
+              <InputText
+                id='subjectName'
+                value={updatedProduct.subjectName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    subjectName: e.target.value,
                   })
                 }
               />
@@ -1112,6 +1134,10 @@ export default function MonthlyReport() {
                 <p className='break-all'>{selectedProduct.slNo}</p>
               </div>
               <div>
+                <h3 className='font-bold'>File Name/Subject</h3>
+                <p className='break-all'>{selectedProduct.subjectName}</p>
+              </div>
+              <div>
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
@@ -1160,7 +1186,23 @@ export default function MonthlyReport() {
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
 
-
+            <div className='field'>
+              <label htmlFor='subjectName' className='font-bold'>
+                File Name/Subject
+              </label>
+              <InputText
+                id='subjectName'
+                onChange={(e) => setSubjectName(e.target.value)}
+                required
+                autoFocus
+                className={classNames({
+                  'p-invalid': submitted && !subjectName,
+                })}
+              />
+              {submitted && !subjectName && (
+                <small className='p-error'>File Name/Subject is required.</small>
+              )}
+            </div>
             <div className='field'>
               <label htmlFor='description' className='font-bold'>
                 Description
@@ -1220,7 +1262,7 @@ export default function MonthlyReport() {
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              
+
             </label>
 
             <div>

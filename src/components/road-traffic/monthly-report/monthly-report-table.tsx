@@ -878,10 +878,18 @@ export default function MonthlyReport() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-sm truncate max-w-xs'
 
-                className='min-w-[8rem]'
+                className='min-w-[12rem]'
                 header='File Name/Subject'
               ></Column>
+              
+              <Column
+                field='monthName'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
+                className='min-w-[12rem]'
+                header='Month Name'
+              ></Column>
               <Column
                 field='description'
                 headerClassName='bg-[#ffc2c2] text-sm'

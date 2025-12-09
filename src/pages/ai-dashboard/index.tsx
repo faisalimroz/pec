@@ -1,87 +1,87 @@
-import TotalVehicle from '@/components/ai-dashboard/TotalVehicle'
-import { Button } from '@/components/ui/button'
-import { Video } from 'lucide-react'
-// import WeatherBoard from '@/components/ai-dashboard/WeatherBoard'
-import logo from '@/assets/bba.png'
-import kecLogo from '@/assets/ex-pic.png'
-import { ChartBoard } from '@/components/ai-dashboard/ChartBoard'
-import VideoFeed from '@/components/ai-dashboard/VideoFeed'
-import { TollOfTollDash } from '@/components/charts/toll-of-toll-dash'
-import { TrafficOfTollDash } from '@/components/charts/traffic-toll-dash'
-import { Link } from 'react-router-dom'
+// import TotalVehicle from '@/components/ai-dashboard/TotalVehicle'
+// import { Button } from '@/components/ui/button'
+// import { Video } from 'lucide-react'
+// // import WeatherBoard from '@/components/ai-dashboard/WeatherBoard'
+// import logo from '@/assets/bba.png'
+// import kecLogo from '@/assets/ex-pic.png'
+// import { ChartBoard } from '@/components/ai-dashboard/ChartBoard'
+// import VideoFeed from '@/components/ai-dashboard/VideoFeed'
+// import { TollOfTollDash } from '@/components/charts/toll-of-toll-dash'
+// import { TrafficOfTollDash } from '@/components/charts/traffic-toll-dash'
+// import { Link } from 'react-router-dom'
 
-export default function AiDashboard() {
-  return (
-    <>
-      <div className='py-2 px-6 flex justify-between items-center bg-main'>
-        <Link to='/dashboard' className='mr-4'>
-          <div className='flex gap-4 items-center font-medium'>
-            <img src={logo} alt='Logo' className='h-10 w-auto' />
-            <h3 className='text-white text-xs'>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
-          </div>
-        </Link>
+// export default function AiDashboard() {
+//   return (
+//     <>
+//       <div className='py-2 px-6 flex justify-between items-center bg-main'>
+//         <Link to='/dashboard' className='mr-4'>
+//           <div className='flex gap-4 items-center font-medium'>
+//             <img src={logo} alt='Logo' className='h-10 w-auto' />
+//             <h3 className='text-white text-xs'>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+//           </div>
+//         </Link>
 
-        <div className='flex items-center gap-4'>
-          <Link
-            to='/dashboard'
-            className='text-blue-700 bg-blue-50  font-semibold py-1 px-4 rounded-full inline-flex items-center hover:bg-blue-400 hover:text-white text-sm'
-          >
-            <i className='pi pi-arrow-left mr-2' /> Home
-          </Link>
-
-
-          <Link
-            to='/ai-dashboard/view-first-six-frames'
-            className='text-blue-700 bg-blue-50  font-semibold py-1 px-4 rounded-full inline-flex items-center hover:bg-blue-400 hover:text-white text-sm'
-          >
-            <i className='pi pi-video mr-2' />  View All Camera
-          </Link>
+//         <div className='flex items-center gap-4'>
+//           <Link
+//             to='/dashboard'
+//             className='text-blue-700 bg-blue-50  font-semibold py-1 px-4 rounded-full inline-flex items-center hover:bg-blue-400 hover:text-white text-sm'
+//           >
+//             <i className='pi pi-arrow-left mr-2' /> Home
+//           </Link>
 
 
-          <div>
-            <img className='w-full h-10' src={kecLogo} alt='' />
-          </div>
-        </div>
-      </div>
-      <hr />
-      <section className='p-6 bg-[#e2ecfe]'>
-        <div className='grid grid-cols-8 gap-3'>
-          <div className='col-span-3'>
-            <TotalVehicle />
-          </div>
-          <div className='col-span-5'>
-            <div className='grid grid-cols-6 gap-2 items-center'>
-              <div className='col-span-3'>
-                <ChartBoard />
+//           <Link
+//             to='/ai-dashboard/view-first-six-frames'
+//             className='text-blue-700 bg-blue-50  font-semibold py-1 px-4 rounded-full inline-flex items-center hover:bg-blue-400 hover:text-white text-sm'
+//           >
+//             <i className='pi pi-video mr-2' />  View All Camera
+//           </Link>
 
-                {/* <LineChartComponent /> */}
-                <TrafficOfTollDash />
-              </div>
-              <div className='col-span-3'>
-                <VideoFeed />
-              </div>
-            </div>
 
-            <div className='mt-4 grid grid-cols-6 gap-2'>
-              <div className='col-span-3'>
-                {/* <BarChartVT /> */}
-                <TollOfTollDash />
-              </div>
-              <div className='col-span-3'>
-                <iframe
-                  src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2281.827946362794!2d90.35027387486845!3d23.649776743514867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755bc3be3d29a65%3A0x75a23b873f4d0353!2zRGhhbGVzaHdhcmkgVG9sbCBQbGF6YSwg4Kai4Ka-4KaV4Ka-LeCmruCmvuCmk-Cmr-CmvOCmviDgpq7gprngpr7gprjgpqHgprzgppU!5e1!3m2!1sen!2sbd!4v1748319418725!5m2!1sen!2sbd'
-                  width='600'
-                  height='390'
-                  allowFullScreen
-                  loading='lazy'
-                  className='rounded-[12px]'
-                ></iframe>
-                {/* <WeatherBoard /> */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
-  )
-}
+//           <div>
+//             <img className='w-full h-10' src={kecLogo} alt='' />
+//           </div>
+//         </div>
+//       </div>
+//       <hr />
+//       <section className='p-6 bg-[#e2ecfe]'>
+//         <div className='grid grid-cols-8 gap-3'>
+//           <div className='col-span-3'>
+//             <TotalVehicle />
+//           </div>
+//           <div className='col-span-5'>
+//             <div className='grid grid-cols-6 gap-2 items-center'>
+//               <div className='col-span-3'>
+//                 <ChartBoard />
+
+//                 {/* <LineChartComponent /> */}
+//                 <TrafficOfTollDash />
+//               </div>
+//               <div className='col-span-3'>
+//                 <VideoFeed />
+//               </div>
+//             </div>
+
+//             <div className='mt-4 grid grid-cols-6 gap-2'>
+//               <div className='col-span-3'>
+//                 {/* <BarChartVT /> */}
+//                 <TollOfTollDash />
+//               </div>
+//               <div className='col-span-3'>
+//                 <iframe
+//                   src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2281.827946362794!2d90.35027387486845!3d23.649776743514867!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755bc3be3d29a65%3A0x75a23b873f4d0353!2zRGhhbGVzaHdhcmkgVG9sbCBQbGF6YSwg4Kai4Ka-4KaV4Ka-LeCmruCmvuCmk-Cmr-CmvOCmviDgpq7gprngpr7gprjgpqHgprzgppU!5e1!3m2!1sen!2sbd!4v1748319418725!5m2!1sen!2sbd'
+//                   width='600'
+//                   height='390'
+//                   allowFullScreen
+//                   loading='lazy'
+//                   className='rounded-[12px]'
+//                 ></iframe>
+//                 {/* <WeatherBoard /> */}
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+//     </>
+//   )
+// }
