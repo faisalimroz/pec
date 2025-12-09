@@ -18,7 +18,6 @@ export interface NavLink {
 export interface SideLink extends NavLink {
   sub?: NavLink[]
 }
-
 export const administrationLinks: SideLink[] = [
   {
     title: 'Administrative',
@@ -26,6 +25,20 @@ export const administrationLinks: SideLink[] = [
     href: '',
     icon: '',
     uName: 'administrative',
+  },
+  {
+    title: 'Employee Personal Profile',
+    label: '',
+    href: '/edms/administrative/employee-personal-profile',
+    uName: 'employee-personal-profile',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Vehicle Mgt. Record',
+    label: '',
+    href: '/edms/administrative/vehicle-mgt-record',
+    uName: 'vehicle-management',
+    icon: <FileIcon />,
   },
   {
     title: 'Asset Management',
@@ -53,34 +66,38 @@ export const administrationLinks: SideLink[] = [
         href: '/edms/administrative/building-maintenance-tools',
         icon: '',
       }
+
+
     ],
   },
+
   {
-    title: 'Employee Personal Profile',
-    label: '',
-    href: '/edms/administrative/employee-personal-profile',
-    uName: 'employee-personal-profile',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Fire Mgt.',
+    title: 'Health Center',
     label: '',
     href: '',
-    uName: 'fire-mgt',
+    uName: 'health-center',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'Monthly Activity',
+        title: 'Monthly Report',
         label: '',
-        href: '/edms/administrative/fire-mgt-monthly-report',
+        href: '/edms/administrative/health-center-monthly-report',
         icon: '',
       },
       {
-        title: ' Tools',
+        title: 'Medicine In/Out Record',
         label: '',
-        href: '/edms/administrative/fire-mgt-tools',
+        href: '/edms/administrative/health-center-medicine-record',
         icon: '',
       },
+      {
+        title: 'Medicine Equipment Record',
+        label: '',
+        href: '/edms/administrative/health-center-monthly-equipment-record',
+        icon: '',
+      },
+
+
     ],
   },
   {
@@ -102,35 +119,34 @@ export const administrationLinks: SideLink[] = [
         href: '/edms/administrative/gardening-tools',
         icon: '',
       },
+
+
     ],
   },
   {
-    title: 'Health Center',
+    title: 'Fire Mgt.',
     label: '',
     href: '',
-    uName: 'health-center',
+    uName: 'fire-mgt',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'Medicine Equipment Record',
+        title: 'Monthly Activity',
         label: '',
-        href: '/edms/administrative/health-center-monthly-equipment-record',
+        href: '/edms/administrative/fire-mgt-monthly-report',
         icon: '',
       },
       {
-        title: 'Medicine In/Out Record',
+        title: ' Tools',
         label: '',
-        href: '/edms/administrative/health-center-medicine-record',
+        href: '/edms/administrative/fire-mgt-tools',
         icon: '',
       },
-      {
-        title: 'Monthly Report',
-        label: '',
-        href: '/edms/administrative/health-center-monthly-report',
-        icon: '',
-      },
+
+
     ],
   },
+
   {
     title: 'IT Electronics',
     label: '',
@@ -150,8 +166,11 @@ export const administrationLinks: SideLink[] = [
         href: '/edms/administrative/it-electronics-communication-tools',
         icon: '',
       }
+
+
     ],
   },
+
   {
     title: 'Security Mgt.',
     label: '',
@@ -171,15 +190,11 @@ export const administrationLinks: SideLink[] = [
         href: '/edms/administrative/security-mgt-tools',
         icon: '',
       }
+
+
     ],
   },
-  {
-    title: 'Vehicle Mgt. Record',
-    label: '',
-    href: '/edms/administrative/vehicle-mgt-record',
-    uName: 'vehicle-management',
-    icon: <FileIcon />,
-  },
+
 
   {
     title: 'Finance & Accounts',
@@ -189,17 +204,17 @@ export const administrationLinks: SideLink[] = [
     uName: 'finance-&-accounts',
   },
   {
-    title: 'IPC Records',
-    label: '',
-    href: '/edms/administrative/ipc-records',
-    uName: 'ipc-records',
-    icon: <FileIcon />,
-  },
-  {
     title: 'Monthly IPC Updates',
     label: '',
     href: '/edms/administrative/ipc-monthly-updates',
     uName: 'monthly-ipc-updates',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'IPC Records',
+    label: '',
+    href: '/edms/administrative/ipc-records',
+    uName: 'ipc-records',
     icon: <FileIcon />,
   },
 ]
@@ -212,19 +227,13 @@ export const rntLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
-  {
-    title: 'KEC Letter',
+  
+    {
+    title: 'Organization/ Organogram',
     label: '',
-    href: '/edms/road-and-traffic/kec-letter',
-    uName: 'r&t-kec-letter',
-    icon: <KecIcon />,
-  },
-  {
-    title: 'Monthly Report',
-    label: '',
-    href: '/edms/road-and-traffic/monthly-report',
-    uName: 'r&t-monthly-report',
-    icon: <ReportIcon />,
+    href: '/edms/road-and-traffic/organization-organogram',
+    uName: 'r&t-organization',
+    icon: <FileIcon />,
   },
   {
     title: 'Monthly Roster (Final)',
@@ -234,12 +243,20 @@ export const rntLinks: SideLink[] = [
     icon: <GuardIcon />,
   },
   {
-    title: 'Organization/ Organogram',
+    title: 'Monthly Report',
     label: '',
-    href: '/edms/road-and-traffic/organization-organogram',
-    uName: 'r&t-organization',
-    icon: <FileIcon />,
+    href: '/edms/road-and-traffic/monthly-report',
+    uName: 'r&t-monthly-report',
+    icon: <ReportIcon />,
   },
+  {
+    title: 'KEC Letter',
+    label: '',
+    href: '/edms/road-and-traffic/kec-letter',
+    uName: 'r&t-kec-letter',
+    icon: <KecIcon />,
+  },
+
   {
     title: 'Road Maintenance Part',
     label: '',
@@ -420,7 +437,7 @@ export const rntLinks: SideLink[] = [
 ]
 
 export const itsLinks: SideLink[] = [
- {
+  {
     title: 'ITS',
     label: '',
     href: '',
@@ -434,15 +451,15 @@ export const itsLinks: SideLink[] = [
     icon: <AboutIcon />,
   },
   {
-    title: 'Monthly Report',
+    title: 'Organization',
     label: '',
-    href: '/edms/its/monthly-report',
+    href: '/edms/its/organization',
     icon: <FileIcon />,
   },
-   {
-    title: 'Operation Manual',
+  {
+    title: 'Work Plan',
     label: '',
-    href: '/edms/its/operation-manual',
+    href: '/edms/its/workplan',
     icon: <FileIcon />,
   },
   {
@@ -457,23 +474,24 @@ export const itsLinks: SideLink[] = [
     href: '/edms/its/system-configure',
     icon: <FileIcon />,
   },
-   {
-    title: 'Organization',
-    label: '',
-    href: '/edms/its/organization',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Work Plan',
-    label: '',
-    href: '/edms/its/workplan',
-    icon: <FileIcon />,
-  },
 
+  {
+    title: 'Operation Manual',
+    label: '',
+    href: '/edms/its/operation-manual',
+    icon: <FileIcon />,
+  },
+   
+ {
+    title: 'Monthly Report',
+    label: '',
+    href: '/edms/its/monthly-report',
+    icon: <FileIcon />,
+  },
 ]
 
 export const tollLinks: SideLink[] = [
- {
+  {
     title: 'Toll Operation',
     label: '',
     href: '',
@@ -501,45 +519,7 @@ export const tollLinks: SideLink[] = [
       },
 
     ],
-  },
-   {
-    title: 'Daily Report',
-    label: '',
-    href: '/edms/toll/daily-report',
-    uName: 'toll-daily-report',
-    icon: <FileIcon />,
-  },
- {
-    title: 'Employee Personal Report',
-    label: '',
-    href: '/edms/toll/employee-personal-report',
-    uName: 'toll-employee-report',
-    icon: <FileIcon />,
-  },
-   {
-    title: 'Hierarchy',
-    label: '',
-    href: '/edms/toll/hierarchy',
-    uName: 'toll-hierarchy',
-    icon: <FileIcon />,
-  },
-  {
-    title: 'Monthly Roster',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Main Bridge Bills',
-        label: '',
-        href: '/edms/toll/monthly-roster/main-bridge-bills',
-        uName: 'toll-monthly-roster',
-        icon: <FileIcon />,
-      }
-
-    ],
-  },
+  }, 
   {
     title: 'Shift Wise Toll & Traffic Data',
     label: '',
@@ -586,13 +566,49 @@ export const tollLinks: SideLink[] = [
 
     ],
   },
- 
+  {
+    title: 'Daily Report',
+    label: '',
+    href: '/edms/toll/daily-report',
+    uName: 'toll-daily-report',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Monthly Roster',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Main Bridge Bills',
+        label: '',
+        href: '/edms/toll/monthly-roster/main-bridge-bills',
+        uName: 'toll-monthly-roster',
+        icon: <FileIcon />,
+      }
 
- 
- 
+    ],
+  },
+
+ {
+    title: 'Employee Personal Report',
+    label: '',
+    href: '/edms/toll/employee-personal-report',
+    uName: 'toll-employee-report',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Hierarchy',
+    label: '',
+    href: '/edms/toll/hierarchy',
+    uName: 'toll-hierarchy',
+    icon: <FileIcon />,
+  },
+
 ]
 export const rtwLinks: SideLink[] = [
-   {
+  {
     title: 'RTW',
     label: '',
     href: '',
@@ -606,7 +622,7 @@ export const rtwLinks: SideLink[] = [
     uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
-   {
+  {
     title: 'Additional Notes',
     label: '',
     href: '',
@@ -633,7 +649,7 @@ export const rtwLinks: SideLink[] = [
       },
     ],
   },
-   {
+  {
     title: 'Communication & Correspondence',
     label: '',
     href: '',
@@ -744,9 +760,9 @@ export const rtwLinks: SideLink[] = [
       },
     ],
   },
-  
-  
- 
+
+
+
   {
     title: 'Visual Records',
     label: '',
@@ -762,11 +778,11 @@ export const rtwLinks: SideLink[] = [
       }
     ],
   },
- 
+
 ]
 
 export const pmisLinks: SideLink[] = [
-   {
+  {
     title: 'Main Bridge',
     label: '',
     href: '',
@@ -780,77 +796,7 @@ export const pmisLinks: SideLink[] = [
     uName: 'dispatched',
     icon: <FileIcon />,
   },
-  {
-    title: 'Additional Notes',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Backup Frequency',
-        label: '',
-        href: '/edms/mb-pmis/additional-notes/backup-frequency',
-        icon: '',
-      },
-      {
-        title: 'Document Control Manager',
-        label: '',
-        href: '/edms/mb-pmis/additional-notes/document-control-manager',
-        icon: '',
-      },
-      {
-        title: 'Document Revision Log',
-        label: '',
-        href: '/edms/mb-pmis/additional-notes/document-revision-log',
-        icon: '',
-      },
-    ],
-  },
-   {
-    title: 'Communication & Correspondence',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'All RTW-related Letters & Official Correspondence',
-        label: '',
-        href: '/edms/mb-pmis/letter-and-official-correspondence',
-        icon: '',
-      },
-      {
-        title: 'Meeting Minutes',
-        label: '',
-        href: '/edms/mb-pmis/meeting-minutes',
-        icon: '',
-      }
-    ],
-  },
-  {
-    title: 'Financial Documentation',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Main Bridge Bills',
-        label: '',
-        href: '/edms/mb-pmis/main-bridge-bills',
-        icon: '',
-      }
-    ],
-  },
-   {
-    title: 'Monitoring & Reporting',
-    label: '',
-    href: '/edms/mb-pmis/monitoring-and-reporting',
-    uName: 'dispatched',
-    icon: <FileIcon />,
-  },
-  {
+    {
     title: 'Technical Documentation',
     label: '',
     href: '',
@@ -890,8 +836,34 @@ export const pmisLinks: SideLink[] = [
       },
     ],
   },
+
+ 
+ 
+  {
+    title: 'Financial Documentation',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Main Bridge Bills',
+        label: '',
+        href: '/edms/mb-pmis/main-bridge-bills',
+        icon: '',
+      }
+    ],
+  },
  
 
+
+   {
+    title: 'Monitoring & Reporting',
+    label: '',
+    href: '/edms/mb-pmis/monitoring-and-reporting',
+    uName: 'dispatched',
+    icon: <FileIcon />,
+  },
   {
     title: 'Quality, Safety',
     label: '',
@@ -913,7 +885,54 @@ export const pmisLinks: SideLink[] = [
       },
     ],
   },
- 
+ {
+    title: 'Communication & Correspondence',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'All RTW-related Letters & Official Correspondence',
+        label: '',
+        href: '/edms/mb-pmis/letter-and-official-correspondence',
+        icon: '',
+      },
+      {
+        title: 'Meeting Minutes',
+        label: '',
+        href: '/edms/mb-pmis/meeting-minutes',
+        icon: '',
+      }
+    ],
+  },
+   {
+    title: 'Additional Notes',
+    label: '',
+    href: '',
+    uName: 'special-audit',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Backup Frequency',
+        label: '',
+        href: '/edms/mb-pmis/additional-notes/backup-frequency',
+        icon: '',
+      },
+      {
+        title: 'Document Control Manager',
+        label: '',
+        href: '/edms/mb-pmis/additional-notes/document-control-manager',
+        icon: '',
+      },
+      {
+        title: 'Document Revision Log',
+        label: '',
+        href: '/edms/mb-pmis/additional-notes/document-revision-log',
+        icon: '',
+      },
+    ],
+  },
   {
     title: 'Visual Records',
     label: '',
@@ -929,5 +948,5 @@ export const pmisLinks: SideLink[] = [
       }
     ],
   },
-  
+
 ]
