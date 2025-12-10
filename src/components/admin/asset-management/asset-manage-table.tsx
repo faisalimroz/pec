@@ -345,7 +345,11 @@ export default function AssetManagementTable() {
       formData.append('date', formatDate(formDate))
       formData.append('approved', approved ? 'true' : 'false');
       formData.append('type', type)
-      
+       if (filesInput && filesInput.length > 0) {
+        filesInput.forEach((file) => {
+            formData.append('attachments', file)
+        })
+      }
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/asset-management/create`,
         formData,
@@ -1250,8 +1254,7 @@ export default function AssetManagementTable() {
                 <p className='break-all'>{selectedProduct.remarks}</p>
               </div>
 
-              {hasEditAccess && (
-                <div className='col-span-2'>
+              <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
                     {selectedProduct.attachments.map((attachment, index) => (
@@ -1265,7 +1268,6 @@ export default function AssetManagementTable() {
                     ))}
                   </div>
                 </div>
-              )}
 
             </div>
           </>

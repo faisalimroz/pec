@@ -136,7 +136,7 @@ export function EDMSLettersList() {
   
   // Display current date if data is missing, otherwise display the date from the fetched record
   const displayDate = todayWaterLevelData?.date || getFormattedDate(); 
-
+  console.log(displayDate,'today water level data')
   const buttonText = loading 
     ? 'Loading...' 
     : (maxWaterLevel !== 'N/A' ? `${maxWaterLevel} PWD` : 'N/A PWD');
@@ -207,9 +207,7 @@ export function EDMSLettersList() {
               <path d="M3 10H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <h1 className='text-basae font-bold'>{displayDate}</h1>
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
-              <path d="M9.28516 18.5566L15.2852 12.5566L9.28516 6.55664" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+           
           </div>
         </div>
 

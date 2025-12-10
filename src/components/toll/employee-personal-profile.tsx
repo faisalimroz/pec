@@ -28,7 +28,7 @@ interface Product {
   // approved: string
   employeeId: string
   dept: string
-  firmName: string
+ 
   position: string
   salary?: string
   boqNo?: string
@@ -74,7 +74,7 @@ export default function EmPersonalProfileTable() {
     employeeName: '',
     approved: false,
     employeeId: '',
-    firmName: '',
+   
     dept: '',
     position: '',
     salary: '',
@@ -138,7 +138,7 @@ export default function EmPersonalProfileTable() {
     employeeName: '',
     employeeId: '',
     dept: '',
-    firmName: '',
+ 
     position: '',
     dateOfMobilization: '',
     dateOfDemobilization: '',
@@ -291,7 +291,7 @@ export default function EmPersonalProfileTable() {
       { value: formData.email, name: 'Email' },
         { value: formData.dateOfMobilization, name: 'Date of Mobilization' },
       { value: formData.dateOfDemobilization, name: 'Date of Demobilization' },
-       { value: formData.firmName, name: 'Firm Name' },
+     
     ];
 
     for (const field of requiredFields) {
@@ -370,7 +370,7 @@ export default function EmPersonalProfileTable() {
         employeeName: '',
         employeeId: '',
         dept: '',
-        firmName: '',
+     
         position: '',
         dateOfMobilization: '',
         dateOfDemobilization: '',

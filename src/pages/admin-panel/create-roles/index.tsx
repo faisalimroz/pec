@@ -51,10 +51,10 @@ interface LabelMapping {
 
 // Add list of nodes that should have hidden children
 const NODES_WITH_HIDDEN_CHILDREN = [
-  'general-information',
+  // 'general-information',
   'edms',
   'notice',
-  'ai-dashboard',
+  // 'ai-dashboard',
 ]
 
 const PermissionManager = () => {
@@ -79,14 +79,14 @@ const PermissionManager = () => {
   const parentLabelMappings: LabelMapping[] = [
     { id: 'admin', label: 'Administration Dept.' },
     { id: 'its-manager', label: 'ITS Dept.' },
-    { id: 'general-information', label: 'General Information' },
+    // { id: 'general-information', label: 'General Information' },
     { id: 'mb-pmis-manager', label: 'Main Bridge Dept.' },
     { id: 'rtw-manager', label: 'RTW Dept.' },
     { id: 'finance-manager', label: 'Finance Dept.' },
     { id: 'edms', label: 'EDMS' },
     { id: 'notice', label: 'Notice' },
     { id: 'r&t-manager', label: 'Road & Traffic Dept.' },
-    { id: 'ai-dashboard', label: 'AI Dashboard' },
+    // { id: 'ai-dashboard', label: 'AI Dashboard' },
     { id: 'toll-manager', label: 'Toll Dept.' },
   ]
 // turn everything ON (view+edit) in the tree for visual feedback

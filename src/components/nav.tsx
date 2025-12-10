@@ -173,6 +173,53 @@ function NavLink({
   )
 }
 
+// function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
+//   const { checkActiveNav } = useCheckActiveNav()
+
+//   /* Open collapsible by default
+//    * if one of child element is active */
+//   const [isOpen, setIsOpen] = useState(
+//     !!sub?.find((s) => checkActiveNav(s.href))
+//   )
+
+//   const handleClick = () => {
+//     setIsOpen(!isOpen)
+//   }
+//   const isChildActive = !!sub?.find((s) => checkActiveNav(s.href))
+//   // use this in the Collapsible if you want to open by default  "defaultOpen = { isChildActive }"
+
+//   return (
+//     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+//       <CollapsibleTrigger
+//         className={cn(
+//           buttonVariants({ variant: 'ghost', size: 'lg' }),
+//           'group h-12 w-full justify-start rounded-none px-6 text-xs text-black'
+//         )}
+//         onClick={handleClick}
+//       >
+//         <div className='mr-2'>{icon}</div>
+//         {title}
+//         <span
+//           className={cn(
+//             'ml-auto transition-all group-data-[state="open"]:-rotate-180'
+//           )}
+//         >
+//           <ChevronDown />
+//         </span>
+//       </CollapsibleTrigger>
+//       <CollapsibleContent className='collapsibleDropdown' asChild>
+//         <ul>
+//           {sub!.map((sublink) => (
+//             <li key={sublink.title} className='my-1 ml-8'>
+//               <NavLink {...sublink} subLink closeNav={() => setIsOpen(false)} />
+//               {/* <NavLink {...sublink} subLink closeNav={closeNav} /> */}
+//             </li>
+//           ))}
+//         </ul>
+//       </CollapsibleContent>
+//     </Collapsible>
+//   )
+// }
 function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
   const { checkActiveNav } = useCheckActiveNav()
 
@@ -186,22 +233,30 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
     setIsOpen(!isOpen)
   }
   const isChildActive = !!sub?.find((s) => checkActiveNav(s.href))
-  // use this in the Collapsible if you want to open by default  "defaultOpen = { isChildActive }"
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger
         className={cn(
           buttonVariants({ variant: 'ghost', size: 'lg' }),
-          'group h-12 w-full justify-start rounded-none px-6 text-xs text-black'
+          // 1. Changed h-12 to "h-auto min-h-12 py-3" to allow expansion
+          // 2. Added "items-center" to ensure vertical alignment
+          'group h-auto min-h-12 w-full justify-start items-center rounded-none px-6 text-xs text-black py-3'
         )}
         onClick={handleClick}
       >
-        <div className='mr-2'>{icon}</div>
-        {title}
+        {/* 3. Added shrink-0 to prevent icon from squashing */}
+        <div className='mr-2 shrink-0'>{icon}</div>
+        
+        {/* 4. Wrapped title in a span to handle wrapping and take up available space */}
+        <span className='flex-1 text-left whitespace-normal leading-tight'>
+          {title}
+        </span>
+
         <span
           className={cn(
-            'ml-auto transition-all group-data-[state="open"]:-rotate-180'
+            // 5. Added shrink-0 to ensure chevron is always visible
+            'ml-2 shrink-0 transition-all group-data-[state="open"]:-rotate-180'
           )}
         >
           <ChevronDown />
@@ -212,7 +267,6 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
           {sub!.map((sublink) => (
             <li key={sublink.title} className='my-1 ml-8'>
               <NavLink {...sublink} subLink closeNav={() => setIsOpen(false)} />
-              {/* <NavLink {...sublink} subLink closeNav={closeNav} /> */}
             </li>
           ))}
         </ul>
@@ -220,7 +274,6 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
     </Collapsible>
   )
 }
-
 function NavLinkIcon({ title, icon, label, href }: NavLinkProps) {
   const { checkActiveNav } = useCheckActiveNav()
   return (

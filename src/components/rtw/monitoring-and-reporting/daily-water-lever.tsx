@@ -134,11 +134,13 @@ export default function MonthlyReport() {
 
     ]
     const year = [
-
+         { name: '2030', code: '2030' },
+        { name: '2029', code: '2029' },
+        { name: '2028', code: '2028' },
         { name: '2027', code: '2027' },
         { name: '2026', code: '2026' },
         { name: '2025', code: '2025' },
-        { name: '2024', code: '2024' },
+       
 
     ]
     const itemTemplate = (option: { name: string; code: string }) => {
@@ -369,10 +371,10 @@ export default function MonthlyReport() {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: location, name: 'Location' },
-            { value: eightAM, name: '8 AM Reading' },
-            { value: twelvePM, name: '12 PM Reading' },
-            { value: twoPM, name: '2 PM Reading' },
-            { value: sixPM, name: '6 PM Reading' },
+            // { value: eightAM, name: '8 AM Reading' },
+            // { value: twelvePM, name: '12 PM Reading' },
+            // { value: twoPM, name: '2 PM Reading' },
+            // { value: sixPM, name: '6 PM Reading' },
             { value: formDate, name: 'Date' }
         ];
 
@@ -576,9 +578,7 @@ export default function MonthlyReport() {
     const leftToolbarTemplate = () => {
         return (
             <div className='flex items-center gap-2'>
-                <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
-                    Document List
-                </div>
+               
 
                 <ButtonGroup onChange={setChartMode} />
 
@@ -1281,6 +1281,7 @@ export default function MonthlyReport() {
                                 options={locations}
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
+                                optionValue="name"
                                 placeholder='Select Type'
                                 className='w-full'
                             />
@@ -1459,8 +1460,7 @@ export default function MonthlyReport() {
 
                         
 
-                            {hasEditAccess && (
-                                <div className='col-span-2'>
+                            <div className='col-span-2'>
                                     <h3 className='font-bold'>Attachments/Download</h3>
                                     <div className='w-fit mt-2 flex flex-col justify-start'>
                                         {selectedProduct.attachments.map((attachment, index) => (
@@ -1474,7 +1474,6 @@ export default function MonthlyReport() {
                                         ))}
                                     </div>
                                 </div>
-                            )}
                         </div>
                     </>
                 )}
@@ -1588,7 +1587,7 @@ export default function MonthlyReport() {
                                 className="w-full"
                             />
                         </div>
-                        <div className='field'>
+                        <div className='field hidden'>
                             <label htmlFor='maximumWaterLevel' className='font-bold'>
                                 Maximum Water Level (Auto)
                             </label>
@@ -1598,7 +1597,7 @@ export default function MonthlyReport() {
                                 readOnly
                             />
                         </div>
-                        <div className='field'>
+                        <div className='field hidden'>
                             <label htmlFor='maximumWaterLevel' className='font-bold'>
                                 Minimum Water Level (Auto)
                             </label>
