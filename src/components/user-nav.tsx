@@ -46,40 +46,40 @@ export function UserNav() {
 
     ...(isAiDashboard
       ? [
-          {
-            template: () => (
-              <CustomMenuItem
-                label='AI Dashboard'
-                onClick={() => navigate('/ai-dashboard')}
-              />
-            ),
-          },
+          // {
+          //   template: () => (
+          //     <CustomMenuItem
+          //       label='AI Dashboard'
+          //       onClick={() => navigate('/ai-dashboard')}
+          //     />
+          //   ),
+          // },
         ]
       : []),
 
     ...(isGuest
       ? [
-          {
-            template: () => (
-              <CustomMenuItem
-                label='AI Dashboard'
-                onClick={() => navigate('/ai-dashboard')}
-              />
-            ),
-          },
+          // {
+          //   template: () => (
+          //     <CustomMenuItem
+          //       label='AI Dashboard'
+          //       onClick={() => navigate('/ai-dashboard')}
+          //     />
+          //   ),
+          // },
         ]
       : []),
 
     ...(isSuperAdminOrAdmin
       ? [
-          {
-            template: () => (
-              <CustomMenuItem
-                label='AI Dashboard'
-                onClick={() => navigate('/ai-dashboard')}
-              />
-            ),
-          },
+          // {
+          //   template: () => (
+          //     <CustomMenuItem
+          //       label='AI Dashboard'
+          //       onClick={() => navigate('/ai-dashboard')}
+          //     />
+          //   ),
+          // },
           {
             template: () => (
               <CustomMenuItem

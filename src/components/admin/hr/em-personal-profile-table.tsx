@@ -270,7 +270,50 @@ export default function EmPersonalProfileTable() {
     return `${day}-${month}-${year}`
   }
 
-  const saveProduct = async () => {
+const saveProduct = async () => {
+   
+    const fieldLabels = {
+        employeeName: 'Employee Name',
+        employeeId: 'Employee ID',
+        dept: 'Department',
+        firmName: 'Firm Name',
+        position: 'Position',
+        dateOfMobilization: 'Date of Mobilization',
+        dateOfDemobilization: 'Date of Demobilization',
+        remarks: 'Remarks',
+        salary: 'Salary',
+        boqNo: 'BOQ No.',
+        location: 'Location',
+        branch: 'Branch',
+        mobile: 'Mobile',
+        address: 'Address',
+        email: 'Email'
+    };
+
+    // Loop through the formData state to check for empty values
+    for (const [key, value] of Object.entries(formData)) {
+        // Skip array/file fields here if you validate them separately, 
+        // otherwise this checks strings/dates/numbers.
+        if (
+            key !== 'cvCertificates' && 
+            key !== 'agreement' && 
+            key !== 'showcaseLetter' && 
+            key !== 'warningLetter' && 
+            key !== 'termination' && 
+            key !== 'insuranceClaiming' &&
+            key !== 'profileImg' 
+        ) {
+            if (!value || (typeof value === 'string' && value.trim() === '')) {
+                // Use the friendly name or the key
+                const fieldName = fieldLabels[key] || key;
+                toast.warning(`${fieldName} is required!`);
+                return; // Stop execution
+            }
+        }
+    }
+
+ 
+
     try {
       setLoading2(true)
       const data = new FormData()
@@ -286,6 +329,7 @@ export default function EmPersonalProfileTable() {
         }
       })
 
+      // ... rest of your file appending logic ...
       cvCertificates.forEach((file) => {
         data.append('cvCertificates', file)
       })
@@ -326,6 +370,7 @@ export default function EmPersonalProfileTable() {
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch();
+      
       // Reset form data after successful save
       setFormData({
         employeeName: '',

@@ -270,7 +270,43 @@ export default function EmPersonalProfileTable() {
     return `${day}-${month}-${year}`
   }
 
-  const saveProduct = async () => {
+ const saveProduct = async () => {
+    // --- 1. VALIDATION START ---
+    // List of fields to validate from your formData state
+    const requiredFields = [
+      { value: formData.employeeName, name: 'Employee Name' },
+      { value: formData.employeeId, name: 'Employee ID' },
+      { value: formData.dept, name: 'Department' },
+      { value: formData.remarks, name: 'Remarks' },
+      { value: formData.salary, name: 'Salary' },
+      { value: formData.position, name: 'Position' },
+        { value: formData.boqNo, name: 'BOQ No.' },
+      { value: formData.location, name: 'Location' },
+    
+     
+    
+      { value: formData.branch, name: 'Branch' },
+      { value: formData.mobile, name: 'Mobile' },
+      { value: formData.address, name: 'Address' },
+      { value: formData.email, name: 'Email' },
+        { value: formData.dateOfMobilization, name: 'Date of Mobilization' },
+      { value: formData.dateOfDemobilization, name: 'Date of Demobilization' },
+       { value: formData.firmName, name: 'Firm Name' },
+    ];
+
+    for (const field of requiredFields) {
+   
+      if (
+        field.value === null || 
+        field.value === undefined || 
+        (typeof field.value === 'string' && field.value.trim() === '')
+      ) {
+        toast.warning(`${field.name} is required!`);
+        return; // Stop execution if validation fails
+      }
+    }
+    // --- VALIDATION END ---
+
     try {
       setLoading2(true)
       const data = new FormData()
@@ -286,6 +322,8 @@ export default function EmPersonalProfileTable() {
         }
       })
 
+      // Append files arrays
+      // Note: Assuming these variables (cvCertificates, etc.) are available in your component's scope
       cvCertificates.forEach((file) => {
         data.append('cvCertificates', file)
       })
@@ -326,6 +364,7 @@ export default function EmPersonalProfileTable() {
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch();
+      
       // Reset form data after successful save
       setFormData({
         employeeName: '',
@@ -342,7 +381,7 @@ export default function EmPersonalProfileTable() {
         branch: '',
         mobile: '',
         address: '',
-        approved: formData.approved,
+        approved: false, // Reset approved to false or keep formData.approved based on preference
         email: '',
         cvCertificates: [],
         agreement: [],
@@ -364,7 +403,6 @@ export default function EmPersonalProfileTable() {
       setLoading2(false)
     }
   }
-
   const exportCSV = () => {
     if (selectedProducts && selectedProducts.length > 0) {
       dt.current?.exportCSV({ selectionOnly: true })
