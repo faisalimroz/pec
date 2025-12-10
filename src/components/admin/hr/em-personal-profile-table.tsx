@@ -27,7 +27,7 @@ interface Product {
   employeeName: string
   employeeId: string
   dept: string
-  firmName: string
+  
   position: string
   salary?: string
   boqNo?: string
@@ -71,7 +71,7 @@ export default function EmPersonalProfileTable() {
     _id: '',
     employeeName: '',
     employeeId: '',
-    firmName: '',
+
     dept: '',
     position: '',
     salary: '',
@@ -136,7 +136,7 @@ export default function EmPersonalProfileTable() {
     employeeName: '',
     employeeId: '',
     dept: '',
-    firmName: '',
+
     position: '',
     dateOfMobilization: '',
     dateOfDemobilization: '',
@@ -276,7 +276,7 @@ const saveProduct = async () => {
         employeeName: 'Employee Name',
         employeeId: 'Employee ID',
         dept: 'Department',
-        firmName: 'Firm Name',
+ 
         position: 'Position',
         dateOfMobilization: 'Date of Mobilization',
         dateOfDemobilization: 'Date of Demobilization',
@@ -376,7 +376,7 @@ const saveProduct = async () => {
         employeeName: '',
         employeeId: '',
         dept: '',
-        firmName: '',
+  
         position: '',
         dateOfMobilization: '',
         dateOfDemobilization: '',
@@ -950,13 +950,7 @@ const saveProduct = async () => {
             // sortable
             ></Column>
 
-            <Column
-              field='firmName'
-              header='Firm Name'
-              headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
-            // sortable
-            ></Column>
+           
 
             <Column
               field='branch'
@@ -1228,7 +1222,7 @@ const saveProduct = async () => {
                   />
                 </div>
               </div>
-              <div className='field'>
+              {/* <div className='field'>
                 <label htmlFor='firmName' className='font-bold'>
                   Firm Name
                 </label>
@@ -1238,7 +1232,7 @@ const saveProduct = async () => {
                   onChange={handleInputChange}
                   required
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className='gap-3 mt-5'>

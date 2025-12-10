@@ -66,11 +66,12 @@ export default function MonthlyReport() {
          const showAll = pathname.startsWith('/edms');
      const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'building-maintenance');
-    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+    const hasEditAccess = showAll && (adminPermission?.edit_authority === true || roles.some((r) => r.title === 'superadmin'));
 
     const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
+        ['superadmin'].includes(role.title)
     )
+    console.log(isClinic,'hello')
     const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
@@ -1265,8 +1266,7 @@ const saveProduct = async () => {
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
 
-                            {hasEditAccess && (
-                                <div className='col-span-2'>
+                            <div className='col-span-2'>
                                     <h3 className='font-bold'>Attachments/Download</h3>
                                     <div className='w-fit mt-2 flex flex-col justify-start'>
                                         {selectedProduct.attachments.map((attachment, index) => (
@@ -1280,7 +1280,6 @@ const saveProduct = async () => {
                                         ))}
                                     </div>
                                 </div>
-                            )}
                         </div>
                     </>
                 )}

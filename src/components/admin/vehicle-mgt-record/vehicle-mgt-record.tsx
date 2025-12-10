@@ -1052,7 +1052,7 @@ const saveProduct = async () => {
               <div><h3 className='font-bold'>Fitness Duration</h3><p className='break-all'>{selectedProduct.fitnessDuration}</p></div>
               <div><h3 className='font-bold'>Remarks</h3><p className='break-all'>{selectedProduct.remarks}</p></div>
 
-              {hasEditAccess && (
+           
                 <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
@@ -1067,7 +1067,7 @@ const saveProduct = async () => {
                     ))}
                   </div>
                 </div>
-              )}
+           
             </div>
           </>
         )}

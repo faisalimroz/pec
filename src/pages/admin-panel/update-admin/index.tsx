@@ -50,10 +50,10 @@ interface TreeNode {
 
 // Add list of nodes that should have hidden children
 const NODES_WITH_HIDDEN_CHILDREN = [
-  'general-information',
+  // 'general-information',
   'edms',
   'notice',
-  'ai-dashboard',
+  // 'ai-dashboard',
 ]
 
 interface LabelMapping {
@@ -99,16 +99,16 @@ const UpdateAdmin = () => {
   // Custom label mappings for parent nodes
   const parentLabelMappings: LabelMapping[] = [
     { id: 'its-manager', label: 'ITS Dept.' },
-    { id: 'general-information', label: 'General Information' },
+    // { id: 'general-information', label: 'General Information' },
     { id: 'finance-manager', label: 'Finance Dept.' },
     { id: 'edms', label: 'EDMS' },
     { id: 'admin', label: 'Administration Dept.' },
     { id: 'notice', label: 'Notice' },
-    { id: 'clinic', label: 'Clinic' },
+    // { id: 'clinic', label: 'Clinic' },
     { id: 'r&t-manager', label: 'Road & Traffic Dept.' },
     { id: 'rtw-manager', label: 'RTW Dept.' },
     { id: 'mb-pmis-manager', label: 'Main Bridge Dept.' },
-    { id: 'ai-dashboard', label: 'AI Dashboard' },
+    // { id: 'ai-dashboard', label: 'AI Dashboard' },
     { id: 'toll-manager', label: 'Toll Dept.' },
   ]
 

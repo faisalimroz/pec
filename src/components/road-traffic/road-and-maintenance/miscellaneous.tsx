@@ -1069,8 +1069,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
 
-                            {hasEditAccess && (
-                                <div className='col-span-2'>
+                            <div className='col-span-2'>
                                     <h3 className='font-bold'>Attachments/Download</h3>
                                     <div className='w-fit mt-2 flex flex-col justify-start'>
                                         {selectedProduct.attachments.map((attachment, index) => (
@@ -1084,7 +1083,6 @@ const [approved, setApproved] = useState<boolean>(false);
                                         ))}
                                     </div>
                                 </div>
-                            )}
                         </div>
                     </>
                 )}

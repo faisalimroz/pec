@@ -19,7 +19,7 @@ interface EmployeeData {
   employeeId: string
   dept: string
   position: string
-  firmName: string
+
   salary: string
   boqNo: string
   location: string
@@ -286,7 +286,7 @@ export default function EmPersonalDetail({
       formData.append('salary', updatedEmployee.salary || '')
       formData.append('boqNo', updatedEmployee.boqNo || '')
       formData.append('location', updatedEmployee.location || '')
-      formData.append('firmName', updatedEmployee.firmName || '')
+    
       formData.append('branch', updatedEmployee.branch || '')
       formData.append('mobile', updatedEmployee.mobile || '')
       formData.append('address', updatedEmployee.address || '')

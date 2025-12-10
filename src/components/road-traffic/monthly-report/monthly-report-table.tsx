@@ -67,7 +67,7 @@ export default function MonthlyReport() {
   const roadSafetyPermission = rtManagerPermission?.children?.find(
     (child) => child.name === 'r&t-monthly-report');
   console.log('roadSafetyPermission', roadSafetyPermission);
-  const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
+  const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll; 
   const [approved, setApproved] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
@@ -1180,8 +1180,7 @@ export default function MonthlyReport() {
                 <p className='break-all'>{selectedProduct.remarks}</p>
               </div>
 
-              {hasEditAccess && (
-                <div className='col-span-2'>
+              <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
                     {selectedProduct.attachments.map((attachment, index) => (
@@ -1195,7 +1194,6 @@ export default function MonthlyReport() {
                     ))}
                   </div>
                 </div>
-              )}
             </div>
           </>
         )}

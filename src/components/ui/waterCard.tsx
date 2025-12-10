@@ -31,16 +31,16 @@ const WaterLevelCards: React.FC<WaterLevelCardsProps> = ({ dailyData }) => {
             "label": "Water Level (PWD)",
             "value": dailyData.eightAM || '0'
         },
-        {
-            "time": "12:00 PM",
-            "label": "Water Level (PWD)",
-            "value": dailyData.twelvePM || '0'
-        },
-        {
-            "time": "2:00 PM",
-            "label": "Water Level (PWD)",
-            "value": dailyData.twoPM || '0'
-        },
+        // {
+        //     "time": "12:00 PM",
+        //     "label": "Water Level (PWD)",
+        //     "value": dailyData.twelvePM || '0'
+        // },
+        // {
+        //     "time": "2:00 PM",
+        //     "label": "Water Level (PWD)",
+        //     "value": dailyData.twoPM || '0'
+        // },
         {
             "time": "6:00 PM",
             "label": "Water Level (PWD)",
@@ -53,7 +53,7 @@ const WaterLevelCards: React.FC<WaterLevelCardsProps> = ({ dailyData }) => {
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 p-3 w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 p-3 w-full">
             {waterLevels.map((item, index) => (
                 <div
                     key={index}

@@ -141,21 +141,8 @@ const fetchData = async () => {
   return (
     <div className='w-full rounded-xl overflow-hidden border shadow-md'>
       <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-center gap-2'>
-        {/* icon */}
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='25'
-          height='26'
-          viewBox='0 0 25 26'
-          fill='none'
-        >
-          {/* your SVG paths exactly as you had them */}
-          <path
-            d='M0.85498 14.7209V15.4579C0.85498 15.845 1.16868 16.1587 1.55572 16.1587H13.9814C14.3684 16.1587 14.6822 15.845 14.6822 15.4579V14.7209C14.6822 14.3339 14.3684 14.0201 13.9814 14.0201H1.55572C1.16868 14.0201 0.85498 14.3339 0.85498 14.7209Z'
-            fill='white'
-          />
-          {/* ... rest of SVG unchanged ... */}
-        </svg>
+
+      
         <h2 className='text-[20px] font-bold text-center'>
           Toll Of Toll Plaza: {date}
         </h2>

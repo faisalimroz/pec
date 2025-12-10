@@ -105,38 +105,7 @@ const fetchData = async () => {
   return (
     <div className='w-full rounded-xl overflow-hidden border shadow-md'>
       <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-center gap-2'>
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          width='26'
-          height='25'
-          viewBox='0 0 26 25'
-          fill='none'
-        >
-          {/* SVG Icon Content */}
-          <g clip-path='url(#clip0_177_408)'>
-            <mask
-              id='mask0_177_408'
-              maskUnits='userSpaceOnUse'
-              x='0'
-              y='0'
-              width='25'
-              height='27'
-            >
-              <path
-                d='M0.5 1.52588e-05H25V26.28H0.5V1.52588e-05Z'
-                fill='white'
-              />
-            </mask>
-            <g mask='url(#mask0_177_408)'>
-              <path
-                d='M23.6166 13.4674L13.5455 23.8834C13.0342 24.4121 12.2053 24.4121 11.694 23.8834L1.62295 13.4674C1.11169 12.9386 1.11169 12.0813 1.62295 11.5525L11.694 1.13656C12.2053 0.607796 13.0342 0.607796 13.5455 1.13656L23.6166 11.5525C24.1278 12.0813 24.1278 12.9386 23.6166 13.4674Z'
-                stroke='white'
-                stroke-width='1.47832'
-                stroke-miterlimit='10'
-              />
-            </g>
-          </g>
-        </svg>
+        
         <h2 className='text-[20px] font-bold text-center'>
           Traffic Of Toll Plaza: {date}
         </h2>

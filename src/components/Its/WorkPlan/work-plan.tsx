@@ -1239,8 +1239,7 @@ const saveProduct = async () => {
                             </div>
 
 
-                            {hasEditAccess && (
-                                <div className='col-span-2'>
+                            <div className='col-span-2'>
                                     <h3 className='font-bold'>Attachments/Download</h3>
                                     <div className='w-fit mt-2 flex flex-col justify-start'>
                                         {selectedProduct.attachments.map((attachment, index) => (
@@ -1254,7 +1253,6 @@ const saveProduct = async () => {
                                         ))}
                                     </div>
                                 </div>
-                            )}
                         </div>
                     </>
                 )}
