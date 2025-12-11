@@ -9,19 +9,19 @@ import TollButtonIcons from '../ui/comparison-button';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import axios from 'axios';
-import { toast } from 'sonner';
+import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview';
 import "../../styles/table-style.css";
 import RefreshButton from '@/components/refresh-button'
 
 interface PeriodData {
-  totalRevenue: number;  
-  totalVehicles: number; 
-  
+  totalRevenue: number;
+  totalVehicles: number;
 }
 
 interface PaymentComparisonItem {
   key: string;
-  label?: string; 
+  label?: string;
   p1: PeriodData;
   p2: PeriodData;
   changes: {
@@ -114,7 +114,6 @@ const getMethodAmount = (
   result: any
 ) => {
   if (isTotalRow) {
-
     if (period === "p1") return result?.period1?.totalAmount || 0;
     return result?.period2?.totalAmount || 0;
   }
@@ -149,6 +148,7 @@ export default function PeriodFiltersSection() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ComparisonResult | null>(null);
   const [showGraph, setShowGraph] = useState(false);
+  const [hideButtons, setHideButtons] = useState(false);
 
   const handleReset = () => {
     setP1({ start: null, end: null });
@@ -194,9 +194,15 @@ export default function PeriodFiltersSection() {
       setLoading(false);
     }
   };
-
   const exportPDF = async () => {
     if (!resultsRef.current) return;
+
+    // Hide buttons
+    setHideButtons(true);
+
+    // Wait for UI update
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     const canvas = await html2canvas(resultsRef.current, { scale: 2, useCORS: true });
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'mm', 'a4');
@@ -204,29 +210,54 @@ export default function PeriodFiltersSection() {
     const imgHeight = (canvas.height * pageWidth) / canvas.width;
     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-
     if (imgHeight > pdfHeight) {
       pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pdfHeight);
       pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, -(pdfHeight), pageWidth, imgHeight);
+      pdf.addImage(imgData, 'PNG', 0, -pdfHeight, pageWidth, imgHeight);
     } else {
       pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
     }
 
     pdf.save('toll-comparison.pdf');
-  };
 
+    // Show buttons again
+    setHideButtons(false);
+  };
   const handlePrint = () => {
     if (!resultsRef.current) return;
-    const printContents = resultsRef.current.innerHTML;
-    const w = window.open('', 'PRINT', 'height=700,width=900');
-    if (w) {
-      w.document.write(`<html><head><title>Comparison</title><style>body{font-family:sans-serif;padding:20px;}.border{border:1px solid #ddd;}.p-4{padding:1rem;}.grid{display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);}</style></head><body>${printContents}</body></html>`);
-      w.document.close();
-      w.focus();
-      w.print();
-      w.close();
-    }
+
+    // Hide buttons
+    setHideButtons(true);
+
+    setTimeout(() => {
+      const printContents = resultsRef.current.innerHTML;
+      const w = window.open('', 'PRINT', 'height=700,width=900');
+
+      if (w) {
+        w.document.write(`
+        <html>
+        <head>
+          <title>Comparison</title>
+          <style>
+            body { font-family: sans-serif; padding: 20px; }
+            .border { border: 1px solid #ddd; }
+            .p-4 { padding: 1rem; }
+            .grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
+          </style>
+        </head>
+        <body>${printContents}</body>
+        </html>
+      `);
+
+        w.document.close();
+        w.focus();
+        w.print();
+        w.close();
+      }
+
+      // Show buttons after printing
+      setHideButtons(false);
+    }, 200); // small delay so UI hides before print opens
   };
 
   const getDiffs = () => {
@@ -249,10 +280,10 @@ export default function PeriodFiltersSection() {
 
   const paymentTableData = result ? Object.values(result.paymentComparison) : [];
 
-  
+
   const totalRow = result
     ? {
-      key: "TOTAL", 
+      key: "TOTAL",
       label: "TOTAL",
       p1: { totalRevenue: result.period1.totalAmount, totalVehicles: result.period1.totalVehicles },
       p2: { totalRevenue: result.period2.totalAmount, totalVehicles: result.period2.totalVehicles },
@@ -268,7 +299,28 @@ export default function PeriodFiltersSection() {
   const finalPaymentData = result && totalRow ? [...paymentTableData, totalRow] : paymentTableData;
   const vehicleTableData = result?.vehicleComparison ? Object.values(result.vehicleComparison) : [];
 
- 
+  // --- NEW CODE: Calculate Totals for Second Table ---
+  const p1TotalVehicles = vehicleTableData.reduce((sum, item) => sum + (Number(item.p1) || 0), 0);
+  const p2TotalVehicles = vehicleTableData.reduce((sum, item) => sum + (Number(item.p2) || 0), 0);
+  const diffTotalVehicles = p2TotalVehicles - p1TotalVehicles;
+  const pctChangeTotalVehicles = p1TotalVehicles > 0
+    ? ((diffTotalVehicles / p1TotalVehicles) * 100).toFixed(2)
+    : 0;
+
+  const vehicleTotalRow = {
+    key: 'TOTAL',
+    p1: p1TotalVehicles,
+    p2: p2TotalVehicles,
+    diff: diffTotalVehicles,
+    pctChange: pctChangeTotalVehicles,
+    _isTotal: true
+  };
+
+  const finalVehicleData = vehicleTableData.length > 0
+    ? [...vehicleTableData, vehicleTotalRow]
+    : [];
+  // --------------------------------------------------
+
   const calculateShare = (amount: number, total: number) => {
     if (!total || total === 0) return 0;
     return (amount / total) * 100;
@@ -346,10 +398,14 @@ export default function PeriodFiltersSection() {
 
           <div className="flex justify-between items-center border-b pb-4">
             <h3 className="text-xl font-bold text-gray-800">Comparison Report</h3>
-            <TollButtonIcons isGraphVisible={showGraph}
-            openNew={toggleGraph}
-            exportPDF={exportPDF}
-            handlePrint={handlePrint} />
+            {!hideButtons && (
+              <TollButtonIcons
+                isGraphVisible={showGraph}
+                openNew={toggleGraph}
+                exportPDF={exportPDF}
+                handlePrint={handlePrint}
+              />
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -367,7 +423,7 @@ export default function PeriodFiltersSection() {
               </div>
             </div>
 
-         
+
             <div className="p-5 border border-gray-200 bg-white rounded-xl shadow-sm">
               <h4 className="text-blue-900 font-semibold mb-2">Total Traffic</h4>
               <div className="flex justify-between items-end">
@@ -383,7 +439,7 @@ export default function PeriodFiltersSection() {
             </div>
           </div>
 
-      
+
           {showGraph && result.chartData && (
             <div className="p-4 border rounded-lg">
               <h4 className="font-bold text-gray-700 mb-4">Vehicle Count Trend</h4>
@@ -399,7 +455,7 @@ export default function PeriodFiltersSection() {
             </div>
           )}
 
-        
+
           <div className="border rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-50 px-4 py-3 border-b"><h4 className="font-bold text-gray-700">Payment Method Analysis (Revenue)</h4></div>
             <DataTable
@@ -423,7 +479,7 @@ export default function PeriodFiltersSection() {
                 headerClassName="bg-red-200"
               />
 
-             
+
               <Column
                 header="P1 Revenue"
                 body={(r: any) => {
@@ -434,7 +490,7 @@ export default function PeriodFiltersSection() {
                 headerClassName="bg-red-200"
               />
 
-            
+
               <Column
                 header="P1 Share"
                 body={(r: any) => {
@@ -446,7 +502,7 @@ export default function PeriodFiltersSection() {
                 headerClassName="bg-red-200"
               />
 
-              
+
               <Column
                 header="P2 Revenue"
                 body={(r: any) => {
@@ -457,7 +513,7 @@ export default function PeriodFiltersSection() {
                 headerClassName="bg-red-200"
               />
 
-           
+
               <Column
                 header="P2 Share"
                 body={(r: any) => {
@@ -469,7 +525,7 @@ export default function PeriodFiltersSection() {
                 headerClassName="bg-red-200"
               />
 
-           
+
               <Column
                 header="Share Change"
                 headerClassName="bg-red-200"
@@ -478,7 +534,7 @@ export default function PeriodFiltersSection() {
 
                   const p1Share = getMethodShare(r, "p1", false, result);
                   const p2Share = getMethodShare(r, "p2", false, result);
-                  const val = p2Share - p1Share; 
+                  const val = p2Share - p1Share;
                   const displayVal = val.toFixed(2);
 
                   const color =
@@ -499,8 +555,17 @@ export default function PeriodFiltersSection() {
 
           <div className="border rounded-lg overflow-hidden shadow-sm">
             <div className="bg-gray-50 px-4 py-3 border-b"><h4 className="font-bold text-gray-700">Vehicle Class Comparison (Traffic)</h4></div>
-            <DataTable value={vehicleTableData} showGridlines stripedRows>
-              <Column header="Vehicle Type" body={(r: any) => VEHICLE_LABELS[r.key] || r.key} headerClassName="bg-red-200" />
+            <DataTable 
+              value={finalVehicleData} 
+              showGridlines 
+              stripedRows
+              rowClassName={(data) => (data._isTotal ? "bg-blue-100 font-bold border-t-2" : "")}
+            >
+              <Column 
+                header="Vehicle Type" 
+                body={(r: any) => r._isTotal ? "TOTAL" : (VEHICLE_LABELS[r.key] || r.key)} 
+                headerClassName="bg-red-200" 
+              />
               <Column field="p1" header="P1 Count" body={(r: any) => fmtNum(r.p1)} headerClassName="bg-red-200" />
               <Column field="p2" header="P2 Count" body={(r: any) => fmtNum(r.p2)} headerClassName="bg-red-200" />
               <Column header="Diff" body={(r: any) => (
@@ -509,7 +574,7 @@ export default function PeriodFiltersSection() {
                 </span>
               )} headerClassName="bg-red-200" />
               <Column header="% Change" headerClassName="bg-red-200" body={(r: any) => {
-                const val = r.pctChange;
+                const val = Number(r.pctChange); // Ensure number
                 const color = val > 0 ? 'text-green-600' : val < 0 ? 'text-red-600' : 'text-gray-400';
                 return <span className={`font-bold ${color}`}>{val > 0 ? '+' : ''}{val}%</span>;
               }}

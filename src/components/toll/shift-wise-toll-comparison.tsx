@@ -9,7 +9,8 @@ import TollButtonIcons from '../ui/comparison-button';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import axios from 'axios';
-import { toast } from 'sonner';
+import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview';
 import "../../styles/table-style.css";
 import RefreshButton from '@/components/refresh-button'
 
@@ -155,6 +156,7 @@ export default function PeriodFiltersSection() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ComparisonResult | null>(null);
   const [showGraph, setShowGraph] = useState(false);
+  const [hideButtons, setHideButtons] = useState(false);
 
   const handleReset = () => {
     setP1({ start: null, end: null });
@@ -207,44 +209,104 @@ export default function PeriodFiltersSection() {
       setLoading(false);
     }
   };
+const exportPDF = async () => {
+  if (!resultsRef.current) return;
 
-  const exportPDF = async () => {
-    if (!resultsRef.current) return;
-    const canvas = await html2canvas(resultsRef.current, {
-      scale: 2,
-      useCORS: true,
-    });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const imgHeight = (canvas.height * pageWidth) / canvas.width;
-    const pdfHeight = pdf.internal.pageSize.getHeight();
+  setHideButtons(true); // 🔥 hide buttons before export
 
-    if (imgHeight > pdfHeight) {
-      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pdfHeight);
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, -pdfHeight, pageWidth, imgHeight);
-    } else {
-      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
-    }
+  await new Promise((resolve) => setTimeout(resolve, 100)); // allow UI to refresh
 
-    pdf.save('toll-comparison.pdf');
-  };
+  const canvas = await html2canvas(resultsRef.current, {
+    scale: 2,
+    useCORS: true,
+  });
 
-  const handlePrint = () => {
-    if (!resultsRef.current) return;
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgHeight = (canvas.height * pageWidth) / canvas.width;
+  const pdfHeight = pdf.internal.pageSize.getHeight();
+
+  if (imgHeight > pdfHeight) {
+    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, -pdfHeight, pageWidth, imgHeight);
+  } else {
+    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, imgHeight);
+  }
+
+  pdf.save("toll-comparison.pdf");
+
+  setHideButtons(false); // 🔥 show buttons again
+};
+  // const exportPDF = async () => {
+  //   if (!resultsRef.current) return;
+  //   const canvas = await html2canvas(resultsRef.current, {
+  //     scale: 2,
+  //     useCORS: true,
+  //   });
+  //   const imgData = canvas.toDataURL('image/png');
+  //   const pdf = new jsPDF('p', 'mm', 'a4');
+  //   const pageWidth = pdf.internal.pageSize.getWidth();
+  //   const imgHeight = (canvas.height * pageWidth) / canvas.width;
+  //   const pdfHeight = pdf.internal.pageSize.getHeight();
+
+  //   if (imgHeight > pdfHeight) {
+  //     pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pdfHeight);
+  //     pdf.addPage();
+  //     pdf.addImage(imgData, 'PNG', 0, -pdfHeight, pageWidth, imgHeight);
+  //   } else {
+  //     pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
+  //   }
+
+  //   pdf.save('toll-comparison.pdf');
+  // };
+const handlePrint = () => {
+  if (!resultsRef.current) return;
+
+  setHideButtons(true); // 🔥 hide buttons
+
+  setTimeout(() => {
     const printContents = resultsRef.current.innerHTML;
     const w = window.open('', 'PRINT', 'height=700,width=900');
+
     if (w) {
-      w.document.write(
-        `<html><head><title>Comparison</title><style>body{font-family:sans-serif;padding:20px;}.border{border:1px solid #ddd;}.p-4{padding:1rem;}.grid{display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);}</style></head><body>${printContents}</body></html>`
+      w.document.write(`
+        <html>
+        <head><title>Comparison</title>
+        <style>
+          body { font-family:sans-serif; padding:20px; }
+          .border { border:1px solid #ddd; }
+          .p-4 { padding:1rem; }
+          .grid { display:grid; gap:1rem; grid-template-columns:repeat(2,1fr); }
+        </style>
+        </head>
+        <body>${printContents}</body>
+        </html>`
       );
       w.document.close();
       w.focus();
       w.print();
       w.close();
     }
-  };
+
+    setHideButtons(false); // 🔥 show again after print
+  }, 200); // short delay so UI updates first
+};
+  // const handlePrint = () => {
+  //   if (!resultsRef.current) return;
+  //   const printContents = resultsRef.current.innerHTML;
+  //   const w = window.open('', 'PRINT', 'height=700,width=900');
+  //   if (w) {
+  //     w.document.write(
+  //       `<html><head><title>Comparison</title><style>body{font-family:sans-serif;padding:20px;}.border{border:1px solid #ddd;}.p-4{padding:1rem;}.grid{display:grid;gap:1rem;grid-template-columns:repeat(2,1fr);}</style></head><body>${printContents}</body></html>`
+  //     );
+  //     w.document.close();
+  //     w.focus();
+  //     w.print();
+  //     w.close();
+  //   }
+  // };
 
   const getDiffs = () => {
     if (!result)
@@ -429,14 +491,18 @@ export default function PeriodFiltersSection() {
         >
           <div className="flex justify-between items-center border-b pb-4">
             <h3 className="text-xl font-bold text-gray-800">
-              Comparison Report
+             Shift Wise Comparison Report
             </h3>
-            <TollButtonIcons
+            {
+              !hideButtons && 
+                <TollButtonIcons 
               isGraphVisible={showGraph}
               openNew={toggleGraph}
               exportPDF={exportPDF}
               handlePrint={handlePrint}
             />
+            }
+          
           </div>
 
       

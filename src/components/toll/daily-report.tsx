@@ -131,12 +131,17 @@ export default function VehicleDetectTollTable() {
             const overallTotals = result?.overallTotals || {};
             setAllData(overallTotals);
 
+            // FIX: Handle both "Traffic" AND null (initial state) as the default view
             if (selectedTraffic === "Toll") {
-                setSummaryTotal(overallTotals.totalOverallAmount || 0);
-                setFooterTotal(overallTotals.totalOverallAmount || 0);
+                // Use consistent naming (totalOverallSum vs totalOverallAmount based on your API)
+                const amount = overallTotals.totalOverallAmount || overallTotals.totalOverallSum || 0;
+                setSummaryTotal(amount);
+                setFooterTotal(amount);
             } else {
-                setSummaryTotal(overallTotals.totalOverallVehicles || 0);
-                setFooterTotal(overallTotals.totalOverallVehicles || 0);
+                // Default view (Traffic)
+                const vehicles = overallTotals.totalOverallVehicles || 0;
+                setSummaryTotal(vehicles);
+                setFooterTotal(vehicles);
             }
 
             setTodaysDate(result?.date || "");
@@ -165,12 +170,15 @@ export default function VehicleDetectTollTable() {
             setProducts(result?.laneData || []);
             const overallTotals = result?.overallTotals || {};
             setAllData(overallTotals);
+            
             if (selectedTraffic === "Toll") {
-                setSummaryTotal(overallTotals.totalOverallSum || 0);
-                setFooterTotal(overallTotals.totalOverallSum || 0);
+                const amount = overallTotals.totalOverallSum || overallTotals.totalOverallAmount || 0;
+                setSummaryTotal(amount);
+                setFooterTotal(amount);
             } else {
-                setSummaryTotal(overallTotals.totalOverallVehicles || 0);
-                setFooterTotal(overallTotals.totalOverallVehicles || 0);
+                const vehicles = overallTotals.totalOverallVehicles || 0;
+                setSummaryTotal(vehicles);
+                setFooterTotal(vehicles);
             }
             setTodaysDate(result?.date || "");
         } catch (error) {
@@ -200,12 +208,15 @@ export default function VehicleDetectTollTable() {
             const overallTotals = result?.overallTotals || {};
             setAllData(overallTotals);
 
+            // Reset logic treats null/Traffic the same
             if (selectedTraffic === "Toll") {
-                setSummaryTotal(overallTotals.totalOverallSum || 0);
-                setFooterTotal(overallTotals.totalOverallSum || 0);
+                const amount = overallTotals.totalOverallSum || overallTotals.totalOverallAmount || 0;
+                setSummaryTotal(amount);
+                setFooterTotal(amount);
             } else {
-                setSummaryTotal(overallTotals.totalOverallVehicles || 0);
-                setFooterTotal(overallTotals.totalOverallVehicles || 0);
+                const vehicles = overallTotals.totalOverallVehicles || 0;
+                setSummaryTotal(vehicles);
+                setFooterTotal(vehicles);
             }
             setTodaysDate(result?.date || "");
         } catch (error) {
@@ -249,7 +260,6 @@ export default function VehicleDetectTollTable() {
     const deleteData = async () => {
         try {
             setLoading2(true);
-            // Ensure your backend supports receiving 'location' in the delete body
             await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/toll/kecmanual/delete/using/date`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 data: { 
@@ -271,7 +281,6 @@ export default function VehicleDetectTollTable() {
 
     const hideDialog2 = () => { setBulkDialog(false); setFile(null); setUploadStatus(""); setFormDate(""); setBulkLocation(null); };
     
-    // Updated to clear delete location as well
     const hideDialog3 = () => { 
         setDeleteDialog(false); 
         setDeleteDate(""); 
@@ -296,7 +305,7 @@ export default function VehicleDetectTollTable() {
                 icon="pi pi-trash" 
                 className="p-button-text" 
                 onClick={deleteData} 
-                disabled={!deleteDate || !deleteLocation || loading2} // Disable if location is missing
+                disabled={!deleteDate || !deleteLocation || loading2}
             />
         </>
     );
@@ -391,7 +400,7 @@ export default function VehicleDetectTollTable() {
                     value={date as any}
                     onChange={(e) => setDate(e.value as any)}
                     dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                    inputClassName='p-inputtext-sm border-none rounded-none ml-4 cursor-pointer focus:ring-0'
                     placeholder="Start Date"
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />} />
@@ -399,7 +408,7 @@ export default function VehicleDetectTollTable() {
                     value={date2 as any}
                     onChange={(e) => setDate2(e.value as any)}
                     dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                    inputClassName='p-inputtext-sm border-none rounded-none ml-4 cursor-pointer focus:ring-0'
                     showIcon
                     placeholder='End Date'
                     icon={() => <i className='pi pi-angle-down' />} />
@@ -407,13 +416,13 @@ export default function VehicleDetectTollTable() {
                     onChange={(e) => setSelectedLocation(e.value)}
                     options={locationOptions}
                     placeholder="Location"
-                    className="border-none ml-4 focus:ring-0"
+                    className="p-inputtext-sm border-none ml-4 focus:ring-0"
                     itemTemplate={itemTemplate} />
                 <Dropdown value={selectedTraffic}
                     onChange={(e) => setSelectedTraffic(e.value)}
                     options={trafficOptions}
                     placeholder="Type"
-                    className="border-none ml-4 focus:ring-0"
+                    className="p-inputtext-sm border-none ml-4 focus:ring-0"
                     itemTemplate={itemTemplate} />
             </div>
             <div className="flex items-center bg-white border p-2 ">
@@ -465,7 +474,6 @@ export default function VehicleDetectTollTable() {
                     scrollHeight="600px"
                 >
                     <Column field="paymentMethod" />
-                    {/* Vehicle Columns */}
                     <Column field="trailer5xl" />
                     <Column field="trailer4xl" />
                     <Column field="trailer3xl" />

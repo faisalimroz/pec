@@ -16,6 +16,7 @@ import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {

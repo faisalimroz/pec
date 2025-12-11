@@ -13,6 +13,7 @@ import '@/styles/table-style.css'
 import { searchRequisitonFormRS } from '@/api/roadTrafficAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -1061,19 +1062,30 @@ const { roles, permissions } = useAuth()
                             </div>
 
                             <div className='col-span-2'>
-                                    <h3 className='font-bold'>Attachments/Download</h3>
-                                    <div className='w-fit mt-2 flex flex-col justify-start'>
-                                        {selectedProduct.attachments.map((attachment, index) => (
-                                            <Button
-                                                key={attachment._id}
-                                                label={`File No. ${index + 1}: ${attachment?.url?.split('/').pop()}`}
-                                                icon='pi pi-file'
-                                                onClick={() => window.open(attachment.url, '_blank')}
-                                                className='hover:text-blue-600/70 px-0 py-2 border rounded-md focus:border-0 focus:ring-0 focus:ring-offset-0'
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
+                <h3 className='font-bold'>Attachments/Download</h3>
+                <div className='grid grid-cols-2 gap-4'>
+                  {selectedProduct.attachments.map((attachment) => (
+                    <div
+                      key={attachment._id}
+                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                    >
+                      <FilePreview url={attachment.url} />
+                      <div className='mt-3 flex items-center justify-between gap-2'>
+                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                          {attachment.url?.split('/').pop()}
+                        </span>
+                        <Button
+                          icon='pi pi-external-link'
+                          onClick={() =>
+                            window.open(attachment.url, '_blank')
+                          }
+                          className='p-button-text p-button-rounded flex-shrink-0'
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
                         </div>
                     </>
                 )}

@@ -1,6 +1,7 @@
 import React, { useState, useRef, ChangeEvent } from 'react'
 import { X } from 'lucide-react'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 
 interface MultiFileInputProps {
   onFilesChange: (files: File[]) => void
