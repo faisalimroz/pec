@@ -15,6 +15,7 @@ import {
 } from '@/api/itsAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import RefreshButton from '@/components/refresh-button'

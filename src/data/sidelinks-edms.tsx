@@ -622,67 +622,64 @@ export const rtwLinks: SideLink[] = [
     uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
+  // {
+  //   title: 'Additional Notes',
+  //   label: '',
+  //   href: '',
+  //   uName: 'rtw-additional-notes',
+  //   icon: <FileIcon />,
+  //   sub: [
+  //     {
+  //       title: 'Backup Frequency',
+  //       label: '',
+  //       href: '/edms/rtw/additional-notes/backup-frequency',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Control Manager',
+  //       label: '',
+  //       href: '/edms/rtw/additional-notes/document-control-manager',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Revision Log',
+  //       label: '',
+  //       href: '/edms/rtw/additional-notes/document-revision-log',
+  //       icon: '',
+  //     },
+  //   ],
+  // },
   {
-    title: 'Additional Notes',
+    title: 'Technical Documentation',
     label: '',
     href: '',
-    uName: 'rtw-additional-notes',
+    uName: 'rtw-technical-documentation',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'Backup Frequency',
+        title: 'RTW Drawings',
         label: '',
-        href: '/edms/rtw/additional-notes/backup-frequency',
+        href: '/edms/rtw/rtw-drawings',
         icon: '',
       },
       {
-        title: 'Document Control Manager',
+        title: 'Materials & Equipment List',
         label: '',
-        href: '/edms/rtw/additional-notes/document-control-manager',
+        href: '/edms/rtw/material-and-equipment',
         icon: '',
       },
       {
-        title: 'Document Revision Log',
+        title: 'Survey Reports',
         label: '',
-        href: '/edms/rtw/additional-notes/document-revision-log',
-        icon: '',
-      },
-    ],
-  },
-  {
-    title: 'Communication & Correspondence',
-    label: '',
-    href: '',
-    uName: 'rtw-communication-correspondence',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'All RTW-related Letters & Official Correspondence',
-        label: '',
-        href: '/edms/rtw/letter-and-official-correspondence',
+        href: '/edms/rtw/survey-reports',
         icon: '',
       },
       {
-        title: 'Meeting Minutes',
+        title: 'RTW Maintenance Manual',
         label: '',
-        href: '/edms/rtw/meeting-minutes',
+        href: '/edms/rtw/rtw-maintenance-manual',
         icon: '',
-      }
-    ],
-  },
-  {
-    title: 'Financial Documentation',
-    label: '',
-    href: '',
-    uName: 'rtw-financial-documentation',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'RTW Bills',
-        label: '',
-        href: '/edms/rtw/rtw-bills',
-        icon: '',
-      }
+      },
     ],
   },
   {
@@ -727,42 +724,45 @@ export const rtwLinks: SideLink[] = [
       },
     ],
   },
-  {
-    title: 'Technical Documentation',
+ 
+
+
+ {
+    title: 'Communication & Correspondence',
     label: '',
     href: '',
-    uName: 'rtw-technical-documentation',
+    uName: 'rtw-communication-correspondence',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'RTW Drawings',
+        title: 'All RTW-related Letters & Official Correspondence',
         label: '',
-        href: '/edms/rtw/rtw-drawings',
+        href: '/edms/rtw/letter-and-official-correspondence',
         icon: '',
       },
       {
-        title: 'Materials & Equipment List',
+        title: 'Meeting Minutes',
         label: '',
-        href: '/edms/rtw/material-and-equipment',
+        href: '/edms/rtw/meeting-minutes',
         icon: '',
-      },
-      {
-        title: 'Survey Reports',
-        label: '',
-        href: '/edms/rtw/survey-reports',
-        icon: '',
-      },
-      {
-        title: 'RTW Maintenance Manual',
-        label: '',
-        href: '/edms/rtw/rtw-maintenance-manual',
-        icon: '',
-      },
+      }
     ],
   },
-
-
-
+  {
+    title: 'Financial Documentation',
+    label: '',
+    href: '',
+    uName: 'rtw-financial-documentation',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'RTW Bills',
+        label: '',
+        href: '/edms/rtw/rtw-bills',
+        icon: '',
+      }
+    ],
+  },
   {
     title: 'Visual Records',
     label: '',
@@ -839,24 +839,7 @@ export const pmisLinks: SideLink[] = [
 
  
  
-  {
-    title: 'Financial Documentation',
-    label: '',
-    href: '',
-    uName: 'special-audit',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Main Bridge Bills',
-        label: '',
-        href: '/edms/mb-pmis/main-bridge-bills',
-        icon: '',
-      }
-    ],
-  },
  
-
-
    {
     title: 'Monitoring & Reporting',
     label: '',
@@ -885,7 +868,35 @@ export const pmisLinks: SideLink[] = [
       },
     ],
   },
- {
+ 
+  //  {
+  //   title: 'Additional Notes',
+  //   label: '',
+  //   href: '',
+  //   uName: 'special-audit',
+  //   icon: <FileIcon />,
+  //   sub: [
+  //     {
+  //       title: 'Backup Frequency',
+  //       label: '',
+  //       href: '/edms/mb-pmis/additional-notes/backup-frequency',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Control Manager',
+  //       label: '',
+  //       href: '/edms/mb-pmis/additional-notes/document-control-manager',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Revision Log',
+  //       label: '',
+  //       href: '/edms/mb-pmis/additional-notes/document-revision-log',
+  //       icon: '',
+  //     },
+  //   ],
+  // },
+  {
     title: 'Communication & Correspondence',
     label: '',
     href: '',
@@ -907,32 +918,23 @@ export const pmisLinks: SideLink[] = [
     ],
   },
    {
-    title: 'Additional Notes',
+    title: 'Financial Documentation',
     label: '',
     href: '',
     uName: 'special-audit',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'Backup Frequency',
+        title: 'Main Bridge Bills',
         label: '',
-        href: '/edms/mb-pmis/additional-notes/backup-frequency',
+        href: '/edms/mb-pmis/main-bridge-bills',
         icon: '',
-      },
-      {
-        title: 'Document Control Manager',
-        label: '',
-        href: '/edms/mb-pmis/additional-notes/document-control-manager',
-        icon: '',
-      },
-      {
-        title: 'Document Revision Log',
-        label: '',
-        href: '/edms/mb-pmis/additional-notes/document-revision-log',
-        icon: '',
-      },
+      }
     ],
   },
+ 
+
+
   {
     title: 'Visual Records',
     label: '',

@@ -23,6 +23,7 @@ import { PasswordInput } from '@/components/custom/password-input'
 import { useAuth } from '@/provider/authProvider'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 
 const formSchema = z
   .object({

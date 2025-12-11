@@ -685,33 +685,110 @@ export const rtwLinks: SideLink[] = [
     uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
-  {
-    title: 'Additional Notes',
+   {
+    title: 'Technical Documentation',
     label: '',
     href: '',
-    uName: 'rtw-additional-notes',
+    uName: 'rtw-technical-documentation',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'Backup Frequency',
+        title: 'RTW Drawings',
         label: '',
-        href: '/rtw/additional-notes/backup-frequency',
+        href: '/rtw/rtw-drawings',
         icon: '',
       },
       {
-        title: 'Document Control Manager',
+        title: 'Materials & Equipment List',
         label: '',
-        href: '/rtw/additional-notes/document-control-manager',
+        href: '/rtw/material-and-equipment',
         icon: '',
       },
       {
-        title: 'Document Revision Log',
+        title: 'Survey Reports',
         label: '',
-        href: '/rtw/additional-notes/document-revision-log',
+        href: '/rtw/survey-reports',
+        icon: '',
+      },
+      {
+        title: 'RTW Maintenance Manual',
+        label: '',
+        href: '/rtw/rtw-maintenance-manual',
         icon: '',
       },
     ],
   },
+   {
+    title: 'Monitoring & Reporting',
+    label: '',
+    href: '',
+    uName: 'rtw-monitoring-reporting',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Daily Water Level Records',
+        label: '',
+        href: '/rtw/monitoring-and-reporting/daily-water-level-records',
+        icon: '',
+      },
+      {
+        title: 'RTW Monthly Reports',
+        label: '',
+        href: '/rtw/monitoring-and-reporting/monthly-reports',
+        icon: '',
+      }
+    ],
+  },
+  // {
+  //   title: 'Additional Notes',
+  //   label: '',
+  //   href: '',
+  //   uName: 'rtw-additional-notes',
+  //   icon: <FileIcon />,
+  //   sub: [
+  //     {
+  //       title: 'Backup Frequency',
+  //       label: '',
+  //       href: '/rtw/additional-notes/backup-frequency',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Control Manager',
+  //       label: '',
+  //       href: '/rtw/additional-notes/document-control-manager',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Revision Log',
+  //       label: '',
+  //       href: '/rtw/additional-notes/document-revision-log',
+  //       icon: '',
+  //     },
+  //   ],
+  // },
+  
+  {
+    title: 'Quality, Safety',
+    label: '',
+    href: '',
+    uName: 'rtw-quality-safety',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Material Test Report',
+        label: '',
+        href: '/rtw/material-test-report',
+        icon: '',
+      },
+      {
+        title: 'Safety',
+        label: '',
+        href: '/rtw/safety',
+        icon: '',
+      },
+    ],
+  },
+
   {
     title: 'Communication & Correspondence',
     label: '',
@@ -748,85 +825,6 @@ export const rtwLinks: SideLink[] = [
       }
     ],
   },
-
-
-  {
-    title: 'Monitoring & Reporting',
-    label: '',
-    href: '',
-    uName: 'rtw-monitoring-reporting',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Daily Water Level Records',
-        label: '',
-        href: '/rtw/monitoring-and-reporting/daily-water-level-records',
-        icon: '',
-      },
-      {
-        title: 'RTW Monthly Reports',
-        label: '',
-        href: '/rtw/monitoring-and-reporting/monthly-reports',
-        icon: '',
-      }
-    ],
-  },
-  {
-    title: 'Technical Documentation',
-    label: '',
-    href: '',
-    uName: 'rtw-technical-documentation',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'RTW Drawings',
-        label: '',
-        href: '/rtw/rtw-drawings',
-        icon: '',
-      },
-      {
-        title: 'Materials & Equipment List',
-        label: '',
-        href: '/rtw/material-and-equipment',
-        icon: '',
-      },
-      {
-        title: 'Survey Reports',
-        label: '',
-        href: '/rtw/survey-reports',
-        icon: '',
-      },
-      {
-        title: 'RTW Maintenance Manual',
-        label: '',
-        href: '/rtw/rtw-maintenance-manual',
-        icon: '',
-      },
-    ],
-  },
-  {
-    title: 'Quality, Safety',
-    label: '',
-    href: '',
-    uName: 'rtw-quality-safety',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Material Test Report',
-        label: '',
-        href: '/rtw/material-test-report',
-        icon: '',
-      },
-      {
-        title: 'Safety',
-        label: '',
-        href: '/rtw/safety',
-        icon: '',
-      },
-    ],
-  },
-
-
   {
     title: 'Visual Records',
     label: '',
@@ -866,21 +864,7 @@ export const pmisLinks: SideLink[] = [
   },
   
 
-  {
-    title: 'Financial Documentation',
-    label: '',
-    href: '',
-    uName: 'mb-pmis-financial-documentation',
-    icon: <FileIcon />,
-    sub: [
-      {
-        title: 'Main Bridge Bills',
-        label: '',
-        href: '/mb-pmis/main-bridge-bills',
-        icon: '',
-      }
-    ],
-  },
+ 
    {
     title: 'Technical Documentation',
     label: '',
@@ -973,34 +957,48 @@ export const pmisLinks: SideLink[] = [
       }
     ],
   },
+  // {
+  //   title: 'Additional Notes',
+  //   label: '',
+  //   href: '',
+  //   uName: 'mb-pmis-additional-notes',
+  //   icon: <FileIcon />,
+  //   sub: [
+  //     {
+  //       title: 'Backup Frequency',
+  //       label: '',
+  //       href: '/mb-pmis/additional-notes/backup-frequency',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Control Manager',
+  //       label: '',
+  //       href: '/mb-pmis/additional-notes/document-control-manager',
+  //       icon: '',
+  //     },
+  //     {
+  //       title: 'Document Revision Log',
+  //       label: '',
+  //       href: '/mb-pmis/additional-notes/document-revision-log',
+  //       icon: '',
+  //     },
+  //   ],
+  // },
   {
-    title: 'Additional Notes',
+    title: 'Financial Documentation',
     label: '',
     href: '',
-    uName: 'mb-pmis-additional-notes',
+    uName: 'mb-pmis-financial-documentation',
     icon: <FileIcon />,
     sub: [
       {
-        title: 'Backup Frequency',
+        title: 'Main Bridge Bills',
         label: '',
-        href: '/mb-pmis/additional-notes/backup-frequency',
+        href: '/mb-pmis/main-bridge-bills',
         icon: '',
-      },
-      {
-        title: 'Document Control Manager',
-        label: '',
-        href: '/mb-pmis/additional-notes/document-control-manager',
-        icon: '',
-      },
-      {
-        title: 'Document Revision Log',
-        label: '',
-        href: '/mb-pmis/additional-notes/document-revision-log',
-        icon: '',
-      },
+      }
     ],
   },
- 
   {
     title: 'Visual Records',
     label: '',

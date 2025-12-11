@@ -15,11 +15,11 @@ import axios from 'axios'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Dropdown } from 'primereact/dropdown'
@@ -140,7 +140,7 @@ export default function AssetManagementTable() {
       formData.append('date', updatedProduct.date)
       formData.append('type', updatedProduct.type);
 
-            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
+      formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
       })
@@ -330,11 +330,11 @@ export default function AssetManagementTable() {
     for (const field of requiredFields) {
       if (!field.value) {
         toast.warning(`${field.name} is required!`);
-        return; 
+        return;
       }
     }
 
-    
+
     try {
       setLoading2(true)
       const formData = new FormData()
@@ -345,9 +345,9 @@ export default function AssetManagementTable() {
       formData.append('date', formatDate(formDate))
       formData.append('approved', approved ? 'true' : 'false');
       formData.append('type', type)
-       if (filesInput && filesInput.length > 0) {
+      if (filesInput && filesInput.length > 0) {
         filesInput.forEach((file) => {
-            formData.append('attachments', file)
+          formData.append('attachments', file)
         })
       }
       const res = await axios.post(
@@ -361,11 +361,11 @@ export default function AssetManagementTable() {
         }
       )
 
-     setDescription('')
-     setRemarks('')
-     setfileName('')
-     setApproved(false);
-     setType('');
+      setDescription('')
+      setRemarks('')
+      setfileName('')
+      setApproved(false);
+      setType('');
       setFormDate('')
       hideDialog()
       toast.success('Data Saved Successfully')
@@ -1255,19 +1255,30 @@ export default function AssetManagementTable() {
               </div>
 
               <div className='col-span-2'>
-                  <h3 className='font-bold'>Attachments/Download</h3>
-                  <div className='w-fit mt-2 flex flex-col justify-start'>
-                    {selectedProduct.attachments.map((attachment, index) => (
-                      <Button
-                        key={attachment._id}
-                        label={`File No. ${index + 1}: ${attachment?.url?.split('/').pop()}`}
-                        icon='pi pi-file'
-                        onClick={() => window.open(attachment.url, '_blank')}
-                        className='hover:text-blue-600/70 px-0 py-2 border rounded-md focus:border-0 focus:ring-0 focus:ring-offset-0'
-                      />
-                    ))}
-                  </div>
+                <h3 className='font-bold'>Attachments/Download</h3>
+                <div className='grid grid-cols-2 gap-4'>
+                  {selectedProduct.attachments.map((attachment) => (
+                    <div
+                      key={attachment._id}
+                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                    >
+                      <FilePreview url={attachment.url} />
+                      <div className='mt-3 flex items-center justify-between gap-2'>
+                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                          {attachment.url?.split('/').pop()}
+                        </span>
+                        <Button
+                          icon='pi pi-external-link'
+                          onClick={() =>
+                            window.open(attachment.url, '_blank')
+                          }
+                          className='p-button-text p-button-rounded flex-shrink-0'
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </div>
 
             </div>
           </>
@@ -1369,7 +1380,7 @@ export default function AssetManagementTable() {
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              
+
             </label>
 
             <div>

@@ -122,10 +122,12 @@ export default function VehicleDetectTollTable() {
       const overallTotals = result?.overallTotals || {};
       setAllData(overallTotals);
 
+      // 3. Set Footer Total - Handle Default Case (Null or Traffic)
       if (selectedTraffic === "Toll") {
         setSummaryTotal(overallTotals.totalOverallAmount || 0);
         setFooterTotal(overallTotals.totalOverallAmount || 0);
       } else {
+        // Default to Traffic totals if selectedTraffic is null or "Traffic"
         setSummaryTotal(overallTotals.totalOverallVehicles || 0);
         setFooterTotal(overallTotals.totalOverallVehicles || 0);
       }
@@ -204,7 +206,7 @@ export default function VehicleDetectTollTable() {
         const overall = result?.overallTotals || {};
         setAllData(overall);
 
-        // SAME LOGIC AS handleSearch
+        // Reset logic treats null/Traffic the same
         if (selectedTraffic === "Toll") {
             setSummaryTotal(overall.totalOverallAmount || 0);
             setFooterTotal(overall.totalOverallAmount || 0);
@@ -320,10 +322,10 @@ export default function VehicleDetectTollTable() {
       <Row>
         <Column header="Payment Method" headerClassName="min-w-[12rem] bg-red-200" rowSpan={2} frozen />
         {/* SHIFT COLUMNS */}
-        <Column header="3rd-2 (00:00-06:00)" headerClassName="min-w-[10rem] bg-red-200" />
-        <Column header="1st (06:00-14:00)" headerClassName="min-w-[10rem] bg-red-200" />
-        <Column header="2nd (14:00-22:00)" headerClassName="min-w-[10rem] bg-red-200" />
-        <Column header="3rd-1 (22:00-00:00)" headerClassName="min-w-[10rem] bg-red-200" />
+        <Column header="3rd-2 (00:00-06:00)" headerClassName="min-w-[14rem] bg-red-200" />
+        <Column header="1st (06:00-14:00)" headerClassName="min-w-[12rem] bg-red-200" />
+        <Column header="2nd (14:00-22:00)" headerClassName="min-w-[12rem] bg-red-200" />
+        <Column header="3rd-1 (22:00-00:00)" headerClassName="min-w-[12rem] bg-red-200" />
         <Column header="Total" headerClassName="min-w-[10rem] bg-red-200" rowSpan={2} frozen />
       </Row>
     </ColumnGroup>
@@ -375,7 +377,7 @@ export default function VehicleDetectTollTable() {
           value={date as any}
           onChange={(e) => setDate(e.value as any)}
           dateFormat="dd/mm/yy"
-          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+          inputClassName='p-inputtext-sm border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           placeholder="Start Date"
           showIcon
           icon={() => <i className='pi pi-angle-down' />} />
@@ -383,7 +385,7 @@ export default function VehicleDetectTollTable() {
           value={date2 as any}
           onChange={(e) => setDate2(e.value as any)}
           dateFormat="dd/mm/yy"
-          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+          inputClassName='p-inputtext-sm border-none rounded-none ml-4 cursor-pointer focus:ring-0'
           showIcon
           placeholder='End Date'
           icon={() => <i className='pi pi-angle-down' />} />
@@ -391,14 +393,14 @@ export default function VehicleDetectTollTable() {
           onChange={(e) => setSelectedLocation(e.value)}
           options={locationOptions}
           placeholder="Location"
-          className="border-none ml-4 focus:ring-0"
+          className="p-inputtext-sm border-none ml-4 focus:ring-0"
           itemTemplate={itemTemplate} />
         <Dropdown 
         value={selectedTraffic} 
         onChange={(e) => setSelectedTraffic(e.value)} 
         options={trafficOptions} 
         placeholder="Type"
-        className="border-none ml-4 focus:ring-0" />
+        className="p-inputtext-sm border-none ml-4 focus:ring-0" />
       </div>
       <div className="flex items-center bg-white border p-2">
       <button onClick={handleSearch} className='border bg-green-500 px-4 py-2.5 rounded-lg text-white hover:bg-green-600'>

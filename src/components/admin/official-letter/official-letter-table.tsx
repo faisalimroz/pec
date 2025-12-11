@@ -14,6 +14,7 @@ import axios from 'axios'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Menu } from 'primereact/menu'
 
 interface Attachment {
