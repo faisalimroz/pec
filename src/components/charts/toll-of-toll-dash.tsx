@@ -11,6 +11,7 @@ import {
   CartesianGrid,
 } from 'recharts'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Dropdown } from 'primereact/dropdown';
 
 interface VehicleData {
   vehicleType: string
@@ -50,7 +51,7 @@ const SkeletonLoader = () => (
       </div>
     </div>
     <p className='text-center text-muted-foreground font-medium'>
-      Graph Data Is Loading. Please Wait...
+      Toll Data Is Loading. Please Wait...
     </p>
   </div>
 )
@@ -75,80 +76,71 @@ export function TollOfTollDash() {
   const [data, setData] = useState<VehicleData[]>([])
   const [loading, setLoading] = useState(true)
   const [date, setDate] = useState<string>('')
+  const [selectedLane, setSelectedLane] = useState<string>('All')
 
-//  const fetchData = async () => {
-//   try {
-//     setLoading(true)
+  const locations = [
+    { name: 'All', code: 'All' },
+    { name: 'Mawa', code: 'Mawa' },
+    { name: 'Janjira', code: 'Janjira' }
+  ];
 
-//     const response = await axios.get(
-//       `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/toll/data`,
-//       {
-        
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem('token')}`,
-//         },
-//       }
-//     )
+  const fetchData = async (lane: string) => {
+    try {
+      setLoading(true)
 
-//     const payload = response.data
-//     const result = Array.isArray(payload.result) ? payload.result : []
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/toll/data`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          params: {
+            lane: lane,
+            _ts: Date.now(),
+          },
+        }
+      )
 
-//     setData(result)
-//     setDate(payload.date || '')
-//     console.log('Toll data result:', result)
-//   } catch (error) {
-//     console.error('Error fetching toll dashboard data:', error)
-//     setData([])
-//   } finally {
-//     setLoading(false)
-//   }
-// }
-const fetchData = async () => {
-  try {
-    setLoading(true)
+      const payload = response.data
+      const result = Array.isArray(payload.result) ? payload.result : []
 
-    const response = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/toll/data`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        params: {
-          lane: 'All',        // or your selected lane
-          _ts: Date.now(),    // 👈 cache-buster so each URL is unique
-        },
-      }
-    )
-
-    const payload = response.data
-    const result = Array.isArray(payload.result) ? payload.result : []
-
-    setData(result)
-    setDate(payload.date || '')
-    console.log('Toll data result:', result)
-  } catch (error) {
-    console.error('Error fetching toll dashboard data:', error)
-    setData([])
-  } finally {
-    setLoading(false)
+      setData(result)
+      setDate(payload.date || '')
+      console.log('Toll data result:', result)
+    } catch (error) {
+      console.error('Error fetching toll dashboard data:', error)
+      setData([])
+    } finally {
+      setLoading(false)
+    }
   }
-}
-
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData(selectedLane)
+  }, [selectedLane])
 
   return (
     <div className='w-full rounded-xl overflow-hidden border shadow-md'>
-      <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-center gap-2'>
+      <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-between'>
+        <div className='flex items-center gap-2'>
+          <h2 className='text-[18px] font-bold'>
+            Toll Of Toll Plaza: {date}
+          </h2>
+        </div>
 
-      
-        <h2 className='text-[20px] font-bold text-center'>
-          Toll Of Toll Plaza: {date}
-        </h2>
+       <div className="flex justify-content-center">
+          <Dropdown
+            value={selectedLane}
+            onChange={(e) => setSelectedLane(e.value)}
+            options={locations}
+            optionLabel="name"
+            optionValue="name"
+            placeholder="Select Location"
+            className="w-full md:w-10rem p-inputtext-sm text-black" 
+          />
+        </div>
       </div>
 
-      <div className='mt-3'>
+      <div className='mt-3 p-2'>
         {loading ? (
           <SkeletonLoader />
         ) : (

@@ -321,7 +321,7 @@ export default function WeatherBoard() {
         </div>
       </div>
 
-      <div className='mt-8 flex justify-center gap-3'>
+      <div className='mt-4 2xl:py-6 flex justify-center gap-5'>
         <div className='flex items-center bg-[#FAFAFA] rounded-[10px] p-2'>
           <Sunrise className='mr-2 h-5 w-5 text-gray-800' />
           <p className='font-medium text-gray-800'>

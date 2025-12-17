@@ -182,7 +182,7 @@ export function EDMSLettersList() {
     <div className='w-full bg-white rounded-xl overflow-hidden border shadow-md h-auto md:h-[300px] xl:h-[400px] '>
       <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center gap-2 '>
         <div className='flex justify-between items-center w-full'>
-          <div className='flex gap-3'>
+          <div className='flex gap-3 py-1'>
             <div className='mt-1'>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <g clip-path="url(#clip0_2054_51433)">

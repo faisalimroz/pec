@@ -107,7 +107,7 @@ export default function AssetManagementTable() {
     { name: "Service Area 2", value: "Service Area 2" },
     { name: "Service Area 3", value: "Service Area 3" },
     { name: "Mawa", value: "Mawa" },
-    { name: "Jinjira", value: "Jinjira" },
+    { name: "Janjira", value: "Janjira" },
 
   ];
   const itemTemplate = (option: { name: string; value: string }) => (
@@ -550,7 +550,7 @@ export default function AssetManagementTable() {
       { label: "Service Area 2", value: "Service Area 2" },
       { label: "Service Area 3", value: "Service Area 3" },
       { label: "Mawa", value: "Mawa" },
-      { label: "Jinjira", value: "Jinjira" },
+      { label: "Janjira", value: "Janjira" },
     ];
 
     const handleButtonClick = (buttonValue: string) => {

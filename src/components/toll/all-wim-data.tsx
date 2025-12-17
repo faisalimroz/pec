@@ -61,7 +61,7 @@ interface WimShiftComparisonResult {
 const locationOptions = [
   { name: "All", value: "All" },
   { name: "Mawa", value: "Mawa" },
-  { name: "Jinjira", value: "Jinjira" },
+  { name: "Janjira", value: "Janjira" },
 ];
 
 const fmtNum = (n: number) =>

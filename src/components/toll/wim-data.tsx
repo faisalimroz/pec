@@ -73,7 +73,7 @@ export default function AssetManagementTable() {
     const locations = [
 
         { label: 'Mawa', value: 'Mawa' },
-        { label: 'Jinjira', value: 'Jinjira' },
+        { label: 'Janjira', value: 'Janjira' },
     ]
     const shifts = [
         { label: 'Shift: 3rd-2', value: 'Shift: 3rd-2' },

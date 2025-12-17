@@ -86,7 +86,7 @@ export default function VehicleDetectTollTable() {
     const locationOptions = [
         { label: "All", value: "All" },
         { label: "Mawa", value: "Mawa" },
-        { label: "Jinjira", value: "Jinjira" },
+        { label: "Janjira", value: "Janjira" },
     ];
 
     const trafficOptions = [

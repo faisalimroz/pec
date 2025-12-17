@@ -69,7 +69,7 @@ const Wim: React.FC = () => {
 
   const locations = [
     { name: 'Mawa', code: 'Mawa' },
-    { name: 'Jinjira', code: 'Jinjira' },
+    { name: 'Janjira', code: 'Janjira' },
     
   ];
 
