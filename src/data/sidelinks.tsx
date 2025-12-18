@@ -556,7 +556,7 @@ export const tollLinks: SideLink[] = [
     title: 'Daily Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'toll-daily-traffic-data',
+    uName: 'daily-toll-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -574,14 +574,11 @@ export const tollLinks: SideLink[] = [
 
     ],
   },
-
- 
- 
   {
     title: 'Shift Wise Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'toll-shiftwise-traffic-data',
+    uName: 'shift-wise-toll-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -676,7 +673,7 @@ export const rtwLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: '',
+    uName: 'rtw',
   },
   {
     title: 'Project Overview',

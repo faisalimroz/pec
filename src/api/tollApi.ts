@@ -700,15 +700,15 @@ export async function searchAllWimData(param: unknown) {
       },
     }
   )
- console.log(response.data)
+
   return response.data
 }
 
 
 export async function getWimShiftStats(payload: {
   location?: string;
-  date_range?: string; // "DD-MM-YYYY to DD-MM-YYYY"
-  shiftNames?: string[]; // e.g. ["Shift: 1st","Shift: 2nd"]
+  date_range?: string; 
+  shiftNames?: string[]; 
 }) {
   const res = await axios.post(
     `${import.meta.env.VITE_BASE_URL}/api/v1/toll/limited-wim-data/stats/shift`,

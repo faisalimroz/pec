@@ -34,7 +34,7 @@ interface FormDataType {
   password: string
   role: string[]
   permissions: ParentPermission[]
-  creator?: string  
+  creator?: string
 }
 
 interface TreeNode {
@@ -90,10 +90,22 @@ const PermissionManager = () => {
     // { id: 'ai-dashboard', label: 'AI Dashboard' },
     { id: 'toll-manager', label: 'Toll Dept.' },
   ]
-// turn everything ON (view+edit) in the tree for visual feedback
-const setAllPermissionsChecked = (checked: boolean) => {
-  setPermissionsData(prev =>
-    prev.map(parent => ({
+  // turn everything ON (view+edit) in the tree for visual feedback
+  const setAllPermissionsChecked = (checked: boolean) => {
+    setPermissionsData(prev =>
+      prev.map(parent => ({
+        ...parent,
+        authority: checked,
+        children: parent.children.map(c => ({
+          ...c,
+          view_authority: checked,
+          edit_authority: checked
+        }))
+      }))
+    )
+
+    // also sync formData (roles + permissions) to reflect the visual change
+    const updated = permissionsData.map(parent => ({
       ...parent,
       authority: checked,
       children: parent.children.map(c => ({
@@ -102,35 +114,23 @@ const setAllPermissionsChecked = (checked: boolean) => {
         edit_authority: checked
       }))
     }))
-  )
-
-  // also sync formData (roles + permissions) to reflect the visual change
-  const updated = permissionsData.map(parent => ({
-    ...parent,
-    authority: checked,
-    children: parent.children.map(c => ({
-      ...c,
-      view_authority: checked,
-      edit_authority: checked
-    }))
-  }))
-  updatePermissionsState(updated)
-}
-
-// when Super Admin toggles, mirror it in the UI (for clarity)
-const handleSuperAdminToggle = (next: boolean) => {
-  setIsSuperAdmin(next)
-  if (next) {
-    setAllPermissionsChecked(true)
-  } else {
-    // uncheck everything visually (optional; or keep user selections)
-    setAllPermissionsChecked(false)
+    updatePermissionsState(updated)
   }
-}
+
+  // when Super Admin toggles, mirror it in the UI (for clarity)
+  const handleSuperAdminToggle = (next: boolean) => {
+    setIsSuperAdmin(next)
+    if (next) {
+      setAllPermissionsChecked(true)
+    } else {
+      // uncheck everything visually (optional; or keep user selections)
+      setAllPermissionsChecked(false)
+    }
+  }
 
   // This would be fetched from an API in a real application
   const [permissionsData, setPermissionsData] = useState<ParentPermission[]>([
-        {
+    {
       name: 'edms',
       authority: false,
       children: [
@@ -164,7 +164,7 @@ const handleSuperAdminToggle = (next: boolean) => {
           edit_authority: false,
           g_children: [],
         },
-         {
+        {
           name: 'building-maintenance',
           view_authority: false,
           edit_authority: false,
@@ -188,31 +188,31 @@ const handleSuperAdminToggle = (next: boolean) => {
           edit_authority: false,
           g_children: [],
         },
-         {
+        {
           name: 'health-center',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
-         {
+        {
           name: 'gardening-mgt',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
-         {
+        {
           name: 'fire-mgt',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
-         {
+        {
           name: 'it-electronics',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
-         {
+        {
           name: 'security-mgt',
           view_authority: false,
           edit_authority: false,
@@ -266,10 +266,10 @@ const handleSuperAdminToggle = (next: boolean) => {
           edit_authority: false,
           g_children: [],
         },
-        
+
       ],
     },
-     {
+    {
       name: 'mb-pmis-manager',
       authority: false,
       children: [
@@ -321,11 +321,11 @@ const handleSuperAdminToggle = (next: boolean) => {
           edit_authority: false,
           g_children: [],
         },
-        
+
       ],
     },
 
-   {
+    {
       name: 'rtw-manager',
       authority: false,
       children: [
@@ -377,10 +377,10 @@ const handleSuperAdminToggle = (next: boolean) => {
           edit_authority: false,
           g_children: [],
         },
-        
+
       ],
     },
-      {
+    {
       name: 'its-manager',
       authority: false,
       children: [
@@ -426,7 +426,7 @@ const handleSuperAdminToggle = (next: boolean) => {
           edit_authority: false,
           g_children: [],
         },
-       
+
       ],
     },
     {
@@ -434,13 +434,13 @@ const handleSuperAdminToggle = (next: boolean) => {
       authority: false,
       children: [
         {
-          name: 'daily-toll-&-traffic-data',
+          name: 'daily-toll-traffic-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'shift-wise-toll-&-traffic-data',
+          name: 'shift-wise-toll-traffic-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -476,7 +476,7 @@ const handleSuperAdminToggle = (next: boolean) => {
           g_children: [],
         }
       ],
-    },  
+    },
     {
       name: 'finance-manager',
       authority: false,
@@ -538,7 +538,7 @@ const handleSuperAdminToggle = (next: boolean) => {
         },
       ],
     },
-    
+
 
     {
       name: 'ai-dashboard',
@@ -564,8 +564,8 @@ const handleSuperAdminToggle = (next: boolean) => {
         },
       ],
     },
-    
-   
+
+
   ])
 
   // Get custom label for parent node or format the name if no custom label exists
@@ -598,14 +598,14 @@ const handleSuperAdminToggle = (next: boolean) => {
         children: NODES_WITH_HIDDEN_CHILDREN.includes(parent.name)
           ? []
           : parent.children.map((child, childIndex) => {
-              const childKey = `${parentIndex}-${childIndex}`
-              return {
-                key: childKey,
-                label: formatName(child.name),
-                data: child.name,
-                parent: parent.name,
-              }
-            }),
+            const childKey = `${parentIndex}-${childIndex}`
+            return {
+              key: childKey,
+              label: formatName(child.name),
+              data: child.name,
+              parent: parent.name,
+            }
+          }),
       }
     })
 
@@ -643,14 +643,14 @@ const handleSuperAdminToggle = (next: boolean) => {
         if (parent.name === parentName) {
           const updatedChildren = parent.children.map((child) => {
             // Special handling for EDMS - check write when read is checked
-          if (parentName === 'edms' && checked) {
-            return {
-              ...child,
-              view_authority: true,
-              edit_authority: true,  
-            };
-          }
-          
+            if (parentName === 'edms' && checked) {
+              return {
+                ...child,
+                view_authority: true,
+                edit_authority: true,
+              };
+            }
+
             return {
               ...child,
               view_authority: checked,
@@ -812,7 +812,7 @@ const handleSuperAdminToggle = (next: boolean) => {
 
   // Custom node template for the tree
   // const nodeTemplate = (node: TreeNode) => {
-    
+
   //   if (node.children || NODES_WITH_HIDDEN_CHILDREN.includes(node.data)) {
   //     // Parent node
   //     const parentName = node.data
@@ -909,120 +909,120 @@ const handleSuperAdminToggle = (next: boolean) => {
   //     )
   //   }
   // }
-const nodeTemplate = (node: TreeNode) => {
-  // Define a small text size class
-  const textSizeClass = 'text-sm';
-  
-  // Parent node logic
-  if (node.children || NODES_WITH_HIDDEN_CHILDREN.includes(node.data)) {
-    
-    const parentName = node.data
-    const parent = permissionsData.find((p) => p.name === parentName)
-    // console.log(permissionsData, 'permissionsData' )
-    // console.log(parent, 'parent')
-    if (!parent) return <span className={textSizeClass}>{node.label}</span> // Applied text-xs
+  const nodeTemplate = (node: TreeNode) => {
+    // Define a small text size class
+    const textSizeClass = 'text-sm';
 
-    const allViewChecked = allChildrenHaveViewAuthority(parentName)
-    const allEditChecked = allChildrenHaveEditAuthority(parentName)
+    // Parent node logic
+    if (node.children || NODES_WITH_HIDDEN_CHILDREN.includes(node.data)) {
 
-    return (
-      <div className='flex items-center justify-between w-full p-2'>
-        {/* Applied text-xs to the parent node label */}
-        <span className={`font-bold text-black ${textSizeClass}`}>{node.label}</span>
-        <div className='flex items-center gap-4'>
-          <div className='flex items-center'>
-            {/* Applied text-xs to the Read label */}
-            <label htmlFor={`parent-view-${parentName}`} className={`mr-2 ${textSizeClass}`}>
-              Read (All)
-            </label>
-            <Checkbox
-              id={`parent-view-${parentName}`}
-              checked={allViewChecked}
-              onChange={(e) =>
-                handleParentViewAuthorityChange(
-                  parentName,
-                  e.checked || false
-                )
-              }
-            />
-          </div>
-          <div className='flex items-center'>
-            {/* Applied text-xs to the Write label */}
-            <label htmlFor={`parent-edit-${parentName}`} className={`mr-2 ${textSizeClass}`}>
-              Write (All)
-            </label>
-            <Checkbox
-              id={`parent-edit-${parentName}`}
-              checked={allEditChecked}
-              onChange={(e) =>
-                handleParentEditAuthorityChange(
-                  parentName,
-                  e.checked || false
-                )
-              }
-            />
-          </div>
-        </div>
-      </div>
-    )
-  } else {
-    // Child node logic
-    const childName = node.data
-    const parentName = node.parent || ''
-    const parent = permissionsData.find((p) => p.name === parentName)
-    // console.log(parent, 'parent in child')  
-    const child = parent?.children.find((c) => c.name === childName)
+      const parentName = node.data
+      const parent = permissionsData.find((p) => p.name === parentName)
+      // console.log(permissionsData, 'permissionsData' )
+      // console.log(parent, 'parent')
+      if (!parent) return <span className={textSizeClass}>{node.label}</span> // Applied text-xs
 
-    if (!child) return <span className={textSizeClass}>{node.label}</span> // Applied text-xs
+      const allViewChecked = allChildrenHaveViewAuthority(parentName)
+      const allEditChecked = allChildrenHaveEditAuthority(parentName)
 
-    return (
-      <div className='flex items-center justify-between w-full p-2'>
-        {/* Applied text-xs to the child node label */}
-        <span className={`uppercase ${textSizeClass}`}>{node.label}</span>
-        <div className='flex items-center gap-4'>
-          <div className='flex items-center'>
-            {/* Applied text-xs to the Read label */}
-            <label htmlFor={`view-${childName}`} className={`mr-2 ${textSizeClass}`}>
-              Read
-            </label>
-            <Checkbox
-              id={`view-${childName}`}
-              checked={child.view_authority}
-              onChange={(e) =>
-                handleViewAuthorityChange(
-                  parentName,
-                  childName,
-                  e.checked || false
-                )
-              }
-            />
-          </div>
-          <div className='flex items-center'>
-            {/* Applied text-xs to the Write label */}
-            <label htmlFor={`edit-${childName}`} className={`mr-2 ${textSizeClass}`}>
-              Write
-            </label>
-            <Checkbox
-              id={`edit-${childName}`}
-              checked={child.edit_authority}
-              onChange={(e) =>
-                handleEditAuthorityChange(
-                  parentName,
-                  childName,
-                  e.checked || false
-                )
-              }
-            />
+      return (
+        <div className='flex items-center justify-between w-full p-2'>
+          {/* Applied text-xs to the parent node label */}
+          <span className={`font-bold text-black ${textSizeClass}`}>{node.label}</span>
+          <div className='flex items-center gap-4'>
+            <div className='flex items-center'>
+              {/* Applied text-xs to the Read label */}
+              <label htmlFor={`parent-view-${parentName}`} className={`mr-2 ${textSizeClass}`}>
+                Read (All)
+              </label>
+              <Checkbox
+                id={`parent-view-${parentName}`}
+                checked={allViewChecked}
+                onChange={(e) =>
+                  handleParentViewAuthorityChange(
+                    parentName,
+                    e.checked || false
+                  )
+                }
+              />
+            </div>
+            <div className='flex items-center'>
+              {/* Applied text-xs to the Write label */}
+              <label htmlFor={`parent-edit-${parentName}`} className={`mr-2 ${textSizeClass}`}>
+                Write (All)
+              </label>
+              <Checkbox
+                id={`parent-edit-${parentName}`}
+                checked={allEditChecked}
+                onChange={(e) =>
+                  handleParentEditAuthorityChange(
+                    parentName,
+                    e.checked || false
+                  )
+                }
+              />
+            </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    } else {
+      // Child node logic
+      const childName = node.data
+      const parentName = node.parent || ''
+      const parent = permissionsData.find((p) => p.name === parentName)
+      // console.log(parent, 'parent in child')  
+      const child = parent?.children.find((c) => c.name === childName)
+
+      if (!child) return <span className={textSizeClass}>{node.label}</span> // Applied text-xs
+
+      return (
+        <div className='flex items-center justify-between w-full p-2'>
+          {/* Applied text-xs to the child node label */}
+          <span className={`uppercase ${textSizeClass}`}>{node.label}</span>
+          <div className='flex items-center gap-4'>
+            <div className='flex items-center'>
+              {/* Applied text-xs to the Read label */}
+              <label htmlFor={`view-${childName}`} className={`mr-2 ${textSizeClass}`}>
+                Read
+              </label>
+              <Checkbox
+                id={`view-${childName}`}
+                checked={child.view_authority}
+                onChange={(e) =>
+                  handleViewAuthorityChange(
+                    parentName,
+                    childName,
+                    e.checked || false
+                  )
+                }
+              />
+            </div>
+            <div className='flex items-center'>
+              {/* Applied text-xs to the Write label */}
+              <label htmlFor={`edit-${childName}`} className={`mr-2 ${textSizeClass}`}>
+                Write
+              </label>
+              <Checkbox
+                id={`edit-${childName}`}
+                checked={child.edit_authority}
+                onChange={(e) =>
+                  handleEditAuthorityChange(
+                    parentName,
+                    childName,
+                    e.checked || false
+                  )
+                }
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
   }
-}
-const withCreator = (payload: any) => ({
-  ...payload,
-  creator: user?.email,  // logged-in user's email
-});
+  const withCreator = (payload: any) => ({
+    ...payload,
+    creator: user?.email,  // logged-in user's email
+  });
   // Handle form submission
   const handleSubmit = async () => {
     if (
@@ -1052,12 +1052,12 @@ const withCreator = (payload: any) => ({
       // Create the request body based on whether superadmin is checked
       const requestBody = isSuperAdmin
         ? {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-            role: ['superadmin'],
-            creator: creatorEmail,
-          }
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: ['superadmin'],
+          creator: creatorEmail,
+        }
         : withCreator(formData)
 
       const response = await axios.post(
@@ -1071,7 +1071,7 @@ const withCreator = (payload: any) => ({
         }
       )
 
-   
+
       toast.success('User created successfully')
 
       // Reset form
@@ -1083,8 +1083,8 @@ const withCreator = (payload: any) => ({
         permissions: [],
       })
       setIsSuperAdmin(false)
-console.log(permissionsData, 'before reset')
-console.log(formData, 'formdata before reset')
+      console.log(permissionsData, 'before reset')
+      console.log(formData, 'formdata before reset')
       // Reset permissions data
       setPermissionsData((prevData) =>
         prevData.map((parent) => ({
@@ -1097,6 +1097,8 @@ console.log(formData, 'formdata before reset')
           })),
         }))
       )
+
+      console.log("Submitting Permissions:", JSON.stringify(formData.permissions, null, 2));
     } catch (error: any) {
       console.error('Error submitting data:', error)
       const errorMsg = error.response?.data?.message || 'An error occurred'
@@ -1179,23 +1181,23 @@ console.log(formData, 'formdata before reset')
               </div>
 
               <div className='space-y-6 mt-8'>
-                
+
 
                 <div className='permissions-container'>
                   <h3 className='text-lg font-semibold mb-4 '>Permissions</h3>
 
                   {showSuperAdmin && (
-  <div className='flex items-center space-x-2 mb-4'>
-    <Checkbox
-      id='superadmin'
-      checked={isSuperAdmin}
-      onChange={(e) => handleSuperAdminToggle(!!e.checked)}
-    />
-    <label htmlFor='superadmin' className='font-medium'>
-      Super Admin
-    </label>
-  </div>
-)}
+                    <div className='flex items-center space-x-2 mb-4'>
+                      <Checkbox
+                        id='superadmin'
+                        checked={isSuperAdmin}
+                        onChange={(e) => handleSuperAdminToggle(!!e.checked)}
+                      />
+                      <label htmlFor='superadmin' className='font-medium'>
+                        Super Admin
+                      </label>
+                    </div>
+                  )}
 
 
                   <div

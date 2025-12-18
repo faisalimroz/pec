@@ -61,9 +61,9 @@ const topNav = [
 export default function Dashboard() {
   const { permissions, roles } = useAuth()
   
-  // console.log('roles==================>> ', roles)
-  // console.log('permissions==================>> ', permissions)
-  // console.log('roleTitles==================>> ', roles.map(r => r.title))
+  console.log('roles==================>> ', roles)
+  console.log('permissions==================>> ', permissions)
+  console.log('roleTitles==================>> ', roles.map(r => r.title))
 
 
   const uNameToAccessMap: { [key: string]: string[] } = {

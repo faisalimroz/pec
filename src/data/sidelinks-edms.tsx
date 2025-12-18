@@ -225,7 +225,7 @@ export const rntLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: '',
+    uName: 'road-&-traffic',
   },
   
     {
@@ -256,7 +256,6 @@ export const rntLinks: SideLink[] = [
     uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
-
   {
     title: 'Road Maintenance Part',
     label: '',
@@ -448,30 +447,35 @@ export const itsLinks: SideLink[] = [
     title: 'About ITS',
     label: '',
     href: '/edms/its/about-its',
+     uName: 'about-its',
     icon: <AboutIcon />,
   },
   {
     title: 'Organization',
     label: '',
     href: '/edms/its/organization',
+    uName: 'its-organization',
     icon: <FileIcon />,
   },
   {
     title: 'Work Plan',
     label: '',
     href: '/edms/its/workplan',
+    uName: 'its-work-plan',
     icon: <FileIcon />,
   },
   {
     title: 'Notice',
     label: '',
     href: '/edms/its/notice',
+    uName: 'its-notice',
     icon: <FileIcon />,
   },
   {
     title: 'System configure',
     label: '',
     href: '/edms/its/system-configure',
+    uName: 'its-system-configure',
     icon: <FileIcon />,
   },
 
@@ -479,6 +483,7 @@ export const itsLinks: SideLink[] = [
     title: 'Operation Manual',
     label: '',
     href: '/edms/its/operation-manual',
+    uName: 'its-operation-manual',
     icon: <FileIcon />,
   },
    
@@ -486,6 +491,7 @@ export const itsLinks: SideLink[] = [
     title: 'Monthly Report',
     label: '',
     href: '/edms/its/monthly-report',
+    uName: 'its-monthly-report',
     icon: <FileIcon />,
   },
 ]
@@ -502,7 +508,7 @@ export const tollLinks: SideLink[] = [
     title: 'Daily Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'toll-daily-traffic-data',
+    uName: 'daily-toll-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -524,7 +530,7 @@ export const tollLinks: SideLink[] = [
     title: 'Shift Wise Toll & Traffic Data',
     label: '',
     href: '',
-    uName: 'toll-shiftwise-traffic-data',
+    uName: 'shift-wise-toll-traffic-data',
     icon: <FileIcon />,
     sub: [
       {
@@ -613,7 +619,7 @@ export const rtwLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: '',
+    uName: 'rtw',
   },
   {
     title: 'Project Overview',
@@ -787,13 +793,13 @@ export const pmisLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: '',
+    uName: 'mb-pmis',
   },
   {
     title: 'Project Overview',
     label: '',
     href: '/edms/mb-pmis/project-overview',
-    uName: 'dispatched',
+    uName: 'mb-pmis-project-overview',
     icon: <FileIcon />,
   },
     {
@@ -836,15 +842,11 @@ export const pmisLinks: SideLink[] = [
       },
     ],
   },
-
- 
- 
- 
    {
     title: 'Monitoring & Reporting',
     label: '',
     href: '/edms/mb-pmis/monitoring-and-reporting',
-    uName: 'dispatched',
+    uName: 'mb-pmis-monitoring-reporting',
     icon: <FileIcon />,
   },
   {
