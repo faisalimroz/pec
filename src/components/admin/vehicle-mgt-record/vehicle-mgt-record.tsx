@@ -200,15 +200,12 @@ export default function MonthlyReport() {
       formData.append('remarks', updatedProduct.remarks)
       formData.append('taxExpiryDate', updatedProduct.taxExpiryDate)
       formData.append('status', updatedProduct.status)
-
       formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       formData.append('vehicleClass', updatedProduct.vehicleClass)
       formData.append('fitnessDuration', updatedProduct.fitnessDuration)
 
       newAttachments.forEach((f) => formData.append('attachments', f))
       removedAttachments.forEach((id) => formData.append('removedAttachments', id))
-
-      // IMPORTANT: let Axios set Content-Type with proper boundary
       await axios.put(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/update/by/${updatedProduct._id}`,
         formData,
@@ -357,6 +354,7 @@ const saveProduct = async () => {
 
       formData.append('vehicleName', vehicleName)
       formData.append('taxTokenReport', taxTokenReport)
+ 
       formData.append('regNo', regNo)
       formData.append('remarks', remarks)
       formData.append('vehicleClass', vehicleClass)

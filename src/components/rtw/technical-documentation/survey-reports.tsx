@@ -354,7 +354,7 @@ const saveProduct = async () => {
             formData.append('description', description)
             formData.append('refNo', refNo)
             formData.append('remarks', remarks)
-            formData.append('typeofsurvey', typesofSurvey)
+            formData.append('typesofsurvey', typesofSurvey)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
 

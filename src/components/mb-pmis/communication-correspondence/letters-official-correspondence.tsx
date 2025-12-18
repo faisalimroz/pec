@@ -87,13 +87,13 @@ export default function MedicineInOutRecord() {
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
-    const [fileName, setMedicineName] = useState('')
+    const [fileName, setFileName] = useState('')
     const [refNo, setRefNo] = useState('')
     const [description, setDescription] = useState('')
     const [sender, setSender] = useState('')
 
     const [remarks, setRemarks] = useState('')
-    const [statusType, setInOutType] = useState<string>('')
+    const [statusType, setStatusType] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
        const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
@@ -330,7 +330,7 @@ const uploadFile = async () => {
     }
 
  const saveProduct = async () => {
-        // --- 1. VALIDATION SHORTCUT ---
+ 
         const requiredFields = [
             { value: fileName, name: 'File Name' },
             { value: refNo, name: 'Reference No' },
@@ -361,7 +361,6 @@ const uploadFile = async () => {
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
 
-            // Append files only if they exist
             if (filesInput && filesInput.length > 0) {
                 filesInput.forEach((file) => {
                     formData.append('attachments', file)
@@ -1350,7 +1349,7 @@ const uploadFile = async () => {
                                 id='statusType'
                                 value={statusType}
                                 options={codes}
-                                onChange={(e) => setInOutType(e.value)}
+                                onChange={(e) => setStatusType(e.value)}
                                 placeholder='Status'
                                 itemTemplate={itemTemplate}
                                 optionLabel='name'
@@ -1394,7 +1393,7 @@ const uploadFile = async () => {
                             </label>
                             <InputText
                                 id='fileName'
-                                onChange={(e) => setMedicineName(e.target.value)}
+                                onChange={(e) => setFileName(e.target.value)}
                                 required
                                 autoFocus
                                 className={classNames({
