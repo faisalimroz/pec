@@ -25,6 +25,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { searchOrganization } from '@/api/itsAPIs'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 interface Attachment {
     url: string
     _id: string
@@ -80,8 +81,14 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [approved, setApproved] = useState<boolean>(false);
+
     const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
+    const [approved, setApproved] = useState<boolean>(false);
+ 
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -434,6 +441,7 @@ export default function MonthlyReport() {
                     <ButtonGroupWithIcons
                         selectedProducts={selectedProducts}
                         openNew={openNew}
+                        openNew3={openBulkUpload}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
 
@@ -837,7 +845,13 @@ export default function MonthlyReport() {
                     </TabPanel>
                 </TabView>
             </div>
-
+<BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/its/organization/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}

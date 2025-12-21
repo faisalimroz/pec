@@ -62,7 +62,13 @@ const ButtonGroupWithIcon: React.FC<ButtonGroupWithIconsProps> = ({
         <BulkUpload />
         Bulk Upload 
       </button>
-
+ <button
+        className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold text-sm h-[40px] px-2 rounded-md"
+        onClick={exportCSV}
+      >
+        <BulkUpload />
+       Download Files{selectedProducts?.length === 0 ? "" : `(${selectedProducts?.length})`}
+      </button>
       <button
         className={`flex items-center gap-2 text-sm h-[40px] px-2 text-[#FF4141] border border-[#F39A9C] font-semibold rounded-md ${
           selectedProducts && selectedProducts.length > 0

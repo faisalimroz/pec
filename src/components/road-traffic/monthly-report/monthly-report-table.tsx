@@ -27,6 +27,7 @@ import FileIcon from '@/components/icons/FileIcon'
 import { searchRtwBills } from '@/api/rtwAPIs'
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 interface Attachment {
   url: string
   _id: string
@@ -99,7 +100,10 @@ export default function MonthlyReport() {
   const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-
+  const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
   const months = [
     { name: 'January', code: 'January' },
     { name: 'February', code: 'February' },
@@ -485,12 +489,13 @@ export default function MonthlyReport() {
       <>
         {hasEditAccess && (
           <ButtonGroupWithIcons
-            selectedProducts={selectedProducts}
-            openNew={openNew}
-            exportCSV={exportCSV}
-            confirmDeleteSelected={confirmDeleteSelected}
-
-          />
+                        selectedProducts={selectedProducts}
+                        openNew={openNew}
+                        openNew3={openBulkUpload}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
+                       
+                    />
           // <div className='space-x-2'>
           //     <button
           //         className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
@@ -934,7 +939,13 @@ export default function MonthlyReport() {
           </TabPanel>
         </TabView>
       </div>
-
+  <BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/road-traffic/monthly-report/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
       {/* update data dialog  */}
       <Dialog
         visible={updateProductDialog}

@@ -25,6 +25,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 interface Attachment {
   url: string
   _id: string
@@ -80,7 +81,13 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
   const [subjectName, setsubjectName] = useState('')
   const [type, setType] = useState<string>("");
   const [description, setDescription] = useState('')
-  const [remarks, setRemarks] = useState('')
+
+    const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
+ 
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [formDate, setFormDate] = useState<string>('')
   const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
@@ -448,9 +455,10 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
         {hasEditAccess && (
           <ButtonGroupWithIcons
             selectedProducts={selectedProducts}
-            openNew={openNew}
-            exportCSV={exportCSV}
-            confirmDeleteSelected={confirmDeleteSelected}
+                        openNew={openNew}
+                        openNew3={openBulkUpload}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
 
           />
         )}
@@ -1288,7 +1296,13 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
           )}
         </div>
       </Dialog>
-
+<BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/its/operation-manual/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
       <Dialog
         visible={deleteMultipleDialog}
         style={{ width: '32rem' }}

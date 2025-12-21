@@ -24,6 +24,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { searchSystemConfigure } from '@/api/itsAPIs'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom'
+import BulkUploadDialog from '@/components/bulk-upload'
 interface Attachment {
     url: string
     _id: string
@@ -84,6 +85,12 @@ const { roles, permissions } = useAuth()
     const [description, setDescription] = useState('')
 
     const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
+
+
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -438,6 +445,7 @@ const { roles, permissions } = useAuth()
                     <ButtonGroupWithIcons
                         selectedProducts={selectedProducts}
                         openNew={openNew}
+                        openNew3={openBulkUpload}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
 
@@ -827,7 +835,13 @@ const { roles, permissions } = useAuth()
                     </TabPanel>
                 </TabView>
             </div>
-
+<BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/its/system-configure/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}

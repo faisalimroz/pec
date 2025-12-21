@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 import { FilePreview } from '@/components/file-preview'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
@@ -87,6 +88,10 @@ export default function MonthlyReport() {
     const [approved, setApproved] = useState<boolean>(false);
     
     const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -443,6 +448,7 @@ export default function MonthlyReport() {
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         exportCSV={exportCSV}
+                        openNew3={openBulkUpload}
                         confirmDeleteSelected={confirmDeleteSelected}
                        
                     />
@@ -849,6 +855,13 @@ export default function MonthlyReport() {
                 </TabView>
             </div>
 
+            <BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/road-traffic/workshop-requisitionform/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}

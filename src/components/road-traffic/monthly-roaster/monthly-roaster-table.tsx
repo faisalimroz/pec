@@ -26,6 +26,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 
 interface Attachment {
   url: string
@@ -92,7 +93,10 @@ export default function MonthlyReport() {
   const [description, setDescription] = useState('')
 
   const [remarks, setRemarks] = useState('')
-
+  const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])
   const [selectedCode, setSelectedCode] = useState(null)
@@ -255,7 +259,7 @@ export default function MonthlyReport() {
   }
 
   const saveProduct = async () => {
-    // --- 1. VALIDATION SHORTCUT ---
+
     const requiredFields = [
       { value: subjectName, name: 'Subject Name' },
       { value: description, name: 'Description' },
@@ -458,12 +462,13 @@ export default function MonthlyReport() {
       <>
         {hasEditAccess && (
           <ButtonGroupWithIcons
-            selectedProducts={selectedProducts}
-            openNew={openNew}
-            exportCSV={exportCSV}
-            confirmDeleteSelected={confirmDeleteSelected}
-
-          />
+                        selectedProducts={selectedProducts}
+                        openNew={openNew}
+                        openNew3={openBulkUpload}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
+                       
+                    />
         )}
 
         <RefreshButton handleReset={handleReset} />
@@ -926,7 +931,13 @@ export default function MonthlyReport() {
           </TabPanel>
         </TabView>
       </div>
-
+  <BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/road-traffic/monthly-roaster/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
       {/* update data dialog  */}
       <Dialog
         visible={updateProductDialog}

@@ -22,10 +22,11 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import ButtonGroupWithIcons from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox';
 import FileIcon from '@/components/icons/FileIcon'
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 interface Attachment {
     url: string
     _id: string
@@ -44,7 +45,7 @@ interface Product {
     creationTimestamp?: string
     updater?: string
     updatingTimestamp?: string
-    
+
 }
 
 export default function MonthlyReport() {
@@ -57,7 +58,7 @@ export default function MonthlyReport() {
         date: '',
         remarks: '',
         attachments: [],
-         approved: false,
+        approved: false,
     }
 
     const { pathname } = useLocation();
@@ -88,6 +89,12 @@ export default function MonthlyReport() {
     const [description, setDescription] = useState('')
 
     const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
+
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
@@ -99,7 +106,7 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-    const [bulkDialog, setBulkDialog] = useState(false);
+
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
@@ -331,7 +338,7 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
@@ -535,10 +542,10 @@ const saveProduct = async () => {
         return (
             <>
                 {hasEditAccess && (
-                    <ButtonGroupWithIcon
+                    <ButtonGroupWithIcons
                         selectedProducts={selectedProducts}
                         openNew={openNew}
-                        openNew2={openNew2}
+                        openNew3={openBulkUpload}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
 
@@ -955,6 +962,13 @@ const saveProduct = async () => {
                     </TabPanel>
                 </TabView>
             </div>
+            <BulkUploadDialog
+                            visible={bulkDialog}
+                            setVisible={setBulkDialog}
+                            apiEndpoint="/api/v1/its/work-plan/bulk-upload"
+                            onSuccess={refetch}
+                            title="Upload Document"
+                        />
             <Dialog
                 visible={bulkDialog}
                 style={{ width: '42rem' }}
@@ -1128,7 +1142,7 @@ const saveProduct = async () => {
                             <div className="flex items-center gap-3">
                                 <Checkbox
                                     inputId="update-approve"
-                                    
+
                                     checked={updatedProduct.approved}
                                     onChange={(e) =>
                                         setUpdatedProduct({
@@ -1138,7 +1152,7 @@ const saveProduct = async () => {
                                     }
                                 />
                                 <label htmlFor="update-approve" className="text-sm">
-                                    Add this document for all 
+                                    Add this document for all
                                 </label>
                             </div>
                         </div>
@@ -1241,30 +1255,30 @@ const saveProduct = async () => {
 
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1362,7 +1376,7 @@ const saveProduct = async () => {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                           
+
                         </label>
 
                         <div>

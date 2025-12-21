@@ -26,6 +26,7 @@ import { searchMonthlyReport } from '@/api/itsAPIs'
 import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 interface Attachment {
     url: string
     _id: string
@@ -83,9 +84,15 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
+
+    const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
     const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
-    const [remarks, setRemarks] = useState('')
+   
 
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -461,6 +468,7 @@ const saveProduct = async () => {
                     <ButtonGroupWithIcons
                         selectedProducts={selectedProducts}
                         openNew={openNew}
+                        openNew3={openBulkUpload}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
 

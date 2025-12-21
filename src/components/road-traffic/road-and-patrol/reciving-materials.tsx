@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { FilePreview } from '@/components/file-preview'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
@@ -86,6 +87,10 @@ const { roles, permissions } = useAuth()
     const [description, setDescription] = useState('')
     const [approved, setApproved] = useState<boolean>(false);
     const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
@@ -441,6 +446,7 @@ const saveProduct = async () => {
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         exportCSV={exportCSV}
+                        openNew3={openBulkUpload}
                         confirmDeleteSelected={confirmDeleteSelected}
                       
                     />
@@ -853,6 +859,13 @@ const saveProduct = async () => {
                 </TabView>
             </div>
 
+            <BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/road-traffic/roadSafety-patrol-recivingmaterials/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
