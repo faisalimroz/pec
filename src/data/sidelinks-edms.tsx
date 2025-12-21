@@ -225,7 +225,7 @@ export const rntLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'road-&-traffic',
+    uName: '',
   },
   
     {
@@ -441,7 +441,7 @@ export const itsLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'its-manager',
+    uName: '',
   },
   {
     title: 'About ITS',
@@ -619,7 +619,7 @@ export const rtwLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'rtw',
+    uName: '',
   },
   {
     title: 'Project Overview',
@@ -793,7 +793,7 @@ export const pmisLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'mb-pmis',
+    uName: '',
   },
   {
     title: 'Project Overview',

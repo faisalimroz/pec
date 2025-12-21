@@ -486,7 +486,7 @@ export const itsLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'its-manager',
+    uName: '',
   },
 
   {
@@ -673,7 +673,7 @@ export const rtwLinks: SideLink[] = [
     label: '',
     href: '',
     icon: '',
-    uName: 'rtw',
+    uName: '',
   },
   {
     title: 'Project Overview',
