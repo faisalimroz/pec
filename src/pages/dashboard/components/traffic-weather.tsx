@@ -6,7 +6,7 @@ import WeatherBoard from '@/components/dashboard/weather-board'
 
 export default function TrafficWeather() {
   return (
-    <div className='grid grid-cols-12 gap-2 items-center'>
+    <div className='grid grid-cols-12 gap-2 '>
       <div className='col-span-9 flex items-center justify-center gap-2 my-0'>
         <TollOfTollDash />
         <TrafficOfTollDash />

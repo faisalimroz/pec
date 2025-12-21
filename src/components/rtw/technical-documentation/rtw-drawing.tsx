@@ -331,7 +331,7 @@ const uploadFile = async () => {
     }
 
    const saveProduct = async () => {
-        // --- 1. VALIDATION SHORTCUT ---
+  
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
             { value: sender, name: 'Sender' },
@@ -356,7 +356,7 @@ const uploadFile = async () => {
             formData.append('docNo', docNo)
             formData.append('remarks', remarks)
             formData.append('date', formatDate(formDate))
-
+            formData.append('typesofDrawings', typesofDrawings);
             // Append files only if they exist
             if (filesInput && filesInput.length > 0) {
                 filesInput.forEach((file) => {

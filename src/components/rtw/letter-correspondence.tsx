@@ -893,6 +893,14 @@ export default function MedicineInOutRecord() {
                                 className='min-w-[10rem]'
                                 sortable
                             ></Column>
+                             <Column
+                                field='refNo'
+                                header='Ref No.'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+                                className='min-w-[10rem]'
+                                sortable
+                            ></Column>
 
                             <Column
                                 field='date'

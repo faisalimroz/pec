@@ -418,13 +418,13 @@ const UpdateAdmin = () => {
       authority: false,
       children: [
          {
-          name: 'daily-toll-&-traffic-data',
+          name: 'daily-toll-traffic-data', 
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'shift-wise-toll-&-traffic-data',
+          name: 'shift-wise-toll-traffic-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],

@@ -131,7 +131,7 @@ export default function MonthlyReport() {
     const locations = [
 
         { name: 'Mawa', code: 'Mawa' },
-        { name: 'Jinjira', code: 'Jinjira' }
+        { name: 'Janjira', code: 'Janjira' }
 
     ]
     const year = [

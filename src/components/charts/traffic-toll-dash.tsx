@@ -11,12 +11,13 @@ import {
   CartesianGrid,
 } from 'recharts'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Dropdown } from 'primereact/dropdown';
 
 interface VehicleData {
   vehicleType: string
-  label: string // Updated to match the new `label` structure
+  label: string
   totalVehicles: number
-  totalAmount: number // Added to match the new data structure
+  totalAmount: number
 }
 
 interface ApiResponse {
@@ -45,7 +46,7 @@ const SkeletonLoader = () => (
       </div>
     </div>
     <p className='text-center text-muted-foreground font-medium'>
-      Graph Data Is Loading. Please Wait...
+      Traffic Data Is Loading. Please Wait...
     </p>
   </div>
 )
@@ -56,7 +57,7 @@ const CustomizedLabel: React.FC<any> = (props) => {
     <text
       x={x + width + 5}
       y={y}
-      dy={12} // Adjusted slightly for centering
+      dy={12}
       fontSize={12}
       fill='hsl(var(--foreground))'
       textAnchor='start'
@@ -70,47 +71,71 @@ export function TrafficOfTollDash() {
   const [data, setData] = useState<VehicleData[]>([])
   const [loading, setLoading] = useState(true)
   const [date, setDate] = useState<string>('')
+  const [selectedLane, setSelectedLane] = useState<string>('All')
 
-const fetchData = async () => {
-  try {
-    setLoading(true);
-    const response = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/traffic/data`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      }
-    );
+  const locations = [
+      { name: 'All', code: 'All' },
+      { name: 'Mawa', code: 'Mawa' },
+      { name: 'Janjira', code: 'Janjira' }
+  ];
 
-    // If your backend returns { success, date, result, ... }
-    const payload = response.data;
-    const result = Array.isArray(payload.result) ? payload.result : [];
-  
-    setData(result);
-    setDate(payload.date || '');
-     console.log(result)
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchData = async (lane: string) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/its/vehicle-detect/get/dashboard/traffic/data`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          params: {
+            lane: lane,
+            _ts: Date.now(), 
+          },
+        }
+      );
 
+      const payload = response.data;
+      const result = Array.isArray(payload.result) ? payload.result : [];
+    
+      setData(result);
+      setDate(payload.date || '');
+      console.log(result)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData(selectedLane)
+  }, [selectedLane])
 
   return (
     <div className='w-full rounded-xl overflow-hidden border shadow-md'>
-      <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-center gap-2'>
-        
-        <h2 className='text-[20px] font-bold text-center'>
-          Traffic Of Toll Plaza: {date}
-        </h2>
+      <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-between'>
+        <div className='flex items-center gap-2'>
+          <h2 className='text-[18px] font-bold'>
+            Traffic Of Toll Plaza: {date}
+          </h2>
+        </div>
+
+     
+        <div className="flex justify-content-center">
+            <Dropdown 
+                value={selectedLane} 
+                onChange={(e) => setSelectedLane(e.value)} 
+                options={locations} 
+                optionLabel="name" 
+                optionValue="name" 
+                placeholder="Select Location" 
+                className="w-full md:w-10rem p-inputtext-sm text-black" 
+            />
+        </div>
       </div>
-      <div className='mt-3'>
+
+      <div className='mt-3 p-2'>
         {loading ? (
           <SkeletonLoader />
         ) : (
@@ -134,9 +159,8 @@ const fetchData = async () => {
                 stroke='hsl(var(--foreground))'
               />
 
-              {/* FIX: Use 'label' instead of 'types' */}
               <YAxis
-                dataKey='label' // Updated to use `label` for Y-axis
+                dataKey='label'
                 type='category'
                 tick={{ fontSize: 10, fill: 'hsl(var(--foreground))' }}
                 width={170}
@@ -155,7 +179,6 @@ const fetchData = async () => {
                 }}
               />
 
-              {/* FIX: Updated dataKey to 'totalVehicles' */}
               <Bar dataKey='totalVehicles' fill='#059669' barSize={20}>
                 <LabelList content={<CustomizedLabel />} />
               </Bar>

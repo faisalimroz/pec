@@ -38,7 +38,7 @@ interface Product {
     subjectName: string
     description: string
     monthName: string;
-    location: string
+   
     date: string
     remarks: string
     approved: boolean;
@@ -55,7 +55,7 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
-        location: '',
+      
         monthName: '',
         approved: false,
         date: '',
@@ -86,7 +86,7 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    const [location, setlocation] = useState<string>("")
+ 
     const [remarks, setRemarks] = useState('')
     const [formDate, setFormDate] = useState<string>('')
     const [approved, setApproved] = useState<boolean>(false);
@@ -205,7 +205,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-            formData.append('location', updatedProduct.location)
+           
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
             formData.append('approved', updatedProduct.approved ? 'true' : 'false')
@@ -339,7 +339,6 @@ export default function MonthlyReport() {
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
-            { value: location, name: 'Location' },
             { value: monthName, name: 'Month Name' },
             { value: remarks, name: 'Remarks' },
             { value: formDate, name: 'Date' }
@@ -358,7 +357,7 @@ export default function MonthlyReport() {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('location', location)
+            
             formData.append('remarks', remarks)
             formData.append('monthName', monthName)
             formData.append('approved', approved ? 'true' : 'false');
@@ -381,17 +380,13 @@ export default function MonthlyReport() {
                     },
                 }
             )
-
-            // --- 2. RESET ALL FIELDS HERE ---
             setSubjectName('')
-            setDescription('')
-            setlocation('')
+            setDescription('')         
             setRemarks('')
             setMonthName('')
             setApproved(false)
             setFormDate('')
             setFilesInput([])
-
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -652,7 +647,7 @@ export default function MonthlyReport() {
         setLoading(true)
         const payload = {
             monthName: selectedCode?.code || '',
-            location: selectedLocation?.code || '',
+         
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
 
@@ -674,7 +669,7 @@ export default function MonthlyReport() {
         setSelectedLocation(null)
         const payload = {
             monthName: selectedCode?.code || '',
-            location: selectedLocation?.code || '',
+        
             date_range: '',
             searchQuery: '',
         }
@@ -693,7 +688,7 @@ export default function MonthlyReport() {
 
         const payload = {
             monthName: '',
-            location: '',
+      
             date_range: '',
             searchQuery: '',
         }
@@ -1235,10 +1230,7 @@ export default function MonthlyReport() {
                                 <h3 className='font-bold'>Month Name</h3>
                                 <p className='break-all'>{selectedProduct.monthName}</p>
                             </div>
-                            <div>
-                                <h3 className='font-bold'>Location</h3>
-                                <p className='break-all'>{selectedProduct.location}</p>
-                            </div>
+                            
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>

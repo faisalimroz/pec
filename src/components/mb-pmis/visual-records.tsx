@@ -330,7 +330,7 @@ export default function MonthlyReport() {
   }
 
  const saveProduct = async () => {
-    // --- 1. VALIDATION SHORTCUT ---
+
     const requiredFields = [
       { value: subjectName, name: 'Subject Name' },
       { value: description, name: 'Description' },
@@ -358,8 +358,6 @@ export default function MonthlyReport() {
       formData.append('remarks', remarks)
       formData.append('approved', approved ? 'true' : 'false');
       formData.append('date', formatDate(formDate))
-
-      // Append files only if they exist
       if (filesInput && filesInput.length > 0) {
         filesInput.forEach((file) => {
           formData.append('attachments', file)

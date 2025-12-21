@@ -25,6 +25,7 @@ import Wim from './limited-wim-data'
 import { searchAllWimData } from '@/api/tollApi'
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom'
+import ButtonGroupWithIcon from '../ui/common-all-buttons'
 
 interface Attachment {
     url: string
@@ -73,7 +74,7 @@ export default function AssetManagementTable() {
     const locations = [
 
         { label: 'Mawa', value: 'Mawa' },
-        { label: 'Jinjira', value: 'Jinjira' },
+        { label: 'Janjira', value: 'Janjira' },
     ]
     const shifts = [
         { label: 'Shift: 3rd-2', value: 'Shift: 3rd-2' },
@@ -110,7 +111,10 @@ export default function AssetManagementTable() {
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [location, setlocation] = useState('')
-
+   const [uploading, setUploading] = useState(false)
+     const [file, setFile] = useState<File | null>(null)
+    const [uploadStatus, setUploadStatus] = useState("")
+     const [bulkDialog, setBulkDialog] = useState(false)
     const [shiftName, setShiftName] = useState('')
     const [pass, setPass] = useState('')
     const [violation, setViolation] = useState('')
@@ -251,6 +255,80 @@ export default function AssetManagementTable() {
     const hideDeleteProductsDialog = () => {
         setDeleteProductsDialog(false)
     }
+const uploadFile = async () => {
+    if (!file) {
+      setUploadStatus('Please select a file first.')
+      return
+    }
+
+    setUploading(true)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/toll/all-wim-data/bulk-upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      toast.success('File uploaded successfully!')
+      setFile(null)
+      refetch()
+      hideDialog2()
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      toast.error('An error occurred while uploading. Please try again.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const hideDialog2 = () => {
+    setBulkDialog(false)
+    setFile(null)
+    setUploadStatus('')
+  }
+
+  const openNew2 = () => {
+    setProduct(emptyProduct)
+    setSubmitted(false)
+    setBulkDialog(true)
+  }
+
+  const productDialogFooter2 = (
+    <>
+      <Button
+        label='Cancel'
+        icon='pi pi-times'
+        className='p-button-text'
+        onClick={hideDialog2}
+      />
+      <Button
+        label='Save'
+        icon='pi pi-upload'
+        className='p-button-text'
+        onClick={uploadFile}
+        disabled={!file || uploading}
+      />
+    </>
+  )
+ const handleFileChange2 = (e: { target: { files: any[] } }) => {
+    const selectedFile = e.target.files[0]
+    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+      setFile(selectedFile)
+      setUploadStatus('')
+    } else {
+      setFile(null)
+      setUploadStatus('Please select a valid .xlsx file.')
+    }
+  }
 
     function formatDate(dateTime?: any) {
         if (!dateTime) return ''
@@ -285,7 +363,7 @@ export default function AssetManagementTable() {
             setLoading2(true)
             const formData = new FormData()
 
-            // Calculate Total
+        
             const total = String(Number(pass || 0) + Number(violation || 0))
 
             formData.append('location', location)
@@ -297,7 +375,6 @@ export default function AssetManagementTable() {
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
 
-            // Append files only if they exist
             if (filesInput && filesInput.length > 0) {
                 filesInput.forEach((file) => {
                     formData.append('attachments', file)
@@ -483,13 +560,13 @@ export default function AssetManagementTable() {
         return (
             <>
                 {hasEditAccess && activeTab === 'all' && (
-                    <ButtonGroupWithIcons
-                        selectedProducts={selectedProducts}
-                        openNew={openNew}
-                        exportCSV={exportCSV}
-                        confirmDeleteSelected={confirmDeleteSelected}
-
-                    />
+                    <ButtonGroupWithIcon
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            openNew2={openNew2}
+            exportCSV={exportCSV}
+            confirmDeleteSelected={confirmDeleteSelected}
+          />
 
                 )}
 
@@ -1379,7 +1456,46 @@ export default function AssetManagementTable() {
                                 )}
                             </div>
                         </Dialog>
-
+   <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
                         <Dialog
                             visible={deleteMultipleDialog}
                             style={{ width: '32rem' }}

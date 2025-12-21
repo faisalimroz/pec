@@ -39,6 +39,7 @@ interface EmployeeData {
   termination: { url: string; _id: string }[]
   insuranceClaiming: { url: string; _id: string }[]
   profileImg: string
+  approved: boolean
 }
 
 interface EmPersonalDetailProps {

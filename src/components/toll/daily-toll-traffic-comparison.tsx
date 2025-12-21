@@ -60,7 +60,7 @@ interface ComparisonResult {
 const locationType = [
   { name: 'All', value: 'All' },
   { name: 'Mawa', value: 'Mawa' },
-  { name: 'Jinjira', value: 'Jinjira' },
+  { name: 'Janjira', value: 'Janjira' },
 ];
 
 const VEHICLE_LABELS: Record<string, string> = {

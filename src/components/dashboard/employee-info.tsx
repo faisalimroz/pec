@@ -106,7 +106,7 @@ export default function AccidentInfo() {
 
   return (
     <div className='w-full rounded-xl overflow-hidden bg-white shadow-md'>
-      <div className='bg-[#0a1747] px-4 py-3 text-white flex items-center justify-between gap-2'>
+      <div className='bg-[#0a1747] px-4 py-[19px] text-white flex items-center justify-between gap-2'>
         <div className='flex items-center gap-2'>
           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
             <path fillRule="evenodd" clipRule="evenodd" d="M6.58872 10.2675C7.52594 7.89 8.65328 6.25 11.2053 6.25H18.0461C20.5958 6.25 21.7244 7.89 22.6628 10.2675L23.6 12.8112C24.2984 12.8199 24.9399 13.2076 25.2855 13.83C25.4889 14.1845 25.5954 14.5886 25.5939 15V18.28C25.603 19.0459 25.226 19.7622 24.597 20.175C24.2978 20.3661 23.9525 20.4674 23.6 20.4675H5.65028C5.29785 20.4674 4.9525 20.3661 4.65335 20.175C4.02425 19.7622 3.64734 19.0459 3.65641 18.28V15C3.65509 14.5891 3.7616 14.1854 3.96475 13.8312C4.31042 13.2089 4.95195 12.8211 5.65028 12.8125L6.58872 10.2675Z" stroke="white" strokeWidth="1.875" strokeLinecap="round" strokeLinejoin="round" />

@@ -36,7 +36,7 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    typesofDrawings: string;
+    materialName: string;
     refNo: string
     date: string
     remarks: string
@@ -55,7 +55,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         refNo: '',
-        typesofDrawings: '',
+        materialName: '',
         date: '',
         approved: false,
         remarks: '',
@@ -94,7 +94,7 @@ export default function MonthlyReport() {
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState<{ name: string; code: string } | null>(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [typesofDrawings, setTypesofDrawings] = useState<string>("");
+    const [materialName, setTypesofDrawings] = useState<string>("");
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -152,7 +152,7 @@ export default function MonthlyReport() {
             formData.append('refNo', updatedProduct.refNo)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-            formData.append('typesofDrawings', updatedProduct.typesofDrawings);
+            formData.append('materialName', updatedProduct.materialName);
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -330,12 +330,12 @@ export default function MonthlyReport() {
     }
 
    const saveProduct = async () => {
-        // --- 1. VALIDATION SHORTCUT ---
+  
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
             { value: refNo, name: 'Ref No' },
-            { value: typesofDrawings, name: 'Types of Drawings' },
+            { value: materialName, name: 'Types of Drawings' },
             { value: remarks, name: 'Remarks' },
             { value: formDate, name: 'Date' }
         ];
@@ -350,16 +350,13 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
             formData.append('subjectName', subjectName)
             formData.append('description', description)
             formData.append('refNo', refNo)
             formData.append('remarks', remarks)
-            formData.append('typesofDrawings', typesofDrawings)
+            formData.append('materialName', materialName)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
-
-            // Append files only if they exist
             if (filesInput && filesInput.length > 0) {
                 filesInput.forEach((file) => {
                     formData.append('attachments', file)
@@ -376,8 +373,6 @@ export default function MonthlyReport() {
                     },
                 }
             )
-
-            // --- 2. RESET ALL FIELDS HERE ---
             setSubjectName('')
             setDescription('')
             setRefNo('')
@@ -386,7 +381,6 @@ export default function MonthlyReport() {
             setApproved(false)
             setFormDate('')
             setFilesInput([])
-
             hideDialog()
             toast.success('Data Saved Successfully')
             refetch()
@@ -680,7 +674,7 @@ export default function MonthlyReport() {
     const handleSearch = () => {
         setLoading(true)
         const payload = {
-            typesofDrawings: selectedCode?.code || '',
+            materialName: selectedCode?.code || '',
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
 
@@ -964,7 +958,7 @@ export default function MonthlyReport() {
                             ></Column>
 
                             <Column
-                                field='typesofDrawings'
+                                field='materialName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
 
@@ -1119,16 +1113,16 @@ export default function MonthlyReport() {
                             />
                         </div>
                         <div className='field'>
-                            <label htmlFor='typesofDrawings' className='font-bold'>
+                            <label htmlFor='materialName' className='font-bold'>
                                 Types
                             </label>
                             <Dropdown
-                                id='typesofDrawings'
-                                value={updatedProduct.typesofDrawings}
+                                id='materialName'
+                                value={updatedProduct.materialName}
                                 onChange={(e) =>
                                     setUpdatedProduct({
                                         ...updatedProduct,
-                                        typesofDrawings: e.value,
+                                        materialName: e.value,
                                     })
                                 }
                                 options={drawingTypes}
@@ -1296,7 +1290,7 @@ export default function MonthlyReport() {
 
                             <div>
                                 <h3 className='font-bold'>Types</h3>
-                                <p className='break-all'>{selectedProduct.typesofDrawings}</p>
+                                <p className='break-all'>{selectedProduct.materialName}</p>
                             </div>
                             <div>
                                 <h3 className='font-bold'>Ref No.</h3>
@@ -1388,12 +1382,12 @@ export default function MonthlyReport() {
                             />
                         </div>
                         <div className="field">
-                            <label htmlFor="typesofDrawings" className="font-bold">
+                            <label htmlFor="materialName" className="font-bold">
                                 Types
                             </label>
                             <Dropdown
-                                id="typesofDrawings"
-                                value={typesofDrawings}
+                                id="materialName"
+                                value={materialName}
                                 onChange={(e) => setTypesofDrawings(e.value)}
                                 options={drawingTypes}
                                 optionLabel='name'
