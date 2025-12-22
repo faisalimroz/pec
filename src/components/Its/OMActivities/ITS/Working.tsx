@@ -80,6 +80,12 @@ export default function OMActivityItsWorking() {
   const [site, setSite] = useState('')
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
+
+    const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
   const [remarks, setRemarks] = useState('')
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])

@@ -25,6 +25,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 interface Attachment {
     url: string
     _id: string
@@ -55,8 +56,8 @@ export default function KecLetter() {
         remarks: '',
         attachments: [],
     }
-const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+    const { pathname } = useLocation();
+    const showAll = pathname.startsWith('/edms');
 
     const { roles, permissions } = useAuth()
     const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
@@ -73,21 +74,24 @@ const { pathname } = useLocation();
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-     const [date, setDate] = useState<Date | null>(null)
-  const [date2, setDate2] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-    
+
     const [remarks, setRemarks] = useState('')
-    
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
+
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -117,13 +121,13 @@ const { pathname } = useLocation();
         try {
             setLoading2(true)
             const formData = new FormData()
-      
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
-           formData.append('approved', updatedProduct.approved ? 'true' : 'false')
+            formData.append('approved', updatedProduct.approved ? 'true' : 'false')
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -231,7 +235,7 @@ const { pathname } = useLocation();
         return `${day}-${month}-${year}`
     }
 
- const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
@@ -423,7 +427,7 @@ const { pathname } = useLocation();
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -435,9 +439,10 @@ const { pathname } = useLocation();
                     <ButtonGroupWithIcons
                         selectedProducts={selectedProducts}
                         openNew={openNew}
+                        openNew3={openBulkUpload}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
@@ -538,54 +543,54 @@ const { pathname } = useLocation();
     )
 
 
-   const handleSearch = () => {
-      setLoading(true)
-      const payload = {
-       
-        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-        searchQuery: searchKey,
-      }
-         console.log(payload)
-      searchRTKec(payload).then((result) => {
-        const rows = Array.isArray(result?.data) ? result.data : [];
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
+        console.log(payload)
+        searchRTKec(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-        setLoading(false)
-      })
-    }
-  
-    const handleReset = () => {
-      setLoading(true)
-      const payload = {
-      
-        date_range: '',
-        searchQuery: '',
-      }
-  
-      setDate(null)
-      setDate2(null)
-      setSearchKey('')
-      setSelectedCode(null)
-  
-      searchRTKec(payload).then((result) => {
-       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-        setLoading(false)
-      })
-    }
-  
-const refetch = () => {
-    setLoading(true)
-    const payload = {
-      date_range: '',
-      searchQuery: '',
+            setLoading(false)
+        })
     }
 
-    searchRTKec(payload).then((result) => {
-     const rows = Array.isArray(result?.data) ? result.data : [];
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+
+        searchRTKec(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-      setLoading(false)
-    })
-  }
+            setLoading(false)
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+        const payload = {
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchRTKec(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false)
+        })
+    }
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -799,7 +804,7 @@ const refetch = () => {
                                 className='min-w-[8rem]'
                                 header='File Name'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -841,7 +846,13 @@ const refetch = () => {
                     </TabPanel>
                 </TabView>
             </div>
-
+            <BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/road-traffic/kecletters/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -854,7 +865,7 @@ const refetch = () => {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -885,7 +896,7 @@ const refetch = () => {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -919,7 +930,7 @@ const refetch = () => {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1057,37 +1068,37 @@ const refetch = () => {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1133,7 +1144,7 @@ const refetch = () => {
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1166,14 +1177,14 @@ const refetch = () => {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                     <div className="col-span-2 mt-2">
+                    <div className="col-span-2 mt-2">
                         <label className="font-bold mb-2 block">Approval</label>
                         <div className="flex items-center gap-3">
                             <Checkbox

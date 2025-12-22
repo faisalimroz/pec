@@ -25,6 +25,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 
 interface Attachment {
     url: string
@@ -84,6 +85,10 @@ const [approved, setApproved] = useState<boolean>(false);
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
     const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
@@ -439,6 +444,7 @@ const [approved, setApproved] = useState<boolean>(false);
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         exportCSV={exportCSV}
+                        openNew3={openBulkUpload}
                         confirmDeleteSelected={confirmDeleteSelected}
                       
                     />
@@ -849,6 +855,13 @@ const [approved, setApproved] = useState<boolean>(false);
                 </TabView>
             </div>
 
+            <BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/road-traffic/miscellaneous/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}

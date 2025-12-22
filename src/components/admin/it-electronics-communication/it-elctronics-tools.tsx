@@ -37,7 +37,7 @@ interface Product {
     subjectName: string
     description: string
 
-  
+  approved: boolean
  
     date: string
     remarks: string

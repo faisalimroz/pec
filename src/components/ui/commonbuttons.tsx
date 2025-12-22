@@ -3,6 +3,7 @@ import React from "react";
 type ButtonGroupWithIconsProps = {
   selectedProducts?: any[];
   openNew: () => void;
+  openNew3: () => void;
   exportCSV: () => void;
   confirmDeleteSelected: () => void;
 
@@ -11,6 +12,7 @@ type ButtonGroupWithIconsProps = {
 const ButtonGroupWithIcons: React.FC<ButtonGroupWithIconsProps> = ({
   selectedProducts,
   openNew,
+  openNew3,
   exportCSV,
   confirmDeleteSelected,
  
@@ -49,6 +51,13 @@ const ButtonGroupWithIcons: React.FC<ButtonGroupWithIconsProps> = ({
       >
         <UploadIcon />
         Upload Document
+      </button>
+      <button
+        className="flex items-center gap-2 bg-[#0B1F8F] text-white border border-[#E2E8F0]  text-sm h-[40px] px-2 rounded-md font-bold"
+        onClick={openNew3}
+      >
+        <UploadIcon />
+        Bulk Upload
       </button>
 
       <button

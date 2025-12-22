@@ -24,6 +24,7 @@ import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import { searchNotice } from '@/api/itsAPIs'
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 
 interface Attachment {
     url: string
@@ -84,23 +85,21 @@ export default function MonthlyReport() {
     const [description, setDescription] = useState('')
 
     const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    } 
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-
-
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-  
-
-    // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
         setUpdateProductDialog(true)
@@ -436,6 +435,7 @@ export default function MonthlyReport() {
                     <ButtonGroupWithIcons
                         selectedProducts={selectedProducts}
                         openNew={openNew}
+                        openNew3={openBulkUpload}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
 
@@ -838,7 +838,13 @@ export default function MonthlyReport() {
                     </TabPanel>
                 </TabView>
             </div>
-
+<BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/its/notice/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Document"
+            />
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
