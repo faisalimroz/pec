@@ -36,10 +36,10 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    monthName: string
+    monthName: string // Added monthName
     date: string
     remarks: string
-  approved: boolean
+    approved: boolean
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -54,7 +54,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         approved: false,
-        monthName: '',
+        monthName: '', // Added monthName
         date: '',
         remarks: '',
         attachments: [],
@@ -62,18 +62,17 @@ export default function MonthlyReport() {
 
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'health-center');
     const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
- 
+
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
-    const [deleteProductsDialog, setDeleteProductsDialog] =
-        useState<boolean>(false)
+    const [deleteProductsDialog, setDeleteProductsDialog] = useState<boolean>(false)
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
@@ -92,7 +91,7 @@ export default function MonthlyReport() {
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [monthName, setMonthName] = useState<string>("");
+    const [monthName, setMonthName] = useState<string>(""); // Added State
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -101,11 +100,13 @@ export default function MonthlyReport() {
     const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-const [approved, setApproved] = useState<boolean>(false);
+    const [approved, setApproved] = useState<boolean>(false);
     const [bulkDialog, setBulkDialog] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
+
+    // --- Dropdown Data ---
     const months = [
         { name: 'January', code: 'January' },
         { name: 'February', code: 'February' },
@@ -120,12 +121,14 @@ const [approved, setApproved] = useState<boolean>(false);
         { name: 'November', code: 'November' },
         { name: 'December', code: 'December' }
     ];
+
     const itemTemplate = (option: { name: string; code: string }) => (
         <div className="flex items-center gap-2">
             <FileIcon />
             <span>{option.name}</span>
         </div>
     )
+
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -152,7 +155,8 @@ const [approved, setApproved] = useState<boolean>(false);
 
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-            formData.append('monthName', updatedProduct.monthName);
+            formData.append('monthName', updatedProduct.monthName); // Added to Update Payload
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -330,12 +334,12 @@ const [approved, setApproved] = useState<boolean>(false);
         return `${day}-${month}-${year}`
     }
 
-   const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
-            { value: monthName, name: 'Month Name' },
+            { value: monthName, name: 'Month Name' }, // Added validation
             { value: remarks, name: 'Remarks' },
             { value: formDate, name: 'Date' }
         ];
@@ -353,7 +357,7 @@ const [approved, setApproved] = useState<boolean>(false);
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
-            formData.append('monthName', monthName)
+            formData.append('monthName', monthName) // Added to Create Payload
             formData.append('remarks', remarks)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
@@ -379,7 +383,7 @@ const [approved, setApproved] = useState<boolean>(false);
             // --- 2. RESET ALL FIELDS HERE ---
             setSubjectName('')
             setDescription('')
-            setMonthName('')
+            setMonthName('') // Reset
             setRemarks('')
             setApproved(false)
             setFormDate('')
@@ -525,39 +529,6 @@ const [approved, setApproved] = useState<boolean>(false);
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
             </div>
         )
     }
@@ -664,23 +635,8 @@ const [approved, setApproved] = useState<boolean>(false);
                 outlined
                 onClick={hideViewDialog}
             />
-            {/* <Button
-        label='Download All'
-        icon='pi pi-download'
-        onClick={downloadAllFiles}
-      /> */}
         </>
     )
-
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
 
     const handleSearch = () => {
         setLoading(true)
@@ -690,29 +646,29 @@ const [approved, setApproved] = useState<boolean>(false);
             searchQuery: searchKey,
         }
         searchHealthcenterMonthlyReport(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-          setDate(null)
-            setDate2(null)
-            setSearchKey('')
-            
-        
-            const payload = {
-            
-              date_range: '',
-              searchQuery: '',
-            }
-            searchHealthcenterMonthlyReport(payload).then((result) => {
-              const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
-                setLoading(false)
-            })
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
         }
+        searchHealthcenterMonthlyReport(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
+            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setLoading(false)
+        })
+    }
 
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
@@ -833,14 +789,14 @@ const [approved, setApproved] = useState<boolean>(false);
     )
 
     const refetch = () => {
-         setLoading(true)
+        setLoading(true)
         const payload = {
 
             date_range: '',
             searchQuery: '',
         }
         searchHealthcenterMonthlyReport(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -932,6 +888,8 @@ const [approved, setApproved] = useState<boolean>(false);
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
+
+                            {/* Added Month Name Column */}
                             <Column
                                 field='monthName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -940,6 +898,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 className='min-w-[12rem]'
                                 header='Month Name'
                             ></Column>
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -1100,6 +1059,8 @@ const [approved, setApproved] = useState<boolean>(false);
                             />
 
                         </div>
+
+                        {/* Added Month Name Field for Update */}
                         <div className='field'>
                             <label htmlFor='monthName' className='font-bold'>
                                 Month Name
@@ -1121,6 +1082,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 itemTemplate={itemTemplate}
                             />
                         </div>
+
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
                             <div className='flex flex-wrap gap-3'>
@@ -1257,40 +1219,42 @@ const [approved, setApproved] = useState<boolean>(false);
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
+                            {/* Added Month Name View */}
                             <div>
                                 <h3 className='font-bold'>Month Name</h3>
                                 <p className='break-all'>{selectedProduct.monthName}</p>
                             </div>
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1336,6 +1300,8 @@ const [approved, setApproved] = useState<boolean>(false);
                                 required
                             />
                         </div>
+
+                        {/* Added Month Name Field for Create */}
                         <div className="field">
                             <label htmlFor="monthName" className="font-bold">
                                 Month Name
@@ -1352,6 +1318,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 itemTemplate={itemTemplate}
                             />
                         </div>
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1384,7 +1351,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
@@ -1392,18 +1359,18 @@ const [approved, setApproved] = useState<boolean>(false);
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 
