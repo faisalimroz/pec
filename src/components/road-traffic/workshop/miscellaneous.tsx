@@ -862,7 +862,7 @@ export default function MonthlyReport() {
                 setVisible={setBulkDialog}
                 apiEndpoint="/api/v1/road-traffic/workshop-miscellaneous/bulk-upload"
                 onSuccess={refetch}
-                title="Upload Document"
+                title="Upload Bulk Data"
             />
             {/* update data dialog  */}
             <Dialog

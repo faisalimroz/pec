@@ -41,7 +41,7 @@ interface Product {
     date: string
     remarks: string
     attachments: Attachment[]
-    approved?: boolean  
+    approved?: boolean
     creator?: string
     creationTimestamp?: string
     updater?: string
@@ -55,7 +55,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         approved: false,
-        
+
         monthName: '',
         date: '',
         remarks: '',
@@ -64,15 +64,15 @@ export default function MonthlyReport() {
 
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-         const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'building-maintenance');
     const hasEditAccess = showAll && (adminPermission?.edit_authority === true || roles.some((r) => r.title === 'superadmin'));
 
     const isClinic = roles.some((role) =>
         ['superadmin'].includes(role.title)
     )
-    console.log(isClinic,'hello')
+    console.log(isClinic, 'hello')
     const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
@@ -126,7 +126,7 @@ export default function MonthlyReport() {
             <span>{option.name}</span>
         </div>
     )
-    // all update dialog func here
+
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
         setUpdateProductDialog(true)
@@ -318,74 +318,74 @@ export default function MonthlyReport() {
     const hideDeleteProductsDialog = () => {
         setDeleteProductsDialog(false)
     }
-const saveProduct = async () => {
+    const saveProduct = async () => {
 
-    const requiredFields = [
-      { value: subjectName, name: 'File Name/Subject' },
-      { value: description, name: 'Description' },
-      { value: remarks, name: 'Remarks' },
-      { value: monthName, name: 'Month Name' },
-      { value: formDate, name: 'Date' }
-    ];
+        const requiredFields = [
+            { value: subjectName, name: 'File Name/Subject' },
+            { value: description, name: 'Description' },
+            { value: remarks, name: 'Remarks' },
+            { value: monthName, name: 'Month Name' },
+            { value: formDate, name: 'Date' }
+        ];
 
-    for (const field of requiredFields) {
-      if (!field.value) {
-        toast.warning(`${field.name} is required!`);
-        return; 
-      }
-    }
-
-    try {
-      setLoading2(true)
-      const formData = new FormData()
-
-      formData.append('subjectName', subjectName)
-      formData.append('description', description)
-      formData.append('remarks', remarks)
-      formData.append('monthName', monthName)
-      formData.append('date', formatDate(formDate))
-      formData.append('approved', approved ? 'true' : 'false');
-      
-      if (filesInput && filesInput.length > 0) {
-        filesInput.forEach((file) => {
-            formData.append('attachments', file)
-        })
-      }
-
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+        for (const field of requiredFields) {
+            if (!field.value) {
+                toast.warning(`${field.name} is required!`);
+                return;
+            }
         }
-      )
+
+        try {
+            setLoading2(true)
+            const formData = new FormData()
+
+            formData.append('subjectName', subjectName)
+            formData.append('description', description)
+            formData.append('remarks', remarks)
+            formData.append('monthName', monthName)
+            formData.append('date', formatDate(formDate))
+            formData.append('approved', approved ? 'true' : 'false');
+
+            if (filesInput && filesInput.length > 0) {
+                filesInput.forEach((file) => {
+                    formData.append('attachments', file)
+                })
+            }
+
+            const res = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/create`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
 
 
-      setSubjectName('')
-      setDescription('')
-      setRemarks('')
-      setMonthName('')
-      setFormDate('')
-      setApproved(false)
-      setFilesInput([])
+            setSubjectName('')
+            setDescription('')
+            setRemarks('')
+            setMonthName('')
+            setFormDate('')
+            setApproved(false)
+            setFilesInput([])
 
-      hideDialog()
-      toast.success('Data Saved Successfully')
-      refetch()
-    } catch (error: any) {
-      if (error.response) {
-        const { message } = error.response.data
-        toast.error(message)
-      } else {
-        // Optional: Handle generic errors here
-      }
-    } finally {
-      setLoading2(false)
+            hideDialog()
+            toast.success('Data Saved Successfully')
+            refetch()
+        } catch (error: any) {
+            if (error.response) {
+                const { message } = error.response.data
+                toast.error(message)
+            } else {
+                // Optional: Handle generic errors here
+            }
+        } finally {
+            setLoading2(false)
+        }
     }
-  }
 
     const editProduct = (product: Product) => {
         setProduct({ ...product })
@@ -691,7 +691,7 @@ const saveProduct = async () => {
         }
 
         searchBuildingMonthlyReport(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -1035,7 +1035,7 @@ const saveProduct = async () => {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                        
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1268,30 +1268,30 @@ const saveProduct = async () => {
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1385,7 +1385,7 @@ const saveProduct = async () => {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                         
+
                         </label>
 
                         <div>
@@ -1393,18 +1393,18 @@ const saveProduct = async () => {
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                                                <label className="font-bold mb-2 block">Approval</label>
-                                                <div className="flex items-center gap-3">
-                                                    <Checkbox
-                                                        inputId="approve"
-                                                        checked={approved}
-                                                        onChange={(e) => setApproved(!!e.checked)}
-                                                    />
-                                                    <label htmlFor="approve" className="text-sm">
-                                                        Add this document for all
-                                                    </label>
-                                                </div>
-                                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
+                        </div>
+                    </div>
                 </>
             </Dialog>
 

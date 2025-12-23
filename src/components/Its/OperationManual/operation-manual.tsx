@@ -1301,7 +1301,7 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
                 setVisible={setBulkDialog}
                 apiEndpoint="/api/v1/its/operation-manual/bulk-upload"
                 onSuccess={refetch}
-                title="Upload Document"
+                title="Upload Bulk Data"
             />
       <Dialog
         visible={deleteMultipleDialog}

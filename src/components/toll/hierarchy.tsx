@@ -84,7 +84,7 @@ function ZoomImage({
     return (
         <div
             ref={containerRef}
-            className={`relative overflow-hidden ${className}`}
+            className={`relative cursor-crosshair overflow-hidden ${className}`}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onMouseMove={handleMouseMove}
