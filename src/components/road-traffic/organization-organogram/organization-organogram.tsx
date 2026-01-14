@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import {
   Dialog,
@@ -10,11 +10,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { Upload, Loader2, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { FilePreview } from '@/components/file-preview'
 import { useAuth } from '@/provider/authProvider'
-import { Checkbox } from 'primereact/checkbox';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom'
 
+// --- Types ---
 interface ProjectLayout {
   _id: string
   image: string
@@ -26,29 +25,93 @@ interface ProjectLayout {
   updater?: string
   updatingTimestamp?: string
 }
+
 interface ApiResponse {
   data: ProjectLayout
 }
 
+// --- Zoom Component (Embedded for easy use) ---
+interface ZoomImageProps {
+  src: string
+  alt?: string
+  className?: string
+  imgClassName?: string
+  zoom?: number
+  onLoad?: () => void
+}
+
+function ZoomImage({
+  src,
+  alt = '',
+  className = '',
+  imgClassName = '',
+  zoom = 2.5, // Increased default zoom slightly for charts
+  onLoad,
+}: ZoomImageProps) {
+  const [isHovering, setIsHovering] = useState(false)
+  const [origin, setOrigin] = useState({ x: '50%', y: '50%' })
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return
+
+    const rect = containerRef.current.getBoundingClientRect()
+    // Calculate mouse position as percentage of the container
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+
+    setOrigin({ x: `${x}%`, y: `${y}%` })
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative overflow-hidden cursor-crosshair ${className}`}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onMouseMove={handleMouseMove}
+    >
+      <img
+        src={src}
+        alt={alt}
+        onLoad={onLoad}
+        // Using object-contain ensures the whole chart is visible, 
+        // but zoom still works on the container area
+        className={`w-full h-full object-contain transition-transform duration-300 ease-out ${imgClassName}`}
+        style={{
+          transform: isHovering ? `scale(${zoom})` : 'scale(1)',
+          transformOrigin: `${origin.x} ${origin.y}`,
+        }}
+      />
+    </div>
+  )
+}
+
+// --- Main Component ---
 const OrgChart: React.FC = () => {
   const { permissions } = useAuth()
+  const { pathname } = useLocation()
+
+  // Permissions Logic
   const checkRole = permissions.find((p) => p.name === 'r&t-manager')
   const checkPermission = checkRole?.children.find(
     (c) => c.name === 'r&t-organization'
   )
-  console.log('checkPermission', checkPermission)
- const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
-   
-  const isGeneral = checkPermission?.edit_authority === true && showAll;
-console.log('isGeneral', isGeneral)
+  const showAll = pathname.startsWith('/edms')
+  const isGeneral = checkPermission?.edit_authority === true && showAll
+
+  // State
   const [layout, setLayout] = useState<ProjectLayout | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  
+  // Dialog & File State
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  
+  // Image Loading State
   const [imageLoading, setImageLoading] = useState(true)
 
   const fetchLayout = async () => {
@@ -98,7 +161,6 @@ console.log('isGeneral', isGeneral)
     if (file) {
       if (validateFile(file)) {
         setSelectedFile(file)
-        // Create preview URL
         const url = URL.createObjectURL(file)
         setPreviewUrl(url)
         setError(null)
@@ -118,29 +180,23 @@ console.log('isGeneral', isGeneral)
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
     event.stopPropagation()
-
     const file = event.dataTransfer.files?.[0]
-    if (file) {
-      if (validateFile(file)) {
-        setSelectedFile(file)
-        const url = URL.createObjectURL(file)
-        setPreviewUrl(url)
-        setError(null)
-      }
+    if (file && validateFile(file)) {
+      setSelectedFile(file)
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
+      setError(null)
     }
   }
 
   const clearSelection = () => {
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl)
-    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
     setSelectedFile(null)
     setPreviewUrl(null)
   }
 
   const handleUpload = async () => {
     if (!selectedFile) return
-
     setIsUploading(true)
     const formData = new FormData()
     formData.append('image', selectedFile)
@@ -156,7 +212,6 @@ console.log('isGeneral', isGeneral)
           },
         }
       )
-
       await fetchLayout()
       setIsDialogOpen(false)
       clearSelection()
@@ -170,8 +225,6 @@ console.log('isGeneral', isGeneral)
       setIsUploading(false)
     }
   }
-
-  // console.log(layout.image)
 
   return (
     <div className='w-full bg-white'>
@@ -197,24 +250,29 @@ console.log('isGeneral', isGeneral)
           </div>
         ) : layout ? (
           <>
-            <div className=' w-full'>
-              <div className='relative w-full'>
+            <div className='w-full'>
+              {/* IMAGE CONTAINER WITH ZOOM */}
+              <div className='relative w-full overflow-hidden rounded-lg shadow-lg'>
                 {imageLoading && (
-                  <div className='absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse rounded-lg'>
+                  <div className='absolute inset-0 flex items-center justify-center bg-gray-100 z-10'>
                     <Loader2 className='h-8 w-8 animate-spin text-[#0b1f8f]' />
                   </div>
                 )}
-                <img
+                
+                {/* Replaced standard <img> with ZoomImage */}
+                <ZoomImage 
                   src={layout.image}
-                  alt='Project Layout'
-                  className={`w-full h-full object-contain rounded-lg shadow-lg transition-opacity duration-300 ${
-                    imageLoading ? 'opacity-0' : 'opacity-100'
-                  }`}
-                  loading='lazy'
+                  alt="Project Layout"
+                  zoom={2.5}
                   onLoad={() => setImageLoading(false)}
+                  // Pass loading opacity logic to the img class
+                  imgClassName={imageLoading ? 'opacity-0' : 'opacity-100'}
+                  // Ensure the container has a height so it doesn't collapse
+                  className="min-h-[500px]" 
                 />
               </div>
 
+              {/* DOCUMENT HISTORY */}
               <div className='border border-gray-200 rounded-lg mt-12'>
                 <div className='bg-gray-50 px-4 py-2 border-b border-gray-200'>
                   <h3 className='text-gray-700 font-semibold'>

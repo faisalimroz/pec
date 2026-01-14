@@ -22,10 +22,10 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom'
+import FileIcon from '@/components/icons/FileIcon' // Imported to match previous code style
 
 interface Attachment {
     url: string
@@ -36,11 +36,10 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-
-   
+    monthName: string // Added monthName
     date: string
     remarks: string
-  approved: boolean
+    approved: boolean
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -54,8 +53,8 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
+        monthName: '', // Added monthName
         approved: false,
-     
         date: '',
         remarks: '',
         attachments: [],
@@ -63,8 +62,8 @@ export default function MonthlyReport() {
 
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-         const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'fire-mgt');
     const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
@@ -75,27 +74,26 @@ export default function MonthlyReport() {
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
-    const [deleteProductsDialog, setDeleteProductsDialog] =
-        useState<boolean>(false)
+    const [deleteProductsDialog, setDeleteProductsDialog] = useState<boolean>(false)
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-   const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-   
+    const [monthName, setMonthName] = useState<string>(""); // Added state
     const [remarks, setRemarks] = useState('')
-  
+
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-const [approved, setApproved] = useState<boolean>(false);
+    const [approved, setApproved] = useState<boolean>(false);
 
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -108,6 +106,29 @@ const [approved, setApproved] = useState<boolean>(false);
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
+
+    // --- Dropdown Data ---
+    const months = [
+        { name: 'January', code: 'January' },
+        { name: 'February', code: 'February' },
+        { name: 'March', code: 'March' },
+        { name: 'April', code: 'April' },
+        { name: 'May', code: 'May' },
+        { name: 'June', code: 'June' },
+        { name: 'July', code: 'July' },
+        { name: 'August', code: 'August' },
+        { name: 'September', code: 'September' },
+        { name: 'October', code: 'October' },
+        { name: 'November', code: 'November' },
+        { name: 'December', code: 'December' }
+    ];
+
+    const itemTemplate = (option: { name: string; code: string }) => (
+        <div className="flex items-center gap-2">
+            <FileIcon />
+            <span>{option.name}</span>
+        </div>
+    )
 
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
@@ -128,11 +149,12 @@ const [approved, setApproved] = useState<boolean>(false);
         try {
             setLoading2(true)
             const formData = new FormData()
-            
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
+            formData.append('monthName', updatedProduct.monthName) // Added to Update Payload
             formData.append('approved', updatedProduct.approved ? 'true' : 'false')
-          
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
 
@@ -279,11 +301,6 @@ const [approved, setApproved] = useState<boolean>(false);
         }
     }
 
-    const codes = [
-        { name: 'Internal Patient', code: 'Internal' },
-        { name: 'Outside Patient', code: 'Outside' },
-    ]
-
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
     }
@@ -318,11 +335,12 @@ const [approved, setApproved] = useState<boolean>(false);
         return `${day}-${month}-${year}`
     }
 
- const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         // Description is NOT here, so it is optional
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
+            { value: monthName, name: 'Month Name' }, // Added validation
             { value: remarks, name: 'Remarks' },
             { value: formDate, name: 'Date' },
             { value: description, name: 'Description' }
@@ -340,7 +358,8 @@ const [approved, setApproved] = useState<boolean>(false);
             const formData = new FormData()
 
             formData.append('subjectName', subjectName)
-            formData.append('description', description) 
+            formData.append('description', description)
+            formData.append('monthName', monthName) // Added to Create Payload
             formData.append('remarks', remarks)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
@@ -361,11 +380,13 @@ const [approved, setApproved] = useState<boolean>(false);
                 }
             )
 
+            // Reset Fields
             setSubjectName('')
             setDescription('')
+            setMonthName('') // Reset
             setRemarks('')
             setApproved(false)
-            setFormDate('') 
+            setFormDate('')
             setFilesInput([])
 
             hideDialog()
@@ -623,43 +644,33 @@ const [approved, setApproved] = useState<boolean>(false);
         </>
     )
 
-    function getMonthName(dateString: string) {
-        const date = new Date(dateString)
-        return date.toLocaleString('en-US', { month: 'long' })
-    }
-
-    function getYear(dateString: string) {
-        const date = new Date(dateString)
-        return date.getFullYear()
-    }
-
     const handleSearch = () => {
         setLoading(true)
-      setLoading(true)
-    const payload = {
-    
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
 
         searchFireMgtMonthlyReport(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
 
-  const handleReset = () => {
-             setDate(null)
-    setDate2(null)
-    setSearchKey('')
+    const handleReset = () => {
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
 
 
-    const payload = {
-      
-      date_range: '',
-      searchQuery: '',
-    }
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
 
         searchFireMgtMonthlyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
@@ -787,19 +798,19 @@ const [approved, setApproved] = useState<boolean>(false);
     )
 
     const refetch = () => {
-           setDate(null)
-    setDate2(null)
-    setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
 
 
-    const payload = {
-     
-      date_range: '',
-      searchQuery: '',
-    }
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
 
         searchFireMgtMonthlyReport(payload).then((result) => {
-         const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -889,6 +900,16 @@ const [approved, setApproved] = useState<boolean>(false);
 
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
+                            ></Column>
+
+                            {/* Added Month Name Column */}
+                            <Column
+                                field='monthName'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+                                sortable
+                                className='min-w-[12rem]'
+                                header='Month Name'
                             ></Column>
 
                             <Column
@@ -1051,6 +1072,30 @@ const [approved, setApproved] = useState<boolean>(false);
                             />
 
                         </div>
+
+                        {/* Added Month Name Field for Update */}
+                        <div className='field'>
+                            <label htmlFor='monthName' className='font-bold'>
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id='monthName'
+                                value={updatedProduct.monthName}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        monthName: e.value,
+                                    })
+                                }
+                                options={months}
+                                placeholder='Select a Month'
+                                className='w-full'
+                                optionLabel='name'
+                                optionValue='name'
+                                itemTemplate={itemTemplate}
+                            />
+                        </div>
+
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
                             <div className='flex flex-wrap gap-3'>
@@ -1187,6 +1232,11 @@ const [approved, setApproved] = useState<boolean>(false);
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
+                            {/* Added Month Name View */}
+                            <div>
+                                <h3 className='font-bold'>Month Name</h3>
+                                <p className='break-all'>{selectedProduct.monthName}</p>
+                            </div>
 
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
@@ -1194,30 +1244,30 @@ const [approved, setApproved] = useState<boolean>(false);
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1264,6 +1314,24 @@ const [approved, setApproved] = useState<boolean>(false);
                             />
                         </div>
 
+                        {/* Added Month Name Field for Create */}
+                        <div className="field">
+                            <label htmlFor="monthName" className="font-bold">
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id="monthName"
+                                value={monthName}
+                                onChange={(e) => setMonthName(e.value)}
+                                options={months}
+                                placeholder="Select a Month"
+                                className="w-full"
+                                optionLabel='name'
+                                optionValue='name'
+                                itemTemplate={itemTemplate}
+                            />
+                        </div>
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1296,7 +1364,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
@@ -1304,18 +1372,18 @@ const [approved, setApproved] = useState<boolean>(false);
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 

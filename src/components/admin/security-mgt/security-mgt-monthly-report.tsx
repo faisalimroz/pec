@@ -22,10 +22,10 @@ import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom'
+import FileIcon from '@/components/icons/FileIcon'
 
 interface Attachment {
     url: string
@@ -36,9 +36,10 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
+    monthName: string // Added monthName
     date: string
     remarks: string
-  approved: boolean
+    approved: boolean
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -52,6 +53,7 @@ export default function MonthlyReport() {
         slNo: '',
         subjectName: '',
         description: '',
+        monthName: '', // Added monthName
         approved: false,
         date: '',
         remarks: '',
@@ -60,8 +62,8 @@ export default function MonthlyReport() {
 
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-         const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'security-mgt');
     const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
@@ -70,8 +72,7 @@ export default function MonthlyReport() {
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
-    const [deleteProductsDialog, setDeleteProductsDialog] =
-        useState<boolean>(false)
+    const [deleteProductsDialog, setDeleteProductsDialog] = useState<boolean>(false)
     const [product, setProduct] = useState<any>(emptyProduct)
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
@@ -83,15 +84,15 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-   
+    const [monthName, setMonthName] = useState<string>(""); // Added State
     const [remarks, setRemarks] = useState('')
 
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
-const [approved, setApproved] = useState<boolean>(false);
+
+    const [approved, setApproved] = useState<boolean>(false);
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
@@ -100,10 +101,34 @@ const [approved, setApproved] = useState<boolean>(false);
     const [newAttachments, setNewAttachments] = useState<File[]>([])
     const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
 
-  const [bulkDialog, setBulkDialog] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState("");
+    const [bulkDialog, setBulkDialog] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState("");
+
+    // --- Dropdown Data ---
+    const months = [
+        { name: 'January', code: 'January' },
+        { name: 'February', code: 'February' },
+        { name: 'March', code: 'March' },
+        { name: 'April', code: 'April' },
+        { name: 'May', code: 'May' },
+        { name: 'June', code: 'June' },
+        { name: 'July', code: 'July' },
+        { name: 'August', code: 'August' },
+        { name: 'September', code: 'September' },
+        { name: 'October', code: 'October' },
+        { name: 'November', code: 'November' },
+        { name: 'December', code: 'December' }
+    ];
+
+    const itemTemplate = (option: { name: string; code: string }) => (
+        <div className="flex items-center gap-2">
+            <FileIcon />
+            <span>{option.name}</span>
+        </div>
+    )
+
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -123,14 +148,15 @@ const [approved, setApproved] = useState<boolean>(false);
         try {
             setLoading2(true)
             const formData = new FormData()
-        
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('approved', updatedProduct.approved ? 'true' : 'false')
-          
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+            formData.append('monthName', updatedProduct.monthName) // Added to Payload
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -198,83 +224,83 @@ const [approved, setApproved] = useState<boolean>(false);
     )
 
     // ending all update dialog funcs
-const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/security/monthly-report/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
+    const uploadFile = async () => {
+        if (!file) {
+            setUploadStatus('Please select a file first.')
+            return
         }
-      )
 
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
+        setUploading(true)
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/security/monthly-report/bulk-upload`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+
+            toast.success('File uploaded successfully!')
+            setFile(null)
+            refetch()
+            hideDialog2()
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            toast.error('An error occurred while uploading. Please try again.')
+        } finally {
+            setUploading(false)
+        }
     }
-  }
 
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
+    const hideDialog2 = () => {
+        setBulkDialog(false)
+        setFile(null)
+        setUploadStatus('')
     }
-  }
 
-   
+    const openNew2 = () => {
+        setProduct(emptyProduct)
+        setSubmitted(false)
+        setBulkDialog(true)
+    }
+
+    const productDialogFooter2 = (
+        <>
+            <Button
+                label='Cancel'
+                icon='pi pi-times'
+                className='p-button-text'
+                onClick={hideDialog2}
+            />
+            <Button
+                label='Save'
+                icon='pi pi-upload'
+                className='p-button-text'
+                onClick={uploadFile}
+                disabled={!file || uploading}
+            />
+        </>
+    )
+
+    const handleFileChange2 = (e: { target: { files: any[] } }) => {
+        const selectedFile = e.target.files[0]
+        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
+            setFile(selectedFile)
+            setUploadStatus('')
+        } else {
+            setFile(null)
+            setUploadStatus('Please select a valid .xlsx file.')
+        }
+    }
+
+
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -310,11 +336,12 @@ const uploadFile = async () => {
         return `${day}-${month}-${year}`
     }
 
-  const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
+            { value: monthName, name: 'Month Name' }, // Added validation
             { value: remarks, name: 'Remarks' },
             { value: formDate, name: 'Date' }
         ];
@@ -332,6 +359,7 @@ const uploadFile = async () => {
 
             formData.append('subjectName', subjectName)
             formData.append('description', description)
+            formData.append('monthName', monthName) // Added to Payload
             formData.append('remarks', remarks)
             formData.append('approved', approved ? 'true' : 'false');
             formData.append('date', formatDate(formDate))
@@ -357,6 +385,7 @@ const uploadFile = async () => {
             // --- 2. RESET ALL FIELDS HERE ---
             setSubjectName('')
             setDescription('')
+            setMonthName('') // Reset
             setRemarks('')
             setApproved(false)
             setFormDate('')
@@ -502,39 +531,6 @@ const uploadFile = async () => {
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-                {/* {isClinic && ( 
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-
-                {/* <button
-          onClick={() => setActiveIndex(1)}
-          className={`p-3 text-lg font-semibold border text-white rounded-t ${activeIndex === 1 ? 'bg-main' : 'bg-gray-600'}`}
-        >
-          Outside Patient
-        </button> */}
-                {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-                {/* <Button
-          label='Delete' 
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected} 
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
             </div>
         )
     }
@@ -542,18 +538,18 @@ const uploadFile = async () => {
     const rightToolbarTemplate = () => {
         return (
             <>
-              {hasEditAccess && (
+                {hasEditAccess && (
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
                         openNew2={openNew2}
                         exportCSV={exportCSV}
                         confirmDeleteSelected={confirmDeleteSelected}
-                       
+
                     />
                 )}
 
-             <RefreshButton handleReset={handleReset} />
+                <RefreshButton handleReset={handleReset} />
             </>
         )
     }
@@ -641,45 +637,40 @@ const uploadFile = async () => {
                 outlined
                 onClick={hideViewDialog}
             />
-            {/* <Button
-        label='Download All'
-        icon='pi pi-download'
-        onClick={downloadAllFiles}
-      /> */}
         </>
     )
 
-    
-     const handleSearch = () => {
+
+    const handleSearch = () => {
         setLoading(true)
-      setLoading(true)
-    const payload = {
-   
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
 
         searchSecurityMonthlyReport(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-          setDate(null)
-    setDate2(null)
-    setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
 
 
-    const payload = {
-      
-      date_range: '',
-      searchQuery: '',
-    }
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
 
         searchSecurityMonthlyReport(payload).then((result) => {
-         const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -725,16 +716,7 @@ const uploadFile = async () => {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-                {/* <div>
-          <Dropdown
-            value={selectedCode}
-            onChange={(e) => setSelectedCode(e.value)}
-            options={codes}
-            optionLabel='name'
-            placeholder='Patient Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
-          />
-        </div> */}
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -813,19 +795,19 @@ const uploadFile = async () => {
     )
 
     const refetch = () => {
-         setDate(null)
-    setDate2(null)
-    setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
 
 
-    const payload = {
-     
-      date_range: '',
-      searchQuery: '',
-    }
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
 
         searchSecurityMonthlyReport(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -917,7 +899,17 @@ const uploadFile = async () => {
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
+
+                            {/* Added Month Name Column */}
+                            <Column
+                                field='monthName'
+                                headerClassName='bg-[#ffc2c2] text-sm'
+                                bodyClassName='text-sm truncate max-w-xs'
+                                sortable
+                                className='min-w-[12rem]'
+                                header='Month Name'
+                            ></Column>
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -959,46 +951,46 @@ const uploadFile = async () => {
                     </TabPanel>
                 </TabView>
             </div>
- <Dialog
-        visible={bulkDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
-        modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
-      >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
-        </div>
-      </Dialog>
+            <Dialog
+                visible={bulkDialog}
+                style={{ width: '42rem' }}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }}
+                header='Upload Bulk Data'
+                modal
+                className='p-fluid'
+                footer={productDialogFooter2}
+                onHide={hideDialog2}
+            >
+                <div className='grid grid-cols-2 items-center gap-6'>
+                    <div className='field col-span-2'>
+                        <label htmlFor='bulkUpload' className='font-bold'>
+                            Select File (.xlsx Only):
+                        </label>
+                        <br />
+                        <input
+                            type='file'
+                            id='bulkUpload'
+                            accept='.xlsx'
+                            // @ts-ignore
+                            onChange={handleFileChange2}
+                            disabled={uploading}
+                            className='mt-3'
+                        />
+                        {/* {file && <p>Selected file: {file?.name}</p>} */}
+                        {uploadStatus && (
+                            <p
+                                className={
+                                    uploadStatus.includes('success')
+                                        ? 'text-green-500'
+                                        : 'text-red-500'
+                                }
+                            >
+                                {uploadStatus}
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Dialog>
             {/* update data dialog  */}
             <Dialog
                 visible={updateProductDialog}
@@ -1011,7 +1003,7 @@ const uploadFile = async () => {
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -1042,7 +1034,7 @@ const uploadFile = async () => {
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -1076,8 +1068,32 @@ const uploadFile = async () => {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
+
+                        {/* Added Month Name Field for Update */}
+                        <div className='field'>
+                            <label htmlFor='monthName' className='font-bold'>
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id='monthName'
+                                value={updatedProduct.monthName}
+                                onChange={(e) =>
+                                    setUpdatedProduct({
+                                        ...updatedProduct,
+                                        monthName: e.value,
+                                    })
+                                }
+                                options={months}
+                                placeholder='Select a Month'
+                                className='w-full'
+                                optionLabel='name'
+                                optionValue='name'
+                                itemTemplate={itemTemplate}
+                            />
+                        </div>
+
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
                             <div className='flex flex-wrap gap-3'>
@@ -1214,37 +1230,42 @@ const uploadFile = async () => {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+                            {/* Added Month Name View */}
+                            <div>
+                                <h3 className='font-bold'>Month Name</h3>
+                                <p className='break-all'>{selectedProduct.monthName}</p>
+                            </div>
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1290,7 +1311,25 @@ const uploadFile = async () => {
                                 required
                             />
                         </div>
-                        
+
+                        {/* Added Month Name Field for Create */}
+                        <div className="field">
+                            <label htmlFor="monthName" className="font-bold">
+                                Month Name
+                            </label>
+                            <Dropdown
+                                id="monthName"
+                                value={monthName}
+                                onChange={(e) => setMonthName(e.value)}
+                                options={months}
+                                placeholder="Select a Month"
+                                className="w-full"
+                                optionLabel='name'
+                                optionValue='name'
+                                itemTemplate={itemTemplate}
+                            />
+                        </div>
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1323,7 +1362,7 @@ const uploadFile = async () => {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
@@ -1331,18 +1370,18 @@ const uploadFile = async () => {
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 

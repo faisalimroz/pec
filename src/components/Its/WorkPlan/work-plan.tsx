@@ -967,7 +967,7 @@ export default function MonthlyReport() {
                             setVisible={setBulkDialog}
                             apiEndpoint="/api/v1/its/work-plan/bulk-upload"
                             onSuccess={refetch}
-                            title="Upload Document"
+                            title="Upload Bulk Data"
                         />
             <Dialog
                 visible={bulkDialog}

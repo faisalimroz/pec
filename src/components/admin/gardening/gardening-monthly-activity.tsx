@@ -39,7 +39,7 @@ interface Product {
     monthName: string
     date: string
     remarks: string
-  approved: boolean
+    approved: boolean
     attachments: Attachment[]
     creator?: string
     creationTimestamp?: string
@@ -62,8 +62,8 @@ export default function MonthlyReport() {
 
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-         const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'gardening-mgt');
     const hasEditAccess = adminPermission?.edit_authority === true && showAll;
 
@@ -87,7 +87,7 @@ export default function MonthlyReport() {
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-const [approved, setApproved] = useState<boolean>(false);
+    const [approved, setApproved] = useState<boolean>(false);
     const [remarks, setRemarks] = useState('')
 
     const [formDate, setFormDate] = useState<string>('')
@@ -332,7 +332,7 @@ const [approved, setApproved] = useState<boolean>(false);
         return `${day}-${month}-${year}`
     }
 
-   const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
@@ -673,7 +673,7 @@ const [approved, setApproved] = useState<boolean>(false);
         </>
     )
 
-    
+
     const handleSearch = () => {
         setLoading(true)
         const payload = {
@@ -681,9 +681,9 @@ const [approved, setApproved] = useState<boolean>(false);
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
-      
+
         searchGardeningMonthlyActivity(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -699,7 +699,7 @@ const [approved, setApproved] = useState<boolean>(false);
             searchQuery: '',
         }
         searchGardeningMonthlyActivity(payload).then((result) => {
-                      const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
             setLoading(false)
         })
@@ -824,7 +824,7 @@ const [approved, setApproved] = useState<boolean>(false);
     )
 
     const refetch = () => {
-       setDate(null)
+        setDate(null)
         setDate2(null)
         setSearchKey('')
 
@@ -1262,30 +1262,30 @@ const [approved, setApproved] = useState<boolean>(false);
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1379,7 +1379,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
@@ -1387,18 +1387,18 @@ const [approved, setApproved] = useState<boolean>(false);
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 
