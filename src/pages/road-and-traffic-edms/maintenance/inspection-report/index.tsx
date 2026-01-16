@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/road-traffic/maintenance/inspection-report-table'
+
 import { useAuth } from '@/provider/authProvider'
 
 export default function InspectionReport() {

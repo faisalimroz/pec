@@ -4,6 +4,8 @@ import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
+//@ts-ignore
+
 import { clinicTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
 import DemoTable from '@/components/clinic-center/treatment-record-table'
 import { useAuth } from '@/provider/authProvider'

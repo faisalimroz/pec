@@ -4,7 +4,7 @@ import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
-import { adminTopNav, clinicTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
+import { adminTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
 import DemoTable from '@/components/admin/ipc/ipc-records'
 import { useAuth } from '@/provider/authProvider'
 

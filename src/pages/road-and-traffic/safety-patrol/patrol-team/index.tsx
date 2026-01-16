@@ -5,7 +5,9 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/road-traffic/safety-patrol/patrol-team-table'
+//@ts-ignore
+
+// import DemoTable from '@/components/road-traffic/safety-patrol/patrol-team-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function PatrolTeam() {
@@ -45,7 +47,7 @@ export default function PatrolTeam() {
                   Patrol Team
                 </h1>
 
-                <DemoTable />
+                {/* <DemoTable /> */}
               </div>
             </LayoutBody>
           </Layout>
