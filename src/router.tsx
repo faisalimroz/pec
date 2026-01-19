@@ -35,12 +35,12 @@ const router = createBrowserRouter([
       Component: (await import('./pages/auth/otp')).default,
     }),
   },
-  {
-    path: '/ai-dashboard',
-    lazy: async () => ({
-      Component: (await import('./pages/ai-dashboard')).default,
-    }),
-  },
+  // {
+  //   path: '/ai-dashboard',
+  //   lazy: async () => ({
+  //     Component: (await import('./pages/ai-dashboard')).default,
+  //   }),
+  // },
   {
     path: '/ai-dashboard/view-first-six-frames',
     lazy: async () => ({
@@ -99,13 +99,13 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (await import('@/pages/edms/others')).default,
             }),
-          },
-          {
-            path: 'edms/official-letter',
-            lazy: async () => ({
-              Component: (await import('@/pages/edms/official-letter')).default,
-            }),
-          },
+          }, 
+          // {
+          //   path: 'edms/official-letter',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/edms/official-letter')).default,
+          //   }),
+          // },
 
           {
             path: 'admin-panel/create-roles',
@@ -135,22 +135,22 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
-          {
-            path: 'admin-panel/toll-collector-report',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin-panel/toll-collect-report')
-              ).default,
-            }),
-          },
-          {
-            path: 'admin-panel/toll-collector-log',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin-panel/toll-collector-log')
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'admin-panel/toll-collector-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/admin-panel/toll-collect-report')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'admin-panel/toll-collector-log',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/admin-panel/toll-collector-log')
+          //     ).default,
+          //   }),
+          // },
           {
             path: 'admin-panel/password-reset',
             lazy: async () => ({
@@ -240,20 +240,20 @@ const router = createBrowserRouter([
             }),
           },
 
-          {
-            path: 'administrative/mobilization',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/mobilization'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/status-of-personnel',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/status-personnel'))
-                .default,
-            }),
-          },
+          // {
+          //   path: 'administrative/mobilization',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/mobilization'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'administrative/status-of-personnel',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/status-personnel'))
+          //       .default,
+          //   }),
+          // },
           {
             path: 'administrative/employee-personal-profile',
             lazy: async () => ({
@@ -269,55 +269,55 @@ const router = createBrowserRouter([
           //       .default,
           //   }),
           // },
-          {
-            path: 'administrative/attendance-management',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/admin/hr/attendance-management')
-              ).default,
-            }),
-          },
-          {
-            path: 'administrative/insurance-management',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/insurance-management'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/insurance-management/:id',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/insurance-detail'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/insurance-claiming',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/insurance-claiming'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/salary-management',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/salary')).default,
-            }),
-          },
-          {
-            path: 'administrative/leave-management',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/leave-management'))
-                .default,
-            }),
-          },
-          {
-            path: 'administrative/welfare-management',
-            lazy: async () => ({
-              Component: (await import('@/pages/admin/hr/welfare-management'))
-                .default,
-            }),
-          },
+          // {
+          //   path: 'administrative/attendance-management',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/admin/hr/attendance-management')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'administrative/insurance-management',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/insurance-management'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'administrative/insurance-management/:id',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/insurance-detail'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'administrative/insurance-claiming',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/insurance-claiming'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'administrative/salary-management',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/salary')).default,
+          //   }),
+          // },
+          // {
+          //   path: 'administrative/leave-management',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/leave-management'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'administrative/welfare-management',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/admin/hr/welfare-management'))
+          //       .default,
+          //   }),
+          // },
 
 
           {
@@ -532,97 +532,97 @@ const router = createBrowserRouter([
           },
 
 
-          {
-            path: 'clinic-center/medicine-record',
-            lazy: async () => ({
-              Component: (await import('@/pages/clinic-center/medicine-record'))
-                .default,
-            }),
-          },
-          {
-            path: 'clinic-center/treatment-record',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/clinic-center/treatment-record')
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'clinic-center/medicine-record',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/clinic-center/medicine-record'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'clinic-center/treatment-record',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/clinic-center/treatment-record')
+          //     ).default,
+          //   }),
+          // },
 
-          {
-            path: 'finance',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance')).default,
-            }),
-          },
-          {
-            path: 'finance/monthly-invoice-record',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/finance/monthly-invoice-record')
-              ).default,
-            }),
-          },
-          {
-            path: 'finance/toll-money-management-for-cash',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/toll-money-for-cash'))
-                .default,
-            }),
-          },
-          {
-            path: 'finance/toll-money-management-for-rfid',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/toll-money-for-rfid'))
-                .default,
-            }),
-          },
-          {
-            path: 'finance/monthly-salary-sheet',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/monthly-salary-sheet'))
-                .default,
-            }),
-          },
-          {
-            path: 'finance/monthly-pit-sheet',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/monthly-pit-sheet'))
-                .default,
-            }),
-          },
-          {
-            path: 'finance/rhd-bill-details',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/rhd-bill-details'))
-                .default,
-            }),
-          },
-          {
-            path: 'finance/maintain-ipc-pdf',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/maintain-ipc-pdf'))
-                .default,
-            }),
-          },
-          {
-            path: 'finance/monthly-ipc-ps',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/monthly-ipc-ps'))
-                .default,
-            }),
-          },
-          {
-            path: 'finance/procurement',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/procurement')).default,
-            }),
-          },
-          {
-            path: 'finance/letter',
-            lazy: async () => ({
-              Component: (await import('@/pages/finance/letter')).default,
-            }),
-          },
+          // {
+          //   path: 'finance',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance')).default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/monthly-invoice-record',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/finance/monthly-invoice-record')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/toll-money-management-for-cash',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/toll-money-for-cash'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/toll-money-management-for-rfid',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/toll-money-for-rfid'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/monthly-salary-sheet',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/monthly-salary-sheet'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/monthly-pit-sheet',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/monthly-pit-sheet'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/rhd-bill-details',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/rhd-bill-details'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/maintain-ipc-pdf',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/maintain-ipc-pdf'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/monthly-ipc-ps',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/monthly-ipc-ps'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/procurement',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/procurement')).default,
+          //   }),
+          // },
+          // {
+          //   path: 'finance/letter',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/finance/letter')).default,
+          //   }),
+          // },
 
           {
             path: 'road-&-traffic',
@@ -637,13 +637,13 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
-          {
-            path: 'road-and-traffic/procurement',
-            lazy: async () => ({
-              Component: (await import('@/pages/road-and-traffic/procurement'))
-                .default,
-            }),
-          },
+          // {
+          //   path: 'road-and-traffic/procurement',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/road-and-traffic/procurement'))
+          //       .default,
+          //   }),
+          // },
           {
             path: 'road-and-traffic/monthly-report',
             lazy: async () => ({
@@ -652,22 +652,22 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-          {
-            path: 'road-and-traffic/drawing/structural',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/road-and-traffic/drawing/structural')
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/drawing/electrical',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/road-and-traffic/drawing/electrical')
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'road-and-traffic/drawing/structural',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/road-and-traffic/drawing/structural')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/drawing/electrical',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/road-and-traffic/drawing/electrical')
+          //     ).default,
+          //   }),
+          // },
           {
             path: 'road-and-traffic/maintenance/daily-work-report',
             lazy: async () => ({
@@ -688,16 +688,16 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-          {
-            path: 'road-and-traffic/maintenance/one-page-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/maintenance/one-page-report'
-                )
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'road-and-traffic/maintenance/one-page-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/maintenance/one-page-report'
+          //       )
+          //     ).default,
+          //   }),
+          // },
           {
             path: 'road-and-traffic/maintenance/work-completion-report',
             lazy: async () => ({
@@ -728,16 +728,16 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-          {
-            path: 'road-and-traffic/road-safety/one-page-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/roadSafetyTraffic/one-page-report'
-                )
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'road-and-traffic/road-safety/one-page-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/roadSafetyTraffic/one-page-report'
+          //       )
+          //     ).default,
+          //   }),
+          // },
           {
             path: 'road-and-traffic/road-safety/accident-report',
             lazy: async () => ({
@@ -748,16 +748,16 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-          {
-            path: 'road-and-traffic/road-safety/police-record',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/safety-patrol/police-record'
-                )
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'road-and-traffic/road-safety/police-record',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/safety-patrol/police-record'
+          //       )
+          //     ).default,
+          //   }),
+          // },
           {
             path: 'road-and-traffic/road-safety/work-completion-report',
             lazy: async () => ({
@@ -778,52 +778,52 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-          {
-            path: '/road-and-traffic/road-safety/analysis',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/road-and-traffic/safety-patrol/analysis')
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/accident-record',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/roadSafetyTraffic/accident-record'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/accident-record/:id',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/road-and-traffic/accident-record-view')
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/safety-and-patrol/patrol-team',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/safety-patrol/patrol-team'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/safety-and-patrol/security-team',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/safety-patrol/security-team'
-                )
-              ).default,
-            }),
-          },
+          // {
+          //   path: '/road-and-traffic/road-safety/analysis',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/road-and-traffic/safety-patrol/analysis')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/accident-record',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/roadSafetyTraffic/accident-record'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/accident-record/:id',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/road-and-traffic/accident-record-view')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/safety-and-patrol/patrol-team',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/safety-patrol/patrol-team'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/safety-and-patrol/security-team',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/safety-patrol/security-team'
+          //       )
+          //     ).default,
+          //   }),
+          // },
           {
             path: 'road-and-traffic/safety-and-patrol/miscellaneous',
             lazy: async () => ({
@@ -835,96 +835,96 @@ const router = createBrowserRouter([
             }),
           },
 
-          {
-            path: 'road-and-traffic/mechanical-electrical/daily-work-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/daily-work-report'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/daily-vehicle-inspection-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/daily-vehicle-inspection'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/periodic-maintenance',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/periodic-maintain'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/inspection-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/inspection-report'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/repairing-work',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/repairing-work'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/inventory-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/inventory-report'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/fuel-consumption-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/fuel-consumption'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/vehicle-insurance',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/vehicle-insurance'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'road-and-traffic/mechanical-electrical/vehicle-documents',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/road-and-traffic/mechanical-electrical/vehicle-documents'
-                )
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/daily-work-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/daily-work-report'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/daily-vehicle-inspection-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/daily-vehicle-inspection'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/periodic-maintenance',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/periodic-maintain'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/inspection-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/inspection-report'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/repairing-work',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/repairing-work'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/inventory-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/inventory-report'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/fuel-consumption-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/fuel-consumption'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/vehicle-insurance',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/vehicle-insurance'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'road-and-traffic/mechanical-electrical/vehicle-documents',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/road-and-traffic/mechanical-electrical/vehicle-documents'
+          //       )
+          //     ).default,
+          //   }),
+          // },
           {
             path: 'road-and-traffic/kec-letter',
             lazy: async () => ({
@@ -1694,84 +1694,84 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-          {
-            path: 'toll/toll-collect-traffic',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'toll/graph',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/toll/toll-collect-traffic/graph-toll-cash'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'toll/etc',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/toll/toll-collect-traffic/etc-card')
-              ).default,
-            }),
-          },
-          {
-            path: 'toll/monthly-traffic-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/toll/toll-collect-traffic/monthly-traffic-report'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'toll/manual-monthly-traffic-report',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/toll/toll-collect-traffic/manual-monthly-traffic'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: 'toll/exemption-report',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/toll/special-audit/exemption-report')
-              ).default,
-            }),
-          },
-          {
-            path: 'toll/top-ten-report',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/toll/special-audit/top-ten-report')
-              ).default,
-            }),
-          },
-          {
-            path: 'toll/others',
-            lazy: async () => ({
-              Component: (await import('@/pages/toll/special-audit/others'))
-                .default,
-            }),
-          },
-          {
-            path: 'toll/training-and-other',
-            lazy: async () => ({
-              Component: (await import('@/pages/toll/training-and-other'))
-                .default,
-            }),
-          },
+          // {
+          //   path: 'toll/toll-collect-traffic',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/toll/toll-collect-traffic/toll-collect-trafic'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/graph',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/toll/toll-collect-traffic/graph-toll-cash'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/etc',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/toll/toll-collect-traffic/etc-card')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/monthly-traffic-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/toll/toll-collect-traffic/monthly-traffic-report'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/manual-monthly-traffic-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/toll/toll-collect-traffic/manual-monthly-traffic'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/exemption-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/toll/special-audit/exemption-report')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/top-ten-report',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/toll/special-audit/top-ten-report')
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/others',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/toll/special-audit/others'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/training-and-other',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/toll/training-and-other'))
+          //       .default,
+          //   }),
+          // },
           {
             path: 'toll',
             lazy: async () => ({
@@ -1804,81 +1804,81 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
-          {
-            path: 'toll/toll-traffic-ver',
-            lazy: async () => ({
-              Component: (await import('@/pages/toll/toll-traffic-ver'))
-                .default,
-            }),
-          },
-          {
-            path: 'toll/vehicle-detect-and-toll',
-            lazy: async () => ({
-              Component: (await import('@/pages/toll/vehicle-detect-toll'))
-                .default,
-            }),
-          },
-          {
-            path: 'toll/vehicle-detect-and-toll/:id',
-            lazy: async () => ({
-              Component: (await import('@/pages/toll/vehicle-detect-lane'))
-                .default,
-            }),
-          },
-          {
-            path: 'toll/vehicle-detect-and-toll/vehicle-type/:id',
-            lazy: async () => ({
-              Component: (await import('@/pages/toll/vehicle-detect-vehicle'))
-                .default,
-            }),
-          },
-          {
-            path: '/toll/toll-collect-traffic/update-delete',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/toll/toll-collect-traffic/toll-collect-modify'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: '/toll/etc/update-delete',
-            lazy: async () => ({
-              Component: (
-                await import(
-                  '@/pages/toll/toll-collect-traffic/etc-card-modify'
-                )
-              ).default,
-            }),
-          },
-          {
-            path: '/toll/exemption-report/update-delete',
-            lazy: async () => ({
-              Component: (
-                await import('@/pages/toll/special-audit/exemption-modify')
-              ).default,
-            }),
-          },
+          // {
+          //   path: 'toll/toll-traffic-ver',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/toll/toll-traffic-ver'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/vehicle-detect-and-toll',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/toll/vehicle-detect-toll'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/vehicle-detect-and-toll/:id',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/toll/vehicle-detect-lane'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: 'toll/vehicle-detect-and-toll/vehicle-type/:id',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/toll/vehicle-detect-vehicle'))
+          //       .default,
+          //   }),
+          // },
+          // {
+          //   path: '/toll/toll-collect-traffic/update-delete',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/toll/toll-collect-traffic/toll-collect-modify'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: '/toll/etc/update-delete',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import(
+          //         '@/pages/toll/toll-collect-traffic/etc-card-modify'
+          //       )
+          //     ).default,
+          //   }),
+          // },
+          // {
+          //   path: '/toll/exemption-report/update-delete',
+          //   lazy: async () => ({
+          //     Component: (
+          //       await import('@/pages/toll/special-audit/exemption-modify')
+          //     ).default,
+          //   }),
+          // },
 
-          {
-            path: 'users',
-            lazy: async () => ({
-              Component: (await import('@/components/coming-soon')).default,
-            }),
-          },
-          {
-            path: 'analysis',
-            lazy: async () => ({
-              Component: (await import('@/components/coming-soon')).default,
-            }),
-          },
-          {
-            path: 'extra-components',
-            lazy: async () => ({
-              Component: (await import('@/pages/extra-components')).default,
-            }),
-          },
+          // {
+          //   path: 'users',
+          //   lazy: async () => ({
+          //     Component: (await import('@/components/coming-soon')).default,
+          //   }),
+          // },
+          // {
+          //   path: 'analysis',
+          //   lazy: async () => ({
+          //     Component: (await import('@/components/coming-soon')).default,
+          //   }),
+          // },
+          // {
+          //   path: 'extra-components',
+          //   lazy: async () => ({
+          //     Component: (await import('@/pages/extra-components')).default,
+          //   }),
+          // },
         ],
       },
 
