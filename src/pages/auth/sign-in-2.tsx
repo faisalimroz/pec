@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { UserAuthForm } from './components/user-auth-form'
-import bgImage from '@/assets/genInfo/aerial4.jpg'
+import bgImage from '@/assets/genInfo/padma.jpg'
 
 export default function SignIn2() {
   return (
