@@ -4,16 +4,17 @@ import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { edmsLinks } from '@/data/sidelinks'
-import { edmsTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
+import { edmsSecondNav, edmsTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
 import DemoTable from '@/components/edms/received-table'
 import { useAuth } from '@/provider/authProvider'
+import NewNavbar from '@/components/edms/new-nav'
 
 export default function EdmsReceived() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-
+   const secondNav=edmsSecondNav
   const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
@@ -37,7 +38,9 @@ export default function EdmsReceived() {
                 <UserNav />
               </div>
             </LayoutHeader>
-
+              <div>
+                <NewNavbar links={secondNav} />
+              </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>

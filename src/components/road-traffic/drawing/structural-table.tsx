@@ -14,13 +14,14 @@ import axios from 'axios'
 import { Dropdown } from 'primereact/dropdown'
 import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '@/components/MultiFileInput'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import MultiFileInputTwo from '@/components/MultiFileInputTwo'
-
+import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
   url: string
   _id: string
@@ -58,7 +59,7 @@ export default function StructuralTable() {
     { name: 'Bhanga Side', code: 'Bhanga Side' },
     { name: 'Dhaleshwari Side', code: 'Dhaleshwari Side' },
   ]
-
+const [approved, setApproved] = useState<boolean>(false);
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
@@ -114,7 +115,7 @@ export default function StructuralTable() {
       formData.append('type', updatedProduct.type)
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
-
+formData.append('subjectName', subjectName)
       newAttachments.forEach((file) => {
         formData.append('attachments', file)
       })
@@ -810,7 +811,7 @@ export default function StructuralTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -1049,7 +1050,8 @@ export default function StructuralTable() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'

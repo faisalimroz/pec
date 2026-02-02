@@ -13,6 +13,7 @@ import '@/styles/table-style.css'
 import { searchMedicineRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import RefreshButton from '@/components/refresh-button'
@@ -701,7 +702,7 @@ export default function MedicineRecordTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -971,8 +972,7 @@ export default function MedicineRecordTable() {
                 <p className='break-all'>{selectedProduct.remarks}</p>
               </div>
 
-              {hasEditAccess && (
-                <div className='col-span-2'>
+              <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
                     {selectedProduct.attachments.map((attachment, index) => (
@@ -986,7 +986,6 @@ export default function MedicineRecordTable() {
                     ))}
                   </div>
                 </div>
-              )}
             </div>
           </>
         )}

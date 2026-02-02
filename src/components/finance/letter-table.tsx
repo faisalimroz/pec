@@ -14,6 +14,7 @@ import axios from 'axios'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Menu } from 'primereact/menu'
 
 interface Attachment {
@@ -561,7 +562,7 @@ export default function OfficialLetterTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

@@ -15,6 +15,7 @@ import { Row } from 'primereact/row'
 import { Dialog } from 'primereact/dialog'
 import { Button } from 'primereact/button'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Dropdown } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
 

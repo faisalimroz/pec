@@ -471,7 +471,7 @@ export default function TrainingData() {
       <Toast ref={toast} />
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -640,7 +640,8 @@ export default function TrainingData() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'

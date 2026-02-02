@@ -8,135 +8,134 @@ import AccidentWindy from './components/accident-windy'
 
 const topNav = [
   {
-    title: 'General Information',
-    href: '/general-information/general-status',
-    isActive: false,
-    logo: GiIcon,
-    roles: ['general-information', 'superadmin'],
-    uName: 'general-information',
-  },
-  {
-    title: 'Road & Traffic',
-    href: '/road-and-traffic/procurement',
-    isActive: false,
-    logo: RntIcon,
-    roles: ['r&t-manager', 'superadmin'],
-    uName: 'road-&-traffic',
-  },
-  {
-    title: 'ITS',
-    href: '/its/overview',
-    isActive: false,
-    logo: ItsIcon,
-    roles: ['its-manager', 'superadmin'],
-    uName: 'its',
-  },
-  {
-    title: 'Toll',
-    href: '/toll/monthly-toll-revenue',
-    isActive: false,
-    logo: EdmsIcon,
-    roles: ['toll-manager', 'superadmin'],
-    uName: 'toll',
-  },
-  {
     title: 'Administration',
     href: '/administrative',
     isActive: false,
     logo: AdminIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
     uName: 'administration',
+  },
+  {
+    title: 'Road & Traffic',
+    href: '/road-and-traffic',
+    isActive: false,
+    logo: RntIcon,
+    uName: 'road-&-traffic',
+  },
+  {
+    title: 'Main Bridge',
+    href: '/mb-pmis',
+    isActive: false,
+    logo: documentSearchIcon,
+    uName: 'mb-pmis',
   },
   {
     title: 'RTW',
     href: '/rtw',
     isActive: false,
     logo: documentSearchIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
     uName: 'rtw',
   },
   {
-    title: 'MB PMIS',
-    href: '/mb-pmis',
+    title: 'Toll Operation',
+    href: '/toll',
     isActive: false,
     logo: documentSearchIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'mb-pmis',
+    uName: 'toll',
   },
   {
-    title: 'Toll Operation',
-    href: '/toll-operation',
+    title: 'ITS',
+    href: '/its',
     isActive: false,
-    logo: documentSearchIcon,
-    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
-    uName: 'toll-operation',
+    logo: ItsIcon,
+    uName: 'its',
   },
   {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'edms'],
     uName: 'edms',
   },
 ]
 
 export default function Dashboard() {
-  const { roles } = useAuth()
+  const { permissions, roles } = useAuth()
+  
+  console.log('roles==================>> ', roles)
+  console.log('permissions==================>> ', permissions)
+  console.log('roleTitles==================>> ', roles.map(r => r.title))
 
-  // Filter topNav based on user roles
-  const filteredTopNav = topNav.filter((nav) =>
-    roles.some((role: any) => nav.roles.includes(role?.title))
-  )
+
+  const uNameToAccessMap: { [key: string]: string[] } = {
+    'administration': ['admin'], 
+    'road-&-traffic': ['r&t-manager'],
+    'mb-pmis': ['mb-pmis-manager'],
+    'rtw': ['rtw-manager'], 
+    'toll': ['toll-manager'],
+    'its': ['its-manager'],
+    'edms': ['edms']
+  }
+
+  const filteredTopNav = topNav.filter((navItem) => {
+    const requiredAccess = uNameToAccessMap[navItem.uName]
+    
+    if (!requiredAccess) {
+      console.log(`No access mapping found for: ${navItem.uName}`)
+      return false
+    }
+
+    
+    const hasRole = roles.some(role => requiredAccess.includes(role.title))
+    const hasPermission = permissions.some(
+      permission => requiredAccess.includes(permission.name) && permission.authority === true
+    )
+
+    const hasAccess = hasRole || hasPermission
+
+    console.log(`Checking ${navItem.title}:`, {
+      uName: navItem.uName,
+      requiredAccess,
+      hasRole,
+      hasPermission,
+      hasAccess,
+      userRoles: roles.map(r => r.title),
+      userPermissions: permissions.map(p => ({ name: p.name, authority: p.authority }))
+    })
+
+    return hasAccess
+  })
+
+  // Add dynamic roles to filtered items
+  const topNavWithDynamicRoles = filteredTopNav.map(navItem => {
+    // Combine roles and active permissions for dynamic roles
+    const roleTitles = roles.map(r => r.title)
+    const permissionNames = permissions
+      .filter(p => p.authority === true)
+      .map(p => p.name)
+    
+    const dynamicRoles = [...roleTitles, ...permissionNames]
+
+    return {
+      ...navItem,
+      roles: dynamicRoles
+    }
+  })
+
+  console.log('Final filtered topNav:', topNavWithDynamicRoles)
+
   return (
     <Layout>
-      {/* ===== Top Heading ===== */}
       <LayoutHeader>
-        <TopNav links={filteredTopNav} />
+        <TopNav links={topNavWithDynamicRoles} />
         <UserNav />
       </LayoutHeader>
 
-      {/* ===== Main ===== */}
       <LayoutBody className='space-y-4'>
         <div className='space-y-2 bg-none'>
-          <NoticeCalender />
           <AccidentWindy />
+          <NoticeCalender />
           <TrafficWeather />
         </div>
-
-        {/* ===== Old Dashboard ===== */}
-        {/* <div className='flex w-full gap-2'>
-          <div className='w-6/12'>
-            <VehiclePassingChart />
-            <DhaleshwariChartDashboard />
-            <EmployeeInfo />
-
-            <RecentUploads />
-            <TollOfTollDash />
-          </div>
-
-          <div className='w-5/12'>
-            <TotalAccident />
-            <TrafficOfTollDash />
-            <div className='border rounded-md shadow-md mt-4 p-3'>
-              <h1 className='uppercase font-semibold text-lg text-blue-800 text-start'>
-                todays toll collection
-              </h1>
-
-              <div className='p-3 rounded-lg shadow-md w-fit mb-1'>
-                <h1 className='font-bold text-blue-800 text-lg uppercase'>
-                  59,243 taka
-                </h1>
-                <h2 className='text-gray-500 font-bold uppercase'>cash</h2>
-              </div>
-
-              <AreaChartCom />
-            </div>
-          </div>
-          <div className='w-3/12'>
-            <WeatherBoard />
-          </div>
-        </div> */}
       </LayoutBody>
     </Layout>
   )

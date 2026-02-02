@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Button } from 'primereact/button'
 import { Toolbar } from 'primereact/toolbar'
 import { IconField } from 'primereact/iconfield'
@@ -1429,7 +1430,7 @@ export default function MonthlyIpcPsTable() {
     <div className=''>
       <div className='ml-4'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

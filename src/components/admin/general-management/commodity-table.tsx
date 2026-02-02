@@ -13,6 +13,7 @@ import '@/styles/table-style.css'
 import { searchCommodityManagement } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 
@@ -550,7 +551,7 @@ export default function CommodityManagementTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -664,7 +665,7 @@ export default function CommodityManagementTable() {
       <Dialog
         visible={updateProductDialog}
         style={{ width: '60rem' }}
-        header='Update Treatment Record'
+        header='Update Document'
         modal
         className='p-fluid'
         footer={updateProductDialogFooter}
@@ -939,7 +940,8 @@ export default function CommodityManagementTable() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -951,7 +953,7 @@ export default function CommodityManagementTable() {
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              <span className='text-red-500 ml-1'>*</span>
+              
             </label>
 
             <div>

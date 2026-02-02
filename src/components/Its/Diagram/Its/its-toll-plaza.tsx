@@ -14,6 +14,7 @@ import { Dialog } from 'primereact/dialog'
 import MultiFileInput from '@/components/MultiFileInput'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Menu } from 'primereact/menu'
 import { Toolbar } from 'primereact/toolbar'
 import RefreshButton from '@/components/refresh-button'
@@ -1144,7 +1145,8 @@ export default function DiagramItsToll() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'

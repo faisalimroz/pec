@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Upload, Loader2, X } from 'lucide-react'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { useAuth } from '@/provider/authProvider'
 
 interface ProjectLayout {

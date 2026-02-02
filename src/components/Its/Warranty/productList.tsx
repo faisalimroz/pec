@@ -14,6 +14,7 @@ import axios from 'axios'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import RefreshButton from '@/components/refresh-button'
 import { FilePreview } from '@/components/file-preview'
 import { useAuth } from '@/provider/authProvider'
@@ -743,7 +744,7 @@ export default function WarrantyProduct() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -915,7 +916,8 @@ export default function WarrantyProduct() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'

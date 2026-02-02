@@ -14,6 +14,7 @@ import { Toolbar } from 'primereact/toolbar'
 import { classNames } from 'primereact/utils'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '../MultiFileInput'
 import { Dropdown } from 'primereact/dropdown'
 
@@ -630,7 +631,7 @@ export default function EtcCardModifyTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white mt-4'
+          className='rounded-none border-none p-0 bg-backgournd mt-4'
           left={leftToolbarTemplate}
           //  right={rightToolbarTemplate}
         ></Toolbar>

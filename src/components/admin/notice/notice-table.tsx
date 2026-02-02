@@ -13,6 +13,7 @@ import { Menu } from 'primereact/menu'
 import { Toolbar } from 'primereact/toolbar'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '../../MultiFileInput'
 import { FilePreview } from '../../file-preview'
 import { Dropdown } from 'primereact/dropdown'
@@ -739,7 +740,7 @@ export default function NoticeBoard() {
       <div className='m-6'>
         <div className='card'>
           <Toolbar
-            className='rounded-none border-none p-0 bg-white'
+            className='rounded-none border-none p-0 bg-background'
             left={leftToolbarTemplate}
             right={rightToolbarTemplate}
           ></Toolbar>
@@ -1019,7 +1020,8 @@ export default function NoticeBoard() {
                   <Calendar
                     id='date'
                     // @ts-ignore
-                    onChange={(e) => setFormDate(e.value)}
+                    value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                     dateFormat='dd/mm/yy'
                     inputClassName='border-0 focus:ring-0 cursor-pointer'
                     className='focus:ring-0'
@@ -1045,7 +1047,7 @@ export default function NoticeBoard() {
             <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
                 Upload Document
-                <span className='text-red-500 ml-1'>*</span>
+                
               </label>
 
               <div>

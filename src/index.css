@@ -14,8 +14,8 @@
     /* Custom CSS Variables */
     --header-height: 4rem;
 
-    /* CSS Variables for light theme */
-    --background: 0 0% 100%;
+    /* CSS Variables for light theme 0 0% 100% */
+    --background: 0 0% 100%; 
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -127,7 +127,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 208,12%,97%; /* color changed */
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;

@@ -4,6 +4,7 @@ import { Button } from 'primereact/button'
 import { InputTextarea } from 'primereact/inputtextarea'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { useAuth } from '@/provider/authProvider'
 
 interface Project {

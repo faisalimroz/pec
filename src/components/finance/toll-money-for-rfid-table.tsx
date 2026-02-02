@@ -19,6 +19,7 @@ import { TabPanel, TabView } from 'primereact/tabview'
 import { Toolbar } from 'primereact/toolbar'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import RefreshButton from '../refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
@@ -1002,7 +1003,7 @@ export default function RhdBillDetails() {
     <div className=''>
       <div className='ml-4'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -1257,8 +1258,7 @@ export default function RhdBillDetails() {
                 <p className='break-all'>{selectedProduct.remarks}</p>
               </div>
 
-              {hasEditAccess && (
-                <div className='col-span-2'>
+              <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
                     {selectedProduct.attachments.map((attachment, index) => (
@@ -1272,7 +1272,6 @@ export default function RhdBillDetails() {
                     ))}
                   </div>
                 </div>
-              )}
             </div>
           </>
         )}

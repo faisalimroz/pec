@@ -1,11 +1,11 @@
 import type React from 'react'
-
 import { useState, useEffect, useCallback } from 'react'
 import { InputText } from 'primereact/inputtext'
 import { Tree, type TreeExpandedKeysType } from 'primereact/tree'
 import { Checkbox } from 'primereact/checkbox'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Eye, EyeOff } from 'lucide-react'
 import './PermissionManager.css'
 import AdminPanelLayout from '..'
@@ -34,6 +34,7 @@ interface FormDataType {
   password: string
   role: string[]
   permissions: ParentPermission[]
+  creator?: string
 }
 
 interface TreeNode {
@@ -51,10 +52,10 @@ interface LabelMapping {
 
 // Add list of nodes that should have hidden children
 const NODES_WITH_HIDDEN_CHILDREN = [
-  'general-information',
+  // 'general-information',
   'edms',
   'notice',
-  'ai-dashboard',
+  // 'ai-dashboard',
 ]
 
 const PermissionManager = () => {
@@ -73,60 +74,158 @@ const PermissionManager = () => {
 
   const { user } = useAuth()
 
-  const showSuperAdmin = user?.id === '68241d8e54ae5fe52759b799'
+  const showSuperAdmin = user
 
   // Custom label mappings for parent nodes
   const parentLabelMappings: LabelMapping[] = [
+    { id: 'admin', label: 'Administration Dept.' },
     { id: 'its-manager', label: 'ITS Dept.' },
-    { id: 'general-information', label: 'General Information' },
+    // { id: 'general-information', label: 'General Information' },
+    { id: 'mb-pmis-manager', label: 'Main Bridge Dept.' },
+    { id: 'rtw-manager', label: 'RTW Dept.' },
     { id: 'finance-manager', label: 'Finance Dept.' },
     { id: 'edms', label: 'EDMS' },
-    { id: 'admin', label: 'Administration Dept.' },
     { id: 'notice', label: 'Notice' },
-    { id: 'clinic', label: 'Clinic' },
     { id: 'r&t-manager', label: 'Road & Traffic Dept.' },
-    { id: 'ai-dashboard', label: 'AI Dashboard' },
+    // { id: 'ai-dashboard', label: 'AI Dashboard' },
     { id: 'toll-manager', label: 'Toll Dept.' },
   ]
+  // turn everything ON (view+edit) in the tree for visual feedback
+  const setAllPermissionsChecked = (checked: boolean) => {
+    setPermissionsData(prev =>
+      prev.map(parent => ({
+        ...parent,
+        authority: checked,
+        children: parent.children.map(c => ({
+          ...c,
+          view_authority: checked,
+          edit_authority: checked
+        }))
+      }))
+    )
+
+    // also sync formData (roles + permissions) to reflect the visual change
+    const updated = permissionsData.map(parent => ({
+      ...parent,
+      authority: checked,
+      children: parent.children.map(c => ({
+        ...c,
+        view_authority: checked,
+        edit_authority: checked
+      }))
+    }))
+    updatePermissionsState(updated)
+  }
+
+  // when Super Admin toggles, mirror it in the UI (for clarity)
+  const handleSuperAdminToggle = (next: boolean) => {
+    setIsSuperAdmin(next)
+    if (next) {
+      setAllPermissionsChecked(true)
+    } else {
+      // uncheck everything visually (optional; or keep user selections)
+      setAllPermissionsChecked(false)
+    }
+  }
 
   // This would be fetched from an API in a real application
   const [permissionsData, setPermissionsData] = useState<ParentPermission[]>([
+    {
+      name: 'edms',
+      authority: false,
+      children: [
+        {
+          name: 'dispatched',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'received',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'others',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+      ],
+    },
+    {
+      name: 'admin',
+      authority: false,
+      children: [
+        {
+          name: 'employee-personal-profile',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'building-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'vehicle-management',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'asset-management',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'admin-building-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'health-center',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'gardening-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'fire-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'it-electronics',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'security-mgt',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+      ],
+    },
     {
       name: 'r&t-manager',
       authority: false,
       children: [
         {
-          name: 'r&t-procurement',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'maint-safety-traffic',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'patrol-security',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'mech-elec',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'building-maint',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-report',
+          name: 'r&t-organization',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -138,11 +237,147 @@ const PermissionManager = () => {
           g_children: [],
         },
         {
-          name: 'drawing',
+          name: 'r&t-monthly-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
+        {
+          name: 'r&t-kec-letter',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-road-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-road-safety-patrol',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-workshop-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+
+      ],
+    },
+    {
+      name: 'mb-pmis-manager',
+      authority: false,
+      children: [
+        {
+          name: 'mb-pmis-project-overview',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-technical-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-monitoring-reporting',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-quality,-safety',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-communication-correspondence',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-financial-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-visual-records',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'mb-pmis-additional-notes',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+
+      ],
+    },
+
+    {
+      name: 'rtw-manager',
+      authority: false,
+      children: [
+        {
+          name: 'rtw-project-overview',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-technical-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-monitoring-reporting',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-quality-safety',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-communication-correspondence',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-financial-documentation',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-visual-records',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'rtw-additional-notes',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+
       ],
     },
     {
@@ -156,53 +391,42 @@ const PermissionManager = () => {
           g_children: [],
         },
         {
-          name: 'report',
+          name: 'its-organization',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'internal-letter-announce',
+          name: 'its-work-plan',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'o&m-activities',
+          name: 'its-notice',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'inventory-management',
+          name: 'its-system-configure',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'its-procurement',
+          name: 'its-operation-manual',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'training',
+          name: 'its-monthly-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
-        {
-          name: 'information-diagram',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'warranty',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
+
       ],
     },
     {
@@ -210,25 +434,25 @@ const PermissionManager = () => {
       authority: false,
       children: [
         {
-          name: 'toll-collect-traffic',
+          name: 'daily-toll-traffic-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'special-audit',
+          name: 'shift-wise-toll-traffic-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'monthly-toll-revenue',
+          name: 'toll-wim-data',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'vehicle-detect-toll',
+          name: 'toll-daily-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -240,60 +464,17 @@ const PermissionManager = () => {
           g_children: [],
         },
         {
-          name: 'comparison',
+          name: 'toll-employee-report',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'kec-manual-data',
+          name: 'toll-hierarchy',
           view_authority: false,
           edit_authority: false,
           g_children: [],
-        },
-        {
-          name: 'kec-manual-data-graph',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'toll-traffic-ver',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
-
-    {
-      name: 'admin',
-      authority: false,
-      children: [
-        {
-          name: 'hr',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'admin-monthly-roster',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'asset-management',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'admin-notice',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
+        }
       ],
     },
     {
@@ -301,73 +482,20 @@ const PermissionManager = () => {
       authority: false,
       children: [
         {
-          name: 'rhd-bill-details',
+          name: 'monthly-ipc-updates',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
         {
-          name: 'maintain-ipc-pdf',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'maintain-ipc-ps-data',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-invoice-record',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-salary-sheet',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'monthly-pit-sheet',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'toll-money',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'finance-procurement',
+          name: 'ipc-records',
           view_authority: false,
           edit_authority: false,
           g_children: [],
         },
       ],
     },
-    {
-      name: 'clinic',
-      authority: false,
-      children: [
-        {
-          name: 'medicine-record',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'treatment-record',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
+
     {
       name: 'general-information',
       authority: false,
@@ -410,30 +538,8 @@ const PermissionManager = () => {
         },
       ],
     },
-    {
-      name: 'edms',
-      authority: false,
-      children: [
-        {
-          name: 'dispatched',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'received',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-        {
-          name: 'others',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
+
+
     {
       name: 'ai-dashboard',
       authority: false,
@@ -458,6 +564,8 @@ const PermissionManager = () => {
         },
       ],
     },
+
+
   ])
 
   // Get custom label for parent node or format the name if no custom label exists
@@ -490,14 +598,14 @@ const PermissionManager = () => {
         children: NODES_WITH_HIDDEN_CHILDREN.includes(parent.name)
           ? []
           : parent.children.map((child, childIndex) => {
-              const childKey = `${parentIndex}-${childIndex}`
-              return {
-                key: childKey,
-                label: formatName(child.name),
-                data: child.name,
-                parent: parent.name,
-              }
-            }),
+            const childKey = `${parentIndex}-${childIndex}`
+            return {
+              key: childKey,
+              label: formatName(child.name),
+              data: child.name,
+              parent: parent.name,
+            }
+          }),
       }
     })
 
@@ -534,6 +642,15 @@ const PermissionManager = () => {
       const updatedPermissions = [...prevData].map((parent) => {
         if (parent.name === parentName) {
           const updatedChildren = parent.children.map((child) => {
+            // Special handling for EDMS - check write when read is checked
+            if (parentName === 'edms' && checked) {
+              return {
+                ...child,
+                view_authority: true,
+                edit_authority: true,
+              };
+            }
+
             return {
               ...child,
               view_authority: checked,
@@ -694,22 +811,128 @@ const PermissionManager = () => {
   }
 
   // Custom node template for the tree
+  // const nodeTemplate = (node: TreeNode) => {
+
+  //   if (node.children || NODES_WITH_HIDDEN_CHILDREN.includes(node.data)) {
+  //     // Parent node
+  //     const parentName = node.data
+  //     const parent = permissionsData.find((p) => p.name === parentName)
+  //     if (!parent) return <span>{node.label}</span>
+
+  //     const allViewChecked = allChildrenHaveViewAuthority(parentName)
+  //     const allEditChecked = allChildrenHaveEditAuthority(parentName)
+
+  //     return (
+  //       <div className='flex items-center justify-between w-full p-2'>
+  //         <span className='font-bold text-black'>{node.label}</span>
+  //         <div className='flex items-center gap-4'>
+  //           <div className='flex items-center'>
+  //             <label htmlFor={`parent-view-${parentName}`} className='mr-2'>
+  //               Read (All)
+  //             </label>
+  //             <Checkbox
+  //               id={`parent-view-${parentName}`}
+  //               checked={allViewChecked}
+  //               onChange={(e) =>
+  //                 handleParentViewAuthorityChange(
+  //                   parentName,
+  //                   e.checked || false
+  //                 )
+  //               }
+  //             />
+  //           </div>
+  //           <div className='flex items-center'>
+  //             <label htmlFor={`parent-edit-${parentName}`} className='mr-2'>
+  //               Write (All)
+  //             </label>
+  //             <Checkbox
+  //               id={`parent-edit-${parentName}`}
+  //               checked={allEditChecked}
+  //               onChange={(e) =>
+  //                 handleParentEditAuthorityChange(
+  //                   parentName,
+  //                   e.checked || false
+  //                 )
+  //               }
+  //             />
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )
+  //   } else {
+  //     // Child node
+  //     const childName = node.data
+  //     const parentName = node.parent || ''
+  //     const parent = permissionsData.find((p) => p.name === parentName)
+  //     const child = parent?.children.find((c) => c.name === childName)
+
+  //     if (!child) return <span>{node.label}</span>
+
+  //     return (
+  //       <div className='flex items-center justify-between w-full p-2'>
+  //         <span className='uppercase'>{node.label}</span>
+  //         <div className='flex items-center gap-4'>
+  //           <div className='flex items-center'>
+  //             <label htmlFor={`view-${childName}`} className='mr-2'>
+  //               Read
+  //             </label>
+  //             <Checkbox
+  //               id={`view-${childName}`}
+  //               checked={child.view_authority}
+  //               onChange={(e) =>
+  //                 handleViewAuthorityChange(
+  //                   parentName,
+  //                   childName,
+  //                   e.checked || false
+  //                 )
+  //               }
+  //             />
+  //           </div>
+  //           <div className='flex items-center'>
+  //             <label htmlFor={`edit-${childName}`} className='mr-2'>
+  //               Write
+  //             </label>
+  //             <Checkbox
+  //               id={`edit-${childName}`}
+  //               checked={child.edit_authority}
+  //               onChange={(e) =>
+  //                 handleEditAuthorityChange(
+  //                   parentName,
+  //                   childName,
+  //                   e.checked || false
+  //                 )
+  //               }
+  //             />
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )
+  //   }
+  // }
   const nodeTemplate = (node: TreeNode) => {
+    // Define a small text size class
+    const textSizeClass = 'text-sm';
+
+    // Parent node logic
     if (node.children || NODES_WITH_HIDDEN_CHILDREN.includes(node.data)) {
-      // Parent node
+
       const parentName = node.data
       const parent = permissionsData.find((p) => p.name === parentName)
-      if (!parent) return <span>{node.label}</span>
+      // console.log(permissionsData, 'permissionsData' )
+      // console.log(parent, 'parent')
+      if (!parent) return <span className={textSizeClass}>{node.label}</span> // Applied text-xs
 
       const allViewChecked = allChildrenHaveViewAuthority(parentName)
       const allEditChecked = allChildrenHaveEditAuthority(parentName)
 
       return (
         <div className='flex items-center justify-between w-full p-2'>
-          <span className='font-bold text-black'>{node.label}</span>
+          {/* Applied text-xs to the parent node label */}
+          <span className={`font-bold text-black ${textSizeClass}`}>{node.label}</span>
           <div className='flex items-center gap-4'>
             <div className='flex items-center'>
-              <label htmlFor={`parent-view-${parentName}`} className='mr-2'>
+              {/* Applied text-xs to the Read label */}
+              <label htmlFor={`parent-view-${parentName}`} className={`mr-2 ${textSizeClass}`}>
                 Read (All)
               </label>
               <Checkbox
@@ -724,7 +947,8 @@ const PermissionManager = () => {
               />
             </div>
             <div className='flex items-center'>
-              <label htmlFor={`parent-edit-${parentName}`} className='mr-2'>
+              {/* Applied text-xs to the Write label */}
+              <label htmlFor={`parent-edit-${parentName}`} className={`mr-2 ${textSizeClass}`}>
                 Write (All)
               </label>
               <Checkbox
@@ -742,20 +966,23 @@ const PermissionManager = () => {
         </div>
       )
     } else {
-      // Child node
+      // Child node logic
       const childName = node.data
       const parentName = node.parent || ''
       const parent = permissionsData.find((p) => p.name === parentName)
+      // console.log(parent, 'parent in child')  
       const child = parent?.children.find((c) => c.name === childName)
 
-      if (!child) return <span>{node.label}</span>
+      if (!child) return <span className={textSizeClass}>{node.label}</span> // Applied text-xs
 
       return (
         <div className='flex items-center justify-between w-full p-2'>
-          <span className='uppercase'>{node.label}</span>
+          {/* Applied text-xs to the child node label */}
+          <span className={`uppercase ${textSizeClass}`}>{node.label}</span>
           <div className='flex items-center gap-4'>
             <div className='flex items-center'>
-              <label htmlFor={`view-${childName}`} className='mr-2'>
+              {/* Applied text-xs to the Read label */}
+              <label htmlFor={`view-${childName}`} className={`mr-2 ${textSizeClass}`}>
                 Read
               </label>
               <Checkbox
@@ -771,7 +998,8 @@ const PermissionManager = () => {
               />
             </div>
             <div className='flex items-center'>
-              <label htmlFor={`edit-${childName}`} className='mr-2'>
+              {/* Applied text-xs to the Write label */}
+              <label htmlFor={`edit-${childName}`} className={`mr-2 ${textSizeClass}`}>
                 Write
               </label>
               <Checkbox
@@ -791,7 +1019,10 @@ const PermissionManager = () => {
       )
     }
   }
-
+  const withCreator = (payload: any) => ({
+    ...payload,
+    creator: user?.email,  // logged-in user's email
+  });
   // Handle form submission
   const handleSubmit = async () => {
     if (
@@ -816,16 +1047,18 @@ const PermissionManager = () => {
 
     try {
       const token = localStorage.getItem('token')
+      const creatorEmail = user?.email || ''
 
       // Create the request body based on whether superadmin is checked
       const requestBody = isSuperAdmin
         ? {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-            role: ['superadmin'],
-          }
-        : formData
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: ['superadmin'],
+          creator: creatorEmail,
+        }
+        : withCreator(formData)
 
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/auth/create`,
@@ -838,7 +1071,7 @@ const PermissionManager = () => {
         }
       )
 
-      console.log('API Response:', response.data)
+
       toast.success('User created successfully')
 
       // Reset form
@@ -850,7 +1083,8 @@ const PermissionManager = () => {
         permissions: [],
       })
       setIsSuperAdmin(false)
-
+      console.log(permissionsData, 'before reset')
+      console.log(formData, 'formdata before reset')
       // Reset permissions data
       setPermissionsData((prevData) =>
         prevData.map((parent) => ({
@@ -863,6 +1097,8 @@ const PermissionManager = () => {
           })),
         }))
       )
+
+      console.log("Submitting Permissions:", JSON.stringify(formData.permissions, null, 2));
     } catch (error: any) {
       console.error('Error submitting data:', error)
       const errorMsg = error.response?.data?.message || 'An error occurred'
@@ -874,7 +1110,7 @@ const PermissionManager = () => {
 
   const headerTemplate = () => {
     return (
-      <div className='flex justify-between px-3 py-2 font-bold text-black text-lg underline underline-offset-2'>
+      <div className='flex justify-between px-3 py-2 font-bold text-black text-md underline underline-offset-2'>
         <span>Menu Name</span>
         <span className='mr-4'>Authority</span>
       </div>
@@ -945,23 +1181,24 @@ const PermissionManager = () => {
               </div>
 
               <div className='space-y-6 mt-8'>
-                
+
 
                 <div className='permissions-container'>
-                  <h3 className='text-xl font-semibold mb-4 '>Permissions</h3>
+                  <h3 className='text-lg font-semibold mb-4 '>Permissions</h3>
 
                   {showSuperAdmin && (
-                  <div className='flex items-center space-x-2 mb-4'>
-                    <Checkbox
-                      id='superadmin'
-                      checked={isSuperAdmin}
-                      onChange={(e) => setIsSuperAdmin(e.checked || false)}
-                    />
-                    <label htmlFor='superadmin' className='font-medium'>
-                      Super Admin
-                    </label>
-                  </div>
-                )}
+                    <div className='flex items-center space-x-2 mb-4'>
+                      <Checkbox
+                        id='superadmin'
+                        checked={isSuperAdmin}
+                        onChange={(e) => handleSuperAdminToggle(!!e.checked)}
+                      />
+                      <label htmlFor='superadmin' className='font-medium'>
+                        Super Admin
+                      </label>
+                    </div>
+                  )}
+
 
                   <div
                     className={`${isSuperAdmin ? 'opacity-50 pointer-events-none' : ''}`}

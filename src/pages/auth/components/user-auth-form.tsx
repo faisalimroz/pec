@@ -16,6 +16,7 @@ import { Button } from '@/components/custom/button'
 import { PasswordInput } from '@/components/custom/password-input'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 

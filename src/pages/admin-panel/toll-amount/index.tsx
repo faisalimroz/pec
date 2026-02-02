@@ -8,6 +8,7 @@ import '@/styles/table-style.css'
 import axios from 'axios'
 import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import AdminPanelLayout from '..'
 import { InputNumber } from 'primereact/inputnumber'
 

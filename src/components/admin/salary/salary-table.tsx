@@ -14,6 +14,7 @@ import axios from 'axios'
 import MultiFileInput from '@/components/MultiFileInput'
 import { Dropdown } from 'primereact/dropdown'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Menu } from 'primereact/menu'
 
 interface Attachment {
@@ -559,7 +560,7 @@ export default function SalaryTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -918,7 +919,8 @@ export default function SalaryTable() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
@@ -930,7 +932,7 @@ export default function SalaryTable() {
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              <span className='text-red-500 ml-1'>*</span>
+              
             </label>
 
             <div>

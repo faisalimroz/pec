@@ -13,6 +13,7 @@ import { Toolbar } from 'primereact/toolbar'
 import { classNames } from 'primereact/utils'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '../MultiFileInput'
 import { ColumnGroup } from 'primereact/columngroup'
 import { Row } from 'primereact/row'
@@ -628,7 +629,7 @@ export default function TollTrafficVerTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

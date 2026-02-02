@@ -6,7 +6,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Menu, UserCircleIcon } from 'lucide-react'
-import logo from '@/assets/rhd.png'
+// import logo from '@/assets/rhd.png'
+import logo from '@/assets/rhd-logo.png'
 import kecLogo from '@/assets/ex-pic.png'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
@@ -55,11 +56,12 @@ export default function AdminPanelLayout({
               <div className='flex items-center'>
                 <Link to='/dashboard' className='mr-4'>
                   <div className='flex gap-4 items-center font-medium'>
-                    <img src={logo} alt='Logo' className='h-12 w-auto' />
-                    <h3>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+                    <img src={logo} alt='Logo' className='h-10 w-auto' />
+                    <h3 className='text-xs'>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
                   </div>
+
                 </Link>
-                <div className='hidden sm:ml-6 sm:flex sm:space-x-8 text-white'>
+                <div className='hidden sm:ml-6 sm:flex sm:space-x-8 text-white text-xs'>
                   {isSuperAdminOrAdmin && (
                     <>
                       {renderNavLink(
@@ -68,7 +70,7 @@ export default function AdminPanelLayout({
                       )}
 
                       {renderNavLink('/admin-panel/update-user', 'Update User')}
-                      {renderNavLink('/admin-panel/toll-amount', 'Toll Amount')}
+                      {/* {renderNavLink('/admin-panel/toll-amount', 'Toll Amount')} */}
                     </>
                   )}
                   {noticeBoard && (

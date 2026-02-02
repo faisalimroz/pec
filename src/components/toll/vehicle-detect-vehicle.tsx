@@ -324,7 +324,7 @@ export default function VehicleDetectVehicleTable({ id }: Props) {
 
       <div className='mt-6'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>

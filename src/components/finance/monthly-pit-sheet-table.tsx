@@ -14,6 +14,7 @@ import { Toolbar } from 'primereact/toolbar'
 import { classNames } from 'primereact/utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import MultiFileInput from '../MultiFileInput'
 import * as XLSX from 'xlsx'
 import RefreshButton from '../refresh-button'
@@ -882,7 +883,7 @@ export default function MonthlyPitSheetTable() {
     <div className='ml-4'>
       <div className='card'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-backgournd'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
@@ -1061,8 +1062,7 @@ export default function MonthlyPitSheetTable() {
                 <p className='break-all'>{selectedProduct.remarks}</p>
               </div>
 
-              {hasEditAccess && (
-                <div className='col-span-2'>
+              <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
                     {selectedProduct.attachments.map((attachment, index) => (
@@ -1076,7 +1076,6 @@ export default function MonthlyPitSheetTable() {
                     ))}
                   </div>
                 </div>
-              )}
             </div>
           </>
         )}

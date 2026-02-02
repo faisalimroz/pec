@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { classNames } from 'primereact/utils'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
@@ -9,26 +10,34 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchMonthlyRoaster } from '@/api/roadTrafficAPIs'
+import { searchRTMonthlyRoaster, searchTreatmentRecord } from '@/api/adminAPIs'
 import axios from 'axios'
-import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
+import { TabView, TabPanel } from 'primereact/tabview'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
+import { Menu } from 'primereact/menu'
 import RefreshButton from '@/components/refresh-button'
 import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import MultiFileInputTwo from '@/components/MultiFileInputTwo'
+import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
+import FileIcon from '@/components/icons/FileIcon'
+import { Checkbox } from 'primereact/checkbox'
+import { useLocation } from 'react-router-dom';
+import BulkUploadDialog from '@/components/bulk-upload'
 
 interface Attachment {
   url: string
   _id: string
 }
-
 interface Product {
-  _id: string
-  title: string
+  _id: string | null
+  slNo: string
+  subjectName: string
+  approved: boolean
+  description: string
   date: string
   type: string
   remarks: string
@@ -39,28 +48,33 @@ interface Product {
   updatingTimestamp?: string
 }
 
-export default function MonthlyRoasterTable() {
+export default function MonthlyReport() {
   let emptyProduct: Product = {
     _id: '',
-    title: '',
-    date: '',
+    slNo: '',
+    subjectName: '',
+    description: '',
     type: '',
+    approved: false,
+    date: '',
     remarks: '',
     attachments: [],
   }
-  const { permissions } = useAuth()
-  const checkRole = permissions.find((p) => p.name === 'r&t-manager')
-  const checkPermission = checkRole?.children.find(
-    (c) => c.name === 'r&t-monthly-roster'
-  )
+  const { pathname } = useLocation();
+  const showAll = pathname.startsWith('/edms');
 
-  const isRnT = checkPermission?.edit_authority || false
+  const { roles, permissions } = useAuth()
 
-  const codes = [
-    { name: 'Plan', code: 'Plan' },
-    { name: 'Actual', code: 'Actual' },
-  ]
 
+  const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+  console.log('rtManagerPermission', rtManagerPermission);
+  const roadSafetyPermission = rtManagerPermission?.children?.find(
+    (child) => child.name === 'r&t-monthly-roster');
+  console.log('roadSafetyPermission', roadSafetyPermission);
+  const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;;
+  const [approved, setApproved] = useState<boolean>(false);
+
+  const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
@@ -70,30 +84,48 @@ export default function MonthlyRoasterTable() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
   const [submitted, setSubmitted] = useState<boolean>(false)
   const dt = useRef<DataTable<Product[]>>(null)
-  const [date, setDate] = useState<string>('')
-  const [date2, setDate2] = useState<string>('')
+  const [date, setDate] = useState<Date | null>(null)
+  const [date2, setDate2] = useState<Date | null>(null)
   const [searchKey, setSearchKey] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loading2, setLoading2] = useState<boolean>(false)
-  const [selectedCode, setSelectedCode] = useState(null)
-  const [title, setTitle] = useState('')
-  const [type, setType] = useState('')
+  const [subjectName, setSubjectName] = useState('')
+  const [description, setDescription] = useState('')
+
   const [remarks, setRemarks] = useState('')
+  const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])
+  const [selectedCode, setSelectedCode] = useState(null)
+  const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
+
+
   const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+
   const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
   const [updatedProduct, setUpdatedProduct] = useState<Product | null>(null)
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
-  const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
-  const [bulkDialog, setBulkDialog] = useState(false)
-  const [file, setFile] = useState<any>(null)
-  const [uploading, setUploading] = useState(false)
-  const [uploadStatus, setUploadStatus] = useState('')
+  const [selectedType, setSelectedType] = useState<string | null>(null)
+  const [type, setType] = useState<string>("");
+  const [buttonType, setButtonType] = useState("");
+  // all update dialog func here
+  const alltypes = [
+    { name: "Plan", value: "Plan" },
+    { name: "Actual", value: "Actual" },
 
+  ];
+  const itemTemplate = (option: { name: string; value: string }) => (
+    <div className="flex items-center gap-2">
+      <FileIcon />
+      <span>{option.name}</span>
+    </div>
+  )
   const openUpdateDialog = (product: Product) => {
     setUpdatedProduct({ ...product })
     setUpdateProductDialog(true)
@@ -112,8 +144,10 @@ export default function MonthlyRoasterTable() {
     try {
       setLoading2(true)
       const formData = new FormData()
-      formData.append('title', updatedProduct.title)
+      formData.append('subjectName', updatedProduct.subjectName)
+      formData.append('description', updatedProduct.description)
       formData.append('type', updatedProduct.type)
+      formData.append('approved', updatedProduct.approved ? 'true' : 'false')
       formData.append('remarks', updatedProduct.remarks)
       formData.append('date', updatedProduct.date)
 
@@ -138,7 +172,7 @@ export default function MonthlyRoasterTable() {
 
       refetch()
       hideUpdateDialog()
-      toast.success('Data Updated Successfully')
+      toast.success('Data updated successfully')
     } catch (error: any) {
       if (error.response) {
         const { message } = error.response.data
@@ -149,6 +183,21 @@ export default function MonthlyRoasterTable() {
     } finally {
       setLoading2(false)
     }
+  }
+
+  const handleNewAttachments = (files: File[]) => {
+    setNewAttachments(files)
+  }
+
+  const handleRemoveAttachment = (attachmentId: string) => {
+    setRemovedAttachments((prev) => [...prev, attachmentId])
+    setUpdatedProduct((prev) => {
+      if (!prev) return null
+      return {
+        ...prev,
+        attachments: prev.attachments.filter((a) => a._id !== attachmentId),
+      }
+    })
   }
 
   const updateProductDialogFooter = (
@@ -168,110 +217,21 @@ export default function MonthlyRoasterTable() {
     </>
   )
 
-  const handleNewAttachments = (files: File[]) => {
-    setNewAttachments(files)
+  // ending all update dialog funcs
+
+  const codes = [
+    { name: 'Internal Patient', code: 'Internal' },
+    { name: 'Outside Patient', code: 'Outside' },
+  ]
+
+  const handleFileChange = (newFiles: File[]) => {
+    setFilesInput(newFiles)
   }
-
-  const handleRemoveAttachment = (attachmentId: string) => {
-    setRemovedAttachments((prev) => [...prev, attachmentId])
-    setUpdatedProduct((prev) => {
-      if (!prev) return null
-      return {
-        ...prev,
-        attachments: prev.attachments.filter((a) => a._id !== attachmentId),
-      }
-    })
-  }
-
-  // end
-
-  // bulk upload
-  const uploadFile = async () => {
-    if (!file) {
-      setUploadStatus('Please select a file first.')
-      return
-    }
-
-    setUploading(true)
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/bulk-upload`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
-
-      toast.success('File uploaded successfully!')
-      setFile(null)
-      refetch()
-      hideDialog2()
-    } catch (error) {
-      console.error('Error uploading file:', error)
-      toast.error('An error occurred while uploading. Please try again.')
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  const hideDialog2 = () => {
-    setBulkDialog(false)
-    setFile(null)
-    setUploadStatus('')
-  }
-
-  const openNew2 = () => {
-    setProduct(emptyProduct)
-    setSubmitted(false)
-    setBulkDialog(true)
-  }
-
-  const productDialogFooter2 = (
-    <>
-      <Button
-        label='Cancel'
-        icon='pi pi-times'
-        className='p-button-text'
-        onClick={hideDialog2}
-      />
-      <Button
-        label='Save'
-        icon='pi pi-upload'
-        className='p-button-text'
-        onClick={uploadFile}
-        disabled={!file || uploading}
-      />
-    </>
-  )
-
-  const handleFileChange2 = (e: { target: { files: any[] } }) => {
-    const selectedFile = e.target.files[0]
-    if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-      setFile(selectedFile)
-      setUploadStatus('')
-    } else {
-      setFile(null)
-      setUploadStatus('Please select a valid .xlsx file.')
-    }
-  }
-
-  // end bulk upload
 
   const openNew = () => {
     setProduct(emptyProduct)
     setSubmitted(false)
     setProductDialog(true)
-  }
-
-  const handleFileChange = (newFiles: File[]) => {
-    setFilesInput(newFiles)
   }
 
   const hideDialog = () => {
@@ -299,17 +259,39 @@ export default function MonthlyRoasterTable() {
   }
 
   const saveProduct = async () => {
+
+    const requiredFields = [
+      { value: subjectName, name: 'Subject Name' },
+      { value: description, name: 'Description' },
+      { value: type, name: 'Type' },
+      { value: remarks, name: 'Remarks' },
+      { value: formDate, name: 'Date' }
+    ];
+
+    for (const field of requiredFields) {
+      if (!field.value) {
+        toast.warning(`${field.name} is required!`);
+        return;
+      }
+    }
+
     try {
       setLoading2(true)
       const formData = new FormData()
 
-      formData.append('title', title)
+      formData.append('subjectName', subjectName)
+      formData.append('description', description)
       formData.append('type', type)
       formData.append('remarks', remarks)
+      formData.append('approved', approved ? 'true' : 'false');
       formData.append('date', formatDate(formDate))
-      filesInput.forEach((file) => {
-        formData.append('attachments', file)
-      })
+
+      // Append files only if they exist
+      if (filesInput && filesInput.length > 0) {
+        filesInput.forEach((file) => {
+          formData.append('attachments', file)
+        })
+      }
 
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-roaster/upload`,
@@ -322,11 +304,18 @@ export default function MonthlyRoasterTable() {
         }
       )
 
-      const response = res
-      console.log(response)
+      // --- 2. RESET ALL FIELDS HERE ---
+      setSubjectName('')
+      setDescription('')
+      setType('')
+      setRemarks('')
+      setApproved(false)
+      setFormDate('')
+      setFilesInput([])
+
       hideDialog()
+      toast.success('Data Saved Successfully')
       refetch()
-      toast.success('Data Added Successfully')
     } catch (error: any) {
       if (error.response) {
         const { message } = error.response.data
@@ -337,6 +326,10 @@ export default function MonthlyRoasterTable() {
     } finally {
       setLoading2(false)
     }
+  }
+  const editProduct = (product: Product) => {
+    setProduct({ ...product })
+    setProductDialog(true)
   }
 
   const confirmDeleteProduct = (product: Product) => {
@@ -378,6 +371,13 @@ export default function MonthlyRoasterTable() {
     setProduct(emptyProduct)
   }
 
+  const exportCSV = () => {
+    if (selectedProducts && selectedProducts.length > 0) {
+      dt.current?.exportCSV({ selectionOnly: true })
+    } else {
+      dt.current?.exportCSV()
+    }
+  }
   // multi delete funcs
   const confirmDeleteSelected = () => {
     if (selectedProducts.length > 0) {
@@ -407,8 +407,8 @@ export default function MonthlyRoasterTable() {
       )
 
       setDeleteMultipleDialog(false)
-      toast.success('Selected items deleted successfully')
       refetch()
+      toast.success('Selected items deleted successfully')
     } catch (error: any) {
       if (error.response) {
         const { message } = error.response.data
@@ -446,56 +446,13 @@ export default function MonthlyRoasterTable() {
 
   // multi delete func end
 
-  const exportCSV = () => {
-    if (selectedProducts && selectedProducts.length > 0) {
-      dt.current?.exportCSV({ selectionOnly: true })
-    } else {
-      dt.current?.exportCSV()
-    }
-  }
-
-  // const deleteSelectedProducts = () => {
-  //   let _products = products.filter(
-  //     (val: Product) => !selectedProducts.includes(val)
-  //   )
-
-  //   setProducts(_products)
-  //   setDeleteProductsDialog(false)
-  //   setSelectedProducts([])
-  // }
-
   const leftToolbarTemplate = () => {
     return (
-      <div className=''>
-        <div className='p-3 bg-main text-base font-semibold text-white rounded-t'>
+      <div className='flex items-center gap-3'>
+        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
           Document List
         </div>
-        {/* {isRnT && (
-          <button
-            onClick={confirmDeleteSelected}
-            disabled={!selectedProducts || selectedProducts.length === 0}
-            className={`p-3 text-lg font-semibold text-white rounded-t ${
-              selectedProducts && selectedProducts.length > 0
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Delete Selected ({selectedProducts?.length || 0})
-          </button>
-        )} */}
-        {/* <Button
-          label='Upload Document'
-          icon='pi pi-file-pdf'
-          severity='success'
-          onClick={openNew}
-        /> */}
-        {/* <Button
-          label='Delete'
-          icon='pi pi-trash'
-          severity='danger'
-          onClick={confirmDeleteSelected}
-          disabled={!selectedProducts || !selectedProducts.length}
-        /> */}
+
       </div>
     )
   }
@@ -503,47 +460,77 @@ export default function MonthlyRoasterTable() {
   const rightToolbarTemplate = () => {
     return (
       <>
-        {isRnT && (
-          <div className='space-x-2'>
-            <button
-              className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-              onClick={openNew}
-            >
-              Upload Document
-            </button>
-            <button
-              className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
-              onClick={openNew2}
-            >
-              Bulk Upload
-            </button>
-            <button
-              className='bg-gray-600 text-white border-gray-600 border-t border-l border-r font-bold px-4 py-3 rounded-t-md'
-              onClick={exportCSV}
-            >
-              Download Files{' '}
-              {selectedProducts?.length === 0
-                ? '(All)'
-                : `(${selectedProducts?.length})`}
-            </button>
-            <button
-              onClick={confirmDeleteSelected}
-              disabled={!selectedProducts || selectedProducts.length === 0}
-              className={`py-3 px-4 text-base font-semibold text-white rounded-t-md ${
-                selectedProducts && selectedProducts.length > 0
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-gray-400 cursor-not-allowed'
-              }`}
-            >
-              Delete Selected ({selectedProducts?.length || 0})
-            </button>
-          </div>
+        {hasEditAccess && (
+          <ButtonGroupWithIcons
+                        selectedProducts={selectedProducts}
+                        openNew={openNew}
+                        openNew3={openBulkUpload}
+                        exportCSV={exportCSV}
+                        confirmDeleteSelected={confirmDeleteSelected}
+                       
+                    />
         )}
-        <RefreshButton className='text-base ml-2' onClick={handleReset} />
+
+        <RefreshButton handleReset={handleReset} />
       </>
     )
   }
+  interface ButtonGroupProps {
+    activeButton: string;
+    onButtonClick: (value: string) => void;
 
+  }
+  const ButtonGroup = ({ activeButton, onButtonClick }: ButtonGroupProps) => {
+
+    const buttons = [
+      { label: 'Plan', value: 'Plan' },
+      { label: 'Actual', value: 'Actual' },
+
+    ]
+
+    const handleButtonClick = (buttonValue: string) => {
+
+      setSelectedType(buttonValue);
+      onButtonClick(buttonValue)
+      setLoading(true);
+      const payload = {
+        type: buttonValue || "",
+        date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : "",
+        searchQuery: searchKey || "",
+      };
+
+      searchRTMonthlyRoaster(payload).then((result) => {
+        const rows = Array.isArray(result?.data) ? result.data : [];
+        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setLoading(false);
+      });
+
+    };
+
+    return (
+      <>
+        <div className='flex items-center space-x-2 py-2 rounded-lg'>
+          {buttons.map((button) => (
+            <button
+              key={button.value}
+              onClick={() => handleButtonClick(button.value)}
+              className={`
+            px-3 py-2 text-sm font-semibold  rounded-lg transition-colors duration-200 ease-in-out
+            ${activeButton === button.value
+                  ? 'bg-[#6F90AE] text-base font-semibold text-white'
+                  : ' bg-main text-base font-semibold text-white'
+                }
+            
+          `}
+            >
+              {button.label}
+            </button>
+          ))}
+        </div>
+      </>
+
+    )
+  }
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
@@ -564,9 +551,9 @@ export default function MonthlyRoasterTable() {
       try {
         const response = await fetch(attachment.url)
         const blob = await response.blob()
-        const filename = attachment.url.split('/').pop()
+        const subjectName = attachment.url.split('/').pop()
         //@ts-ignore
-        folder.file(filename, blob)
+        folder.file(subjectName, blob)
       } catch (error) {
         console.error(`Failed to fetch ${attachment.url}:`, error)
       }
@@ -585,7 +572,7 @@ export default function MonthlyRoasterTable() {
         command: () => viewProduct(rowData),
       },
     ]
-    if (isRnT) {
+    if (hasEditAccess) {
       items.push(
         {
           label: 'Edit',
@@ -635,133 +622,141 @@ export default function MonthlyRoasterTable() {
     </>
   )
 
-  function getMonthName(dateString: string) {
-    const date = new Date(dateString)
-    return date.toLocaleString('en-US', { month: 'long' })
-  }
 
-  function getYear(dateString: string) {
-    const date = new Date(dateString)
-    return date.getFullYear()
-  }
-
+  // search/reset/refetch
   const handleSearch = () => {
     setLoading(true)
-    const initialPayload = {
-      month: date ? getMonthName(date) : '',
-      year: date2 ? getYear(date2) : '',
-      // @ts-ignore
-      type: selectedCode?.name || '',
+    const payload = {
+      type: selectedType || '',
+      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
       searchQuery: searchKey,
     }
-
-    searchMonthlyRoaster(initialPayload).then((result) => {
-      setProducts(result?.MonthlyRoasters)
+    console.log(payload)
+    searchRTMonthlyRoaster(payload).then((result) => {
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
 
   const handleReset = () => {
-    setLoading(true)
-
-    const initialPayload = {
-      month: '',
-      year: '',
-      searchQuery: '',
-      type: '',
-    }
-
-    setDate('')
-    setDate2('')
+    setDate(null)
+    setDate2(null)
     setSearchKey('')
-    setSelectedCode(null)
+    setButtonType('')
 
-    searchMonthlyRoaster(initialPayload).then((result) => {
-      setProducts(result?.MonthlyRoasters)
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
+    }
+    setLoading(true)
+    searchRTMonthlyRoaster(payload).then((result) => {
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
       setLoading(false)
     })
   }
 
+  const refetch = () => {
+    setLoading(true)
+    const payload = {
+      type: '',
+      date_range: '',
+      searchQuery: '',
+    }
+    setButtonType('')
+    searchRTMonthlyRoaster(payload).then((result) => {
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setLoading(false)
+    })
+  }
+
+  useEffect(() => {
+    refetch()
+  }, [])
+
   const filterSearchForm = (
-    <div
-      role='search'
-      onSubmit={(e) => {
-        e.preventDefault()
-        handleSearch()
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
+    <div className='flex items-center justify-center'>
+      <div
+        role='search'
+        onSubmit={(e) => {
           e.preventDefault()
           handleSearch()
-        }
-      }}
-      className='flex mx-auto w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
-    >
-      <Calendar
-        // @ts-ignore
-        value={date}
-        // @ts-ignore
-        onChange={(e) => setDate(e.value)}
-        view='month'
-        dateFormat='MM'
-        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
-        placeholder='By Month'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
-      <Calendar
-        // @ts-ignore
-        value={date2}
-        // @ts-ignore
-        onChange={(e) => setDate2(e.value)}
-        view='year'
-        dateFormat='yy'
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
-        placeholder='By Year'
-        showIcon
-        icon={() => <i className='pi pi-angle-down' />}
-      />
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            handleSearch()
+          }
+        }}
+        className='flex w-fit gap-2 divide-x-2 border p-2 rounded-md bg-white'
+      >
+        <Calendar
+          // @ts-ignore
+          value={date}
+          // @ts-ignore
+          onChange={(e) => setDate(e.value)}
 
-      <div>
-        <Dropdown
-          value={selectedCode}
-          onChange={(e) => setSelectedCode(e.value)}
-          options={codes}
-          optionLabel='name'
-          placeholder='Select Type'
-          className='border-none rounded-none ml-4 cursor-pointer ring-0'
+          dateFormat="dd/mm/yy"
+          inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+          placeholder='Start Date'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
         />
-      </div>
+        <Calendar
+          // @ts-ignore
+          value={date2}
+          // @ts-ignore
+          onChange={(e) => setDate2(e.value)}
 
-      <IconField iconPosition='left' className='relative'>
-        <InputIcon className='pi pi-search' />
-        <InputText
-          type='search'
-          placeholder='Search'
-          value={searchKey}
-          className='border-none ml-4 focus:ring-0'
-          onChange={(e) => setSearchKey(e.target.value)}
+          dateFormat="dd/mm/yy"
+          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+          placeholder='End Date'
+          showIcon
+          icon={() => <i className='pi pi-angle-down' />}
         />
+        {/* <div>
+          <Dropdown
+            value={selectedCode}
+            onChange={(e) => setSelectedCode(e.value)}
+            options={codes}
+            optionLabel='name'
+            placeholder='Patient Type'
+            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+          />
+        </div> */}
+        <IconField iconPosition='left' className='relative'>
+          <InputIcon className='pi pi-search' />
+          <InputText
+            type='search'
+            placeholder='Search'
+            className='border-none ml-4 focus:ring-0'
+            onChange={(e) => setSearchKey(e.target.value)}
+            value={searchKey}
+          />
 
-        <button
-          onClick={() => handleSearch()}
-          className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
-          type='submit'
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            viewBox='0 0 24 24'
-            fill='white'
-            className='size-6'
+          <button
+            onClick={() => handleSearch()}
+            className='absolute top-0.5 right-1 border bg-green-500 px-4 py-2.5 rounded-lg'
+            type='submit'
           >
-            <path
-              fillRule='evenodd'
-              d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
-              clipRule='evenodd'
-            />
-          </svg>
-        </button>
-      </IconField>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='white'
+              className='size-6'
+            >
+              <path
+                fillRule='evenodd'
+                d='M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+        </IconField>
+      </div>
     </div>
   )
 
@@ -776,26 +771,22 @@ export default function MonthlyRoasterTable() {
       />
     </>
   )
-
   const deleteProductDialogFooter = (
-    <div className='flex justify-end gap-2'>
-      <button
-        type='button'
-        className='text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 font-semibold py-2 px-4 rounded border'
+    <>
+      <Button
+        label='No'
+        icon='pi pi-times'
+        outlined
         onClick={hideDeleteProductDialog}
-      >
-        No
-      </button>
-      <button
-        type='button'
-        className='bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded'
+      />
+      <Button
+        label='Yes'
+        icon='pi pi-check'
+        severity='danger'
         onClick={deleteProduct}
-      >
-        Yes
-      </button>
-    </div>
+      />
+    </>
   )
-
   const deleteProductsDialogFooter = (
     <>
       <Button
@@ -813,128 +804,276 @@ export default function MonthlyRoasterTable() {
     </>
   )
 
+
+
   const attachmentBodyTemplate = (rowData: any) => {
     return <div>{rowData?.attachments?.length}</div>
   }
 
-  const refetch = () => {
-    setLoading(true)
-    const initialPayload = {
-      month: '',
-      year: '',
-      type: '',
-      searchQuery: '',
-    }
-
-    searchMonthlyRoaster(initialPayload).then((result) => {
-      setProducts(result?.MonthlyRoasters)
-      setLoading(false)
-    })
-  }
-
-  // initial data load
-  useEffect(() => {
-    refetch()
-  }, [])
-
   // console.log(products)
 
   return (
-    <div className='ml-4'>
-      <div className='card'>
+    <div className=''>
+      <div className='ml-4'>
         <Toolbar
-          className='rounded-none border-none p-0 bg-white'
+          className='rounded-none border-none p-0 bg-background'
           left={leftToolbarTemplate}
           right={rightToolbarTemplate}
         ></Toolbar>
-
-        <DataTable
-          ref={dt}
-          value={products}
-          selection={selectedProducts}
-          onSelectionChange={(e: any) => {
-            if (Array.isArray(e.value)) {
-              setSelectedProducts(e.value)
-            }
-          }}
-          dataKey='_id'
-          paginator
-          rows={10}
-          rowsPerPageOptions={[5, 10, 25]}
-          paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
-          currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
-          header={filterSearchForm}
-          selectionMode='multiple'
-          showGridlines
-          cellSelection
-          emptyMessage='No data found!'
-          loading={loading}
+        <div className='mt-2'>
+          <ButtonGroup activeButton={buttonType}
+            onButtonClick={setButtonType} ></ButtonGroup>
+        </div>
+        <TabView
+          activeIndex={activeIndex}
+          onTabChange={(e) => setActiveIndex(e.index)}
         >
-          {isRnT && (
-            <Column
+          {/* 1st tab  */}
+          <TabPanel>
+            <DataTable
+              ref={dt}
+              value={products}
+              selection={selectedProducts}
+              onSelectionChange={(e: any) => {
+                if (Array.isArray(e.value)) {
+                  setSelectedProducts(e.value)
+                }
+              }}
+              dataKey='_id'
+              paginator
+              rows={10}
+              rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate='FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown'
+              currentPageReportTemplate='Showing {first} to {last} of {totalRecords} Datas'
+              header={filterSearchForm}
               selectionMode='multiple'
-              headerStyle={{ width: '3rem' }}
-              exportable={false}
-              headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
-            ></Column>
-          )}
+              showGridlines
+              cellSelection
+              emptyMessage='No data found!'
+              loading={loading}
+              scrollable
+            >
+              {hasEditAccess && (
+                <Column
+                  selectionMode='multiple'
+                  headerStyle={{ width: '3rem' }}
+                  exportable={false}
+                  headerClassName='bg-[#ffc2c2] text-sm'
+                  bodyClassName='text-sm truncate max-w-xs'
+                ></Column>
+              )}
 
-          <Column
-            field='title'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Title'
-          ></Column>
+              <Column
+                field='slNo'
+                header='SL No.'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[10rem]'
 
-          <Column
-            field='date'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Date'
-          ></Column>
+              ></Column>
 
-          <Column
-            field='type'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Type'
-          ></Column>
 
-          <Column
-            field='remarks'
-            header='Remarks'
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-          ></Column>
+              <Column
+                field='date'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
-          {/* <Column
-            body={attachmentBodyTemplate}
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            sortable
-            header='Attachment'
-          ></Column> */}
+                className='min-w-[12rem]'
+                header='Date'
+              ></Column>
+              <Column
+                field='subjectName'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
 
-          <Column
-            body={actionBodyTemplate}
-            headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
-            header='Actions'
-            headerStyle={{ width: '3rem' }}
-            exportable={false}
-          ></Column>
-        </DataTable>
+                className='min-w-[12rem]'
+                header='File Name/Subject'
+              ></Column>
+
+              <Column
+                field='description'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+
+                className='min-w-[8rem]'
+                header='Description'
+              ></Column>
+
+
+
+              <Column
+                body={attachmentBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[12rem]'
+                header='Attachment'
+              ></Column>
+
+              <Column
+                field='remarks'
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                sortable
+                className='min-w-[12rem]'
+                header='Remarks'
+              ></Column>
+
+
+              <Column
+                body={actionBodyTemplate}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                header='Actions'
+                headerStyle={{ width: '3rem' }}
+                exportable={false}
+              ></Column>
+            </DataTable>
+          </TabPanel>
+        </TabView>
       </div>
+  <BulkUploadDialog
+                visible={bulkDialog}
+                setVisible={setBulkDialog}
+                apiEndpoint="/api/v1/road-traffic/monthly-roaster/bulk-upload"
+                onSuccess={refetch}
+                title="Upload Bulk Data"
+            />
+      {/* update data dialog  */}
+      <Dialog
+        visible={updateProductDialog}
+        style={{ width: '60rem' }}
+        header='Update Document'
+        modal
+        className='p-fluid'
+        footer={updateProductDialogFooter}
+        onHide={hideUpdateDialog}
+      >
+        {updatedProduct && (
+          <div className='grid grid-cols-2 gap-4'>
+
+            <div className='field'>
+              <label htmlFor='description' className='font-bold'>
+                Description
+              </label>
+              <InputText
+                id='description'
+                value={updatedProduct.description}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    description: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+
+
+            <div className='field'>
+              <label htmlFor='remarks' className='font-bold'>
+                Remarks
+              </label>
+              <InputText
+                id='remarks'
+                value={updatedProduct.remarks}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    remarks: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='subjectName' className='font-bold'>
+                File Name/ Subject
+              </label>
+              <InputText
+                id='subjectName'
+                value={updatedProduct.subjectName}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    subjectName: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='date' className='font-bold'>
+                Date
+              </label>
+              <Calendar
+                id='date'
+                value={
+                  new Date(updatedProduct.date.split('-').reverse().join('-'))
+                }
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    date: e.value ? formatDate(e.value) : '',
+                  })
+                }
+                dateFormat='dd/mm/yy'
+              />
+
+            </div>
+            <div className='col-span-2'>
+              <h3 className='font-bold mb-2'>Existing Attachments</h3>
+              <div className='flex flex-wrap gap-3'>
+                {updatedProduct.attachments.map((attachment) => (
+                  <div
+                    key={attachment._id}
+                    className='flex items-center gap-2 bg-gray-100 p-1 rounded-md'
+                  >
+                    <a
+                      href={attachment.url}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-blue-600 hover:underline'
+                    >
+                      {attachment.url?.split('/').pop()}
+                    </a>
+                    <Button
+                      icon='pi pi-times text-red-500'
+                      className='p-button-rounded text-sm text-red-500 ml-2'
+                      onClick={() => handleRemoveAttachment(attachment._id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className='col-span-2'>
+              <h3 className='font-bold mb-2'>Add New Attachments</h3>
+              <MultiFileInput onFilesChange={handleNewAttachments} />
+            </div>
+            <div className="col-span-2 mt-2">
+              <label className="font-bold mb-2 block">Approval</label>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  inputId="update-approve"
+
+                  checked={updatedProduct.approved}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      approved: !!e.checked,
+                    })
+                  }
+                />
+                <label htmlFor="update-approve" className="text-sm">
+                  Add this document for all (Approve)
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
+      </Dialog>
 
       <Dialog
         visible={viewProductDialog}
         style={{ width: '50rem' }}
-        header='Document Details'
+        header='File Details'
         modal
         className='p-fluid'
         footer={viewProductDialogFooter}
@@ -1000,25 +1139,32 @@ export default function MonthlyRoasterTable() {
                 </div>
               </div>
             </div>
+
             <div className='grid grid-cols-2 gap-4'>
+              <div>
+                <h3 className='font-bold'>SL No.</h3>
+                <p className='break-all'>{selectedProduct.slNo}</p>
+              </div>
+              <div>
+                <h3 className='font-bold'>File Name/Subject</h3>
+                <p className='break-all'>{selectedProduct.subjectName}</p>
+              </div>
               <div>
                 <h3 className='font-bold'>Date</h3>
                 <p>{selectedProduct.date}</p>
               </div>
+
               <div>
-                <h3 className='font-bold'>Title</h3>
-                <p className='break-all'>{selectedProduct.title}</p>
+                <h3 className='font-bold'>Description</h3>
+                <p className='break-all'>{selectedProduct.description}</p>
               </div>
-              <div>
-                <h3 className='font-bold'>Type</h3>
-                <p className='break-all'>{selectedProduct.type}</p>
-              </div>
+
               <div>
                 <h3 className='font-bold'>Remarks</h3>
                 <p className='break-all'>{selectedProduct.remarks}</p>
               </div>
 
-              {isRnT && (
+       
                 <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
@@ -1033,7 +1179,7 @@ export default function MonthlyRoasterTable() {
                     ))}
                   </div>
                 </div>
-              )}
+              
             </div>
           </>
         )}
@@ -1051,26 +1197,32 @@ export default function MonthlyRoasterTable() {
       >
         <>
           <div className='grid grid-cols-2 items-center gap-6'>
-            <div className='field'>
-              <label htmlFor='title' className='font-bold'>
-                Title
-              </label>
-              <InputText
-                id='title'
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
 
             <div className='field'>
-              <label htmlFor='type' className='font-bold'>
-                Select Type
+              <label htmlFor='subjectName' className='font-bold'>
+                File Name/Subject
               </label>
-              <Dropdown
-                id='type'
-                value={type}
-                options={['Plan', 'Actual']}
-                onChange={(e) => setType(e.target.value)}
-                placeholder='Select Type'
+              <InputText
+                id='subjectName'
+                onChange={(e) => setSubjectName(e.target.value)}
+                required
+                autoFocus
+                className={classNames({
+                  'p-invalid': submitted && !subjectName,
+                })}
+              />
+              {submitted && !subjectName && (
+                <small className='p-error'>File Name/Subject is required.</small>
+              )}
+            </div>
+            <div className='field'>
+              <label htmlFor='description' className='font-bold'>
+                Description
+              </label>
+              <InputText
+                id='description'
+                onChange={(e) => setDescription(e.target.value)}
+                required
               />
             </div>
 
@@ -1084,6 +1236,22 @@ export default function MonthlyRoasterTable() {
                 required
               />
             </div>
+            <div className="field">
+              <label htmlFor="type" className="font-bold">
+                Type
+              </label>
+              <Dropdown
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                options={alltypes}
+                optionLabel='name'
+                optionValue='name'
+                itemTemplate={itemTemplate}
+                placeholder="Select type"
+                className="w-full"
+              />
+            </div>
 
             <div>
               <label htmlFor='date' className='font-bold'>
@@ -1093,6 +1261,7 @@ export default function MonthlyRoasterTable() {
                 <Calendar
                   id='date'
                   // @ts-ignore
+                  value={formDate}
                   onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
@@ -1102,15 +1271,27 @@ export default function MonthlyRoasterTable() {
               </div>
             </div>
           </div>
-
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              <span className='text-red-500 ml-1'>*</span>
+
             </label>
 
             <div>
-              <MultiFileInputTwo onFilesChange={handleFileChange} />
+              <MultiFileInput onFilesChange={handleFileChange} />
+            </div>
+          </div>
+          <div className="col-span-2 mt-2">
+            <label className="font-bold mb-2 block">Approval</label>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                inputId="approve"
+                checked={approved}
+                onChange={(e) => setApproved(!!e.checked)}
+              />
+              <label htmlFor="approve" className="text-sm">
+                Add this document for all
+              </label>
             </div>
           </div>
         </>
@@ -1125,174 +1306,39 @@ export default function MonthlyRoasterTable() {
         footer={deleteProductDialogFooter}
         onHide={hideDeleteProductDialog}
       >
-        <div className='flex flex-col mx-auto text-center space-y-2'>
+        <div className='confirmation-content'>
           <i
-            className='pi pi-exclamation-triangle mr-3 text-red-600'
+            className='pi pi-exclamation-triangle mr-3'
             style={{ fontSize: '2rem' }}
           />
           {product && (
-            <span className='text-red-500'>
-              Are you sure you want to delete <b>{product.title}</b>?
+            <span>
+              Are you sure you want to delete <b>{product.name}</b>?
             </span>
           )}
         </div>
       </Dialog>
 
       <Dialog
-        visible={updateProductDialog}
-        style={{ width: '50rem' }}
-        header='Update Document'
-        modal
-        className='p-fluid'
-        footer={updateProductDialogFooter}
-        onHide={hideUpdateDialog}
-      >
-        {updatedProduct && (
-          <div className='grid grid-cols-2 gap-4'>
-            <div className='field'>
-              <label htmlFor='title' className='font-bold'>
-                Title
-              </label>
-              <InputText
-                id='title'
-                value={updatedProduct.title}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    title: e.target.value,
-                  })
-                }
-                required
-              />
-            </div>
-            <div className='field'>
-              <label htmlFor='type' className='font-bold'>
-                Select Type
-              </label>
-              <Dropdown
-                id='type'
-                value={updatedProduct.type}
-                options={['Plan', 'Actual']}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    type: e.target.value,
-                  })
-                }
-                placeholder='Select Type'
-                required
-              />
-            </div>
-            <div className='field'>
-              <label htmlFor='remarks' className='font-bold'>
-                Remarks
-              </label>
-              <InputText
-                id='remarks'
-                value={updatedProduct.remarks}
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    remarks: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className='field'>
-              <label htmlFor='date' className='font-bold'>
-                Date
-              </label>
-              <Calendar
-                id='date'
-                value={
-                  new Date(updatedProduct.date.split('-').reverse().join('-'))
-                }
-                onChange={(e) =>
-                  setUpdatedProduct({
-                    ...updatedProduct,
-                    date: e.value ? formatDate(e.value) : '',
-                  })
-                }
-                dateFormat='dd/mm/yy'
-              />
-            </div>
-
-            <div className='col-span-2'>
-              <h3 className='font-bold mb-2'>Existing Attachments</h3>
-              <div className='flex flex-wrap gap-3'>
-                {updatedProduct.attachments.map((attachment) => (
-                  <div
-                    key={attachment._id}
-                    className='flex items-center gap-2 bg-gray-100 p-1 rounded-md'
-                  >
-                    <a
-                      href={attachment.url}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='text-blue-600 hover:underline'
-                    >
-                      {attachment.url?.split('/').pop()}
-                    </a>
-                    <Button
-                      icon='pi pi-times text-red-500'
-                      className='p-button-rounded text-sm text-red-500 ml-2'
-                      onClick={() => handleRemoveAttachment(attachment._id)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className='col-span-2'>
-              <h3 className='font-bold mb-2'>Add New Attachments</h3>
-              <MultiFileInputTwo onFilesChange={handleNewAttachments} />
-            </div>
-          </div>
-        )}
-      </Dialog>
-
-      {/* Bulk Upload Dialog  */}
-      <Dialog
-        visible={bulkDialog}
+        visible={deleteProductsDialog}
         style={{ width: '42rem' }}
         breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Upload Bulk Data'
+        header='Confirm'
         modal
-        className='p-fluid'
-        footer={productDialogFooter2}
-        onHide={hideDialog2}
+        footer={deleteProductsDialogFooter}
+        onHide={hideDeleteProductsDialog}
       >
-        <div className='grid grid-cols-2 items-center gap-6'>
-          <div className='field col-span-2'>
-            <label htmlFor='bulkUpload' className='font-bold'>
-              Select File (.xlsx Only):
-            </label>
-            <br />
-            <input
-              type='file'
-              id='bulkUpload'
-              accept='.xlsx'
-              // @ts-ignore
-              onChange={handleFileChange2}
-              disabled={uploading}
-              className='mt-3'
-            />
-            {/* {file && <p>Selected file: {file?.name}</p>} */}
-            {uploadStatus && (
-              <p
-                className={
-                  uploadStatus.includes('success')
-                    ? 'text-green-500'
-                    : 'text-red-500'
-                }
-              >
-                {uploadStatus}
-              </p>
-            )}
-          </div>
+        <div className='confirmation-content'>
+          <i
+            className='pi pi-exclamation-triangle mr-3'
+            style={{ fontSize: '3rem' }}
+          />
+          {product && (
+            <span>Are you sure you want to delete the selected products?</span>
+          )}
         </div>
       </Dialog>
 
-      {/* multi-delete confirmation dialog */}
       <Dialog
         visible={deleteMultipleDialog}
         style={{ width: '32rem' }}

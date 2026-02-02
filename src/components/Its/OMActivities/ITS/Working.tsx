@@ -13,6 +13,7 @@ import axios from 'axios'
 import { Dialog } from 'primereact/dialog'
 import MultiFileInput from '@/components/MultiFileInput'
 import { toast } from 'sonner'
+import { FilePreview } from '@/components/file-preview'
 import { Menu } from 'primereact/menu'
 import { Toolbar } from 'primereact/toolbar'
 import RefreshButton from '@/components/refresh-button'
@@ -79,6 +80,12 @@ export default function OMActivityItsWorking() {
   const [site, setSite] = useState('')
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
+
+    const [remarks, setRemarks] = useState('')
+    const [bulkDialog, setBulkDialog] = useState(false)
+    const openBulkUpload = () => {
+        setBulkDialog(true)
+    }
   const [remarks, setRemarks] = useState('')
   const [formDate, setFormDate] = useState<string>('')
   const [filesInput, setFilesInput] = useState<File[]>([])
@@ -914,7 +921,8 @@ export default function OMActivityItsWorking() {
                 <Calendar
                   id='date'
                   // @ts-ignore
-                  onChange={(e) => setFormDate(e.value)}
+                  value={formDate}
+                                    onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'
                   inputClassName='border-0 focus:ring-0 cursor-pointer'
                   className='focus:ring-0'
