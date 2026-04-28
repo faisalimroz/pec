@@ -66,7 +66,7 @@ export default function MonthlyReport() {
   const { roles, permissions } = useAuth()
     const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
     const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'mb-pmis-technical-documentation');
-    const hasEditAccess = mbPmisPermission?.edit_authority === true && showAll;
+    const hasEditAccess = mbPmisPermission?.edit_authority === true &&  !showAll;
      const [approved, setApproved] = useState<boolean>(false);
     const [buttonType, setButtonType] = useState("");
     const [activeIndex, setActiveIndex] = useState(0)
