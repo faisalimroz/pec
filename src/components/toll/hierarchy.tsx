@@ -52,9 +52,9 @@ interface Product {
 type ZoomImageProps = {
     src: string
     alt?: string
-    className?: string        
-    imgClassName?: string     
-    zoom?: number             
+    className?: string
+    imgClassName?: string
+    zoom?: number
 }
 
 function ZoomImage({
@@ -121,7 +121,7 @@ export default function AssetManagementTable() {
     const tollPermission = tollManagerPermission?.children?.find(
         (child) => child.name === 'toll-hierarchy'
     )
-    const hasEditAccess = tollPermission?.edit_authority === true && showAll
+    const hasEditAccess = tollPermission?.edit_authority === true && !showAll
 
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -363,14 +363,35 @@ export default function AssetManagementTable() {
                         </div>
                     </div>
 
-                    {/* BOTTOM ROW: two zoomable images */}
-                    <div className='flex justify-around gap-3 mt-4'>
+                    {/* <div className='flex justify-around gap-3 mt-4'>
                         {img1 && (
                             <ZoomImage
                                 src={img1}
                                 alt='Hierarchy bottom image 1'
-                                className='w-[500px] h-[320px] rounded-md bg-gray-200'
-                                imgClassName='rounded-md'
+                                className='w-[500px]  rounded-md bg-gray-200'
+                                imgClassName='rounded-md object-contain w-full h-full'
+                                zoom={2.5}
+                            />
+                        )}
+
+                        {img2 && (
+                            <ZoomImage
+                                src={img2}
+                                alt='Hierarchy bottom image 2'
+                                className='w-[500px]  rounded-md bg-gray-200'
+                                imgClassName='rounded-md object-contain w-full h-full'
+                                zoom={2.5}
+                            />
+                        )}
+                    </div> */}
+                    <div className='flex flex-col md:flex-row justify-around gap-3 mt-4'>
+                        {img1 && (
+                            <ZoomImage
+                                src={img1}
+                                alt='Hierarchy bottom image 1'
+                                // Use w-full and h-auto so it doesn't crop
+                                className='w-full md:w-1/2 h-auto rounded-md bg-gray-200'
+                                imgClassName='rounded-md w-full h-auto object-contain'
                                 zoom={2.3}
                             />
                         )}
@@ -379,8 +400,9 @@ export default function AssetManagementTable() {
                             <ZoomImage
                                 src={img2}
                                 alt='Hierarchy bottom image 2'
-                                className='w-[500px] h-[320px] rounded-md bg-gray-200'
-                                imgClassName='rounded-md'
+                                // Use w-full so the wide image has space to breathe
+                                className='w-full h-auto rounded-md bg-gray-200'
+                                imgClassName='rounded-md w-full h-auto object-contain'
                                 zoom={2.3}
                             />
                         )}
