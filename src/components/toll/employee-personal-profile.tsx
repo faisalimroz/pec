@@ -103,7 +103,7 @@ export default function EmPersonalProfileTable() {
   const { roles, permissions } = useAuth()
   const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
   const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-employee-report');
-  const hasEditAccess = tollPermission?.edit_authority === true && showAll;
+  const hasEditAccess = tollPermission?.edit_authority === true && !showAll;
   const navigate = useNavigate()
 
 

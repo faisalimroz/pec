@@ -67,7 +67,7 @@ export default function VehicleDetectTollTable() {
   const { permissions } = useAuth();
   const tollManagerPermission = permissions.find((p) => p.name === "toll-manager");
   const tollPermission = tollManagerPermission?.children?.find((child) => child.name === "toll-daily-report");
-  const hasEditAccess = tollPermission?.edit_authority === true && showAll;
+  const hasEditAccess = tollPermission?.edit_authority === true && !showAll;
 
   const locationOptions = [
     { label: "All", value: "All" },

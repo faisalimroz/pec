@@ -66,7 +66,7 @@ export default function MonthlyReport() {
     const roadSafetyPermission = rtManagerPermission?.children?.find(
         (child) => child.name === 'r&t-workshop-maintenance');
         
-    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
+    const hasEditAccess = roadSafetyPermission?.edit_authority === true && !showAll;
   
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
