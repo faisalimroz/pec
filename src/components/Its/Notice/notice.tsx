@@ -64,7 +64,7 @@ export default function MonthlyReport() {
     const { roles, permissions } = useAuth()
   const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
     const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-notice');
-  const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
+  const hasEditAccess = itsPermission ?.edit_authority === true && !showAll;
     const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
