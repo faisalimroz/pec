@@ -667,7 +667,7 @@ const uploadFile = async () => {
           console.log(payload, 'hello')
           searchBackupFrequency(payload).then((result) => {
                const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
               setLoading(false)
           })
       }
@@ -687,7 +687,7 @@ const uploadFile = async () => {
   
           searchBackupFrequency(payload).then((result) => {
           const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
               setLoading(false)
           })
       }
@@ -703,7 +703,7 @@ const uploadFile = async () => {
   
           searchBackupFrequency(payload).then((result) => {
               const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
               setLoading(false)
           })
       }

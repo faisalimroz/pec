@@ -66,6 +66,7 @@ export const adminTopNav = [
     roles: ['superadmin', 'admin', 'finance-manager'],
     uName: 'administration',
   },
+ 
   {
     title: 'Road & Traffic',
     href: '/road-and-traffic',
@@ -114,6 +115,14 @@ export const adminTopNav = [
     roles: ['edms', 'superadmin'],
     uName: 'edms',
   },
+  //  {
+  //   title: 'PMBP',
+  //   href: '/administrative',
+  //   isActive: false,
+  //   logo: AdminIcon,
+  //   roles: ['superadmin', 'admin', 'finance-manager'],
+  //   uName: 'administration',
+  // }
 ]
 export const tollTopNav = [
   {

@@ -148,6 +148,12 @@ const UpdateAdmin = () => {
       name: 'admin',
       authority: false,
       children: [
+         {
+          name: 'organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
         {
           name: 'employee-personal-profile',
           view_authority: false,

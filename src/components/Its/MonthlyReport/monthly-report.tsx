@@ -580,7 +580,7 @@ const saveProduct = async () => {
 
         searchMonthlyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false); // This is correct
         }).catch((error) => {
             console.error('Search error:', error);
@@ -601,7 +601,7 @@ const saveProduct = async () => {
 
         searchMonthlyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false); // This is correct
         }).catch((error) => {
             console.error('Reset error:', error);
@@ -618,7 +618,7 @@ const saveProduct = async () => {
 
         searchMonthlyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false); // ✅ ADD THIS - was missing!
         }).catch((error) => {
             console.error('Refetch error:', error);

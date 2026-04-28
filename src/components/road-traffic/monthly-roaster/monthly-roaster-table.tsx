@@ -501,7 +501,7 @@ export default function MonthlyReport() {
 
       searchRTMonthlyRoaster(payload).then((result) => {
         const rows = Array.isArray(result?.data) ? result.data : [];
-        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setProducts(rows)
         setLoading(false);
       });
 
@@ -634,7 +634,7 @@ export default function MonthlyReport() {
     console.log(payload)
     searchRTMonthlyRoaster(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -653,7 +653,7 @@ export default function MonthlyReport() {
     setLoading(true)
     searchRTMonthlyRoaster(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -668,7 +668,7 @@ export default function MonthlyReport() {
     setButtonType('')
     searchRTMonthlyRoaster(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }

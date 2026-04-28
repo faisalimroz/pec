@@ -576,7 +576,7 @@ export default function EmPersonalProfileTable() {
 
 
       const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -596,7 +596,7 @@ export default function EmPersonalProfileTable() {
 
     searchEmployeeReport(initialPayload).then((result) => {
       const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -821,7 +821,7 @@ export default function EmPersonalProfileTable() {
 
     searchEmployeeReport(initialPayload).then((result) => {
       const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }

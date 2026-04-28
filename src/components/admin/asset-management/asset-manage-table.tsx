@@ -65,7 +65,7 @@ export default function AssetManagementTable() {
   console.log('adminManagerPermission', adminManagerPermission);
   const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'asset-management');
   console.log('adminPermission', adminPermission);
-  const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+  const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
   const [products, setProducts] = useState<any>([])
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)
@@ -566,7 +566,7 @@ export default function AssetManagementTable() {
 
       searchAssetManagement(payload).then((result) => {
         const rows = Array.isArray(result?.data) ? result.data : [];
-        setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+        setProducts(rows)
         setLoading(false);
       });
 
@@ -693,7 +693,7 @@ export default function AssetManagementTable() {
     }
     searchAssetManagement(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -712,7 +712,7 @@ export default function AssetManagementTable() {
     setLoading(true)
     searchAssetManagement(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -843,7 +843,7 @@ export default function AssetManagementTable() {
     setButtonType('')
     searchAssetManagement(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }

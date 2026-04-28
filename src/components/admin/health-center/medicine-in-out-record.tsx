@@ -64,7 +64,7 @@ export default function MedicineInOutRecord() {
     const showAll = pathname.startsWith('/edms');
     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'health-center');
-    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+    const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
     const [approved, setApproved] = useState<boolean>(false);
 
     const [activeIndex, setActiveIndex] = useState(0)
@@ -636,7 +636,7 @@ export default function MedicineInOutRecord() {
 
         searchMedicineInOutRecord(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }
@@ -663,7 +663,7 @@ export default function MedicineInOutRecord() {
         // 3. Call the API with the clean payload
         searchMedicineInOutRecord(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }
@@ -808,7 +808,7 @@ export default function MedicineInOutRecord() {
 
         searchMedicineInOutRecord(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }

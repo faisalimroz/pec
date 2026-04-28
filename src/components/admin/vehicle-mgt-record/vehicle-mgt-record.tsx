@@ -74,7 +74,7 @@ export default function MonthlyReport() {
   console.log('adminManagerPermission', adminManagerPermission);
   const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'vehicle-management');
 
-  const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+  const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<Product[]>([])
@@ -584,7 +584,7 @@ const saveProduct = async () => {
 
     searchVehicleMgtRecord(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -603,7 +603,7 @@ const saveProduct = async () => {
     setLoading(true)
     searchVehicleMgtRecord(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -617,7 +617,7 @@ const saveProduct = async () => {
     }
     searchVehicleMgtRecord(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }

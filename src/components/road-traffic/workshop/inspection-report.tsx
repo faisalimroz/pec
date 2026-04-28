@@ -563,7 +563,7 @@ export default function MonthlyReport() {
               console.log(payload)
               searchInspectionWM(payload).then((result) => {
                    const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
                   setLoading(false)
               })
           }
@@ -583,7 +583,7 @@ export default function MonthlyReport() {
       
               searchInspectionWM(payload).then((result) => {
                    const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
                   setLoading(false)
               })
           }
@@ -599,7 +599,7 @@ export default function MonthlyReport() {
          
                  searchInspectionWM(payload).then((result) => {
                       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
                      setLoading(false)
                  })
              }

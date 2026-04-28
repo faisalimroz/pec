@@ -65,7 +65,7 @@ export default function MonthlyReport() {
     const showAll = pathname.startsWith('/edms');
     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'it-electronics');
-    const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+    const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
 
     const isClinic = roles.some((role) =>
         ['superadmin', 'clinic'].includes(role.title)
@@ -652,7 +652,7 @@ export default function MonthlyReport() {
 
         searchITMonthlyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }
@@ -671,7 +671,7 @@ export default function MonthlyReport() {
 
         searchITMonthlyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }
@@ -808,7 +808,7 @@ export default function MonthlyReport() {
 
         searchITMonthlyReport(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }

@@ -656,7 +656,7 @@ export default function KecLetter() {
         console.log(payload, 'hello')
         searchMaterialsList(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }
@@ -676,7 +676,7 @@ export default function KecLetter() {
 
         searchMaterialsList(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }
@@ -692,7 +692,7 @@ export default function KecLetter() {
 
         searchMaterialsList(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
             setLoading(false)
         })
     }

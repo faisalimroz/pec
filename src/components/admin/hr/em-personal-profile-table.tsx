@@ -72,7 +72,6 @@ export default function EmPersonalProfileTable() {
     _id: '',
     employeeName: '',
     employeeId: '',
-
     dept: '',
     position: '',
     salary: '',
@@ -100,7 +99,7 @@ export default function EmPersonalProfileTable() {
   const showAll = pathname.startsWith('/edms');
   const adminManagerPermission = permissions.find((p) => p.name === 'admin');
   const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'employee-personal-profile');
-  const hasEditAccess = adminPermission?.edit_authority === true && showAll;
+  
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -581,7 +580,7 @@ const saveProduct = async () => {
     searchEmployeePersonalProfile(initialPayload).then((result) => {
 
       const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+     setProducts(rows);
       setLoading(false)
     })
   }
@@ -601,7 +600,7 @@ const saveProduct = async () => {
 
     searchEmployeePersonalProfile(initialPayload).then((result) => {
       const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows);
       setLoading(false)
     })
   }
@@ -832,10 +831,9 @@ const saveProduct = async () => {
       date_range: '',
       searchQuery: '',
     }
-
     searchEmployeePersonalProfile(initialPayload).then((result) => {
       const rows = Array.isArray(result?.EmployeePersonals) ? result.EmployeePersonals : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows);
       setLoading(false)
     })
   }

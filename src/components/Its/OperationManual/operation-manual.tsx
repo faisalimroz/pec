@@ -625,7 +625,7 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
 
     searchOperationManual(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -644,7 +644,7 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
     setLoading(true)
     searchOperationManual(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false);
     })
   }
@@ -775,7 +775,7 @@ const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
     setButtonType('')
     searchOperationManual(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-      setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+      setProducts(rows)
       setLoading(false)
     })
   }

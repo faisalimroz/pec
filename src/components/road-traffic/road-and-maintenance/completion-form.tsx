@@ -559,7 +559,7 @@ const [approved, setApproved] = useState<boolean>(false);
                   console.log(payload)
                   searchRTMCompletionForm(payload).then((result) => {
                        const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
                       setLoading(false)
                   })
               }
@@ -579,7 +579,7 @@ const [approved, setApproved] = useState<boolean>(false);
           
                   searchRTMCompletionForm(payload).then((result) => {
                        const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
                       setLoading(false)
                   })
               }
@@ -595,7 +595,7 @@ const [approved, setApproved] = useState<boolean>(false);
              
                      searchRTMCompletionForm(payload).then((result) => {
                           const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(showAll ? rows : rows.filter((r: any) => r.approved === true));
+            setProducts(rows)
                          setLoading(false)
                      })
                  }

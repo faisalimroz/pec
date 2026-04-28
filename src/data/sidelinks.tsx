@@ -27,6 +27,13 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
+      {
+    title: 'Organogram',
+    label: '',
+    href: '/administrative/organogram',
+    icon: <FileIcon />,
+    uName: 'organogram',
+  },
   {
     title: 'Employee Personal Profile',
     label: '',
