@@ -1,8 +1,6 @@
-// Function to check if user has a specific role
 const hasRole = (userRoles: string[], requiredRoles: string[]) => {
   return userRoles.some((role) => requiredRoles.includes(role))
 }
-
 
 export const adminTopNav = [
   {

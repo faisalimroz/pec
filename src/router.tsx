@@ -239,6 +239,13 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
+            {
+            path: 'administrative/letter-attachment',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/gardening/gardening-tools'))
+                .default,
+            }),
+          },
 
           // {
           //   path: 'administrative/mobilization',

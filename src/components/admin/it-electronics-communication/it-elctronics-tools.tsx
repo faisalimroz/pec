@@ -37,8 +37,8 @@ interface Product {
     subjectName: string
     description: string
 
-  approved: boolean
- 
+    approved: boolean
+
     date: string
     remarks: string
     attachments: Attachment[]
@@ -55,7 +55,7 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         approved: false,
-      
+
         date: '',
         remarks: '',
         attachments: [],
@@ -63,8 +63,8 @@ export default function MonthlyReport() {
 
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-         const showAll = pathname.startsWith('/edms');
-     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
+    const showAll = pathname.startsWith('/edms');
+    const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'it-electronics');
     const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
 
@@ -81,14 +81,14 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-   const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
-  const [approved, setApproved] = useState<boolean>(false);
+    const [approved, setApproved] = useState<boolean>(false);
     const [remarks, setRemarks] = useState('')
     const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
@@ -105,7 +105,7 @@ export default function MonthlyReport() {
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
-    
+
     // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
@@ -125,11 +125,11 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-           
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('approved', updatedProduct.approved ? 'true' : 'false')
-     
+
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
 
@@ -311,7 +311,7 @@ export default function MonthlyReport() {
         return `${day}-${month}-${year}`
     }
 
-   const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
@@ -653,34 +653,34 @@ export default function MonthlyReport() {
 
     const handleSearch = () => {
         setLoading(true)
-      setLoading(true)
-    const payload = {
-   
-      date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-      searchQuery: searchKey,
-    }
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
 
         searchITTools(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-          setDate(null)
-    setDate2(null)
-    setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
 
 
-    const payload = {
-      
-      date_range: '',
-      searchQuery: '',
-    }
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
 
         searchITTools(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
         })
@@ -815,18 +815,18 @@ export default function MonthlyReport() {
 
     const refetch = () => {
         setDate(null)
-    setDate2(null)
-    setSearchKey('')
+        setDate2(null)
+        setSearchKey('')
 
 
-    const payload = {
-     
-      date_range: '',
-      searchQuery: '',
-    }
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
 
         searchITTools(payload).then((result) => {
-           const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
         })
@@ -1108,25 +1108,7 @@ export default function MonthlyReport() {
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                        <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="update-approve"
 
-                                    checked={updatedProduct.approved}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            approved: !!e.checked,
-                                        })
-                                    }
-                                />
-                                <label htmlFor="update-approve" className="text-sm">
-                                    Add this document for all (Approve)
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 )}
             </Dialog>
@@ -1222,30 +1204,30 @@ export default function MonthlyReport() {
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1324,7 +1306,7 @@ export default function MonthlyReport() {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
@@ -1332,18 +1314,18 @@ export default function MonthlyReport() {
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 

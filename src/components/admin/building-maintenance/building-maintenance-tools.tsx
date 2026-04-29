@@ -1122,25 +1122,7 @@ export default function MonthlyReport() {
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                        <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="update-approve"
-
-                                    checked={updatedProduct.approved}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            approved: !!e.checked,
-                                        })
-                                    }
-                                />
-                                <label htmlFor="update-approve" className="text-sm">
-                                    Add this document for all (Approve)
-                                </label>
-                            </div>
-                        </div>
+                       
                     </div>
                 )}
             </Dialog>
@@ -1345,19 +1327,7 @@ export default function MonthlyReport() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                    <div className="col-span-2 mt-2">
-                        <label className="font-bold mb-2 block">Approval</label>
-                        <div className="flex items-center gap-3">
-                            <Checkbox
-                                inputId="approve"
-                                checked={approved}
-                                onChange={(e) => setApproved(!!e.checked)}
-                            />
-                            <label htmlFor="approve" className="text-sm">
-                                Add this document for all
-                            </label>
-                        </div>
-                    </div>
+                    
                 </>
             </Dialog>
 

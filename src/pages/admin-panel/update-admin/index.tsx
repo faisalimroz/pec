@@ -149,7 +149,13 @@ const UpdateAdmin = () => {
       authority: false,
       children: [
          {
-          name: 'organogram',
+          name: 'organization/organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+          {
+          name: 'admin-letter-attachment',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -216,6 +222,18 @@ const UpdateAdmin = () => {
       children: [
         {
           name: 'r&t-organization',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'r&t-organization/organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-letter-attachment',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -325,6 +343,18 @@ const UpdateAdmin = () => {
           edit_authority: false,
           g_children: [],
         },
+         {
+          name: 'mb-pmis-letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+          {
+          name: 'mb-pmis-organization-organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
         {
           name: 'mb-pmis-technical-documentation',
           view_authority: false,
@@ -379,6 +409,18 @@ const UpdateAdmin = () => {
           view_authority: false,
           edit_authority: false,
           g_children: [],
+        },  
+          {
+          name: 'its-organization/organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'its-letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
         },
         {
           name: 'its-organization',
@@ -425,6 +467,12 @@ const UpdateAdmin = () => {
       children: [
          {
           name: 'daily-toll-traffic-data', 
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+           {
+          name: 'toll-letter attachment',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -1074,26 +1122,28 @@ const withCreator = (payload: any) => ({
   creator: user?.email,  // logged-in user's email
 });
   // Handle form submission for update
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
+    // 1. Log the raw form state to see why validation might trigger
+    console.log('--- Validation Check ---');
+    console.log('formData:', formData);
+    console.log('isSuperAdmin:', isSuperAdmin);
+    console.log('Permissions Length:', formData.permissions.length);
+
     if (
       !formData.name ||
       !formData.email ||
       (!isSuperAdmin && formData.permissions.length === 0)
     ) {
-      toast.error(
-        'Please fill in all required fields and select at least one permission'
-      )
-      return
+      toast.error('Please fill in all required fields and select at least one permission');
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
+      const creatorEmail = user?.email || '';
 
-      const creatorEmail = user?.email || ''
-  
-      // request body based on whether superadmin is checked
       const requestBody = isSuperAdmin
         ? {
             name: formData.name,
@@ -1102,22 +1152,23 @@ const withCreator = (payload: any) => ({
             role: ['superadmin'],
             creator: creatorEmail,
           }
-        : withCreator(formData)
+        : withCreator(formData);
 
-      console.log('Submitting request body:', requestBody)
+      // 2. Log the FINAL data sent to the backend
+      console.log('--- Final Request Body ---');
+      console.dir(requestBody); // use console.dir for better object inspection
 
       if (selectedUser) {
-        await axios.put(
-          `${import.meta.env.VITE_BASE_URL}/api/v1/auth/update/${selectedUser._id}`,
-          requestBody,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        toast.success('User permissions updated successfully')
+        const url = `${import.meta.env.VITE_BASE_URL}/api/v1/auth/update/${selectedUser._id}`;
+        console.log('Target URL:', url);
+
+        await axios.put(url, requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        toast.success('User permissions updated successfully');
       }
 
       fetchUsers()

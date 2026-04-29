@@ -69,7 +69,7 @@ export default function MonthlyReport() {
   const roadSafetyPermission = rtManagerPermission?.children?.find(
     (child) => child.name === 'r&t-monthly-report');
   console.log('roadSafetyPermission', roadSafetyPermission);
-  const hasEditAccess = roadSafetyPermission?.edit_authority === true && !showAll; 
+  const hasEditAccess = roadSafetyPermission?.edit_authority === true && !showAll;
   const [approved, setApproved] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<any>([])
@@ -101,9 +101,9 @@ export default function MonthlyReport() {
   const [newAttachments, setNewAttachments] = useState<File[]>([])
   const [removedAttachments, setRemovedAttachments] = useState<string[]>([])
   const [bulkDialog, setBulkDialog] = useState(false)
-    const openBulkUpload = () => {
-        setBulkDialog(true)
-    }
+  const openBulkUpload = () => {
+    setBulkDialog(true)
+  }
   const months = [
     { name: 'January', code: 'January' },
     { name: 'February', code: 'February' },
@@ -254,74 +254,74 @@ export default function MonthlyReport() {
   }
 
   const saveProduct = async () => {
-        // --- 1. VALIDATION SHORTCUT ---
-        const requiredFields = [
-            { value: subjectName, name: 'Subject Name' },
-            { value: description, name: 'Description' },
-            { value: remarks, name: 'Remarks' },
-            { value: monthName, name: 'Month Name' },
-            { value: formDate, name: 'Date' }
-        ];
+    // --- 1. VALIDATION SHORTCUT ---
+    const requiredFields = [
+      { value: subjectName, name: 'Subject Name' },
+      { value: description, name: 'Description' },
+      { value: remarks, name: 'Remarks' },
+      { value: monthName, name: 'Month Name' },
+      { value: formDate, name: 'Date' }
+    ];
 
-        for (const field of requiredFields) {
-            if (!field.value) {
-                toast.warning(`${field.name} is required!`);
-                return;
-            }
-        }
-
-        try {
-            setLoading2(true)
-            const formData = new FormData()
-
-            formData.append('subjectName', subjectName)
-            formData.append('description', description)
-            formData.append('remarks', remarks)
-            formData.append('monthName', monthName)
-            formData.append('approved', approved ? 'true' : 'false');
-            formData.append('date', formatDate(formDate))
-
-            // Append files only if they exist
-            if (filesInput && filesInput.length > 0) {
-                filesInput.forEach((file) => {
-                    formData.append('attachments', file)
-                })
-            }
-
-            const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/create`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            )
-
-            // --- 2. RESET ALL FIELDS HERE ---
-            setSubjectName('')
-            setDescription('')
-            setRemarks('')
-            setMonthName('')
-            setApproved(false)
-            setFormDate('')
-            setFilesInput([])
-
-            hideDialog()
-            toast.success('Data Saved Successfully')
-            refetch()
-        } catch (error: any) {
-            if (error.response) {
-                const { message } = error.response.data
-                toast.error(message)
-            } else {
-                console.log(error)
-            }
-        } finally {
-            setLoading2(false)
-        }
+    for (const field of requiredFields) {
+      if (!field.value) {
+        toast.warning(`${field.name} is required!`);
+        return;
+      }
     }
+
+    try {
+      setLoading2(true)
+      const formData = new FormData()
+
+      formData.append('subjectName', subjectName)
+      formData.append('description', description)
+      formData.append('remarks', remarks)
+      formData.append('monthName', monthName)
+      formData.append('approved', approved ? 'true' : 'false');
+      formData.append('date', formatDate(formDate))
+
+      // Append files only if they exist
+      if (filesInput && filesInput.length > 0) {
+        filesInput.forEach((file) => {
+          formData.append('attachments', file)
+        })
+      }
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/monthly-report/create`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      // --- 2. RESET ALL FIELDS HERE ---
+      setSubjectName('')
+      setDescription('')
+      setRemarks('')
+      setMonthName('')
+      setApproved(false)
+      setFormDate('')
+      setFilesInput([])
+
+      hideDialog()
+      toast.success('Data Saved Successfully')
+      refetch()
+    } catch (error: any) {
+      if (error.response) {
+        const { message } = error.response.data
+        toast.error(message)
+      } else {
+        console.log(error)
+      }
+    } finally {
+      setLoading2(false)
+    }
+  }
   const editProduct = (product: Product) => {
     setProduct({ ...product })
     setProductDialog(true)
@@ -489,13 +489,13 @@ export default function MonthlyReport() {
       <>
         {hasEditAccess && (
           <ButtonGroupWithIcons
-                        selectedProducts={selectedProducts}
-                        openNew={openNew}
-                        openNew3={openBulkUpload}
-                        exportCSV={exportCSV}
-                        confirmDeleteSelected={confirmDeleteSelected}
-                       
-                    />
+            selectedProducts={selectedProducts}
+            openNew={openNew}
+            openNew3={openBulkUpload}
+            exportCSV={exportCSV}
+            confirmDeleteSelected={confirmDeleteSelected}
+
+          />
           // <div className='space-x-2'>
           //     <button
           //         className='bg-white text-gray-800 border-gray-600 border-t border-l border-r px-4 py-3 rounded-t-md font-bold'
@@ -652,7 +652,7 @@ export default function MonthlyReport() {
 
     searchRTMonthlyReport(payload).then((result) => {
       const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(rows)
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -797,8 +797,8 @@ export default function MonthlyReport() {
     }
 
     searchRTMonthlyReport(payload).then((result) => {
-     const rows = Array.isArray(result?.data) ? result.data : [];
-            setProducts(rows)
+      const rows = Array.isArray(result?.data) ? result.data : [];
+      setProducts(rows)
       setLoading(false)
     })
   }
@@ -889,7 +889,7 @@ export default function MonthlyReport() {
                 className='min-w-[12rem]'
                 header='File Name/Subject'
               ></Column>
-              
+
               <Column
                 field='monthName'
                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -939,13 +939,13 @@ export default function MonthlyReport() {
           </TabPanel>
         </TabView>
       </div>
-  <BulkUploadDialog
-                visible={bulkDialog}
-                setVisible={setBulkDialog}
-                apiEndpoint="/api/v1/road-traffic/monthly-report/bulk-upload"
-                onSuccess={refetch}
-                title="Upload Bulk Data"
-            />
+      <BulkUploadDialog
+        visible={bulkDialog}
+        setVisible={setBulkDialog}
+        apiEndpoint="/api/v1/road-traffic/monthly-report/bulk-upload"
+        onSuccess={refetch}
+        title="Upload Bulk Data"
+      />
       {/* update data dialog  */}
       <Dialog
         visible={updateProductDialog}
@@ -1076,25 +1076,7 @@ export default function MonthlyReport() {
               <h3 className='font-bold mb-2'>Add New Attachments</h3>
               <MultiFileInput onFilesChange={handleNewAttachments} />
             </div>
-            <div className="col-span-2 mt-2">
-              <label className="font-bold mb-2 block">Approval</label>
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  inputId="update-approve"
 
-                  checked={updatedProduct.approved}
-                  onChange={(e) =>
-                    setUpdatedProduct({
-                      ...updatedProduct,
-                      approved: !!e.checked,
-                    })
-                  }
-                />
-                <label htmlFor="update-approve" className="text-sm">
-                  Add this document for all (Approve)
-                </label>
-              </div>
-            </div>
           </div>
         )}
       </Dialog>
@@ -1193,19 +1175,19 @@ export default function MonthlyReport() {
               </div>
 
               <div className='col-span-2'>
-                  <h3 className='font-bold'>Attachments/Download</h3>
-                  <div className='w-fit mt-2 flex flex-col justify-start'>
-                    {selectedProduct.attachments.map((attachment, index) => (
-                      <Button
-                        key={attachment._id}
-                        label={`File No. ${index + 1}: ${attachment?.url?.split('/').pop()}`}
-                        icon='pi pi-file'
-                        onClick={() => window.open(attachment.url, '_blank')}
-                        className='hover:text-blue-600/70 px-0 py-2 border rounded-md focus:border-0 focus:ring-0 focus:ring-offset-0'
-                      />
-                    ))}
-                  </div>
+                <h3 className='font-bold'>Attachments/Download</h3>
+                <div className='w-fit mt-2 flex flex-col justify-start'>
+                  {selectedProduct.attachments.map((attachment, index) => (
+                    <Button
+                      key={attachment._id}
+                      label={`File No. ${index + 1}: ${attachment?.url?.split('/').pop()}`}
+                      icon='pi pi-file'
+                      onClick={() => window.open(attachment.url, '_blank')}
+                      className='hover:text-blue-600/70 px-0 py-2 border rounded-md focus:border-0 focus:ring-0 focus:ring-offset-0'
+                    />
+                  ))}
                 </div>
+              </div>
             </div>
           </>
         )}
@@ -1299,26 +1281,14 @@ export default function MonthlyReport() {
           <div className='gap-3 mt-5'>
             <label className='block mb-1 font-semibold'>
               Upload Document
-              
+
             </label>
 
             <div>
               <MultiFileInput onFilesChange={handleFileChange} />
             </div>
           </div>
-          <div className="col-span-2 mt-2">
-            <label className="font-bold mb-2 block">Approval</label>
-            <div className="flex items-center gap-3">
-              <Checkbox
-                inputId="approve"
-                checked={approved}
-                onChange={(e) => setApproved(!!e.checked)}
-              />
-              <label htmlFor="approve" className="text-sm">
-                Add this document for all
-              </label>
-            </div>
-          </div>
+
         </>
       </Dialog>
 

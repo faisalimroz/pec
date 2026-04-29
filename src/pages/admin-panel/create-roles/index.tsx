@@ -164,8 +164,26 @@ const PermissionManager = () => {
           edit_authority: false,
           g_children: [],
         },
+           {
+          name: 'organization/organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+           {
+          name: 'letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
         {
           name: 'building-maintenance',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+         {
+          name: 'admin-letter-attachment',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -231,6 +249,18 @@ const PermissionManager = () => {
           g_children: [],
         },
         {
+          name: 'r&t-organization/organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
+          name: 'r&t-letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+        {
           name: 'r&t-monthly-roster',
           view_authority: false,
           edit_authority: false,
@@ -275,6 +305,18 @@ const PermissionManager = () => {
       children: [
         {
           name: 'mb-pmis-project-overview',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+          {
+          name: 'mb-pmis-letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+          {
+          name: 'mb-pmis-organization/organogram',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -335,6 +377,18 @@ const PermissionManager = () => {
           edit_authority: false,
           g_children: [],
         },
+               {
+          name: 'rtw-organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+               {
+          name: 'rtw-letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
         {
           name: 'rtw-technical-documentation',
           view_authority: false,
@@ -390,6 +444,18 @@ const PermissionManager = () => {
           edit_authority: false,
           g_children: [],
         },
+          {
+          name: 'its-organization/organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+          {
+          name: 'its-letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
         {
           name: 'its-organization',
           view_authority: false,
@@ -435,6 +501,13 @@ const PermissionManager = () => {
       children: [
         {
           name: 'daily-toll-traffic-data',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+      
+         {
+          name: 'toll-letter attachment',
           view_authority: false,
           edit_authority: false,
           g_children: [],

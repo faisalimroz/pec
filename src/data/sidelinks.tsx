@@ -27,6 +27,27 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
+   {
+    title: 'Letter Attachment',
+    label: '',
+    href: '',
+    uName: 'admin-letter-attachment',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Incoming Attachment',
+        label: '',
+        href: '/administrative/letter-attachment/incoming-letters',
+        icon: '',
+      },
+      {
+        title: 'Outgoing Attachment',
+        label: '',
+        href: '/administrative/letter-attachment/outgoing-letters',
+        icon: '',
+      }
+    ],
+  },
       {
     title: 'Organogram',
     label: '',
@@ -279,6 +300,27 @@ export const rntLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
+  {
+    title: 'Letter Attachment',
+    label: '',
+    href: '',
+    uName: 'r&t-letter-attachment',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Incoming Attachment',
+        label: '',
+        href: '/road-and-traffic/letter-attachment/incoming-letters',
+        icon: '',
+      },
+      {
+        title: 'Outgoing Attachment',
+        label: '',
+        href: '/road-and-traffic/letter-attachment/outgoing-letters',
+        icon: '',
+      }
+    ],
+  },
  {
     title: 'Organization/ Organogram',
     label: '',
@@ -495,7 +537,34 @@ export const itsLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
-
+{
+    title: 'Letter Attachment',
+    label: '',
+    href: '',
+    uName: 'its-letter-attachment',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Incoming Attachment',
+        label: '',
+        href: '/its/letter-attachment/incoming-letters',
+        icon: '',
+      },
+      {
+        title: 'Outgoing Attachment',
+        label: '',
+        href: '/its/letter-attachment/outgoing-letters',
+        icon: '',
+      }
+    ],
+  },
+  {
+    title: 'Organization/ Organogram',
+    label: '',
+    href: '/its/organization',
+    uName: 'its-organization',
+    icon: <FileIcon />,
+  },
   {
     title: 'About ITS',
     label: '',
@@ -547,6 +616,12 @@ export const itsLinks: SideLink[] = [
     href: '/its/monthly-report',
     icon: <FileIcon />,
   },
+  {
+    title: 'Organization/Organom',
+    label: '',
+    href: '/its/its-organom',
+    icon: <FileIcon />,
+  },
 
 
 ]
@@ -558,6 +633,27 @@ export const tollLinks: SideLink[] = [
     href: '',
     icon: '',
     uName: '',
+  },
+  {
+    title: 'Letter Attachment',
+    label: '',
+    href: '',
+    uName: 'toll-letter-attachment',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Incoming Attachment',
+        label: '',
+        href: '/toll/letter-attachment/incoming-letters',
+        icon: '',
+      },
+      {
+        title: 'Outgoing Attachment',
+        label: '',
+        href: '/toll/letter-attachment/outgoing-letters',
+        icon: '',
+      }
+    ],
   },
   {
     title: 'Daily Toll & Traffic Data',
@@ -683,6 +779,34 @@ export const rtwLinks: SideLink[] = [
     uName: '',
   },
   {
+    title: 'Letter Attachment',
+    label: '',
+    href: '',
+    uName: 'rtw-letter-attachment',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Incoming Attachment',
+        label: '',
+        href: '/rtw/letter-attachment/incoming-letters',
+        icon: '',
+      },
+      {
+        title: 'Outgoing Attachment',
+        label: '',
+        href: '/rtw/letter-attachment/outgoing-letters',
+        icon: '',
+      }
+    ],
+  },
+  {
+    title: 'Organization/ Organogram',
+    label: '',
+    href: '/rtw/organization-organogram',
+    uName: 'rtw-organization',
+    icon: <FileIcon />,
+  },
+  {
     title: 'Project Overview',
     label: '',
     href: '/rtw/project-overview',
@@ -743,34 +867,6 @@ export const rtwLinks: SideLink[] = [
       }
     ],
   },
-  // {
-  //   title: 'Additional Notes',
-  //   label: '',
-  //   href: '',
-  //   uName: 'rtw-additional-notes',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Backup Frequency',
-  //       label: '',
-  //       href: '/rtw/additional-notes/backup-frequency',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Control Manager',
-  //       label: '',
-  //       href: '/rtw/additional-notes/document-control-manager',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Revision Log',
-  //       label: '',
-  //       href: '/rtw/additional-notes/document-revision-log',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
-  
   {
     title: 'Quality, Safety',
     label: '',
@@ -866,9 +962,6 @@ export const pmisLinks: SideLink[] = [
     uName: 'mb-pmis-project-overview',
     icon: <FileIcon />,
   },
-  
-
- 
    {
     title: 'Technical Documentation',
     label: '',
@@ -916,9 +1009,6 @@ export const pmisLinks: SideLink[] = [
     uName: 'mb-pmis-monitoring-reporting',
     icon: <FileIcon />,
   },
- 
-
-
   {
     title: 'Quality, Safety',
     label: '',
@@ -934,6 +1024,34 @@ export const pmisLinks: SideLink[] = [
       },
       {
         title: 'Safety',
+        label: '',
+        href: '/mb-pmis/quality-and-safety/safety',
+        icon: '',
+      },
+    ],
+  },
+  {
+    title: 'Organization/Organom',
+    label: '',
+    href: '/mb-pmis/organization-organogram',
+    uName: 'mb-pmis-organization-organogram',
+    icon: <FileIcon />,
+  },
+  {
+    title: 'Letter Attachment',
+    label: '',
+    href: '',
+    uName: 'mb-pmis-letter-attachment',
+    icon: <FileIcon />,
+    sub: [
+      {
+        title: 'Incoming Letter',
+        label: '',
+        href: '/mb-pmis/quality-and-safety/material-test-report',
+        icon: '',
+      },
+      {
+        title: 'Outgoin letter',
         label: '',
         href: '/mb-pmis/quality-and-safety/safety',
         icon: '',
@@ -961,33 +1079,6 @@ export const pmisLinks: SideLink[] = [
       }
     ],
   },
-  // {
-  //   title: 'Additional Notes',
-  //   label: '',
-  //   href: '',
-  //   uName: 'mb-pmis-additional-notes',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Backup Frequency',
-  //       label: '',
-  //       href: '/mb-pmis/additional-notes/backup-frequency',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Control Manager',
-  //       label: '',
-  //       href: '/mb-pmis/additional-notes/document-control-manager',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Revision Log',
-  //       label: '',
-  //       href: '/mb-pmis/additional-notes/document-revision-log',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
   {
     title: 'Financial Documentation',
     label: '',

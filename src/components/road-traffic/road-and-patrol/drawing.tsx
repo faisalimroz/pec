@@ -35,9 +35,9 @@ interface Product {
     _id: string | null
     slNo: string
     subjectName: string
-    description: string 
+    description: string
     approved: boolean
-   
+
     date: string
     remarks: string
     attachments: Attachment[]
@@ -54,25 +54,21 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         approved: false,
-      
+
         date: '',
         remarks: '',
         attachments: [],
     }
 
     const { pathname } = useLocation();
- const showAll = pathname.startsWith('/edms');
-const { roles, permissions } = useAuth()
-       const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
-console.log('R&T Manager Permission:', rtManagerPermission);
-
-// Then find the road-safety-patrol child within it
-const roadSafetyChild = rtManagerPermission?.children?.find(
-  (child) => child.name === 'r&t-road-safety-patrol'
-);
-
-
-const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
+    const showAll = pathname.startsWith('/edms');
+    const { roles, permissions } = useAuth()
+    const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+    console.log('R&T Manager Permission:', rtManagerPermission);
+    const roadSafetyChild = rtManagerPermission?.children?.find(
+        (child) => child.name === 'r&t-road-safety-patrol'
+    );
+    const hasEditAccess = roadSafetyChild?.edit_authority === true && !showAll;;
 
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
@@ -84,7 +80,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-   const [date, setDate] = useState<Date | null>(null)
+    const [date, setDate] = useState<Date | null>(null)
     const [date2, setDate2] = useState<Date | null>(null)
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
@@ -102,10 +98,10 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
     const [filesInput, setFilesInput] = useState<File[]>([])
     const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    
 
-    
-     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
+
+
+    const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -133,15 +129,15 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
         try {
             setLoading2(true)
             const formData = new FormData()
-         
+
             formData.append('subjectName', updatedProduct.subjectName)
-       
+
             formData.append('description', updatedProduct.description)
             formData.append('approved', updatedProduct.approved ? 'true' : 'false')
 
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-           
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -441,7 +437,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                 <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
                     Document List
                 </div>
-               
+
             </div>
         )
     }
@@ -456,7 +452,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                         exportCSV={exportCSV}
                         openNew3={openBulkUpload}
                         confirmDeleteSelected={confirmDeleteSelected}
-                    
+
                     />
                 )}
 
@@ -566,57 +562,57 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
         return date.getFullYear()
     }
 
-  
-   const handleSearch = () => {
-               setLoading(true)
-               const payload = {
-       
-                   date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
-                   searchQuery: searchKey,
-               }
-               console.log(payload)
-               searchDrawingWM(payload).then((result) => {
-                    const rows = Array.isArray(result?.data) ? result.data : [];
+
+    const handleSearch = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
+            searchQuery: searchKey,
+        }
+        console.log(payload)
+        searchDrawingWM(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
-                   setLoading(false)
-               })
-           }
-       
-           const handleReset = () => {
-               setLoading(true)
-               const payload = {
-       
-                   date_range: '',
-                   searchQuery: '',
-               }
-       
-               setDate(null)
-               setDate2(null)
-               setSearchKey('')
-               setSelectedCode(null)
-       
-               searchDrawingWM(payload).then((result) => {
-                    const rows = Array.isArray(result?.data) ? result.data : [];
+            setLoading(false)
+        })
+    }
+
+    const handleReset = () => {
+        setLoading(true)
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
+        setSelectedCode(null)
+
+        searchDrawingWM(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
-                   setLoading(false)
-               })
-           }
-       
-           const refetch = () => {
-               setLoading(true)
-       
-               const payload = {
-       
-                   date_range: '',
-                   searchQuery: '',
-               }
-       
-               searchDrawingWM(payload).then((result) => {
-                    const rows = Array.isArray(result?.data) ? result.data : [];
+            setLoading(false)
+        })
+    }
+
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchDrawingWM(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
-                   setLoading(false)
-               })
-           }
+            setLoading(false)
+        })
+    }
     const filterSearchForm = (
         <div className='flex items-center justify-center'>
             <div
@@ -657,7 +653,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-              
+
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -735,7 +731,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
         </>
     )
 
- 
+
 
     // initial data load - Internal
     useEffect(() => {
@@ -823,7 +819,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
-                           
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -885,7 +881,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
             >
                 {updatedProduct && (
                     <div className='grid grid-cols-2 gap-4'>
-                     
+
                         <div className='field'>
                             <label htmlFor='description' className='font-bold'>
                                 Description
@@ -916,7 +912,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                                 }
                             />
                         </div>
-                        
+
 
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
@@ -950,7 +946,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                           
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -981,25 +977,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                        <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="update-approve"
 
-                                    checked={updatedProduct.approved}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            approved: !!e.checked,
-                                        })
-                                    }
-                                />
-                                <label htmlFor="update-approve" className="text-sm">
-                                    Add this document for all (Approve)
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 )}
             </Dialog>
@@ -1088,37 +1066,37 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1164,7 +1142,7 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                                 required
                             />
                         </div>
-                        
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1197,26 +1175,14 @@ const hasEditAccess = roadSafetyChild?.edit_authority === true && showAll;;
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                <div className="col-span-2 mt-2">
-                        <label className="font-bold mb-2 block">Approval</label>
-                        <div className="flex items-center gap-3">
-                            <Checkbox
-                                inputId="approve"
-                                checked={approved}
-                                onChange={(e) => setApproved(!!e.checked)}
-                            />
-                            <label htmlFor="approve" className="text-sm">
-                                Add this document for all
-                            </label>
-                        </div>
-                    </div>
+
                 </>
             </Dialog>
 
