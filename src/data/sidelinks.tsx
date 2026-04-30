@@ -342,13 +342,7 @@ export const rntLinks: SideLink[] = [
     uName: 'r&t-monthly-report',
     icon: <ReportIcon />,
   },
-  {
-    title: 'KEC Letter',
-    label: '',
-    href: '/road-and-traffic/kec-letter',
-    uName: 'r&t-kec-letter',
-    icon: <KecIcon />,
-  },
+ 
 
   {
     title: 'Road Maintenance Part',

@@ -272,12 +272,7 @@ const PermissionManager = () => {
           edit_authority: false,
           g_children: [],
         },
-        {
-          name: 'r&t-kec-letter',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
+    
         {
           name: 'r&t-road-maintenance',
           view_authority: false,
