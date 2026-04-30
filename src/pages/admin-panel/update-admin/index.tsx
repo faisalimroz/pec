@@ -472,7 +472,7 @@ const UpdateAdmin = () => {
           g_children: [],
         },
            {
-          name: 'toll-letter attachment',
+          name: 'toll-letter-attachment',
           view_authority: false,
           edit_authority: false,
           g_children: [],

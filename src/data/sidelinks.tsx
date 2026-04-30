@@ -27,7 +27,7 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
-   {
+  {
     title: 'Letter Attachment',
     label: '',
     href: '',
@@ -37,23 +37,23 @@ export const administrationLinks: SideLink[] = [
       {
         title: 'Incoming Attachment',
         label: '',
-        href: '/administrative/letter-attachment/incoming-letters',
+        href: '/administrative/letter-attachment-incoming',
         icon: '',
       },
       {
         title: 'Outgoing Attachment',
         label: '',
-        href: '/administrative/letter-attachment/outgoing-letters',
+        href: '/administrative/letter-attachment-outgoing',
         icon: '',
       }
     ],
   },
-      {
+  {
     title: 'Organogram',
     label: '',
     href: '/administrative/organogram',
     icon: <FileIcon />,
-    uName: 'organogram',
+    uName: 'organization/organogram',
   },
   {
     title: 'Employee Personal Profile',
@@ -310,18 +310,18 @@ export const rntLinks: SideLink[] = [
       {
         title: 'Incoming Attachment',
         label: '',
-        href: '/road-and-traffic/letter-attachment/incoming-letters',
+        href: '/road-and-traffic/letter-attachment-incoming',
         icon: '',
       },
       {
         title: 'Outgoing Attachment',
         label: '',
-        href: '/road-and-traffic/letter-attachment/outgoing-letters',
+        href: '/road-and-traffic/letter-attachment-outgoing',
         icon: '',
       }
     ],
   },
- {
+  {
     title: 'Organization/ Organogram',
     label: '',
     href: '/road-and-traffic/organization-organogram',
@@ -342,14 +342,14 @@ export const rntLinks: SideLink[] = [
     uName: 'r&t-monthly-report',
     icon: <ReportIcon />,
   },
-    {
+  {
     title: 'KEC Letter',
     label: '',
     href: '/road-and-traffic/kec-letter',
     uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
- 
+
   {
     title: 'Road Maintenance Part',
     label: '',
@@ -537,7 +537,7 @@ export const itsLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
-{
+  {
     title: 'Letter Attachment',
     label: '',
     href: '',
@@ -547,13 +547,13 @@ export const itsLinks: SideLink[] = [
       {
         title: 'Incoming Attachment',
         label: '',
-        href: '/its/letter-attachment/incoming-letters',
+        href: '/its/letter-attachment-incoming-letters',
         icon: '',
       },
       {
         title: 'Outgoing Attachment',
         label: '',
-        href: '/its/letter-attachment/outgoing-letters',
+        href: '/its/letter-attachment-outgoing-letters',
         icon: '',
       }
     ],
@@ -561,8 +561,8 @@ export const itsLinks: SideLink[] = [
   {
     title: 'Organization/ Organogram',
     label: '',
-    href: '/its/organization',
-    uName: 'its-organization',
+    href: '/its/organom',
+    uName: 'its-organom',
     icon: <FileIcon />,
   },
   {
@@ -577,22 +577,22 @@ export const itsLinks: SideLink[] = [
     href: '/its/organization',
     icon: <FileIcon />,
   },
-  
-   {
+
+  {
     title: 'Work Plan',
     label: '',
     href: '/its/work-plan',
     icon: <FileIcon />,
   },
 
- 
+
   {
     title: 'Notice',
     label: '',
     href: '/its/notice',
     icon: <FileIcon />,
   },
-  
+
 
 
   {
@@ -644,13 +644,13 @@ export const tollLinks: SideLink[] = [
       {
         title: 'Incoming Attachment',
         label: '',
-        href: '/toll/letter-attachment/incoming-letters',
+        href: '/toll/letter-attachment-incoming',
         icon: '',
       },
       {
         title: 'Outgoing Attachment',
         label: '',
-        href: '/toll/letter-attachment/outgoing-letters',
+        href: '/toll/letter-attachment-outgoing',
         icon: '',
       }
     ],
@@ -724,14 +724,14 @@ export const tollLinks: SideLink[] = [
 
     ],
   },
-    {
+  {
     title: 'Daily Report',
     label: '',
     href: '/toll/daily-report',
     uName: 'toll-daily-report',
     icon: <FileIcon />,
   },
- {
+  {
     title: 'Monthly Roster',
     label: '',
     href: '',
@@ -748,7 +748,7 @@ export const tollLinks: SideLink[] = [
     ],
   },
 
- {
+  {
     title: 'Employee Personal Report',
     label: '',
     href: '/toll/employee-personal-report',
@@ -767,7 +767,6 @@ export const tollLinks: SideLink[] = [
 ]
 
 export const edmsLinks: SideLink[] = [
-
 ]
 
 export const rtwLinks: SideLink[] = [
@@ -788,22 +787,22 @@ export const rtwLinks: SideLink[] = [
       {
         title: 'Incoming Attachment',
         label: '',
-        href: '/rtw/letter-attachment/incoming-letters',
+        href: '/rtw/letter-attachment-incoming-letters',
         icon: '',
       },
       {
         title: 'Outgoing Attachment',
         label: '',
-        href: '/rtw/letter-attachment/outgoing-letters',
+        href: '/rtw/letter-attachment-outgoing-letters',
         icon: '',
       }
     ],
   },
   {
-    title: 'Organization/ Organogram',
+    title: 'Organization/Organogram',
     label: '',
     href: '/rtw/organization-organogram',
-    uName: 'rtw-organization',
+    uName: 'rtw-organom',
     icon: <FileIcon />,
   },
   {
@@ -813,7 +812,7 @@ export const rtwLinks: SideLink[] = [
     uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
-   {
+  {
     title: 'Technical Documentation',
     label: '',
     href: '',
@@ -846,7 +845,7 @@ export const rtwLinks: SideLink[] = [
       },
     ],
   },
-   {
+  {
     title: 'Monitoring & Reporting',
     label: '',
     href: '',
@@ -943,10 +942,6 @@ export const rtwLinks: SideLink[] = [
 
 ]
 
-
-
-
-
 export const pmisLinks: SideLink[] = [
   {
     title: 'MAIN BRIDGE',
@@ -962,7 +957,7 @@ export const pmisLinks: SideLink[] = [
     uName: 'mb-pmis-project-overview',
     icon: <FileIcon />,
   },
-   {
+  {
     title: 'Technical Documentation',
     label: '',
     href: '',
@@ -1031,9 +1026,9 @@ export const pmisLinks: SideLink[] = [
     ],
   },
   {
-    title: 'Organization/Organom',
+    title: 'Organization/Organogram',
     label: '',
-    href: '/mb-pmis/organization-organogram',
+    href: '/mb-pmis/organogram',
     uName: 'mb-pmis-organization-organogram',
     icon: <FileIcon />,
   },
@@ -1047,18 +1042,18 @@ export const pmisLinks: SideLink[] = [
       {
         title: 'Incoming Letter',
         label: '',
-        href: '/mb-pmis/quality-and-safety/material-test-report',
+        href: '/mb-pmis/letter-attachment-incoming',
         icon: '',
       },
       {
-        title: 'Outgoin letter',
+        title: 'Outgoing letter',
         label: '',
-        href: '/mb-pmis/quality-and-safety/safety',
+        href: '/mb-pmis/letter-attachment-outgoing',
         icon: '',
       },
     ],
   },
- {
+  {
     title: 'Communication & Correspondence',
     label: '',
     href: '',

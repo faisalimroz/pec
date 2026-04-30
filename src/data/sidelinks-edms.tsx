@@ -26,13 +26,34 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
-    {
-    title: 'Organogram',
-    label: '',
-    href: '',
-    icon: '',
-    uName: 'organogram',
-  },
+  {
+     title: 'Letter Attachment',
+     label: '',
+     href: '',
+     uName: 'admin-letter-attachment',
+     icon: <FileIcon />,
+     sub: [
+       {
+         title: 'Incoming Attachment',
+         label: '',
+         href: '/edms/administrative/letter-attachment-incoming',
+         icon: '',
+       },
+       {
+         title: 'Outgoing Attachment',
+         label: '',
+         href: '/edms/administrative/letter-attachment-outgoing',
+         icon: '',
+       }
+     ],
+   },
+       {
+     title: 'Organogram',
+     label: '',
+     href: '/edms/administrative/organogram',
+     icon: <FileIcon />,
+     uName: 'organization/organogram',
+   },
   {
     title: 'Employee Personal Profile',
     label: '',
@@ -242,6 +263,7 @@ export const rntLinks: SideLink[] = [
     uName: 'r&t-organization',
     icon: <FileIcon />,
   },
+  
   {
     title: 'Monthly Roster (Final)',
     label: '',
@@ -263,7 +285,7 @@ export const rntLinks: SideLink[] = [
     uName: 'r&t-kec-letter',
     icon: <KecIcon />,
   },
-  {
+   {
     title: 'Road Maintenance Part',
     label: '',
     href: '',
@@ -320,6 +342,27 @@ export const rntLinks: SideLink[] = [
       },
     ],
   },
+   {
+     title: 'Letter Attachment',
+     label: '',
+     href: '',
+     uName: 'r&t-letter-attachment',
+     icon: <FileIcon />,
+     sub: [
+       {
+         title: 'Incoming Attachment',
+         label: '',
+         href: '/edms/road-and-traffic/letter-attachment-incoming',
+         icon: '',
+       },
+       {
+         title: 'Outgoing Attachment',
+         label: '',
+         href: '/edms/road-and-traffic/letter-attachment-outgoing',
+         icon: '',
+       }
+     ],
+   },,
   {
     title: 'Road Safety & Patrol Part',
     label: '',
@@ -450,6 +493,34 @@ export const itsLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
+    {
+      title: 'Letter Attachment',
+      label: '',
+      href: '',
+      uName: 'its-letter-attachment',
+      icon: <FileIcon />,
+      sub: [
+        {
+          title: 'Incoming Attachment',
+          label: '',
+          href: '/edms/its/letter-attachment-incoming-letters',
+          icon: '',
+        },
+        {
+          title: 'Outgoing Attachment',
+          label: '',
+          href: '/edms/its/letter-attachment-outgoing-letters',
+          icon: '',
+        }
+      ],
+    },
+    {
+      title: 'Organization/ Organogram',
+      label: '',
+      href: '/edms/its/organom',
+      uName: 'its-organom',
+      icon: <FileIcon />,
+    },
   {
     title: 'About ITS',
     label: '',
@@ -511,6 +582,27 @@ export const tollLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
+   {
+      title: 'Letter Attachment',
+      label: '',
+      href: '',
+      uName: 'toll-letter-attachment',
+      icon: <FileIcon />,
+      sub: [
+        {
+          title: 'Incoming Attachment',
+          label: '',
+          href: '/edms/toll/letter-attachment-incoming',
+          icon: '',
+        },
+        {
+          title: 'Outgoing Attachment',
+          label: '',
+          href: '/edms/toll/letter-attachment-outgoing',
+          icon: '',
+        }
+      ],
+    },
   {
     title: 'Daily Toll & Traffic Data',
     label: '',
@@ -635,33 +727,34 @@ export const rtwLinks: SideLink[] = [
     uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
-  // {
-  //   title: 'Additional Notes',
-  //   label: '',
-  //   href: '',
-  //   uName: 'rtw-additional-notes',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Backup Frequency',
-  //       label: '',
-  //       href: '/edms/rtw/additional-notes/backup-frequency',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Control Manager',
-  //       label: '',
-  //       href: '/edms/rtw/additional-notes/document-control-manager',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Revision Log',
-  //       label: '',
-  //       href: '/edms/rtw/additional-notes/document-revision-log',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
+   {
+      title: 'Letter Attachment',
+      label: '',
+      href: '',
+      uName: 'rtw-letter-attachment',
+      icon: <FileIcon />,
+      sub: [
+        {
+          title: 'Incoming Attachment',
+          label: '',
+          href: '/edms/rtw/letter-attachment-incoming-letters',
+          icon: '',
+        },
+        {
+          title: 'Outgoing Attachment',
+          label: '',
+          href: '/edms/rtw/letter-attachment-outgoing-letters',
+          icon: '',
+        }
+      ],
+    },
+    {
+      title: 'Organization/Organogram',
+      label: '',
+      href: '/edms/rtw/organization-organogram',
+      uName: 'rtw-organom',
+      icon: <FileIcon />,
+    },
   {
     title: 'Technical Documentation',
     label: '',
@@ -809,6 +902,34 @@ export const pmisLinks: SideLink[] = [
     uName: 'mb-pmis-project-overview',
     icon: <FileIcon />,
   },
+  {
+      title: 'Organization/Organogram',
+      label: '',
+      href: '/edms/mb-pmis/organogram',
+      uName: 'mb-pmis-organization-organogram',
+      icon: <FileIcon />,
+    },
+    {
+      title: 'Letter Attachment',
+      label: '',
+      href: '',
+      uName: 'mb-pmis-letter-attachment',
+      icon: <FileIcon />,
+      sub: [
+        {
+          title: 'Incoming Letter',
+          label: '',
+          href: '/edms/mb-pmis/letter-attachment-incoming',
+          icon: '',
+        },
+        {
+          title: 'Outgoin letter',
+          label: '',
+          href: '/edms/mb-pmis/letter-attachment-outgoing',
+          icon: '',
+        },
+      ],
+    },
     {
     title: 'Technical Documentation',
     label: '',
@@ -860,7 +981,7 @@ export const pmisLinks: SideLink[] = [
     title: 'Quality, Safety',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'mb-pmis-quality-safety',
     icon: <FileIcon />,
     sub: [
       {
@@ -878,38 +999,11 @@ export const pmisLinks: SideLink[] = [
     ],
   },
  
-  //  {
-  //   title: 'Additional Notes',
-  //   label: '',
-  //   href: '',
-  //   uName: 'special-audit',
-  //   icon: <FileIcon />,
-  //   sub: [
-  //     {
-  //       title: 'Backup Frequency',
-  //       label: '',
-  //       href: '/edms/mb-pmis/additional-notes/backup-frequency',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Control Manager',
-  //       label: '',
-  //       href: '/edms/mb-pmis/additional-notes/document-control-manager',
-  //       icon: '',
-  //     },
-  //     {
-  //       title: 'Document Revision Log',
-  //       label: '',
-  //       href: '/edms/mb-pmis/additional-notes/document-revision-log',
-  //       icon: '',
-  //     },
-  //   ],
-  // },
   {
     title: 'Communication & Correspondence',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'mb-pmis-communication-correspondence',
     icon: <FileIcon />,
     sub: [
       {
@@ -930,7 +1024,7 @@ export const pmisLinks: SideLink[] = [
     title: 'Financial Documentation',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'mb-pmis-financial-documentation',
     icon: <FileIcon />,
     sub: [
       {
@@ -941,14 +1035,11 @@ export const pmisLinks: SideLink[] = [
       }
     ],
   },
- 
-
-
   {
     title: 'Visual Records',
     label: '',
     href: '',
-    uName: 'special-audit',
+    uName: 'mb-pmis-visual-records',
     icon: <FileIcon />,
     sub: [
       {

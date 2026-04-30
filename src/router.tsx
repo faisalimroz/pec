@@ -389,10 +389,29 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin/building-maintenance/monthly-report')).default,
             }),
           },
-          {
+             {
             path: 'administrative/building-maintenance-tools',
             lazy: async () => ({
               Component: (await import('@/pages/admin/building-maintenance/tools')).default,
+            }),
+          },
+            {
+            path: '/administrative/letter-attachment-outgoing',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/letter-attachment/outgoing')).default,
+            }),
+          },
+            {
+            path: '/administrative/letter-attachment-incoming',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/letter-attachment/incoming')).default,
+            }),
+          },
+      
+          {
+            path: '/administrative/organogram',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin/organogram')).default,
             }),
           },
           {
@@ -519,6 +538,24 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/admin- edms/building-maintenance/tools')).default,
             }),
           },
+              {
+            path: '/edms/administrative/letter-attachment-outgoing',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin- edms/letter-attachment/outgoing')).default,
+            }),
+          },
+                       {
+            path: '/edms/administrative/letter-attachment-incoming',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin- edms/letter-attachment/incoming')).default,
+            }),
+          },
+                      {
+            path: '/edms/administrative/organogram',
+            lazy: async () => ({
+              Component: (await import('@/pages/admin- edms/organogram')).default,
+            }),
+          },
           {
             path: '/edms/administrative/health-center-monthly-report',
             lazy: async () => ({
@@ -643,7 +680,7 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/road-and-traffic/rhd-letter'))
                 .default,
             }),
-          },
+          }, 
           // {
           //   path: 'road-and-traffic/procurement',
           //   lazy: async () => ({
@@ -1094,7 +1131,22 @@ const router = createBrowserRouter([
               ).default,
             }),
           },
-
+  {
+            path: 'road-and-traffic/letter-attachment-incoming',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/letter-attachment/incoming')
+              ).default,
+            }),
+          },
+           {
+            path: 'road-and-traffic/letter-attachment-outgoing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic/letter-attachment/outgoing')
+              ).default,
+            }),
+          },
           {
             path: 'road-and-traffic/road-and-maintanance/accident-incident-report',
             lazy: async () => ({
@@ -1221,6 +1273,22 @@ const router = createBrowserRouter([
             lazy: async () => ({
               Component: (
                 await import('@/pages/road-and-traffic-edms/road-and-patrol/requisition-form')
+              ).default,
+            }),
+          },
+            {
+            path: '/edms/road-and-traffic/letter-attachment-incoming',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/letter-attachment/incoming')
+              ).default,
+            }),
+          },
+           {
+            path: '/edms/road-and-traffic/letter-attachment-outgoing',
+            lazy: async () => ({
+              Component: (
+                await import('@/pages/road-and-traffic-edms/letter-attachment/outgoing')
               ).default,
             }),
           },
@@ -1432,10 +1500,28 @@ const router = createBrowserRouter([
               Component: (await import('@/pages/its/AboutUs')).default,
             }),
           },
-          {
+            {
             path: 'its/system-configure',
             lazy: async () => ({
               Component: (await import('@/pages/its/SystemConfigure')).default,
+            }),
+          },
+          {
+            path: 'its/letter-attachment-incoming-letters',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/letter-attachment/incoming')).default,
+            }),
+          },
+            {
+            path: 'its/letter-attachment-outgoing-letters',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/letter-attachment/outcoming')).default,
+            }),
+          },
+             {
+            path: 'its/its-organom',
+            lazy: async () => ({
+              Component: (await import('@/pages/its/Organom')).default,
             }),
           },
           {
@@ -1484,6 +1570,26 @@ const router = createBrowserRouter([
               Component: (
                 await import(
                   '@/pages/toll-edms/wim-data'
+                )
+              ).default,
+            }),
+          },
+            {
+            path: '/edms/toll/letter-attachment-incoming',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/letter-attachment/incoming'
+                )
+              ).default,
+            }),
+          },
+            {
+            path: '/edms/toll/letter-attachment-outgoing',
+            lazy: async () => ({
+              Component: (
+                await import(
+                  '@/pages/toll-edms/letter-attachment/outgoing'
                 )
               ).default,
             }),
@@ -1811,6 +1917,18 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
+           {
+            path: 'toll/letter-attachment-incoming',
+            lazy: async () => ({
+              Component: (await import('@/pages/toll/letter-attachment/incoming')).default,
+            }),
+          },
+           {
+            path: 'toll/letter-attachment-outgoing',
+            lazy: async () => ({
+              Component: (await import('@/pages/toll/letter-attachment/outgoing')).default,
+            }),
+          },
           // {
           //   path: 'toll/toll-traffic-ver',
           //   lazy: async () => ({
@@ -1947,6 +2065,30 @@ const router = createBrowserRouter([
     }),
   },
   {
+    path: 'rtw/project-overview',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw/project-overview')).default,
+    }),
+  },
+    {
+    path: 'rtw/letter-attachment-incoming-letters',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw/letter-attachment/incoming')).default,
+    }),
+  },
+   {
+    path: 'rtw/letter-attachment-outgoing-letters',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw/letter-attachment/outcoming')).default,
+    }),
+  },
+   {
+    path: 'rtw/organization-organogram',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw/organom')).default,
+    }),
+  },
+    {
     path: 'rtw/project-overview',
     lazy: async () => ({
       Component: (await import('@/pages/rtw/project-overview')).default,
@@ -2159,8 +2301,24 @@ const router = createBrowserRouter([
     }),
   },
 
-
-
+ {
+    path: '/edms/rtw/letter-attachment-incoming-letters',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/letter-attachment/incoming')).default,
+    }),
+  },
+ {
+    path: '/edms/rtw/letter-attachment-outgoing-letters',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/letter-attachment/outcoming')).default,
+    }),
+  },
+   {
+    path: '/edms/rtw/organization-organogram',
+    lazy: async () => ({
+      Component: (await import('@/pages/rtw-edms/organom')).default,
+    }),
+  },
   //main bridge pmis
     {
     path: '/mb-pmis',
@@ -2185,6 +2343,24 @@ const router = createBrowserRouter([
     path: '/mb-pmis/technical-documentation/survey-reports',
     lazy: async () => ({
       Component: (await import('@/pages/mb-pis/technical-documentation/survery-reports')).default,
+    }),
+  },
+   {
+    path: '/mb-pmis/letter-attachment-outgoing',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis/letter-attachment/outcoming')).default,
+    }),
+  },
+     {
+    path: '/mb-pmis/letter-attachment-incoming',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis/letter-attachment/incoming')).default,
+    }),
+  },
+     {
+    path: '/mb-pmis/organogram',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis/organogram')).default,
     }),
   },
   {
@@ -2286,6 +2462,24 @@ const router = createBrowserRouter([
       Component: (await import('@/pages/mb-pis-edms/technical-documentation/main-bridge-drawings')).default,
     }),
   },
+    {
+    path: '/edms/mb-pmis/letter-attachment-incoming',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/letter-attachment/incoming')).default,
+    }),
+  },
+   {
+    path: '/edms/mb-pmis/letter-attachment-outgoing',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/letter-attachment/outgoing')).default,
+    }),
+  },
+   {
+    path: '/edms/mb-pmis/organogram',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis-edms/organogram')).default,
+    }),
+  },
   {
     path: '/edms/mb-pmis/technical-documentation/survey-reports',
     lazy: async () => ({
@@ -2378,6 +2572,24 @@ const router = createBrowserRouter([
     path: '/edms/its/workplan',
     lazy: async () => ({
       Component: (await import('@/pages/its-edms/WorkPlan')).default,
+    }),
+  },
+    {
+    path: '/edms/its/its-organom',
+    lazy: async () => ({
+      Component: (await import('@/pages/its-edms/Organom')).default,
+    }),
+  },
+   {
+    path: '/edms/its/letter-attachment-outgoing-letters',
+    lazy: async () => ({
+      Component: (await import('@/pages/its-edms/letter-attachment/outgoing')).default,
+    }),
+  },
+   {
+    path: '/edms/its/letter-attachment-incoming-letters',
+    lazy: async () => ({
+      Component: (await import('@/pages/its-edms/letter-attachment/incoming')).default,
     }),
   },
   {

@@ -507,7 +507,7 @@ const PermissionManager = () => {
         },
       
          {
-          name: 'toll-letter attachment',
+          name: 'toll-letter-attachment',
           view_authority: false,
           edit_authority: false,
           g_children: [],
@@ -883,105 +883,6 @@ const PermissionManager = () => {
     }))
   }
 
-  // Custom node template for the tree
-  // const nodeTemplate = (node: TreeNode) => {
-
-  //   if (node.children || NODES_WITH_HIDDEN_CHILDREN.includes(node.data)) {
-  //     // Parent node
-  //     const parentName = node.data
-  //     const parent = permissionsData.find((p) => p.name === parentName)
-  //     if (!parent) return <span>{node.label}</span>
-
-  //     const allViewChecked = allChildrenHaveViewAuthority(parentName)
-  //     const allEditChecked = allChildrenHaveEditAuthority(parentName)
-
-  //     return (
-  //       <div className='flex items-center justify-between w-full p-2'>
-  //         <span className='font-bold text-black'>{node.label}</span>
-  //         <div className='flex items-center gap-4'>
-  //           <div className='flex items-center'>
-  //             <label htmlFor={`parent-view-${parentName}`} className='mr-2'>
-  //               Read (All)
-  //             </label>
-  //             <Checkbox
-  //               id={`parent-view-${parentName}`}
-  //               checked={allViewChecked}
-  //               onChange={(e) =>
-  //                 handleParentViewAuthorityChange(
-  //                   parentName,
-  //                   e.checked || false
-  //                 )
-  //               }
-  //             />
-  //           </div>
-  //           <div className='flex items-center'>
-  //             <label htmlFor={`parent-edit-${parentName}`} className='mr-2'>
-  //               Write (All)
-  //             </label>
-  //             <Checkbox
-  //               id={`parent-edit-${parentName}`}
-  //               checked={allEditChecked}
-  //               onChange={(e) =>
-  //                 handleParentEditAuthorityChange(
-  //                   parentName,
-  //                   e.checked || false
-  //                 )
-  //               }
-  //             />
-  //           </div>
-  //         </div>
-  //       </div>
-  //     )
-  //   } else {
-  //     // Child node
-  //     const childName = node.data
-  //     const parentName = node.parent || ''
-  //     const parent = permissionsData.find((p) => p.name === parentName)
-  //     const child = parent?.children.find((c) => c.name === childName)
-
-  //     if (!child) return <span>{node.label}</span>
-
-  //     return (
-  //       <div className='flex items-center justify-between w-full p-2'>
-  //         <span className='uppercase'>{node.label}</span>
-  //         <div className='flex items-center gap-4'>
-  //           <div className='flex items-center'>
-  //             <label htmlFor={`view-${childName}`} className='mr-2'>
-  //               Read
-  //             </label>
-  //             <Checkbox
-  //               id={`view-${childName}`}
-  //               checked={child.view_authority}
-  //               onChange={(e) =>
-  //                 handleViewAuthorityChange(
-  //                   parentName,
-  //                   childName,
-  //                   e.checked || false
-  //                 )
-  //               }
-  //             />
-  //           </div>
-  //           <div className='flex items-center'>
-  //             <label htmlFor={`edit-${childName}`} className='mr-2'>
-  //               Write
-  //             </label>
-  //             <Checkbox
-  //               id={`edit-${childName}`}
-  //               checked={child.edit_authority}
-  //               onChange={(e) =>
-  //                 handleEditAuthorityChange(
-  //                   parentName,
-  //                   childName,
-  //                   e.checked || false
-  //                 )
-  //               }
-  //             />
-  //           </div>
-  //         </div>
-  //       </div>
-  //     )
-  //   }
-  // }
   const nodeTemplate = (node: TreeNode) => {
     // Define a small text size class
     const textSizeClass = 'text-sm';
