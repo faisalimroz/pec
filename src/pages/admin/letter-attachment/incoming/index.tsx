@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { administrationLinks } from '@/data/sidelinks'
 import { adminTopNav, getFilteredNavLinks } from '@/data/topNavLinks'
-import DemoTable from '@/components/admin/building-maintenance/building-maintenance-monthly-report'
+import DemoTable from '@/components/admin/letter/incoming'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AssetManagement() {
@@ -42,7 +42,7 @@ export default function AssetManagement() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                 Monthly Maintenance Report
+                Incoming Letter Attachment
                 </h1>
                  
                 <DemoTable />

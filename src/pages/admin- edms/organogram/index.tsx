@@ -3,7 +3,6 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-
 import DemoTable from '@/components/admin/ipc/ipc-monthly-updates'
 import { useAuth } from '@/provider/authProvider'
 import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
@@ -11,10 +10,8 @@ import NewNavbar from '@/components/edms/new-nav'
 import { administrationLinks } from '@/data/sidelinks-edms'
 export default function TreatmentRecord() {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
-
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-
   const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (

@@ -57,6 +57,41 @@ export async function searchBuildingToolsReport(param: unknown) {
   return response.data
 }
 
+
+//letter attachment
+export async function searchLetterAttachmentIncoming(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/admin/letter-attachment/incoming/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
+export async function searchLetterAttachmentOutgoing(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/admin/letter-attachment/outgoing/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 //asset management
 export async function searchAssetManagement(param: unknown) {
   console.log('param', param)

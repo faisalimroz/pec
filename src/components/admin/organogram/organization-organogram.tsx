@@ -45,7 +45,7 @@ function ZoomImage({
   alt = '',
   className = '',
   imgClassName = '',
-  zoom = 2.5, // Increased default zoom slightly for charts
+  zoom = 2.5,
   onLoad,
 }: ZoomImageProps) {
   const [isHovering, setIsHovering] = useState(false)
@@ -93,9 +93,9 @@ const OrgChart: React.FC = () => {
   const { pathname } = useLocation()
 
   // Permissions Logic
-  const checkRole = permissions.find((p) => p.name === 'r&t-manager')
+  const checkRole = permissions.find((p) => p.name === 'admin')
   const checkPermission = checkRole?.children.find(
-    (c) => c.name === 'r&t-organization')
+    (c) => c.name === 'organization/organogram')
   const showAll = pathname.startsWith('/edms')
   const isGeneral = checkPermission?.edit_authority === true && !showAll
 
@@ -117,7 +117,7 @@ const OrgChart: React.FC = () => {
     setIsLoading(true)
     try {
       const response = await axios.get<ApiResponse>(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/organization/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/organization/organization-chart`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -202,7 +202,7 @@ const OrgChart: React.FC = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/organization/organization-chart`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/organization/organization-chart`,
         formData,
         {
           headers: {

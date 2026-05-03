@@ -68,7 +68,7 @@ export default function Sidebar2({
               <Link to='/dashboard' className='mr-4'>
                 <div className='flex gap-4 items-center font-medium text-white'>
                   <img src={logo} alt='Logo' className='h-10 w-auto' />
-                  <h3 className='text-xs'>PADMA MULTIPURPOSE<br />BRIDGE PROJECT</h3>
+                  <h3 className='text-xs'>PADMA MULTIPURPOSE<br />BRIDGE O & M</h3>
                 </div>
               </Link>
             </div>

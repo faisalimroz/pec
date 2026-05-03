@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchBuildingMonthlyReport } from '@/api/adminAPIs'
+import { searchLetterAttachmentOutgoing } from '@/api/adminAPIs'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { FilePreview } from '@/components/file-preview'
@@ -24,7 +24,6 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
-import FileIcon from '@/components/icons/FileIcon'
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom'
 
@@ -37,11 +36,12 @@ interface Product {
     slNo: string
     subjectName: string
     description: string
-    monthName: string;
+    approved?: boolean
+    problem: string
+    patientType: string
     date: string
     remarks: string
     attachments: Attachment[]
-    approved?: boolean
     creator?: string
     creationTimestamp?: string
     updater?: string
@@ -55,8 +55,9 @@ export default function MonthlyReport() {
         subjectName: '',
         description: '',
         approved: false,
+        problem: '',
 
-        monthName: '',
+        patientType: '',
         date: '',
         remarks: '',
         attachments: [],
@@ -66,14 +67,12 @@ export default function MonthlyReport() {
     const { pathname } = useLocation();
     const showAll = pathname.startsWith('/edms');
     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
-    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'building-maintenance');
-  const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
+    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'admin-letter-attachment');
+    const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
 
     const isClinic = roles.some((role) =>
-        ['superadmin'].includes(role.title)
+        ['superadmin', 'clinic'].includes(role.title)
     )
-    console.log(isClinic, 'hello')
-    const [approved, setApproved] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -84,18 +83,21 @@ export default function MonthlyReport() {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
     const [submitted, setSubmitted] = useState<boolean>(false)
     const dt = useRef<DataTable<Product[]>>(null)
-    const [date, setDate] = useState<Date | null>(null)
-    const [date2, setDate2] = useState<Date | null>(null)
+
     const [searchKey, setSearchKey] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loading2, setLoading2] = useState<boolean>(false)
     const [subjectName, setSubjectName] = useState('')
     const [description, setDescription] = useState('')
+    const [problem, setproblem] = useState('')
     const [remarks, setRemarks] = useState('')
+    const [department, setDepartment] = useState<string>('')
     const [formDate, setFormDate] = useState<string>('')
     const [filesInput, setFilesInput] = useState<File[]>([])
+    const [selectedCode, setSelectedCode] = useState(null)
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
-    const [monthName, setMonthName] = useState<string>("");
+    const [date, setDate] = useState<Date | null>(null)
+    const [date2, setDate2] = useState<Date | null>(null)
     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -106,27 +108,8 @@ export default function MonthlyReport() {
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
-    const months = [
-        { name: 'January', code: 'January' },
-        { name: 'February', code: 'February' },
-        { name: 'March', code: 'March' },
-        { name: 'April', code: 'April' },
-        { name: 'May', code: 'May' },
-        { name: 'June', code: 'June' },
-        { name: 'July', code: 'July' },
-        { name: 'August', code: 'August' },
-        { name: 'September', code: 'September' },
-        { name: 'October', code: 'October' },
-        { name: 'November', code: 'November' },
-        { name: 'December', code: 'December' }
-    ];
-    const itemTemplate = (option: { name: string; code: string }) => (
-        <div className="flex items-center gap-2">
-            <FileIcon />
-            <span>{option.name}</span>
-        </div>
-    )
-
+    const [approved, setApproved] = useState<boolean>(false);
+    // all update dialog func here
     const openUpdateDialog = (product: Product) => {
         setUpdatedProduct({ ...product })
         setUpdateProductDialog(true)
@@ -145,13 +128,14 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const formData = new FormData()
-
+            formData.append('patientType', updatedProduct.patientType)
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('approved', updatedProduct.approved ? 'true' : 'false')
+            formData.append('problem', updatedProduct.problem)
             formData.append('remarks', updatedProduct.remarks)
             formData.append('date', updatedProduct.date)
-            formData.append('monthName', updatedProduct.monthName);
+
             newAttachments.forEach((file) => {
                 formData.append('attachments', file)
             })
@@ -161,7 +145,7 @@ export default function MonthlyReport() {
             })
 
             const res = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/update/by/${updatedProduct._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/letter-attachment/outgoing/update/by/${updatedProduct._id}`,
                 formData,
                 {
                     headers: {
@@ -213,7 +197,7 @@ export default function MonthlyReport() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/bulk-upload`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/letter-attachment/outgoing/bulk-upload`,
                 formData,
                 {
                     headers: {
@@ -295,6 +279,10 @@ export default function MonthlyReport() {
 
     // ending all update dialog funcs
 
+    const codes = [
+        { name: 'Internal Patient', code: 'Internal' },
+        { name: 'Outside Patient', code: 'Outside' },
+    ]
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -318,13 +306,25 @@ export default function MonthlyReport() {
     const hideDeleteProductsDialog = () => {
         setDeleteProductsDialog(false)
     }
+
+    function formatDate(dateTime?: any) {
+        if (!dateTime) return ''
+        const date = new Date(dateTime)
+
+        const day = date.getDate().toString().padStart(2, '0')
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const year = date.getFullYear()
+
+        return `${day}-${month}-${year}`
+    }
+
     const saveProduct = async () => {
 
         const requiredFields = [
-            { value: subjectName, name: 'File Name/Subject' },
+            { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
             { value: remarks, name: 'Remarks' },
-            { value: monthName, name: 'Month Name' },
+           
             { value: formDate, name: 'Date' }
         ];
 
@@ -342,10 +342,11 @@ export default function MonthlyReport() {
             formData.append('subjectName', subjectName)
             formData.append('description', description)
             formData.append('remarks', remarks)
-            formData.append('monthName', monthName)
+
             formData.append('date', formatDate(formDate))
             formData.append('approved', approved ? 'true' : 'false');
 
+            // Append files only if they exist (Optional)
             if (filesInput && filesInput.length > 0) {
                 filesInput.forEach((file) => {
                     formData.append('attachments', file)
@@ -353,7 +354,7 @@ export default function MonthlyReport() {
             }
 
             const res = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/create`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/letter-attachment/outgoing/create`,
                 formData,
                 {
                     headers: {
@@ -367,7 +368,6 @@ export default function MonthlyReport() {
             setSubjectName('')
             setDescription('')
             setRemarks('')
-            setMonthName('')
             setFormDate('')
             setApproved(false)
             setFilesInput([])
@@ -380,7 +380,7 @@ export default function MonthlyReport() {
                 const { message } = error.response.data
                 toast.error(message)
             } else {
-                // Optional: Handle generic errors here
+                console.log(error)
             }
         } finally {
             setLoading2(false)
@@ -405,7 +405,7 @@ export default function MonthlyReport() {
         try {
             setLoading2(true)
             const res = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/delete/by/${product._id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/letter-attachment/outgoing/delete/by/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -455,7 +455,7 @@ export default function MonthlyReport() {
             const selectedIds = selectedProducts.map((product) => product._id)
 
             const response = await axios.delete(
-                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/building/monthly-maintenance/delete-multiple`,
+                `${import.meta.env.VITE_BASE_URL}/api/v1/admin/letter-attachment/outgoing/delete-multiple`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -658,31 +658,19 @@ export default function MonthlyReport() {
       /> */}
         </>
     )
-    // ---- helpers ----
-    const formatDate = (d?: Date | null) => {
-        if (!d) return ''
-        const day = String(d.getDate()).padStart(2, '0')
-        const month = String(d.getMonth() + 1).padStart(2, '0')
-        const year = d.getFullYear()
-        return `${day}-${month}-${year}`
+
+    function getMonthName(dateString: string) {
+        const date = new Date(dateString)
+        return date.toLocaleString('en-US', { month: 'long' })
     }
 
-    const parseDDMMYYYY = (s: string) => {
-        // "DD-MM-YYYY" -> Date
-        const [dd, mm, yyyy] = s.split('-').map((x) => parseInt(x, 10))
-        if (!dd || !mm || !yyyy) return null
-        return new Date(yyyy, mm - 1, dd)
-    }
-
-    const stringifyRange = (val: any): string => {
-        // PrimeReact Calendar range gives [Date|undefined, Date|undefined]
-        if (Array.isArray(val) && val[0] && val[1]) {
-            return `${formatDate(val[0])} - ${formatDate(val[1])}`
-        }
-        return ''
+    function getYear(dateString: string) {
+        const date = new Date(dateString)
+        return date.getFullYear()
     }
 
     const handleSearch = () => {
+        setLoading(true)
         setLoading(true)
         const payload = {
 
@@ -690,7 +678,7 @@ export default function MonthlyReport() {
             searchQuery: searchKey,
         }
 
-        searchBuildingMonthlyReport(payload).then((result) => {
+        searchLetterAttachmentOutgoing(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
@@ -708,8 +696,7 @@ export default function MonthlyReport() {
             date_range: '',
             searchQuery: '',
         }
-        setLoading(true)
-        searchBuildingMonthlyReport(payload).then((result) => {
+        searchLetterAttachmentOutgoing(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
@@ -756,7 +743,16 @@ export default function MonthlyReport() {
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
-
+                {/* <div>
+          <Dropdown
+            value={selectedCode}
+            onChange={(e) => setSelectedCode(e.value)}
+            options={codes}
+            optionLabel='name'
+            placeholder='Patient Type'
+            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+          />
+        </div> */}
                 <IconField iconPosition='left' className='relative'>
                     <InputIcon className='pi pi-search' />
                     <InputText
@@ -836,12 +832,14 @@ export default function MonthlyReport() {
 
     const refetch = () => {
         setLoading(true)
-        const payload = {
-
-            date_range: '',
+        const initialPayload = {
+            month: '',
+            year: '',
             searchQuery: '',
+            patientType: '',
         }
-        searchBuildingMonthlyReport(payload).then((result) => {
+
+        searchLetterAttachmentOutgoing(initialPayload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
@@ -934,14 +932,7 @@ export default function MonthlyReport() {
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
-                            <Column
-                                field='monthName'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[12rem]'
-                                header='Month Name'
-                            ></Column>
+
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -1100,27 +1091,7 @@ export default function MonthlyReport() {
                                 }
                                 dateFormat='dd/mm/yy'
                             />
-                            <div className='field'>
-                                <label htmlFor='monthName' className='font-bold'>
-                                    Month Name
-                                </label>
-                                <Dropdown
-                                    id='monthName'
-                                    value={updatedProduct.monthName}
-                                    onChange={(e) =>
-                                        setUpdatedProduct({
-                                            ...updatedProduct,
-                                            monthName: e.value,
-                                        })
-                                    }
-                                    options={months}
-                                    optionLabel='name'
-                                    optionValue='name'
-                                    placeholder='Select a Month'
-                                    className='w-full'
-                                    itemTemplate={itemTemplate}
-                                />
-                            </div>
+
                         </div>
                         <div className='col-span-2'>
                             <h3 className='font-bold mb-2'>Existing Attachments</h3>
@@ -1240,40 +1211,37 @@ export default function MonthlyReport() {
                                 <p className='break-all'>{selectedProduct.subjectName}</p>
                             </div>
 
-                            <div>
-                                <h3 className='font-bold'>Month Name</h3>
-                                <p className='break-all'>{selectedProduct.monthName}</p>
-                            </div>
+
                             <div>
                                 <h3 className='font-bold'>Remarks</h3>
                                 <p className='break-all'>{selectedProduct.remarks}</p>
                             </div>
 
                             <div className='col-span-2'>
-                                <h3 className='font-bold'>Attachments/Download</h3>
-                                <div className='grid grid-cols-2 gap-4'>
-                                    {selectedProduct.attachments.map((attachment) => (
-                                        <div
-                                            key={attachment._id}
-                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                                        >
-                                            <FilePreview url={attachment.url} />
-                                            <div className='mt-3 flex items-center justify-between gap-2'>
-                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                                                    {attachment.url?.split('/').pop()}
-                                                </span>
-                                                <Button
-                                                    icon='pi pi-external-link'
-                                                    onClick={() =>
-                                                        window.open(attachment.url, '_blank')
-                                                    }
-                                                    className='p-button-text p-button-rounded flex-shrink-0'
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                <h3 className='font-bold'>Attachments/Download</h3>
+                <div className='grid grid-cols-2 gap-4'>
+                  {selectedProduct.attachments.map((attachment) => (
+                    <div
+                      key={attachment._id}
+                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                    >
+                      <FilePreview url={attachment.url} />
+                      <div className='mt-3 flex items-center justify-between gap-2'>
+                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                          {attachment.url?.split('/').pop()}
+                        </span>
+                        <Button
+                          icon='pi pi-external-link'
+                          onClick={() =>
+                            window.open(attachment.url, '_blank')
+                          }
+                          className='p-button-text p-button-rounded flex-shrink-0'
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
                         </div>
                     </>
                 )}
@@ -1314,27 +1282,12 @@ export default function MonthlyReport() {
                                 Description
                             </label>
                             <InputText
-                                id='description'
+                                id='problem'
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
                         </div>
-                        <div className="field">
-                            <label htmlFor="monthName" className="font-bold">
-                                Month Name
-                            </label>
-                            <Dropdown
-                                id="monthName"
-                                value={monthName}
-                                onChange={(e) => setMonthName(e.value)}
-                                options={months}
-                                optionLabel='name'
-                                optionValue='name'
-                                itemTemplate={itemTemplate}
-                                placeholder="Select a Month"
-                                className="w-full"
-                            />
-                        </div>
+
                         <div className='field'>
                             <label htmlFor='remarks' className='font-bold'>
                                 Remarks
@@ -1367,7 +1320,7 @@ export default function MonthlyReport() {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-
+                            
                         </label>
 
                         <div>
