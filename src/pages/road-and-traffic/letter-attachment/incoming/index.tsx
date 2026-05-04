@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/road-traffic/kec-letter/kec-letter'
+import DemoTable from '@/components/road-traffic/letter/incoming'
 import { useAuth } from '@/provider/authProvider'
 
 export default function BuildingMaintenance() {
@@ -43,7 +43,7 @@ export default function BuildingMaintenance() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                 KEC Letter 
+                Incoming Letters
                 </h1>
 
                 <DemoTable />
