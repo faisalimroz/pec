@@ -3,7 +3,7 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import DemoTable from '@/components/road-traffic/kec-letter/kec-letter'
+import DemoTable from '@/components/road-traffic/letter/incoming'
 import { useAuth } from '@/provider/authProvider'
 import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
 import NewNavbar from '@/components/edms/new-nav'
@@ -35,14 +35,14 @@ export default function BuildingMaintenance() {
                 <UserNav />
               </div>
             </LayoutHeader>
-<div>
-                <NewNavbar links={edmsSecondNav} />
-              </div>
+            <div>
+              <NewNavbar links={edmsSecondNav} />
+            </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                 KEC Letter 
+                  Incoming Letters
                 </h1>
 
                 <DemoTable />

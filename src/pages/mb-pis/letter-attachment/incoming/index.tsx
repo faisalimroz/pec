@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { pmisLinks, rtwLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, pmisTopNav, rtwTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/mb-pmis/monitoring-reporting'
+import DemoTable from '@/components/mb-pmis/letter/incoming'
 import { useAuth } from '@/provider/authProvider'
 
 export default function MonthlyReport() {
@@ -42,7 +42,7 @@ export default function MonthlyReport() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-              Monitoring & Reporting
+           Incoming Letters
                 </h1>
 
                 <DemoTable />

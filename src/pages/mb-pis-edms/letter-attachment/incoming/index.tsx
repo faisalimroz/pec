@@ -3,7 +3,7 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import DemoTable from '@/components/mb-pmis/quality-safety/material-test'
+import DemoTable from '@/components/mb-pmis/letter/incoming'
 import { useAuth } from '@/provider/authProvider'
 import NewNavbar from '@/components/edms/new-nav'
 import { pmisLinks } from '@/data/sidelinks-edms'
@@ -42,7 +42,7 @@ export default function MonthlyReport() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-            Material Test Report
+         Incoming Letters
                 </h1>
 
                 <DemoTable />

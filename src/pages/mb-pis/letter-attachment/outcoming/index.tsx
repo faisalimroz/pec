@@ -3,9 +3,9 @@ import { UserNav } from '@/components/user-nav'
 import { Layout, LayoutBody, LayoutHeader } from '@/components/custom/layout'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
-import { pmisLinks, rtwLinks } from '@/data/sidelinks'
-import { getFilteredNavLinks, pmisTopNav, rtwTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/mb-pmis/monitoring-reporting'
+import { pmisLinks } from '@/data/sidelinks'
+import { getFilteredNavLinks, pmisTopNav } from '@/data/topNavLinks'
+import DemoTable from '@/components/mb-pmis/letter/outgoing'
 import { useAuth } from '@/provider/authProvider'
 
 export default function MonthlyReport() {
@@ -42,7 +42,7 @@ export default function MonthlyReport() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-              Monitoring & Reporting
+              Outgoing Letters
                 </h1>
 
                 <DemoTable />

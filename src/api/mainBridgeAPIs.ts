@@ -61,6 +61,39 @@ export async function searchMBTechDrawings(param: unknown) {
 }
 
 
+// letter attachment
+export async function searchMBLetterAttachmentIncoming(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/mb-pmis/letter-attachment/incoming/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchMBLetterAttachmentoutgoinging(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/mb-pmis/letter-attachment/outgoing/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 
 export async function searchMBTechMaterialsList(param: unknown) {
   // console.log('param', param)
