@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { itsLinks, rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, itsTopNav, rntTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/Its/Notice/notice'
+import DemoTable from '@/components/Its/Orgaogram/organogram'
 import { useAuth } from '@/provider/authProvider'
 
 export default function AccidentReport() {
@@ -42,7 +42,7 @@ export default function AccidentReport() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                Notice
+                  Orgaization/Organogram
                 </h1>
 
                 <DemoTable />

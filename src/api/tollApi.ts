@@ -201,6 +201,41 @@ export async function searchGraphManualMonthly(param: unknown) {
   return response.data
 }
 
+
+//letter attachment
+export async function searchTollLetterAttachmentIncoming(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/letter-attachment/incoming/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
+export async function searchTollLetterAttachmentOutgoing(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/toll/letter-attachment/outgoing/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 export async function searchGraphManualYearly(param: unknown) {
   //   console.log('param', param)
 

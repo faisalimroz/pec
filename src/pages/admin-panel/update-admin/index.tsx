@@ -283,6 +283,18 @@ const UpdateAdmin = () => {
           edit_authority: false,
           g_children: [],
         },
+           {
+          name: 'rtw-organogram',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
+          {
+          name: 'rtw-letter-attachment',
+          view_authority: false,
+          edit_authority: false,
+          g_children: [],
+        },
         {
           name: 'rtw-technical-documentation',
           view_authority: false,

@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { tollLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, tollTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/toll/kec-manual-table'
+import DemoTable from '@/components/toll/incoming'
 import { useAuth } from '@/provider/authProvider'
 
 export default function Comparison() {
@@ -42,7 +42,7 @@ export default function Comparison() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                  KEC Manual Data
+               Incoming Letters
                 </h1>
 
                 <DemoTable />

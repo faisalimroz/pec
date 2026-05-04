@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 
 
-import DemoTable from '@/components/rtw/additional-notes/backup-frequency'
+import DemoTable from '@/components/rtw/letter-attachment/incoming'
 import { useAuth } from '@/provider/authProvider'
 import { edmsTopNav, edmsSecondNav, getFilteredNavLinks } from '@/data/edmsNavLinks'
 import NewNavbar from '@/components/edms/new-nav'

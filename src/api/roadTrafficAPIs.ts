@@ -99,8 +99,6 @@ export async function searchMonthlyReport(param: unknown) {
 }
 
 //letter attachment
-
-//letter attachment
 export async function searchRTLetterAttachmentIncoming(param: unknown) {
   console.log('paramss', param)
 
@@ -118,7 +116,6 @@ export async function searchRTLetterAttachmentIncoming(param: unknown) {
   return response.data
 }
 
-//letter attachment
 export async function searchRTLetterAttachmentoutgoing(param: unknown) {
   console.log('paramss', param)
 
@@ -135,6 +132,7 @@ export async function searchRTLetterAttachmentoutgoing(param: unknown) {
 
   return response.data
 }
+
 // building maintenance apis
 
 export async function searchBMDailyWork(param: unknown) {

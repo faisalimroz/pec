@@ -63,6 +63,43 @@ export async function searchWorkPlan(param: unknown) {
   return response.data
 }
 
+
+
+
+// letter attachment
+export async function searchITSetterAttachmentIncoming(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/its/letter-attachment/incoming/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchITSLetterAttachmentOutgoinging(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/its/letter-attachment/outgoing/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+
 // notice
 export async function searchNotice(param: unknown) {
   // console.log('param', param)

@@ -213,6 +213,42 @@ export async function searchSafety(param: unknown) {
 
   return response.data
 }
+
+
+
+// letter attachment
+export async function searchRTWLetterAttachmentIncoming(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/rtw/letter-attachment/incoming/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
+export async function searchRTWLetterAttachmentOutgoinging(param: unknown) {
+  console.log('paramss', param)
+
+  const response = await axios.post(
+    `${BASE_URL}/api/v1/rtw/letter-attachment/outgoing/data/search`,
+    param,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
+  return response.data
+}
 // communication and correspondense
 export async function searchOfficialLetters(param: unknown) {
   
