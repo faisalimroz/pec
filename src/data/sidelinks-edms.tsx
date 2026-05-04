@@ -511,7 +511,7 @@ export const itsLinks: SideLink[] = [
       title: 'Organization/ Organogram',
       label: '',
       href: '/edms/its/organom',
-      uName: 'its-organom',
+      uName: 'its-organization/organogram',
       icon: <FileIcon />,
     },
   {

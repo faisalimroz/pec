@@ -1384,9 +1384,9 @@ const router = createBrowserRouter([
             }),
           },
              {
-            path: 'its/its-organom',
+            path: 'its/organom',
             lazy: async () => ({
-              Component: (await import('@/pages/its/Organom')).default,
+              Component: (await import('@/pages/its/Organom/index')).default,
             }),
           },
           {
@@ -2191,10 +2191,22 @@ const router = createBrowserRouter([
       Component: (await import('@/pages/mb-pis/index')).default,
     }),
   },
+     {
+            path: '/mb-pmis/organom',
+            lazy: async () => ({
+              Component: (await import('@/pages/mb-pis/organogram')).default,
+            }),
+          },
   {
     path: '/mb-pmis/project-overview',
     lazy: async () => ({
       Component: (await import('@/pages/mb-pis/project-overview')).default,
+    }),
+  },
+ {
+    path: '/edms/mb-pmis/organom',
+    lazy: async () => ({
+      Component: (await import('@/pages/mb-pis/organogram')).default,
     }),
   },
 
@@ -2440,7 +2452,7 @@ const router = createBrowserRouter([
     }),
   },
     {
-    path: '/edms/its/its-organom',
+    path: '/edms/its/organom',
     lazy: async () => ({
       Component: (await import('@/pages/its-edms/Organom')).default,
     }),
