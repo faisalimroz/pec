@@ -26,33 +26,33 @@ export const administrationLinks: SideLink[] = [
     icon: '',
     uName: 'administrative',
   },
+    {
+     title: 'Organization/Organogram',
+     label: '',
+     href: '/edms/administrative/organogram',
+     icon: <FileIcon />,
+     uName: 'organization/organogram',
+   },
   {
-     title: 'Letter Attachment',
+     title: 'Letter',
      label: '',
      href: '',
      uName: 'admin-letter-attachment',
      icon: <FileIcon />,
      sub: [
        {
-         title: 'Incoming Attachment',
+         title: 'Incoming Letters',
          label: '',
          href: '/edms/administrative/letter-attachment-incoming',
          icon: '',
        },
        {
-         title: 'Outgoing Attachment',
+         title: 'Outgoing Letters',
          label: '',
          href: '/edms/administrative/letter-attachment-outgoing',
          icon: '',
        }
      ],
-   },
-       {
-     title: 'Organogram',
-     label: '',
-     href: '/edms/administrative/organogram',
-     icon: <FileIcon />,
-     uName: 'organization/organogram',
    },
   {
     title: 'Employee Personal Profile',
@@ -257,13 +257,33 @@ export const rntLinks: SideLink[] = [
   },
   
     {
-    title: 'Organization/ Organogram',
+    title: 'Organization/Organogram',
     label: '',
     href: '/edms/road-and-traffic/organization-organogram',
     uName: 'r&t-organization',
     icon: <FileIcon />,
   },
-  
+  {
+     title: 'Letter',
+     label: '',
+     href: '',
+     uName: 'r&t-letter-attachment',
+     icon: <FileIcon />,
+     sub: [
+       {
+         title: 'Incoming Letters',
+         label: '',
+         href: '/edms/road-and-traffic/letter-attachment-incoming',
+         icon: '',
+       },
+       {
+         title: 'Outgoing Letters',
+         label: '',
+         href: '/edms/road-and-traffic/letter-attachment-outgoing',
+         icon: '',
+       }
+     ],
+   },
   {
     title: 'Monthly Roster (Final)',
     label: '',
@@ -335,27 +355,7 @@ export const rntLinks: SideLink[] = [
       },
     ],
   },
-   {
-     title: 'Letter Attachment',
-     label: '',
-     href: '',
-     uName: 'r&t-letter-attachment',
-     icon: <FileIcon />,
-     sub: [
-       {
-         title: 'Incoming Attachment',
-         label: '',
-         href: '/edms/road-and-traffic/letter-attachment-incoming',
-         icon: '',
-       },
-       {
-         title: 'Outgoing Attachment',
-         label: '',
-         href: '/edms/road-and-traffic/letter-attachment-outgoing',
-         icon: '',
-       }
-     ],
-   },,
+   
   {
     title: 'Road Safety & Patrol Part',
     label: '',
@@ -486,34 +486,35 @@ export const itsLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
+  {
+      title: 'Organization/Organogram',
+      label: '',
+      href: '/edms/its/organom',
+      uName: 'its-organization/organogram',
+      icon: <FileIcon />,
+    },
     {
-      title: 'Letter Attachment',
+      title: 'Letter',
       label: '',
       href: '',
       uName: 'its-letter-attachment',
       icon: <FileIcon />,
       sub: [
         {
-          title: 'Incoming Attachment',
+          title: 'Incoming Letters',
           label: '',
           href: '/edms/its/letter-attachment-incoming-letters',
           icon: '',
         },
         {
-          title: 'Outgoing Attachment',
+          title: 'Outgoing Letters',
           label: '',
           href: '/edms/its/letter-attachment-outgoing-letters',
           icon: '',
         }
       ],
     },
-    {
-      title: 'Organization/ Organogram',
-      label: '',
-      href: '/edms/its/organom',
-      uName: 'its-organization/organogram',
-      icon: <FileIcon />,
-    },
+    
   {
     title: 'About ITS',
     label: '',
@@ -576,20 +577,27 @@ export const tollLinks: SideLink[] = [
     uName: '',
   },
    {
-      title: 'Letter Attachment',
+    title: 'Hierarchy',
+    label: '',
+    href: '/edms/toll/hierarchy',
+    uName: 'toll-hierarchy',
+    icon: <FileIcon />,
+  },
+   {
+      title: 'Letter',
       label: '',
       href: '',
       uName: 'toll-letter-attachment',
       icon: <FileIcon />,
       sub: [
         {
-          title: 'Incoming Attachment',
+          title: 'Incoming Letters',
           label: '',
           href: '/edms/toll/letter-attachment-incoming',
           icon: '',
         },
         {
-          title: 'Outgoing Attachment',
+          title: 'Outgoing Letters',
           label: '',
           href: '/edms/toll/letter-attachment-outgoing',
           icon: '',
@@ -696,13 +704,7 @@ export const tollLinks: SideLink[] = [
     uName: 'toll-employee-report',
     icon: <FileIcon />,
   },
-  {
-    title: 'Hierarchy',
-    label: '',
-    href: '/edms/toll/hierarchy',
-    uName: 'toll-hierarchy',
-    icon: <FileIcon />,
-  },
+ 
 
 ]
 export const rtwLinks: SideLink[] = [
@@ -713,6 +715,35 @@ export const rtwLinks: SideLink[] = [
     icon: '',
     uName: '',
   },
+   {
+      title: 'Organization/Organogram',
+      label: '',
+      href: '/edms/rtw/organization-organogram',
+      uName: 'rtw-organom',
+      icon: <FileIcon />,
+    },
+   {
+      title: 'Letter',
+      label: '',
+      href: '',
+      uName: 'rtw-letter-attachment',
+      icon: <FileIcon />,
+      sub: [
+        {
+          title: 'Incoming Letters',
+          label: '',
+          href: '/edms/rtw/letter-attachment-incoming-letters',
+          icon: '',
+        },
+        {
+          title: 'Outgoing Letters',
+          label: '',
+          href: '/edms/rtw/letter-attachment-outgoing-letters',
+          icon: '',
+        }
+      ],
+    },
+   
   {
     title: 'Project Overview',
     label: '',
@@ -720,34 +751,7 @@ export const rtwLinks: SideLink[] = [
     uName: 'rtw-project-overview',
     icon: <FileIcon />,
   },
-   {
-      title: 'Letter Attachment',
-      label: '',
-      href: '',
-      uName: 'rtw-letter-attachment',
-      icon: <FileIcon />,
-      sub: [
-        {
-          title: 'Incoming Attachment',
-          label: '',
-          href: '/edms/rtw/letter-attachment-incoming-letters',
-          icon: '',
-        },
-        {
-          title: 'Outgoing Attachment',
-          label: '',
-          href: '/edms/rtw/letter-attachment-outgoing-letters',
-          icon: '',
-        }
-      ],
-    },
-    {
-      title: 'Organization/Organogram',
-      label: '',
-      href: '/edms/rtw/organization-organogram',
-      uName: 'rtw-organom',
-      icon: <FileIcon />,
-    },
+  
   {
     title: 'Technical Documentation',
     label: '',
@@ -889,13 +893,6 @@ export const pmisLinks: SideLink[] = [
     uName: '',
   },
   {
-    title: 'Project Overview',
-    label: '',
-    href: '/edms/mb-pmis/project-overview',
-    uName: 'mb-pmis-project-overview',
-    icon: <FileIcon />,
-  },
-  {
       title: 'Organization/Organogram',
       label: '',
       href: '/edms/mb-pmis/organogram',
@@ -903,7 +900,7 @@ export const pmisLinks: SideLink[] = [
       icon: <FileIcon />,
     },
     {
-      title: 'Letter Attachment',
+      title: 'Letter',
       label: '',
       href: '',
       uName: 'mb-pmis-letter-attachment',
@@ -916,13 +913,21 @@ export const pmisLinks: SideLink[] = [
           icon: '',
         },
         {
-          title: 'Outgoin letter',
+          title: 'Outgoing Letter',
           label: '',
           href: '/edms/mb-pmis/letter-attachment-outgoing',
           icon: '',
         },
       ],
     },
+  {
+    title: 'Project Overview',
+    label: '',
+    href: '/edms/mb-pmis/project-overview',
+    uName: 'mb-pmis-project-overview',
+    icon: <FileIcon />,
+  },
+  
     {
     title: 'Technical Documentation',
     label: '',

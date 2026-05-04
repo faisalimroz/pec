@@ -45,7 +45,7 @@ export default function AccidentReport() {
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
                 <h1 className='text-2xl font-bold tracking-tight md:text-3xl pl-4'>
-                  Incoming Letter
+                  Incoming Letters
                 </h1>
 
                 <DemoTable />
