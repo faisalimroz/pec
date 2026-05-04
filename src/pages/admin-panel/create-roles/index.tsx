@@ -373,7 +373,7 @@ const PermissionManager = () => {
           g_children: [],
         },
                {
-          name: 'rtw-organogram',
+          name: 'rtw-organom',
           view_authority: false,
           edit_authority: false,
           g_children: [],
