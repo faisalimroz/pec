@@ -1,0 +1,42 @@
+{
+  "topNav": [
+    {
+      "id": "administration",
+      "title": "Administration",
+      "roles": ["admin", "edms_admin"],
+      "children": [
+        {
+          "id": "letter-attachment",
+          "title": "Letter Attachment",
+          "path": "/administrative/letter-attachment",
+          "component": "admin/letter-attachment"
+        },
+        {
+          "id": "vehicle-mgt-record",
+          "title": "Vehicle Mgt Record",
+          "path": "/administrative/vehicle-mgt-record",
+          "component": "admin/vehicle-mgt-record"
+        },
+        {
+          "id": "asset-management",
+          "title": "Asset Management",
+          "path": "/administrative/asset-management",
+          "component": "admin/asset-management"
+        }
+      ]
+    },
+    {
+      "id": "records",
+      "title": "Records",
+      "roles": ["edms_user", "editor"],
+      "children": [
+        {
+          "id": "incoming-letters",
+          "title": "Incoming Letters",
+          "path": "/records/incoming",
+          "component": "admin-edms/incoming-letters"
+        }
+      ]
+    }
+  ]
+}

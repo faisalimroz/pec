@@ -449,8 +449,57 @@ export const edmsSecondNav=[
 ]
 export const edmsTopNav = [
   {
+    title: 'Administration',
+    href: '/administrative',
+    isActive: false,
+    logo: AdminIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'administration',
+  },
+  {
+    title: 'Road & Traffic',
+    href: '/road-and-traffic/about',
+    isActive: false,
+    logo: RntIcon,
+    roles: ['superadmin', 'r&t-manager'],
+    uName: 'road-&-traffic',
+  },
+  {
+    title: 'Main Bridge',
+    href: '/mb-pmis',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'mb-pmis',
+  },
+  {
+    title: 'RTW',
+    href: '/rtw',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'admin', 'finance-manager', 'clinic'],
+    uName: 'rtw',
+  },
+  
+  {
+    title: 'Toll Operation',
+    href: '/toll',
+    isActive: false,
+    logo: edmsIcon,
+    roles: ['superadmin', 'toll-manager'],
+    uName: 'toll',
+  },
+  {
+    title: 'ITS',
+    href: '/its',
+    isActive: false,
+    logo: ItsIcon,
+    roles: ['superadmin', 'its-manager'],
+    uName: 'its',
+  },
+  {
     title: 'EDMS',
-    href: '/edms/dispatched',
+    href: '/edms',
     isActive: true,
     logo: edmsIcon,
     roles: ['edms', 'superadmin'],

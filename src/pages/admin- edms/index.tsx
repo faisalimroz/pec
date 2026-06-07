@@ -13,7 +13,6 @@ export default function Administrative() {
 
   const { roles } = useAuth()
   const userRoles = roles.map((role) => role.title)
-
   const selectedNav = edmsTopNav
   const filteredNavLinks = getFilteredNavLinks(selectedNav, userRoles)
   return (
@@ -36,17 +35,15 @@ export default function Administrative() {
                 <UserNav />
               </div>
             </LayoutHeader>
-<div>
-                <NewNavbar links={edmsSecondNav} />
-              </div>
+            <div>
+              <NewNavbar links={edmsSecondNav} />
+            </div>
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4 bg-gray-100'>
               <div className='h-[calc(100vh)] flex items-center justify-center '>
                 <h1 className='text-4xl font-bold tracking-tight md:text-5xl text-center'>
                   Welcome To Administration Department
                 </h1>
-
-              
               </div>
             </LayoutBody>
           </Layout>
