@@ -117,9 +117,6 @@ const navJson: TreeNode[] = [
           },
         ],
       },
-  
-  
-
   {
     id: "admin-edms",
     title: "Administration",
@@ -144,32 +141,19 @@ const navJson: TreeNode[] = [
         title: "Building Maintenance",
         type: "folder",
         children: [
-          {
-            id: "building-maintenance-monthly-report",
-            title: "Monthly Report",
-            type: "folder",
-            children: [
+         
               {
                 id: "building-maintenance-monthly-report-index",
-                title: "Index",
+                title: "Monthly Maintainance Report",
                 type: "file",
                 component: "admin- edms/building-maintenance/monthly-report/index",
               },
-            ],
-          },
-          {
-            id: "building-maintenance-tools",
-            title: "Tools",
-            type: "folder",
-            children: [
               {
                 id: "building-maintenance-tools-index",
-                title: "Index",
+                title: "Tools",
                 type: "file",
                 component: "admin- edms/building-maintenance/tools/index",
               },
-            ],
-          },
         ],
       },
 
@@ -1159,6 +1143,39 @@ const navJson: TreeNode[] = [
 }
 ]
 
+const filterTree = (nodes: TreeNode[], query: string): TreeNode[] => {
+  if (!query.trim()) return nodes
+
+  const searchTerm = query.toLowerCase()
+
+  return nodes
+    .map((node) => {
+      const titleMatch = node.title.toLowerCase().includes(searchTerm)
+
+      const matchedChildren = node.children
+        ? filterTree(node.children, query)
+        : []
+
+      // parent matched, show parent with ALL original children
+      if (titleMatch) {
+        return {
+          ...node,
+          children: node.children ? [...node.children] : [],
+        }
+      }
+
+      // child matched, show parent with matched children only
+      if (matchedChildren.length > 0) {
+        return {
+          ...node,
+          children: matchedChildren,
+        }
+      }
+
+      return null
+    })
+    .filter(Boolean) as TreeNode[]
+}
 export default function EdmsFileExplorer() {
   const [searchQuery, setSearchQuery] = useState("")
   const [expanded, setExpanded] = useState<Set<string>>(
@@ -1230,89 +1247,101 @@ export default function EdmsFileExplorer() {
       return next
     })
   }
+const filteredNavJson = filterTree(navJson, searchQuery)
+React.useEffect(() => {
+  if (!searchQuery.trim()) return
 
-  const renderTree = (nodes: TreeNode[], level = 0): React.ReactNode => {
-    return nodes.map((node) => {
-      const isExpanded = expanded.has(node.id)
-      const isSelected = selected === node.id
-      const hasChildren = !!node.children?.length
+  const collectFolderIds = (
+    nodes: TreeNode[],
+    ids = new Set<string>()
+  ) => {
+    nodes.forEach((node) => {
+      if (node.type === "folder") {
+        ids.add(node.id)
+      }
 
-      const matchesSearch = node.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
+      if (node.children?.length) {
+        collectFolderIds(node.children, ids)
+      }
+    })
 
-      const hasMatchingChild = node.children?.some((child) =>
-        child.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    return ids
+  }
 
-      if (searchQuery && !matchesSearch && !hasMatchingChild) return null
+  setExpanded(collectFolderIds(filteredNavJson))
+}, [searchQuery])
+const renderTree = (nodes: TreeNode[], level = 0): React.ReactNode => {
+  return nodes.map((node) => {
+    const isExpanded = expanded.has(node.id)
+    const isSelected = selected === node.id
+    const hasChildren = !!node.children?.length
 
-      return (
-        <div key={node.id} className="flex flex-col">
-          <div
-            onClick={() => handleChildClick(node)}
-            className={`relative flex w-full cursor-pointer select-none items-center px-3 py-1.5 ${
-              isSelected
-                ? "bg-blue-50/70 text-[#2b5296]"
-                : "text-gray-700 hover:bg-gray-50"
-            }`}
-            style={{ paddingLeft: `${level * 1.5 + 0.75}rem` }}
-          >
-            {isSelected && (
-              <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#3b66b5]" />
-            )}
+    return (
+      <div key={node.id} className="flex flex-col">
+        <div
+          onClick={() => handleChildClick(node)}
+          className={`relative flex w-full cursor-pointer select-none items-center px-3 py-1.5 ${
+            isSelected
+              ? "bg-blue-50/70 text-[#2b5296]"
+              : "text-gray-700 hover:bg-gray-50"
+          }`}
+          style={{ paddingLeft: `${level * 1.5 + 0.75}rem` }}
+        >
+          {isSelected && (
+            <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#3b66b5]" />
+          )}
 
-            <div className="mr-1 flex w-5 items-center justify-center">
-              {node.type === "folder" && (
-                <button
-                  onClick={(e) => toggleExpandOnly(node.id, e)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  {isExpanded ? (
-                    <ChevronDown size={14} />
-                  ) : (
-                    <ChevronRight size={14} />
-                  )}
-                </button>
-              )}
-            </div>
-
-            <div className="mr-2 text-gray-400">
-              {node.type === "folder" ? (
-                isExpanded ? (
-                  <FolderOpen size={16} strokeWidth={2.5} />
+          <div className="mr-1 flex w-5 items-center justify-center">
+            {node.type === "folder" && (
+              <button
+                onClick={(e) => toggleExpandOnly(node.id, e)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                {isExpanded ? (
+                  <ChevronDown size={14} />
                 ) : (
-                  <Folder size={16} strokeWidth={2.5} />
-                )
-              ) : (
-                <FileText size={16} strokeWidth={2.5} />
-              )}
-            </div>
-
-            <span
-              className={`flex-1 truncate text-sm ${
-                isSelected ? "font-semibold" : "font-medium"
-              }`}
-            >
-              {node.title}
-            </span>
-
-            {node.count !== undefined && (
-              <span className="ml-2 font-mono text-[11px] tracking-wider text-gray-400">
-                {node.count}
-              </span>
+                  <ChevronRight size={14} />
+                )}
+              </button>
             )}
           </div>
 
-          {isExpanded && hasChildren && (
-            <div className="flex flex-col">
-              {renderTree(node.children!, level + 1)}
-            </div>
+          <div className="mr-2 text-gray-400">
+            {node.type === "folder" ? (
+              isExpanded ? (
+                <FolderOpen size={16} strokeWidth={2.5} />
+              ) : (
+                <Folder size={16} strokeWidth={2.5} />
+              )
+            ) : (
+              <FileText size={16} strokeWidth={2.5} />
+            )}
+          </div>
+
+          <span
+            className={`flex-1 truncate text-sm ${
+              isSelected ? "font-semibold" : "font-medium"
+            }`}
+          >
+            {node.title}
+          </span>
+
+          {node.count !== undefined && (
+            <span className="ml-2 font-mono text-[11px] tracking-wider text-gray-400">
+              {node.count}
+            </span>
           )}
         </div>
-      )
-    })
-  }
+
+        {isExpanded && hasChildren && (
+          <div className="flex flex-col">
+            {renderTree(node.children!, level + 1)}
+          </div>
+        )}
+      </div>
+    )
+  })
+}
 
   return (
     <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-white">
@@ -1329,8 +1358,7 @@ export default function EdmsFileExplorer() {
             />
           </div>
         </div>
-
-        <div className="h-full overflow-y-auto py-2">{renderTree(navJson)}</div>
+        <div className="h-full overflow-y-auto py-2">{renderTree(filteredNavJson)}</div>
       </div>
 
       <div className="relative flex h-full flex-1 flex-col overflow-hidden bg-[#f8f9fa]">
