@@ -163,32 +163,24 @@ const navJson: TreeNode[] = [
         title: "Fire Management",
         type: "folder",
         children: [
-          {
-            id: "fire-mgt-monthly-report",
-            title: "Fire Monthly Report",
-            type: "folder",
-            children: [
+          
+            
               {
                 id: "fire-mgt-monthly-report-index",
-                title: "Index",
+                title: "Monthly Activity",
                 type: "file",
                 component: "admin- edms/fire-mgt/fire-monthly-report/index",
               },
-            ],
-          },
-          {
-            id: "fire-mgt-tools",
-            title: "Fire Tools",
-            type: "folder",
-            children: [
+            
+          
+         
               {
                 id: "fire-mgt-tools-index",
-                title: "Index",
+                title: "Tools",
                 type: "file",
                 component: "admin- edms/fire-mgt/fire-tools/index",
               },
-            ],
-          },
+         
         ],
       },
 
@@ -197,32 +189,24 @@ const navJson: TreeNode[] = [
         title: "Gardening",
         type: "folder",
         children: [
-          {
-            id: "gardening-monthly-activity",
-            title: "Gardening Monthly Activity",
-            type: "folder",
-            children: [
+          
+           
               {
                 id: "gardening-monthly-activity-index",
-                title: "Index",
+                title: "Monthly Activity",
                 type: "file",
                 component: "admin- edms/gardening/gardening-monthly-activity/index",
-              },
-            ],
+           
           },
-          {
-            id: "gardening-tools",
-            title: "Gardening Tools",
-            type: "folder",
-            children: [
+          
+          
               {
                 id: "gardening-tools-index",
-                title: "Index",
+                title: "Gardening Tools",
                 type: "file",
                 component: "admin- edms/gardening/gardening-tools/index",
               },
-            ],
-          },
+            
         ],
       },
 
@@ -252,59 +236,30 @@ const navJson: TreeNode[] = [
         ],
       },
 
-    //   {
-    //     id: "hr",
-    //     title: "HR",
-    //     type: "folder",
-    //     children: [
-    //       {
-    //         id: "hr-em-personal-detail",
-    //         title: "Employee Personal Detail",
-    //         type: "folder",
-    //         children: [
-    //           {
-    //             id: "hr-em-personal-detail-index",
-    //             title: "Index",
-    //             type: "file",
-    //             component: "admin- edms/hr/em-personal-detail/index",
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //   },
 
       {
         id: "ipc",
-        title: "IPC",
+        title: "Finance and Accounts",
         type: "folder",
         children: [
-          {
-            id: "ipc-monthly-updates",
-            title: "IPC Monthly Updates",
-            type: "folder",
-            children: [
+        
               {
                 id: "ipc-monthly-updates-index",
                 title: "Index",
                 type: "file",
                 component: "admin- edms/ipc/ipc-monthly-updates/index",
               },
-            ],
-          },
-          {
-            id: "ipc-records",
-            title: "IPC Records",
-            type: "folder",
-            children: [
+           
+          
+            
               {
                 id: "ipc-records-index",
                 title: "Index",
                 type: "file",
                 component: "admin- edms/ipc/ipc-records/index",
               },
-            ],
-          },
-        ],
+        ]
+       
       },
 
       {
@@ -312,34 +267,26 @@ const navJson: TreeNode[] = [
         title: "IT Electronics Communication",
         type: "folder",
         children: [
-          {
-            id: "it-electronics-monthly-report",
-            title: "IT Electronics Monthly Report",
-            type: "folder",
-            children: [
+          
+            
               {
                 id: "it-electronics-monthly-report-index",
-                title: "Index",
+                title: "Monthly Report",
                 type: "file",
                 component:
                   "admin- edms/it-electronics-communication/it-electronics-monthly-report/index",
               },
-            ],
-          },
-          {
-            id: "it-electronics-tools",
-            title: "IT Electronics Tools",
-            type: "folder",
-            children: [
+          
+          
+         
               {
                 id: "it-electronics-tools-index",
-                title: "Index",
+                title: "Tools",
                 type: "file",
                 component:
                   "admin- edms/it-electronics-communication/it-electronics-tools/index",
               },
-            ],
-          },
+           
         ],
       },
 
@@ -348,32 +295,22 @@ const navJson: TreeNode[] = [
         title: "Letter Attachment",
         type: "folder",
         children: [
-          {
-            id: "letter-attachment-incoming",
-            title: "Incoming",
-            type: "folder",
-            children: [
+          
+           
               {
                 id: "letter-attachment-incoming-index",
-                title: "Index",
+                title: "Incoming",
                 type: "file",
                 component: "admin- edms/letter-attachment/incoming/index",
               },
-            ],
-          },
-          {
-            id: "letter-attachment-outgoing",
-            title: "Outgoing",
-            type: "folder",
-            children: [
+        
               {
                 id: "letter-attachment-outgoing-index",
-                title: "Index",
+                title: "Outgoing",
                 type: "file",
                 component: "admin- edms/letter-attachment/outgoing/index",
               },
-            ],
-          },
+            
         ],
       },
 
@@ -396,32 +333,22 @@ const navJson: TreeNode[] = [
         title: "Security Management",
         type: "folder",
         children: [
-          {
-            id: "security-mgt-monthly-report",
-            title: "Security Monthly Report",
-            type: "folder",
-            children: [
+         
               {
                 id: "security-mgt-monthly-report-index",
-                title: "Index",
+                title: "Security Monthly Report",
                 type: "file",
                 component: "admin- edms/security-mgt/security-monthly-report/index",
               },
-            ],
-          },
-          {
-            id: "security-mgt-tools",
-            title: "Security Tools",
-            type: "folder",
-            children: [
+            
+          
               {
                 id: "security-mgt-tools-index",
-                title: "Index",
+                title: "Security Tools",
                 type: "file",
                 component: "admin- edms/security-mgt/security-tools/index",
               },
-            ],
-          },
+           
         ],
       },
 
@@ -439,12 +366,6 @@ const navJson: TreeNode[] = [
         ],
       },
 
-      {
-        id: "root-index",
-        title: "Index",
-        type: "file",
-        component: "admin- edms/index",
-      },
     ],
   },
 
@@ -460,33 +381,19 @@ const navJson: TreeNode[] = [
       id: "road-traffic-letter-attachment",
       title: "Letter Attachment",
       type: "folder",
-      children: [
-        {
-          id: "road-traffic-letter-attachment-incoming",
-          title: "Incoming",
-          type: "folder",
-          children: [
+      children: [    
             {
               id: "road-traffic-letter-attachment-incoming-index",
-              title: "Index",
+              title: "Incoming",
               type: "file",
               component: "road-and-traffic-edms/letter-attachment/incoming/index",
             },
-          ],
-        },
-        {
-          id: "road-traffic-letter-attachment-outgoing",
-          title: "Outgoing",
-          type: "folder",
-          children: [
             {
               id: "road-traffic-letter-attachment-outgoing-index",
-              title: "Index",
+              title: "Outgoing",
               type: "file",
               component: "road-and-traffic-edms/letter-attachment/outgoing/index",
-            },
-          ],
-        },
+            }
       ],
     },
     {
@@ -903,32 +810,20 @@ const navJson: TreeNode[] = [
       title: "Letter Attachment",
       type: "folder",
       children: [
-        {
-          id: "its-letter-attachment-incoming",
-          title: "Incoming",
-          type: "folder",
-          children: [
+       
             {
               id: "its-letter-attachment-incoming-index",
-              title: "Index",
+              title: "Incoming",
               type: "file",
               component: "its-edms/letter-attachment/incoming/index",
-            },
-          ],
-        },
-        {
-          id: "its-letter-attachment-outgoing",
-          title: "Outgoing",
-          type: "folder",
-          children: [
+            },      
             {
               id: "its-letter-attachment-outgoing-index",
-              title: "Index",
+              title: "Outgoing",
               type: "file",
               component: "its-edms/letter-attachment/outgoing/index",
             },
-          ],
-        },
+          
       ],
     },
     {
@@ -1200,6 +1095,351 @@ const navJson: TreeNode[] = [
           "title": "Pictures and Videos",
           "type": "file",
           "component": "rtw-edms/visual-records/pictures-and-videos/index"
+        }
+      ]
+    }
+  ]
+},
+{
+  "id": "mb-pis-edms",
+  "title": "MB PMIS",
+  "type": "folder",
+  "children": [
+
+    {
+      "id": "mb-communication-correspondence",
+      "title": "Communication Correspondence",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-communication-correspondence-index",
+          "title": "All RTW-related Letters & Official Correspondence",
+          "type": "file",
+          "component": "mb-pis-edms/communication-correspondence/letter-and-correspondence/index"
+        },
+        {
+          "id": "mb-communication-correspondences",
+          "title": "Meeting Minutes",
+          "type": "file",
+          "component": "mb-pis-edms/communication-correspondence/meeting-minutes/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-letter-and-correspondence",
+      "title": "Letter And Correspondence",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-letter-and-correspondence-index",
+          "title": "Index",
+          "type": "file",
+          "component": "mb-pis-edms/letter-and-correspondence/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-meeting-minutes",
+      "title": "Meeting Minutes",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-meeting-minutes-index",
+          "title": "Index",
+          "type": "file",
+          "component": "mb-pis-edms/meeting-minutes/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-financial-documentation",
+      "title": "Financial Documentation",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-financial-documentation-index",
+          "title": "Main Bridge Bills",
+          "type": "file",
+          "component": "mb-pis-edms/financial-documentation/main-bridge-bills/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-letter-attachment",
+      "title": "Letter Attachment",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-letter-attachment-incoming",
+          "title": "Incoming",
+          "type": "file",
+          "component": "mb-pis-edms/letter-attachment/incoming/index"
+        },
+        {
+          "id": "mb-letter-attachment-outgoing",
+          "title": "Outgoing",
+          "type": "file",
+          "component": "mb-pis-edms/letter-attachment/outgoing/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-monitoring-reporting",
+      "title": "Monitoring Reporting",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-monitoring-reporting-index",
+          "title": "Index",
+          "type": "file",
+          "component": "mb-pis-edms/monitoring-reporting/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-organogram",
+      "title": "Organogram",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-organogram-index",
+          "title": "Index",
+          "type": "file",
+          "component": "mb-pis-edms/organogram/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-project-overview",
+      "title": "Project Overview",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-project-overview-index",
+          "title": "Index",
+          "type": "file",
+          "component": "mb-pis-edms/project-overview/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-quality-safety",
+      "title": "Quality Safety",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-material-test-report",
+          "title": "Material Test Report",
+          "type": "file",
+          "component": "mb-pis-edms/quality-safety/material-test-report/index"
+        },
+        {
+          "id": "mb-safety",
+          "title": "Safety",
+          "type": "file",
+          "component": "mb-pis-edms/quality-safety/safety/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-technical-documentation",
+      "title": "Technical Documentation",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-main-bridge-drawings",
+          "title": "Main Bridge Drawings",
+          "type": "file",
+          "component": "mb-pis-edms/technical-documentation/main-bridge-drawings/index"
+        },
+        {
+          "id": "mb-main-bridge-maintenance",
+          "title": "Main Bridge Maintenance",
+          "type": "file",
+          "component": "mb-pis-edms/technical-documentation/main-bridge-maintenace/index"
+        },
+        {
+          "id": "mb-materials-equipment",
+          "title": "Materials And Equipment",
+          "type": "file",
+          "component": "mb-pis-edms/technical-documentation/materials-and-equipment/index"
+        },
+        {
+          "id": "mb-others",
+          "title": "Others",
+          "type": "file",
+          "component": "mb-pis-edms/technical-documentation/others/index"
+        },
+        {
+          "id": "mb-survey-reports",
+          "title": "Survey Reports",
+          "type": "file",
+          "component": "mb-pis-edms/technical-documentation/survery-reports/index"
+        }
+      ]
+    },
+
+    {
+      "id": "mb-visual-records",
+      "title": "Visual Records",
+      "type": "folder",
+      "children": [
+        {
+          "id": "mb-visual-records-index",
+          "title": "Index",
+          "type": "file",
+          "component": "mb-pis-edms/visual-records/index"
+        }
+      ]
+    }
+  ]
+},
+{
+  "id": "toll-edms",
+  "title": "Toll",
+  "type": "folder",
+  "children": [
+    {
+      "id": "toll-daily-report",
+      "title": "Daily Report",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-daily-report-index",
+          "title": "Index",
+          "type": "file",
+          "component": "toll-edms/daily-report/index"
+        }
+      ]
+    },
+
+    {
+      "id": "toll-daily-toll-traffic-comparison",
+      "title": "Daily Toll Traffic Comparison",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-daily-toll-traffic-index",
+          "title": "Daily Toll & Traffic Data",
+          "type": "file",
+          "component": "toll-edms/daily-report/index"
+        },
+        {
+          "id": "toll-daily-toll-traffic-comparison-index",
+          "title": "Daily Toll & Traffic Data Comparison",
+          "type": "file",
+          "component": "toll-edms/daily-toll-trafic-comparison/index"
+        }
+      ]
+    },
+
+    {
+      "id": "toll-employee-personal-report",
+      "title": "Employee Personal Report",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-employee-personal-report-index",
+          "title": "Index",
+          "type": "file",
+          "component": "toll-edms/employee-personal-report/index"
+        }
+      ]
+    },
+
+    {
+      "id": "toll-hierarchy",
+      "title": "Hierarchy",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-hierarchy-index",
+          "title": "Index",
+          "type": "file",
+          "component": "toll-edms/hierarchy/index"
+        }
+      ]
+    },
+
+    {
+      "id": "toll-letter-attachment",
+      "title": "Letter Attachment",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-letter-attachment-incoming",
+          "title": "Incoming",
+          "type": "file",
+          "component": "toll-edms/letter-attachment/incoming/index"
+        },
+        {
+          "id": "toll-letter-attachment-outgoing",
+          "title": "Outgoing",
+          "type": "file",
+          "component": "toll-edms/letter-attachment/outgoing/index"
+        }
+      ]
+    },
+
+    {
+      "id": "toll-monthly-roster",
+      "title": "Monthly Roster",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-monthly-roster-index",
+          "title": "Main Bridge Bills",
+          "type": "file",
+          "component": "toll-edms/monthly-roster/index"
+        }
+      ]
+    },
+
+    {
+      "id": "toll-shift-wise",
+      "title": "Shift Wise",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-shift-wise-toll-comparison",
+          "title": "Shift Wise Toll Comparison",
+          "type": "file",
+          "component": "toll-edms/shift-wise/shift-wise-toll-comparison/index"
+        },
+        {
+          "id": "toll-shift-wise-toll-traffic-data",
+          "title": "Shift Wise Toll Traffic Data",
+          "type": "file",
+          "component": "toll-edms/shift-wise/shift-wise-toll-traffic-data/index"
+        }
+      ]
+    },
+
+    {
+      "id": "toll-wim-data",
+      "title": "WIM Data",
+      "type": "folder",
+      "children": [
+        {
+          "id": "toll-wim-data-index",
+          "title": "Represent Wim Data",
+          "type": "file",
+          "component": "toll-edms/wim-data-comparison/index"
+        },
+         {
+          "id": "toll-wim-data-indexs",
+          "title": "Wim Data Comparison",
+          "type": "file",
+          "component": "toll-edms/wim-data/index"
         }
       ]
     }

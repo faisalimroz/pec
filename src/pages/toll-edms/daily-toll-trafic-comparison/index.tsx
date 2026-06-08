@@ -20,27 +20,16 @@ export default function TollCollectModify() {
   return (
     <>
       <section className='relative h-full overflow-hidden bg-background'>
-        <Sidebar2
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
-          sideLinks={tollLinks}
-        />
+        
 
         <div
           id='content'
-          className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 ${isCollapsed ? 'md:ml-14' : 'md:ml-52'} h-full`}
+          className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 h-full`}
         >
           <Layout>
             {/* ===== Top Heading ===== */}
-            <LayoutHeader>
-              <TopNav links={filteredNavLinks} />
-              <div className='ml-auto flex items-center space-x-4'>
-                <UserNav />
-              </div>
-            </LayoutHeader>
- <div>
-                <NewNavbar links={edmsSecondNav} />
-              </div>
+            
+ 
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2 space-x-4'>

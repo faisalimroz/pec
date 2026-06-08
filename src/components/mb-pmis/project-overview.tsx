@@ -8,7 +8,7 @@ const Projectoverview = () => {
         const { roles, permissions } = useAuth()
    const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
     const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'mb-pmis-project-overview');
-    const hasEditAccess = mbPmisPermission?.edit_authority === true &&  !showAll;
+    const hasEditAccess = mbPmisPermission?.edit_authority === true &&  showAll;
     return (
         <div className="min-h-screen p-2">
             <div className="w-full flex flex-col justify-center items-center bg-white rounded-lg p-2">

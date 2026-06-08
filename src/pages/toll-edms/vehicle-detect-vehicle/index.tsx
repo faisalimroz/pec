@@ -15,15 +15,11 @@ export default function VehicleDetectVehicle() {
   return (
     <>
       <section className='relative h-full overflow-hidden bg-background'>
-        <Sidebar2
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
-          sideLinks={tollLinks}
-        />
+        
 
         <div
           id='content'
-          className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 ${isCollapsed ? 'md:ml-14' : 'md:ml-52'} h-full`}
+          className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 h-full`}
         >
           <Layout>
             {/* ===== Top Heading ===== */}
