@@ -71,7 +71,7 @@ export default function MonthlyReport() {
   const roadSafetyPermission = rtManagerPermission?.children?.find(
     (child) => child.name === 'r&t-monthly-roster');
   console.log('roadSafetyPermission', roadSafetyPermission);
-  const hasEditAccess = roadSafetyPermission?.edit_authority === true && !showAll;;
+  const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;;
   const [approved, setApproved] = useState<boolean>(false);
 
   const [activeIndex, setActiveIndex] = useState(0)

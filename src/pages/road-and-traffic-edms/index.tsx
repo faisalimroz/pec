@@ -27,19 +27,12 @@ export default function RoadAndTraffic() {
 
         <div
           id='content'
-          className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 ${isCollapsed ? 'md:ml-14' : 'md:ml-52'} h-full`}
+          className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 h-full`}
         >
           <Layout>
             {/* ===== Top Heading ===== */}
-            <LayoutHeader>
-              <TopNav links={filteredNavLinks} />
-              <div className='ml-auto flex items-center space-x-4'>
-                <UserNav />
-              </div>
-            </LayoutHeader>
-  <div>
-                <NewNavbar links={edmsSecondNav} />
-              </div>
+            
+  
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='h-[calc(100vh)] flex items-center justify-center '>

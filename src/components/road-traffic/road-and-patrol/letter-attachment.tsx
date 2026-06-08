@@ -67,7 +67,7 @@ const { roles, permissions } = useAuth()
     const roadSafetyPermission = rtManagerPermission?.children?.find(
         (child) => child.name === 'r&t-road-safety-patrol');
       
-    const hasEditAccess = roadSafetyPermission?.edit_authority === true && !showAll;
+    const hasEditAccess = roadSafetyPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

@@ -448,12 +448,438 @@ const navJson: TreeNode[] = [
     ],
   },
 
-  {
-    id: "road-traffic-folder",
-    title: "Road & Traffic",
-    type: "folder",
-    children: [],
-  },
+{
+  id: "road-and-traffic-edms",
+  title: "Road & Traffic",
+  type: "folder",
+  children: [
+    
+    
+   
+    {
+      id: "road-traffic-letter-attachment",
+      title: "Letter Attachment",
+      type: "folder",
+      children: [
+        {
+          id: "road-traffic-letter-attachment-incoming",
+          title: "Incoming",
+          type: "folder",
+          children: [
+            {
+              id: "road-traffic-letter-attachment-incoming-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/letter-attachment/incoming/index",
+            },
+          ],
+        },
+        {
+          id: "road-traffic-letter-attachment-outgoing",
+          title: "Outgoing",
+          type: "folder",
+          children: [
+            {
+              id: "road-traffic-letter-attachment-outgoing-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/letter-attachment/outgoing/index",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "road-traffic-monthly-report",
+      title: "Monthly Report",
+      type: "folder",
+      children: [
+        {
+          id: "road-traffic-monthly-report-index",
+          title: "Index",
+          type: "file",
+          component: "road-and-traffic-edms/monthly-report/index",
+        },
+      ],
+    },
+    {
+      id: "road-traffic-monthly-roaster",
+      title: "Monthly Roaster",
+      type: "folder",
+      children: [
+        {
+          id: "road-traffic-monthly-roaster-index",
+          title: "Index",
+          type: "file",
+          component: "road-and-traffic-edms/monthly-roaster/index",
+        },
+      ],
+    },
+    {
+      id: "road-traffic-orgaorganization-organogram",
+      title: "Orgaorganization Organogram",
+      type: "folder",
+      children: [
+        {
+          id: "road-traffic-orgaorganization-organogram-index",
+          title: "Index",
+          type: "file",
+          component: "road-and-traffic-edms/orgaorganization-organogram/index",
+        },
+      ],
+    },
+
+
+    {
+      id: "road-and-maintenance",
+      title: "Road And Maintenance",
+      type: "folder",
+      children: [
+        {
+          id: "road-and-maintenance-accident",
+          title: "Accident",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-accident-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/accident/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-maintenance-completion-form",
+          title: "Completion Form",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-completion-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/completion-form/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-maintenance-drawing",
+          title: "Drawing",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-drawing-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/drawing/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-maintenance-inspection-report",
+          title: "Inspection Report",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-inspection-report-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/inspection-report/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-maintenance-letter-attachment",
+          title: "Letter Attachment",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-letter-attachment-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/letter-attachment/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-maintenance-miscellaneous",
+          title: "Miscellaneous",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-miscellaneous-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/miscellaneous/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-maintenance-reciving-materials-form",
+          title: "Reciving Materials Form",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-reciving-materials-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/reciving-materials-form/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-maintenance-requisition-form",
+          title: "Requisition Form",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-maintenance-requisition-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-maintenance/requisition-form/index",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "road-and-patrol",
+      title: "Road And Patrol",
+      type: "folder",
+      children: [
+        {
+          id: "road-and-patrol-accident",
+          title: "Accident",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-accident-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/accident/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-completion-form",
+          title: "Completion Form",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-completion-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/completion-form/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-controllers-report",
+          title: "Controllers Report",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-controllers-report-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/controllers-report/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-drawing",
+          title: "Drawing",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-drawing-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/drawing/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-inspection-report",
+          title: "Inspection Report",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-inspection-report-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/inspection-report/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-letter-attachment",
+          title: "Letter Attachment",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-letter-attachment-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/letter-attachment/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-miscellaneous",
+          title: "Miscellaneous",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-miscellaneous-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/miscellaneous/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-reciving-materials-form",
+          title: "Reciving Materials Form",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-reciving-materials-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/reciving-materials-form/index",
+            },
+          ],
+        },
+        {
+          id: "road-and-patrol-requisition-form",
+          title: "Requisition Form",
+          type: "folder",
+          children: [
+            {
+              id: "road-and-patrol-requisition-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/road-and-patrol/requisition-form/index",
+            },
+          ],
+        },
+       
+       
+      ],
+    },
+    {
+      id: "workshop",
+      title: "Workshop",
+      type: "folder",
+      children: [
+        {
+          id: "workshop-accident",
+          title: "Accident",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-accident-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/accident/index",
+            },
+          ],
+        },
+        {
+          id: "workshop-completion-form",
+          title: "Completion Form",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-completion-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/completion-form/index",
+            },
+          ],
+        },
+        {
+          id: "workshop-drawing",
+          title: "Drawing",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-drawing-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/drawing/index",
+            },
+          ],
+        },
+        {
+          id: "workshop-inspection-report",
+          title: "Inspection Report",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-inspection-report-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/inspection-report/index",
+            },
+          ],
+        },
+        {
+          id: "workshop-letter-attachment",
+          title: "Letter Attachment",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-letter-attachment-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/letter-attachment/index",
+            },
+          ],
+        },
+        {
+          id: "workshop-miscellaneous",
+          title: "Miscellaneous",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-miscellaneous-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/miscellaneous/index",
+            },
+          ],
+        },
+        {
+          id: "workshop-reciving-materials-form",
+          title: "Reciving Materials Form",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-reciving-materials-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/reciving-materials-form/index",
+            },
+          ],
+        },
+        {
+          id: "workshop-requisition-form",
+          title: "Requisition Form",
+          type: "folder",
+          children: [
+            {
+              id: "workshop-requisition-form-index",
+              title: "Index",
+              type: "file",
+              component: "road-and-traffic-edms/workshop/requisition-form/index",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
 ]
 
 export default function EdmsFileExplorer() {
