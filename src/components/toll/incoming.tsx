@@ -69,10 +69,6 @@ export default function MonthlyReport() {
     const adminManagerPermission = permissions.find((p) => p.name === 'toll-manager');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'toll-letter-attachment');
     const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
-
-    const isClinic = roles.some((role) =>
-        ['superadmin', 'clinic'].includes(role.title)
-    )
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
@@ -552,7 +548,7 @@ export default function MonthlyReport() {
     const rightToolbarTemplate = () => {
         return (
             <>
-                {hasEditAccess && (
+                
                     <ButtonGroupWithIcon
                         selectedProducts={selectedProducts}
                         openNew={openNew}
@@ -561,7 +557,7 @@ export default function MonthlyReport() {
                         confirmDeleteSelected={confirmDeleteSelected}
 
                     />
-                )}
+               
 
                 <RefreshButton handleReset={handleReset} />
             </>
@@ -609,7 +605,7 @@ export default function MonthlyReport() {
                 command: () => viewProduct(rowData),
             },
         ]
-        if (hasEditAccess) {
+        if (hasEditAccess || !hasEditAccess) {
             items.push(
                 {
                     label: 'Edit',
@@ -895,7 +891,7 @@ export default function MonthlyReport() {
                             loading={loading}
                             scrollable
                         >
-                            {hasEditAccess && (
+                        
                                 <Column
                                     selectionMode='multiple'
                                     headerStyle={{ width: '3rem' }}
@@ -903,7 +899,7 @@ export default function MonthlyReport() {
                                     headerClassName='bg-[#ffc2c2] text-sm'
                                     bodyClassName='text-sm truncate max-w-xs'
                                 ></Column>
-                            )}
+                    
 
                             <Column
                                 field='slNo'
