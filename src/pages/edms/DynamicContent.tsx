@@ -258,7 +258,7 @@ const navJson: TreeNode[] = [
         
               {
                 id: "ipc-monthly-updates-index",
-                title: "Index",
+                title: "Monthly IPC Updates",
                 type: "file",
                 component: "admin- edms/ipc/ipc-monthly-updates/index",
               },
@@ -267,7 +267,7 @@ const navJson: TreeNode[] = [
             
               {
                 id: "ipc-records-index",
-                title: "Index",
+                title: "IPC Records",
                 type: "file",
                 component: "admin- edms/ipc/ipc-records/index",
               },
@@ -1342,10 +1342,9 @@ const renderTree = (nodes: TreeNode[], level = 0): React.ReactNode => {
     )
   })
 }
-
   return (
-    <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-white">
-      <div className="h-full w-80 shrink-0 border-r border-gray-200 bg-white">
+ <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-white">
+      <div className="flex h-full w-80 shrink-0 flex-col border-r border-gray-200 bg-white">
         <div className="border-b border-gray-100 p-4 pb-2">
           <div className="flex h-9 items-center overflow-hidden rounded-md border border-gray-200 bg-gray-50">
             <Search size={16} className="ml-3 text-gray-400" />
@@ -1358,43 +1357,50 @@ const renderTree = (nodes: TreeNode[], level = 0): React.ReactNode => {
             />
           </div>
         </div>
-        <div className="h-full overflow-y-auto py-2">{renderTree(filteredNavJson)}</div>
+     
+        <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
+          {renderTree(filteredNavJson)}
+        </div>
+        
       </div>
-
-      <div className="relative flex h-full flex-1 flex-col overflow-hidden bg-[#f8f9fa]">
+      <div className="relative flex flex-1 flex-col h-full w-full overflow-auto bg-white">
+        
         {loadingComp && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-sm">
-            <Loader2 className="h-8 w-8 animate-spin text-[#0055aa]" />
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-[#0055aa]" />
+              <p className="text-sm font-semibold uppercase tracking-widest text-[#0055aa]">Fetching Document...</p>
+            </div>
           </div>
         )}
+        
+        {/* 2. Changed 'h-full' to 'flex-1 min-h-full' so it can grow taller than the screen */}
+        <div className="flex-1 min-h-full w-full min-w-min flex flex-col">
+          
+          {!ActiveComponent && !loadingComp && (
+            <div className='flex flex-1 w-full flex-col items-center justify-center bg-white'>
+              <FolderOpen size={64} className="mb-4 text-gray-200" strokeWidth={1} />
+              <h1 className='mb-2 text-3xl font-bold tracking-tight text-gray-300'>
+                No File Selected
+              </h1>
+              <p className="text-sm text-gray-400">Select a document from the left sidebar to view its contents.</p>
+            </div>
+          )}
 
-        {!ActiveComponent && !loadingComp && (
-          <div className="m-6 flex h-full flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white">
-            <FolderOpen size={64} className="mb-4 text-gray-200" />
-            <h1 className="mb-2 text-3xl font-bold text-gray-300">
-              No File Selected
-            </h1>
-            <p className="text-sm text-gray-400">
-              Select a document from the left sidebar to view its contents.
-            </p>
-          </div>
-        )}
-
-        {ActiveComponent && (
-          <div className="h-full overflow-hidden border border-gray-200 bg-white shadow-sm">
-            <Suspense
-              fallback={
-                <div className="flex h-full items-center justify-center text-gray-400">
-                  <Loader2 className="mr-2 animate-spin" size={16} />
-                  Rendering Component...
+          {ActiveComponent && (
+           
+            <div className="animate-in fade-in flex-1 w-full bg-white duration-300">
+              <Suspense fallback={
+                <div className="flex h-full min-h-[50vh] w-full items-center justify-center text-gray-400">
+                  <Loader2 className="mr-2 animate-spin" size={16}/> Rendering Component...
                 </div>
-              }
-            >
-              <ActiveComponent />
-            </Suspense>
-          </div>
-        )}
+              }>
+                <ActiveComponent />
+              </Suspense>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </div>      
   )
 }
