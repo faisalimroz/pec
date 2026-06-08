@@ -19,11 +19,7 @@ export default function RoadAndTraffic() {
   return (
     <>
       <section className='relative h-full overflow-hidden bg-gray-100'>
-        <Sidebar2
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
-          sideLinks={rntLinks}
-        />
+        
 
         <div
           id='content'

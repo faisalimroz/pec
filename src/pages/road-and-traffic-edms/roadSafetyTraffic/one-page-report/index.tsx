@@ -18,11 +18,7 @@ export default function OnePageReport() {
   return (
     <>
       <section className='relative h-full overflow-hidden bg-background'>
-        <Sidebar2
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
-          sideLinks={rntLinks}
-        />
+        
 
         <div
           id='content'

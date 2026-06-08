@@ -22,11 +22,7 @@ export default function EmployeePersonalProfile() {
   return (
     <>
       <section className='relative h-full overflow-hidden bg-background'>
-        <Sidebar2
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
-          sideLinks={administrationLinks}
-        />
+        
 
         <div
           id='content'

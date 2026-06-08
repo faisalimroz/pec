@@ -63,7 +63,7 @@ export default function KecLetter() {
     const { roles, permissions } = useAuth()
     const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
     const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-quality-safety');
-    const hasEditAccess = rtwPermission?.edit_authority === true && !showAll;
+    const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

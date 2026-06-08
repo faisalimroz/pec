@@ -20,11 +20,7 @@ export default function AccidentReport() {
   return (
     <>
       <section className='relative h-full overflow-hidden bg-background'>
-        <Sidebar2
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
-          sideLinks={itsLinks}
-        />
+        
 
         <div
           id='content'

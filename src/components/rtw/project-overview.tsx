@@ -10,7 +10,7 @@ const Projectoverview = () => {
         const { roles, permissions } = useAuth()
       const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
         const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-project-overview');
-        const hasEditAccess = rtwPermission?.edit_authority === true && !showAll;
+        const hasEditAccess = rtwPermission?.edit_authority === true && showAll;
     return (
         <div className="min-h-screen p-2">
             <div className="w-full flex flex-col justify-center items-center bg-white rounded-lg p-2">

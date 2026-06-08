@@ -882,7 +882,7 @@ const navJson: TreeNode[] = [
 },
 {
   id: "its-edms",
-  title: "ITS EDMS",
+  title: "ITS",
   type: "folder",
   children: [
     {
@@ -1024,6 +1024,187 @@ const navJson: TreeNode[] = [
     },
   ],
 },
+
+{
+  "id": "rtw",
+  "title": "RTW",
+  "type": "folder",
+  "children": [
+    {
+      "id": "rtw-additional-notes",
+      "title": "Additional Notes",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-backup-frequency",
+          "title": "Backup Frequency",
+          "type": "file",
+          "component": "rtw-edms/additional-notes/backup-frequency/index"
+        },
+        {
+          "id": "rtw-document-control",
+          "title": "Document Control",
+          "type": "file",
+          "component": "rtw-edms/additional-notes/document-control/index"
+        },
+        {
+          "id": "rtw-document-revision-log",
+          "title": "Document Revision Log",
+          "type": "file",
+          "component": "rtw-edms/additional-notes/document-revision-log/index"
+        }
+      ]
+    },
+    {
+      "id": "rtw-letter-attachment",
+      "title": "Letter Attachment",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-letter-attachment-incoming",
+          "title": "Incoming",
+          "type": "file",
+          "component": "rtw-edms/letter-attachment/incoming/index"
+        },
+        {
+          "id": "rtw-letter-attachment-outgoing",
+          "title": "Outgoing",
+          "type": "file",
+          "component": "rtw-edms/letter-attachment/outcoming/index"
+        }
+      ]
+    },
+    {
+      "id": "rtw-monitoring-reporting",
+      "title": "Monitoring And Reporting",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-daily-water-level",
+          "title": "Daily Water Level",
+          "type": "file",
+          "component": "rtw-edms/monitoring-and-reporting/daily-water-level-records/index"
+        },
+    
+        {
+          "id": "rtw-monthly-reports",
+          "title": "RTW Monthly Reports",
+          "type": "file",
+          "component": "rtw-edms/monitoring-and-reporting/monthly-report/index"
+        },
+       
+      ]
+    },
+    {
+      "id": "rtw-technical-documentation",
+      "title": "Technical Documentation",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-materials-equipment",
+          "title": "Materials Equipment",
+          "type": "file",
+          "component": "rtw-edms/technical-documentation/materials-and-equipment/index"
+        },
+        {
+          "id": "rtw-drawing",
+          "title": "RTW Drawing",
+          "type": "file",
+          "component": "rtw-edms/technical-documentation/rtw-drawings/index"
+        },
+        {
+          "id": "rtw-maintenance",
+          "title": "RTW Maintenance",
+          "type": "file",
+          "component": "rtw-edms/technical-documentation/rtw-maintenance-manual/index"
+        },
+        {
+          "id": "rtw-survey-reports",
+          "title": "Survey Reports",
+          "type": "file",
+          "component": "rtw-edms/technical-documentation/survey-reports/index"
+        }
+      ]
+    },
+      {
+      "id": "rtw-project-overview",
+      "title": "Project Overview",
+      "type": "file",
+      "component": "rtw-edms/project-overview/index"
+    },
+      {
+      "id": "rtw-organogram",
+      "title": "Organogram",
+      "type": "file",
+      "component": "rtw-edms/organom/index"
+    },
+  {
+      "id": "rtw-communication-correspondence",
+      "title": "Communication and Correspondence",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-letter-correspondence",
+          "title": "Letter Correspondence",
+          "type": "file",
+          "component": "rtw-edms/communication-correspondence/letter-official-correspondence/index"
+        },
+        {
+          "id": "rtw-meeting-minutes",
+          "title": "Meeting Minutes",
+          "type": "file",
+          "component": "rtw-edms/communication-correspondence/meeting-minutes/index"
+        }
+      ]
+    },
+  
+{
+      "id": "rtw-financial",
+      "title": "Financial",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-bills",
+          "title": "RTW Bills",
+          "type": "file",
+          "component": "rtw-edms/financial-documentation/rtw-bills/index"
+        }
+      ]
+    },
+    {
+      "id": "rtw-quality-safety",
+      "title": "Quality, Safety",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-material",
+          "title": "Material Test Report",
+          "type": "file",
+          "component": "rtw-edms/quality-safety/material-test-report/index"
+        },
+        {
+          "id": "rtw-safety",
+          "title": "Safety",
+          "type": "file",
+          "component": "rtw-edms/quality-safety/safety/index"
+        }
+      ]
+    },
+  {
+      "id": "rtw-visual-records-folder",
+      "title": "Visual Records",
+      "type": "folder",
+      "children": [
+        {
+          "id": "rtw-visual-records",
+          "title": "Pictures and Videos",
+          "type": "file",
+          "component": "rtw-edms/visual-records/pictures-and-videos/index"
+        }
+      ]
+    }
+  ]
+}
 ]
 
 export default function EdmsFileExplorer() {
