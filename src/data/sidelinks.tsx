@@ -612,13 +612,7 @@ export const itsLinks: SideLink[] = [
     label: '',
     href: '/its/monthly-report',
     icon: <FileIcon />,
-  },
-  {
-    title: 'Organization/Organom',
-    label: '',
-    href: '/its/its-organom',
-    icon: <FileIcon />,
-  },
+  }
 
 
 ]
