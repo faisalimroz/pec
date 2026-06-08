@@ -879,7 +879,151 @@ const navJson: TreeNode[] = [
       ],
     },
   ],
-}
+},
+{
+  id: "its-edms",
+  title: "ITS EDMS",
+  type: "folder",
+  children: [
+    {
+      id: "its-about-us",
+      title: "About Us",
+      type: "folder",
+      children: [
+        {
+          id: "its-about-us-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/AboutUs/index",
+        },
+      ],
+    },
+    {
+      id: "its-letter-attachment",
+      title: "Letter Attachment",
+      type: "folder",
+      children: [
+        {
+          id: "its-letter-attachment-incoming",
+          title: "Incoming",
+          type: "folder",
+          children: [
+            {
+              id: "its-letter-attachment-incoming-index",
+              title: "Index",
+              type: "file",
+              component: "its-edms/letter-attachment/incoming/index",
+            },
+          ],
+        },
+        {
+          id: "its-letter-attachment-outgoing",
+          title: "Outgoing",
+          type: "folder",
+          children: [
+            {
+              id: "its-letter-attachment-outgoing-index",
+              title: "Index",
+              type: "file",
+              component: "its-edms/letter-attachment/outgoing/index",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "its-monthly-report",
+      title: "Monthly Report",
+      type: "folder",
+      children: [
+        {
+          id: "its-monthly-report-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/MonthlyReport/index",
+        },
+      ],
+    },
+    {
+      id: "its-notice",
+      title: "Notice",
+      type: "folder",
+      children: [
+        {
+          id: "its-notice-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/Notice/index",
+        },
+      ],
+    },
+    {
+      id: "its-operation-manual",
+      title: "Operation Manual",
+      type: "folder",
+      children: [
+        {
+          id: "its-operation-manual-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/OperationManual/index",
+        },
+      ],
+    },
+    {
+      id: "its-organization",
+      title: "Organization",
+      type: "folder",
+      children: [
+        {
+          id: "its-organization-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/Organization/index",
+        },
+      ],
+    },
+    {
+      id: "its-organogram",
+      title: "Organogram",
+      type: "folder",
+      children: [
+        {
+          id: "its-organogram-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/Organom/index",
+        },
+      ],
+    },
+    {
+      id: "its-system-configure",
+      title: "System Configure",
+      type: "folder",
+      children: [
+        {
+          id: "its-system-configure-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/SystemConfigure/index",
+        },
+      ],
+    },
+    {
+      id: "its-work-plan",
+      title: "Work Plan",
+      type: "folder",
+      children: [
+        {
+          id: "its-work-plan-index",
+          title: "Index",
+          type: "file",
+          component: "its-edms/WorkPlan/index",
+        },
+      ],
+    },
+  ],
+},
 ]
 
 export default function EdmsFileExplorer() {

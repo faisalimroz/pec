@@ -63,7 +63,7 @@ export default function MonthlyReport() {
     const showAll = pathname.startsWith('/edms');
     const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
     const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-organization');
-    const hasEditAccess = itsPermission?.edit_authority === true && !showAll;
+    const hasEditAccess = itsPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

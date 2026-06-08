@@ -38,7 +38,7 @@ const OrgChart: React.FC = () => {
   const checkPermission = checkRole?.children.find(
     (c) => c.name === 'about-its'
   )
-  const isGeneral = checkPermission?.edit_authority ===true && !showAll;
+  const isGeneral = checkPermission?.edit_authority ===true && showAll;
 
 
 

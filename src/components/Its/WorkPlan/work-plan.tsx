@@ -70,7 +70,7 @@ export default function MonthlyReport() {
     const itsPermission = itsManagerPermission?.children?.find(
         (child) => child.name === 'its-work-plan');
 
-    const hasEditAccess = itsPermission?.edit_authority === true && !showAll;
+    const hasEditAccess = itsPermission?.edit_authority === true && showAll;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
