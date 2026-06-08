@@ -64,7 +64,7 @@ export default function MedicineInOutRecord() {
     const showAll = pathname.startsWith('/edms');
     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'health-center');
-    const hasEditAccess = !showAll && adminPermission?.edit_authority === true;
+    const hasEditAccess = showAll && adminPermission?.edit_authority === true;
     const [approved, setApproved] = useState<boolean>(false);
 
     const [activeIndex, setActiveIndex] = useState(0)

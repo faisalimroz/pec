@@ -1,42 +1,57 @@
-{
-  "topNav": [
+[
     {
-      "id": "administration",
-      "title": "Administration",
-      "roles": ["admin", "edms_admin"],
-      "children": [
-        {
-          "id": "letter-attachment",
-          "title": "Letter Attachment",
-          "path": "/administrative/letter-attachment",
-          "component": "admin/letter-attachment"
-        },
-        {
-          "id": "vehicle-mgt-record",
-          "title": "Vehicle Mgt Record",
-          "path": "/administrative/vehicle-mgt-record",
-          "component": "admin/vehicle-mgt-record"
-        },
-        {
-          "id": "asset-management",
-          "title": "Asset Management",
-          "path": "/administrative/asset-management",
-          "component": "admin/asset-management"
-        }
-      ]
+        "id": "project-data",
+        "title": "Project Data",
+        "type": "folder",
+        "children": [
+            {
+                "id": "letters",
+                "title": "Letters",
+                "type": "folder",
+                "children": [
+                    {
+                        "id": "incoming-letters",
+                        "title": "Incoming Letters",
+                        "type": "folder",
+                        "children": [
+                            { "id": "inc-admin", "title": "Administration", "type": "file", "count": 340, "component": "admin- edms/asset-management/index" },
+                            { "id": "inc-road-traffic", "title": "Road & Traffic", "type": "file", "count": 791, "component": "edms/incoming/road-traffic" },
+                            { "id": "inc-main-bridge", "title": "Main Bridge", "type": "file", "count": 205, "component": "edms/incoming/main-bridge" },
+                            { "id": "inc-rtw", "title": "RTW", "type": "file", "count": 392, "component": "edms/incoming/rtw" },
+                            { "id": "inc-toll-operation", "title": "Toll Operation", "type": "file", "count": 503, "component": "edms/incoming/toll-operation" },
+                            { "id": "inc-its", "title": "ITS", "type": "file", "count": 356, "component": "edms/incoming/its" }
+                        ]
+                    },
+                    {
+                        "id": "outgoing-letters",
+                        "title": "Outgoing Letters",
+                        "type": "folder",
+                        "children": []
+                    }
+                ]
+            }
+        ]
     },
     {
-      "id": "records",
-      "title": "Records",
-      "roles": ["edms_user", "editor"],
-      "children": [
-        {
-          "id": "incoming-letters",
-          "title": "Incoming Letters",
-          "path": "/records/incoming",
-          "component": "admin-edms/incoming-letters"
-        }
-      ]
+        "id": "administration-folder",
+        "title": "Administration",
+        "type": "folder",
+        "children": [
+            { "id": "emp-profile", "title": "Employee Personal Profile", "type": "file", "count": "1,000", "component": "admin/emp-profile" },
+            { "id": "vehicle-mgt", "title": "Vehicle Management Record", "type": "file", "count": "1,000", "component": "admin/vehicle-mgt-record/index" },
+            { "id": "asset-inventory", "title": "Asset Inventory Management", "type": "file", "count": "1,000", "component": "admin/asset-management/index" },
+            { "id": "building-maint", "title": "Building Maintenance", "type": "file", "count": "1,000", "component": "admin/building-maintenance/index" },
+            { "id": "health-center", "title": "Health Center", "type": "file", "count": "1,000", "component": "admin/health-center/index" },
+            { "id": "gardening-mgt", "title": "Gardening Management", "type": "file", "count": "1,000", "component": "admin/gardening/index" },
+            { "id": "fire-mgt", "title": "Fire Management", "type": "file", "count": "1,000", "component": "admin/fire-mgt/index" },
+            { "id": "it-electronics", "title": "IT Electronics Communication", "type": "file", "count": "1,000", "component": "admin/it-electronics-communication/index" },
+            { "id": "security-mgt", "title": "Security Management", "type": "file", "count": "1,000", "component": "admin/security-mgt/index" }
+        ]
+    },
+    {
+        "id": "road-traffic-folder",
+        "title": "Road & Traffic",
+        "type": "folder",
+        "children": []
     }
-  ]
-}
+]
