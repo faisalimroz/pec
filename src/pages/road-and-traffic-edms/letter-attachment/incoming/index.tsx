@@ -26,9 +26,7 @@ export default function BuildingMaintenance() {
           <Layout>
             {/* ===== Top Heading ===== */}
             
-            <div>
-              <NewNavbar links={edmsSecondNav} />
-            </div>
+       
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>

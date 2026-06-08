@@ -21,11 +21,8 @@ type TreeNode = {
 const componentModules = import.meta.glob("/src/pages/**/*.tsx")
 
 const navJson: TreeNode[] = [
-  {
-    id: "project-data",
-    title: "Project Data",
-    type: "folder",
-    children: [
+  
+  
       {
         id: "letters",
         title: "Letters",
@@ -36,60 +33,92 @@ const navJson: TreeNode[] = [
             title: "Incoming Letters",
             type: "folder",
             children: [
-              {
-                id: "inc-admin",
-                title: "Administration",
+               {
+                id: "letter-attachment-incoming-index",
+                title: "Administrative",
                 type: "file",
-                count: 340,
-                component: "admin- edms/asset-management/index",
+                component: "admin- edms/letter-attachment/incoming/index",
               },
               {
-                id: "inc-road-traffic",
-                title: "Road & Traffic",
-                type: "file",
-                count: 791,
-                component: "edms/incoming/road-traffic",
-              },
+              id: "road-traffic-letter-attachment-incoming-index",
+              title: "Road & Traffic",
+              type: "file",
+              component: "road-and-traffic-edms/letter-attachment/incoming/index",
+            },
+               {
+              id: "its-letter-attachment-incoming-index",
+              title: "ITS",
+              type: "file",
+              component: "its-edms/letter-attachment/incoming/index",
+            },    
               {
-                id: "inc-main-bridge",
-                title: "Main Bridge",
-                type: "file",
-                count: 205,
-                component: "edms/incoming/main-bridge",
-              },
-              {
-                id: "inc-rtw",
-                title: "RTW",
-                type: "file",
-                count: 392,
-                component: "edms/incoming/rtw",
-              },
-              {
-                id: "inc-toll-operation",
-                title: "Toll Operation",
-                type: "file",
-                count: 503,
-                component: "edms/incoming/toll-operation",
-              },
-              {
-                id: "inc-its",
-                title: "ITS",
-                type: "file",
-                count: 356,
-                component: "edms/incoming/its",
-              },
+          "id": "mb-letter-attachment-incoming",
+          "title": "Main Bridge",
+          "type": "file",
+          "component": "mb-pis-edms/letter-attachment/incoming/index"
+        },  {
+          "id": "rtw-letter-attachment-incoming",
+          "title": "RTW",
+          "type": "file",
+          "component": "rtw-edms/letter-attachment/incoming/index"
+        },
+               {
+          "id": "toll-letter-attachment-incoming",
+          "title": "Toll",
+          "type": "file",
+          "component": "toll-edms/letter-attachment/incoming/index"
+        },
+        
             ],
           },
           {
             id: "outgoing-letters",
             title: "Outgoing Letters",
             type: "folder",
-            children: [],
+            children: [
+   {
+                id: "letter-attachment-outgoing-index",
+                title: "Administrative",
+                type: "file",
+                component: "admin- edms/letter-attachment/outgoing/index",
+              },
+  {
+              id: "road-traffic-letter-attachment-outgoing-index",
+              title: "Road & Traffic",
+              type: "file",
+              component: "road-and-traffic-edms/letter-attachment/outgoing/index",
+            },
+             {
+          "id": "mb-letter-attachment-outgoing",
+          "title": "Main Bridge",
+          "type": "file",
+          "component": "mb-pis-edms/letter-attachment/outgoing/index"
+        },
+ {
+          "id": "toll-letter-attachment-outgoing",
+          "title": "Toll",
+          "type": "file",
+          "component": "toll-edms/letter-attachment/outgoing/index"
+        },
+         {
+              id: "its-letter-attachment-outgoing-index",
+              title: "ITS",
+              type: "file",
+              component: "its-edms/letter-attachment/outgoing/index",
+            },
+             {
+          "id": "rtw-letter-attachment-outgoing",
+          "title": "RTW",
+          "type": "file",
+          "component": "rtw-edms/letter-attachment/outcoming/index"
+        }
+
+            ],
           },
         ],
       },
-    ],
-  },
+  
+  
 
   {
     id: "admin-edms",
@@ -290,29 +319,7 @@ const navJson: TreeNode[] = [
         ],
       },
 
-      {
-        id: "letter-attachment",
-        title: "Letter Attachment",
-        type: "folder",
-        children: [
-          
-           
-              {
-                id: "letter-attachment-incoming-index",
-                title: "Incoming",
-                type: "file",
-                component: "admin- edms/letter-attachment/incoming/index",
-              },
-        
-              {
-                id: "letter-attachment-outgoing-index",
-                title: "Outgoing",
-                type: "file",
-                component: "admin- edms/letter-attachment/outgoing/index",
-              },
-            
-        ],
-      },
+   
 
       {
         id: "organogram",
@@ -377,25 +384,7 @@ const navJson: TreeNode[] = [
     
     
    
-    {
-      id: "road-traffic-letter-attachment",
-      title: "Letter Attachment",
-      type: "folder",
-      children: [    
-            {
-              id: "road-traffic-letter-attachment-incoming-index",
-              title: "Incoming",
-              type: "file",
-              component: "road-and-traffic-edms/letter-attachment/incoming/index",
-            },
-            {
-              id: "road-traffic-letter-attachment-outgoing-index",
-              title: "Outgoing",
-              type: "file",
-              component: "road-and-traffic-edms/letter-attachment/outgoing/index",
-            }
-      ],
-    },
+   
     {
       id: "road-traffic-monthly-report",
       title: "Monthly Report",
@@ -628,27 +617,7 @@ const navJson: TreeNode[] = [
         },
       ],
     },
-    {
-      id: "its-letter-attachment",
-      title: "Letter Attachment",
-      type: "folder",
-      children: [
-       
-            {
-              id: "its-letter-attachment-incoming-index",
-              title: "Incoming",
-              type: "file",
-              component: "its-edms/letter-attachment/incoming/index",
-            },      
-            {
-              id: "its-letter-attachment-outgoing-index",
-              title: "Outgoing",
-              type: "file",
-              component: "its-edms/letter-attachment/outgoing/index",
-            },
-          
-      ],
-    },
+    
     {
       id: "its-monthly-report",
       title: "Monthly Report",
@@ -748,50 +717,8 @@ const navJson: TreeNode[] = [
   "title": "RTW",
   "type": "folder",
   "children": [
-    {
-      "id": "rtw-additional-notes",
-      "title": "Additional Notes",
-      "type": "folder",
-      "children": [
-        {
-          "id": "rtw-backup-frequency",
-          "title": "Backup Frequency",
-          "type": "file",
-          "component": "rtw-edms/additional-notes/backup-frequency/index"
-        },
-        {
-          "id": "rtw-document-control",
-          "title": "Document Control",
-          "type": "file",
-          "component": "rtw-edms/additional-notes/document-control/index"
-        },
-        {
-          "id": "rtw-document-revision-log",
-          "title": "Document Revision Log",
-          "type": "file",
-          "component": "rtw-edms/additional-notes/document-revision-log/index"
-        }
-      ]
-    },
-    {
-      "id": "rtw-letter-attachment",
-      "title": "Letter Attachment",
-      "type": "folder",
-      "children": [
-        {
-          "id": "rtw-letter-attachment-incoming",
-          "title": "Incoming",
-          "type": "file",
-          "component": "rtw-edms/letter-attachment/incoming/index"
-        },
-        {
-          "id": "rtw-letter-attachment-outgoing",
-          "title": "Outgoing",
-          "type": "file",
-          "component": "rtw-edms/letter-attachment/outcoming/index"
-        }
-      ]
-    },
+  
+    
     {
       "id": "rtw-monitoring-reporting",
       "title": "Monitoring And Reporting",
@@ -991,26 +918,7 @@ const navJson: TreeNode[] = [
       ]
     },
 
-    {
-      "id": "mb-letter-attachment",
-      "title": "Letter Attachment",
-      "type": "folder",
-      "children": [
-        {
-          "id": "mb-letter-attachment-incoming",
-          "title": "Incoming",
-          "type": "file",
-          "component": "mb-pis-edms/letter-attachment/incoming/index"
-        },
-        {
-          "id": "mb-letter-attachment-outgoing",
-          "title": "Outgoing",
-          "type": "file",
-          "component": "mb-pis-edms/letter-attachment/outgoing/index"
-        }
-      ]
-    },
-
+   
     {
       "id": "mb-monitoring-reporting",
       "title": "Monitoring Reporting",
@@ -1193,26 +1101,7 @@ const navJson: TreeNode[] = [
       ]
     },
 
-    {
-      "id": "toll-letter-attachment",
-      "title": "Letter Attachment",
-      "type": "folder",
-      "children": [
-        {
-          "id": "toll-letter-attachment-incoming",
-          "title": "Incoming",
-          "type": "file",
-          "component": "toll-edms/letter-attachment/incoming/index"
-        },
-        {
-          "id": "toll-letter-attachment-outgoing",
-          "title": "Outgoing",
-          "type": "file",
-          "component": "toll-edms/letter-attachment/outgoing/index"
-        }
-      ]
-    },
-
+    
     {
       "id": "toll-monthly-roster",
       "title": "Monthly Roster",

@@ -27,11 +27,7 @@ export default function BuildingMaintenance() {
           className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 h-full`}
         >
           <Layout>
-            {/* ===== Top Heading ===== */}
-            
-            <div>
-              <NewNavbar links={edmsSecondNav} />
-            </div>
+        
             {/* ===== Main ===== */}
             <LayoutBody className='space-y-4'>
               <div className='space-y-2'>
