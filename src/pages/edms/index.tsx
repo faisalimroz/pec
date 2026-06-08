@@ -41,7 +41,7 @@ export default function EdmsDispatched() {
               </div>
             </LayoutHeader>
 
-            <LayoutBody className='space-y-4 bg-gray-100'>
+            <LayoutBody className=' p-0 bg-gray-100'>
           
                <FileTreeSidebar/>
            
