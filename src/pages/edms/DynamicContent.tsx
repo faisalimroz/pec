@@ -592,190 +592,169 @@ const navJson: TreeNode[] = [
   ],
 },
 
-  {
-    "id": "mb-pis-edms",
-    "title": "Main Bridge",
-    "type": "folder",
-    "children": [
-
-      {
-        "id": "mb-communication-correspondence",
-        "title": "Communication Correspondence",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-communication-correspondence-index",
-            "title": "All RTW-related Letters & Official Correspondence",
-            "type": "file",
-            "component": "mb-pis-edms/communication-correspondence/letter-and-correspondence/index"
-          },
-          {
-            "id": "mb-communication-correspondences",
-            "title": "Meeting Minutes",
-            "type": "file",
-            "component": "mb-pis-edms/communication-correspondence/meeting-minutes/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-letter-and-correspondence",
-        "title": "Letter And Correspondence",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-letter-and-correspondence-index",
-            "title": "Index",
-            "type": "file",
-            "component": "mb-pis-edms/letter-and-correspondence/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-meeting-minutes",
-        "title": "Meeting Minutes",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-meeting-minutes-index",
-            "title": "Index",
-            "type": "file",
-            "component": "mb-pis-edms/meeting-minutes/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-financial-documentation",
-        "title": "Financial Documentation",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-financial-documentation-index",
-            "title": "Main Bridge Bills",
-            "type": "file",
-            "component": "mb-pis-edms/financial-documentation/main-bridge-bills/index"
-          }
-        ]
-      },
-
-
-      {
-        "id": "mb-monitoring-reporting",
-        "title": "Monitoring Reporting",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-monitoring-reporting-index",
-            "title": "Index",
-            "type": "file",
-            "component": "mb-pis-edms/monitoring-reporting/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-organogram",
-        "title": "Organogram",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-organogram-index",
-            "title": "Index",
-            "type": "file",
-            "component": "mb-pis-edms/organogram/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-project-overview",
-        "title": "Project Overview",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-project-overview-index",
-            "title": "Index",
-            "type": "file",
-            "component": "mb-pis-edms/project-overview/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-quality-safety",
-        "title": "Quality Safety",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-material-test-report",
-            "title": "Material Test Report",
-            "type": "file",
-            "component": "mb-pis-edms/quality-safety/material-test-report/index"
-          },
-          {
-            "id": "mb-safety",
-            "title": "Safety",
-            "type": "file",
-            "component": "mb-pis-edms/quality-safety/safety/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-technical-documentation",
-        "title": "Technical Documentation",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-main-bridge-drawings",
-            "title": "Main Bridge Drawings",
-            "type": "file",
-            "component": "mb-pis-edms/technical-documentation/main-bridge-drawings/index"
-          },
-          {
-            "id": "mb-main-bridge-maintenance",
-            "title": "Main Bridge Maintenance",
-            "type": "file",
-            "component": "mb-pis-edms/technical-documentation/main-bridge-maintenace/index"
-          },
-          {
-            "id": "mb-materials-equipment",
-            "title": "Materials And Equipment",
-            "type": "file",
-            "component": "mb-pis-edms/technical-documentation/materials-and-equipment/index"
-          },
-          {
-            "id": "mb-others",
-            "title": "Others",
-            "type": "file",
-            "component": "mb-pis-edms/technical-documentation/others/index"
-          },
-          {
-            "id": "mb-survey-reports",
-            "title": "Survey Reports",
-            "type": "file",
-            "component": "mb-pis-edms/technical-documentation/survery-reports/index"
-          }
-        ]
-      },
-
-      {
-        "id": "mb-visual-records",
-        "title": "Visual Records",
-        "type": "folder",
-        "children": [
-          {
-            "id": "mb-visual-records-index",
-            "title": "Pictures and Videos",
-            "type": "file",
-            "component": "mb-pis-edms/visual-records/index"
-          }
-        ]
-      }
-    ]
-  },
+{
+  id: "mb-pis-edms",
+  title: "Main Bridge",
+  type: "folder",
+  countKey: "mbpmis-total",
+  children: [
+    {
+      id: "mb-communication-correspondence",
+      title: "Communication Correspondence",
+      type: "folder",
+      countKey: "mbpmis-communication-total",
+      children: [
+        {
+          id: "mb-communication-correspondence-index",
+          title: "All RTW-related Letters & Official Correspondence",
+          type: "file",
+          component:
+            "mb-pis-edms/communication-correspondence/letter-and-correspondence/index",
+          countKey: "mbpmis-communication-letter",
+        },
+        {
+          id: "mb-communication-correspondences",
+          title: "Meeting Minutes",
+          type: "file",
+          component:
+            "mb-pis-edms/communication-correspondence/meeting-minutes/index",
+          countKey: "mbpmis-communication-meeting-minutes",
+        },
+      ],
+    },
+    {
+      id: "mb-financial-documentation",
+      title: "Financial Documentation",
+      type: "folder",
+      countKey: "mbpmis-financial-bills",
+      children: [
+        {
+          id: "mb-financial-documentation-index",
+          title: "Main Bridge Bills",
+          type: "file",
+          component:
+            "mb-pis-edms/financial-documentation/main-bridge-bills/index",
+          countKey: "mbpmis-financial-bills",
+        },
+      ],
+    },
+    {
+      id: "mb-monitoring-reporting",
+      title: "Monitoring Reporting",
+      type: "folder",
+      countKey: "mbpmis-monitoring-total",
+      children: [
+        {
+          id: "mb-monitoring-reporting-index",
+          title: "Index",
+          type: "file",
+          component: "mb-pis-edms/monitoring-reporting/index",
+          countKey: "mbpmis-monitoring-reporting",
+        },
+      ],
+    },
+    {
+      id: "mb-organogram",
+      title: "Organogram",
+      type: "folder",
+      countKey: "mbpmis-organogram",
+      children: [
+        {
+          id: "mb-organogram-index",
+          title: "Index",
+          type: "file",
+          component: "mb-pis-edms/organogram/index",
+          countKey: "mbpmis-organogram",
+        },
+      ],
+    },
+    {
+      id: "mb-quality-safety",
+      title: "Quality Safety",
+      type: "folder",
+      countKey: "mbpmis-quality-total",
+      children: [
+        {
+          id: "mb-material-test-report",
+          title: "Material Test Report",
+          type: "file",
+          component:
+            "mb-pis-edms/quality-safety/material-test-report/index",
+          countKey: "mbpmis-quality-material-test",
+        },
+        {
+          id: "mb-safety",
+          title: "Safety",
+          type: "file",
+          component: "mb-pis-edms/quality-safety/safety/index",
+          countKey: "mbpmis-quality-safety",
+        },
+      ],
+    },
+    {
+      id: "mb-technical-documentation",
+      title: "Technical Documentation",
+      type: "folder",
+      countKey: "mbpmis-technical-total",
+      children: [
+        {
+          id: "mb-main-bridge-drawings",
+          title: "Main Bridge Drawings",
+          type: "file",
+          component:
+            "mb-pis-edms/technical-documentation/main-bridge-drawings/index",
+          countKey: "mbpmis-technical-drawing",
+        },
+        {
+          id: "mb-main-bridge-maintenance",
+          title: "Main Bridge Maintenance",
+          type: "file",
+          component:
+            "mb-pis-edms/technical-documentation/main-bridge-maintenace/index",
+          countKey: "mbpmis-technical-maintenance",
+        },
+        {
+          id: "mb-materials-equipment",
+          title: "Materials And Equipment",
+          type: "file",
+          component:
+            "mb-pis-edms/technical-documentation/materials-and-equipment/index",
+          countKey: "mbpmis-technical-materials",
+        },
+        {
+          id: "mb-others",
+          title: "Others",
+          type: "file",
+          component: "mb-pis-edms/technical-documentation/others/index",
+          countKey: "mbpmis-technical-others",
+        },
+        {
+          id: "mb-survey-reports",
+          title: "Survey Reports",
+          type: "file",
+          component:
+            "mb-pis-edms/technical-documentation/survery-reports/index",
+          countKey: "mbpmis-technical-survey-reports",
+        },
+      ],
+    },
+    {
+      id: "mb-visual-records",
+      title: "Visual Records",
+      type: "folder",
+      countKey: "mbpmis-visual-total",
+      children: [
+        {
+          id: "mb-visual-records-index",
+          title: "Pictures and Videos",
+          type: "file",
+          component: "mb-pis-edms/visual-records/index",
+          countKey: "mbpmis-visual-pictures",
+        },
+      ],
+    },
+  ],
+},
 {
   id: "rtw",
   title: "RTW",
@@ -1265,7 +1244,6 @@ export default function EdmsFileExplorer() {
   const filteredNavJson = useMemo(() => {
     return filterTree(navWithCounts, searchQuery)
   }, [navWithCounts, searchQuery])
-
 useEffect(() => {
   const fetchCounts = async () => {
     try {
@@ -1273,7 +1251,7 @@ useEffect(() => {
 
       const token = localStorage.getItem("token")
 
-      const [adminRes, itsRes, roadRes, rtwRes] = await Promise.all([
+      const results = await Promise.allSettled([
         axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/admin/counts`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
@@ -1286,31 +1264,51 @@ useEffect(() => {
         axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/rtw/counts`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
+        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/counts`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ])
 
-      const adminCounts = adminRes.data?.success ? adminRes.data.data : {}
-      const itsCounts = itsRes.data?.success ? itsRes.data.data : {}
-      const roadCounts = roadRes.data?.success ? roadRes.data.data : {}
-      const rtwCounts = rtwRes.data?.success ? rtwRes.data.data : {}
+      const adminCounts =
+        results[0].status === "fulfilled"
+          ? results[0].value.data.data
+          : {}
+
+      const itsCounts =
+        results[1].status === "fulfilled"
+          ? results[1].value.data.data
+          : {}
+
+      const roadCounts =
+        results[2].status === "fulfilled"
+          ? results[2].value.data.data
+          : {}
+
+      const rtwCounts =
+        results[3].status === "fulfilled"
+          ? results[3].value.data.data
+          : {}
+
+      const mbCounts =
+        results[4].status === "fulfilled"
+          ? results[4].value.data.data
+          : {}
+
+      console.log("ADMIN", adminCounts)
+      console.log("ITS", itsCounts)
+      console.log("ROAD", roadCounts)
+      console.log("RTW", rtwCounts)
+      console.log("MB", mbCounts)
 
       setCounts({
         ...adminCounts,
         ...itsCounts,
         ...roadCounts,
         ...rtwCounts,
-
-        "admin-total": adminCounts.total ?? 0,
-        "its-total": itsCounts.total ?? 0,
-        "road-total": roadCounts["road-total"] ?? roadCounts.total ?? 0,
-        "rtw-total": rtwCounts["rtw-total"] ?? rtwCounts.total ?? 0,
+        ...mbCounts,
       })
-    } catch (error: any) {
-      console.error("Failed to fetch sidebar counts:", error)
-
-      if (error.response) {
-        console.error("Response data:", error.response.data)
-        console.error("Response status:", error.response.status)
-      }
+    } catch (error) {
+      console.error(error)
     } finally {
       setCountLoading(false)
     }
