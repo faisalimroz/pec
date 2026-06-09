@@ -1,4 +1,5 @@
-import React, { useState, Suspense } from "react"
+import React, { useState, Suspense, useMemo, useEffect } from "react"
+import axios from 'axios';
 import {
   Search,
   Folder,
@@ -14,6 +15,7 @@ type TreeNode = {
   title: string
   type: "folder" | "file"
   count?: number | string
+  countKey?: string
   component?: string
   children?: TreeNode[]
 }
@@ -45,18 +47,18 @@ const navJson: TreeNode[] = [
             type: "file",
             component: "road-and-traffic-edms/letter-attachment/incoming/index",
           },
-            {
+          {
             "id": "mb-letter-attachment-incoming",
             "title": "Main Bridge",
             "type": "file",
             "component": "mb-pis-edms/letter-attachment/incoming/index"
-          }, 
-            {
+          },
+          {
             "id": "rtw-letter-attachment-incoming",
             "title": "RTW",
             "type": "file",
             "component": "rtw-edms/letter-attachment/incoming/index"
-          },         
+          },
           {
             "id": "toll-letter-attachment-incoming",
             "title": "Toll",
@@ -94,7 +96,7 @@ const navJson: TreeNode[] = [
             "type": "file",
             "component": "mb-pis-edms/letter-attachment/outgoing/index"
           },
-           {
+          {
             "id": "rtw-letter-attachment-outgoing",
             "title": "RTW",
             "type": "file",
@@ -112,7 +114,7 @@ const navJson: TreeNode[] = [
             type: "file",
             component: "its-edms/letter-attachment/outgoing/index",
           },
-         
+
 
         ],
       },
@@ -122,17 +124,20 @@ const navJson: TreeNode[] = [
     id: "admin-edms",
     title: "Administration",
     type: "folder",
+    countKey: "total",
     children: [
       {
         id: "asset-management",
         title: "Asset Management",
         type: "folder",
+        countKey: "asset-management",
         children: [
           {
             id: "asset-management-index",
             title: "Index",
             type: "file",
             component: "admin- edms/asset-management/index",
+            countKey: "asset-management",
           },
         ],
       },
@@ -141,88 +146,79 @@ const navJson: TreeNode[] = [
         title: "Building Maintenance",
         type: "folder",
         children: [
-
           {
             id: "building-maintenance-monthly-report-index",
             title: "Monthly Maintainance Report",
             type: "file",
             component: "admin- edms/building-maintenance/monthly-report/index",
+            countKey: "building-monthly-maintenance",
           },
           {
             id: "building-maintenance-tools-index",
             title: "Tools",
             type: "file",
             component: "admin- edms/building-maintenance/tools/index",
+            countKey: "building-tools",
           },
         ],
       },
-
       {
         id: "employee-personal-profile",
         title: "Employee Personal Profile",
         type: "folder",
+        countKey: "hr-employee-personal",
         children: [
           {
             id: "employee-personal-profile-index",
             title: "Index",
             type: "file",
             component: "admin- edms/employee-personal-profile/index",
+            countKey: "hr-employee-personal",
           },
         ],
       },
-
       {
         id: "fire-mgt",
         title: "Fire Management",
         type: "folder",
         children: [
-
-
           {
             id: "fire-mgt-monthly-report-index",
             title: "Monthly Activity",
             type: "file",
             component: "admin- edms/fire-mgt/fire-monthly-report/index",
+            countKey: "fire-monthly-activity",
           },
-
-
-
           {
             id: "fire-mgt-tools-index",
             title: "Tools",
             type: "file",
             component: "admin- edms/fire-mgt/fire-tools/index",
+            countKey: "fire-tools",
           },
-
         ],
       },
-
       {
         id: "gardening",
         title: "Gardening",
         type: "folder",
         children: [
-
-
           {
             id: "gardening-monthly-activity-index",
             title: "Monthly Activity",
             type: "file",
             component: "admin- edms/gardening/gardening-monthly-activity/index",
-
+            countKey: "gardening-monthly-activity",
           },
-
-
           {
             id: "gardening-tools-index",
             title: "Gardening Tools",
             type: "file",
             component: "admin- edms/gardening/gardening-tools/index",
+            countKey: "gardening-tools",
           },
-
         ],
       },
-
       {
         id: "health-center",
         title: "Health Center",
@@ -233,130 +229,98 @@ const navJson: TreeNode[] = [
             title: "Medical Equipment Record",
             type: "file",
             component: "admin- edms/health-center/medical-equipment-record",
+            countKey: "health-medicine-equipment",
           },
           {
             id: "health-center-medicine-in-out",
             title: "Medicine In-Out Record",
             type: "file",
             component: "admin- edms/health-center/medicine-in-out-record",
+            countKey: "health-medicine-inout",
           },
           {
             id: "health-center-monthly-report",
             title: "Monthly Report",
             type: "file",
             component: "admin- edms/health-center/monthly-report",
+            countKey: "health-monthly-report",
           },
         ],
       },
-
-
-      {
-        id: "ipc",
-        title: "Finance and Accounts",
-        type: "folder",
-        children: [
-
-          {
-            id: "ipc-monthly-updates-index",
-            title: "Monthly IPC Updates",
-            type: "file",
-            component: "admin- edms/ipc/ipc-monthly-updates/index",
-          },
-
-
-
-          {
-            id: "ipc-records-index",
-            title: "IPC Records",
-            type: "file",
-            component: "admin- edms/ipc/ipc-records/index",
-          },
-        ]
-
-      },
-
       {
         id: "it-electronics-communication",
         title: "IT Electronics Communication",
         type: "folder",
         children: [
-
-
           {
             id: "it-electronics-monthly-report-index",
             title: "Monthly Report",
             type: "file",
             component:
-              "admin- edms/it-electronics-communication/it-electronics-monthly-report/index",
+              "admin-edms/it-electronics-communication/it-electronics-monthly-report/index",
+            countKey: "it-electronics-monthly-report",
           },
-
-
-
           {
             id: "it-electronics-tools-index",
             title: "Tools",
             type: "file",
             component:
-              "admin- edms/it-electronics-communication/it-electronics-tools/index",
+              "admin-edms/it-electronics-communication/it-electronics-tools/index",
+            countKey: "it-electronics-tools",
           },
-
         ],
       },
-
-
-
       {
         id: "organogram",
         title: "Organogram",
         type: "folder",
+        countKey: "organogram",
         children: [
           {
             id: "organogram-index",
             title: "Index",
             type: "file",
             component: "admin- edms/organogram/index",
+            countKey: "organogram",
           },
         ],
       },
-
       {
         id: "security-mgt",
         title: "Security Management",
         type: "folder",
         children: [
-
           {
             id: "security-mgt-monthly-report-index",
             title: "Security Monthly Report",
             type: "file",
             component: "admin- edms/security-mgt/security-monthly-report/index",
+            countKey: "security-monthly-report",
           },
-
-
           {
             id: "security-mgt-tools-index",
             title: "Security Tools",
             type: "file",
             component: "admin- edms/security-mgt/security-tools/index",
+            countKey: "security-tools",
           },
-
         ],
       },
-
       {
         id: "vehicle-mgt-record",
         title: "Vehicle Management Record",
         type: "folder",
+        countKey: "vehicle-mgt-record",
         children: [
           {
             id: "vehicle-mgt-record-index",
             title: "Index",
             type: "file",
             component: "admin- edms/vehicle-mgt-record/index",
+            countKey: "vehicle-mgt-record",
           },
         ],
       },
-
     ],
   },
 
@@ -365,7 +329,7 @@ const navJson: TreeNode[] = [
     title: "Road & Traffic",
     type: "folder",
     children: [
-       {
+      {
         id: "road-traffic-orgaorganization-organogram",
         title: "Orgaorganization Organogram",
         type: "folder",
@@ -391,7 +355,7 @@ const navJson: TreeNode[] = [
           },
         ],
       },
-           {
+      {
         "id": "road-and-maintenance",
         "title": "Road And Maintenance",
         "type": "folder",
@@ -578,7 +542,7 @@ const navJson: TreeNode[] = [
     ],
   },
 
- {
+  {
     "id": "mb-pis-edms",
     "title": "Main Bridge",
     "type": "folder",
@@ -1023,36 +987,39 @@ const navJson: TreeNode[] = [
       }
     ]
   },
-    {
+  {
     id: "its-edms",
     title: "ITS",
     type: "folder",
+    countKey: "its-total",
     children: [
-      
       {
         id: "its-about-us",
         title: "About Us",
         type: "folder",
+        countKey: "its-about-us",
         children: [
           {
             id: "its-about-us-index",
             title: "Index",
             type: "file",
             component: "its-edms/AboutUs/index",
+            countKey: "its-about-us",
           },
         ],
       },
-
       {
         id: "its-monthly-report",
         title: "Monthly Report",
         type: "folder",
+        countKey: "its-monthly-report",
         children: [
           {
             id: "its-monthly-report-index",
             title: "Index",
             type: "file",
             component: "its-edms/MonthlyReport/index",
+            countKey: "its-monthly-report",
           },
         ],
       },
@@ -1060,12 +1027,14 @@ const navJson: TreeNode[] = [
         id: "its-notice",
         title: "Notice",
         type: "folder",
+        countKey: "its-notice",
         children: [
           {
             id: "its-notice-index",
             title: "Index",
             type: "file",
             component: "its-edms/Notice/index",
+            countKey: "its-notice",
           },
         ],
       },
@@ -1073,12 +1042,14 @@ const navJson: TreeNode[] = [
         id: "its-operation-manual",
         title: "Operation Manual",
         type: "folder",
+        countKey: "its-operation-manual",
         children: [
           {
             id: "its-operation-manual-index",
             title: "Index",
             type: "file",
             component: "its-edms/OperationManual/index",
+            countKey: "its-operation-manual",
           },
         ],
       },
@@ -1086,26 +1057,44 @@ const navJson: TreeNode[] = [
         id: "its-organization",
         title: "Organization",
         type: "folder",
+        countKey: "its-organization",
         children: [
           {
             id: "its-organization-index",
             title: "Index",
             type: "file",
             component: "its-edms/Organization/index",
+            countKey: "its-organization",
           },
         ],
       },
-     
+      {
+        id: "its-organogram",
+        title: "Organogram",
+        type: "folder",
+        countKey: "its-organogram",
+        children: [
+          {
+            id: "its-organogram-index",
+            title: "Index",
+            type: "file",
+            component: "its-edms/Organom/index",
+            countKey: "its-organogram",
+          },
+        ],
+      },
       {
         id: "its-system-configure",
         title: "System Configure",
         type: "folder",
+        countKey: "its-system-configure",
         children: [
           {
             id: "its-system-configure-index",
             title: "Index",
             type: "file",
             component: "its-edms/SystemConfigure/index",
+            countKey: "its-system-configure",
           },
         ],
       },
@@ -1113,17 +1102,19 @@ const navJson: TreeNode[] = [
         id: "its-work-plan",
         title: "Work Plan",
         type: "folder",
+        countKey: "its-work-plan",
         children: [
           {
             id: "its-work-plan-index",
             title: "Index",
             type: "file",
             component: "its-edms/WorkPlan/index",
+            countKey: "its-work-plan",
           },
         ],
       },
     ],
-  },
+  }
 ]
 
 const filterTree = (nodes: TreeNode[], query: string): TreeNode[] => {
@@ -1139,7 +1130,6 @@ const filterTree = (nodes: TreeNode[], query: string): TreeNode[] => {
         ? filterTree(node.children, query)
         : []
 
-      // parent matched, show parent with ALL original children
       if (titleMatch) {
         return {
           ...node,
@@ -1147,7 +1137,6 @@ const filterTree = (nodes: TreeNode[], query: string): TreeNode[] => {
         }
       }
 
-      // child matched, show parent with matched children only
       if (matchedChildren.length > 0) {
         return {
           ...node,
@@ -1159,23 +1148,124 @@ const filterTree = (nodes: TreeNode[], query: string): TreeNode[] => {
     })
     .filter(Boolean) as TreeNode[]
 }
+
+const addCountsToTree = (
+  nodes: TreeNode[],
+  counts: Record<string, number>
+): TreeNode[] => {
+  return nodes.map((node) => {
+    const children = node.children
+      ? addCountsToTree(node.children, counts)
+      : undefined
+
+    const childrenTotal =
+      children?.reduce((sum, child) => {
+        const childCount =
+          typeof child.count === "number" ? child.count : Number(child.count || 0)
+
+        return sum + childCount
+      }, 0) ?? 0
+
+    const ownCount =
+      node.countKey && counts[node.countKey] !== undefined
+        ? counts[node.countKey]
+        : childrenTotal || node.count
+
+    return {
+      ...node,
+      count: ownCount,
+      children,
+    }
+  })
+}
+
 export default function EdmsFileExplorer() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [counts, setCounts] = useState<Record<string, number>>({})
+  const [countLoading, setCountLoading] = useState(false)
+
   const [expanded, setExpanded] = useState<Set<string>>(
-    new Set([
-      "project-data",
-      "letters",
-      "incoming-letters",
-      "admin-edms",
-      "building-maintenance",
-      "building-maintenance-monthly-report",
-    ])
+    new Set(["admin-edms"])
   )
 
   const [selected, setSelected] = useState<string | null>(null)
   const [ActiveComponent, setActiveComponent] =
     useState<null | React.ComponentType>(null)
   const [loadingComp, setLoadingComp] = useState(false)
+
+  const navWithCounts = useMemo(() => {
+    return addCountsToTree(navJson, counts)
+  }, [counts])
+
+  const filteredNavJson = useMemo(() => {
+    return filterTree(navWithCounts, searchQuery)
+  }, [navWithCounts, searchQuery])
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        setCountLoading(true)
+
+        const token = localStorage.getItem("token")
+
+        const [adminRes, itsRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/admin/counts`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/its/counts`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        ])
+
+        const adminCounts = adminRes.data?.success ? adminRes.data.data : {}
+        const itsCounts = itsRes.data?.success ? itsRes.data.data : {}
+
+        setCounts({
+          ...adminCounts,
+          ...itsCounts,
+          "its-total": itsCounts.total ?? 0,
+        })
+      } catch (error: any) {
+        console.error("Failed to fetch sidebar counts:", error)
+
+        if (error.response) {
+          console.error("Response data:", error.response.data)
+          console.error("Response status:", error.response.status)
+        }
+      } finally {
+        setCountLoading(false)
+      }
+    }
+
+    fetchCounts()
+  }, [])
+
+  useEffect(() => {
+    if (!searchQuery.trim()) return
+
+    const collectFolderIds = (
+      nodes: TreeNode[],
+      ids = new Set<string>()
+    ) => {
+      nodes.forEach((node) => {
+        if (node.type === "folder") {
+          ids.add(node.id)
+        }
+
+        if (node.children?.length) {
+          collectFolderIds(node.children, ids)
+        }
+      })
+
+      return ids
+    }
+
+    setExpanded(collectFolderIds(filteredNavJson))
+  }, [searchQuery, filteredNavJson])
 
   async function handleChildClick(node: TreeNode) {
     if (node.type === "folder") {
@@ -1230,29 +1320,7 @@ export default function EdmsFileExplorer() {
       return next
     })
   }
-  const filteredNavJson = filterTree(navJson, searchQuery)
-  React.useEffect(() => {
-    if (!searchQuery.trim()) return
 
-    const collectFolderIds = (
-      nodes: TreeNode[],
-      ids = new Set<string>()
-    ) => {
-      nodes.forEach((node) => {
-        if (node.type === "folder") {
-          ids.add(node.id)
-        }
-
-        if (node.children?.length) {
-          collectFolderIds(node.children, ids)
-        }
-      })
-
-      return ids
-    }
-
-    setExpanded(collectFolderIds(filteredNavJson))
-  }, [searchQuery])
   const renderTree = (nodes: TreeNode[], level = 0): React.ReactNode => {
     return nodes.map((node) => {
       const isExpanded = expanded.has(node.id)
@@ -1276,6 +1344,7 @@ export default function EdmsFileExplorer() {
             <div className="mr-1 flex w-5 items-center justify-center">
               {node.type === "folder" && (
                 <button
+                  type="button"
                   onClick={(e) => toggleExpandOnly(node.id, e)}
                   className="text-gray-400 hover:text-gray-600"
                 >
@@ -1309,7 +1378,7 @@ export default function EdmsFileExplorer() {
 
             {node.count !== undefined && (
               <span className="ml-2 font-mono text-[11px] tracking-wider text-gray-400">
-                {node.count}
+                {countLoading ? "..." : Number(node.count).toLocaleString()}
               </span>
             )}
           </div>
@@ -1323,6 +1392,7 @@ export default function EdmsFileExplorer() {
       )
     })
   }
+
   return (
     <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden bg-white">
       <div className="flex h-full w-80 shrink-0 flex-col border-r border-gray-200 bg-white">
@@ -1342,40 +1412,47 @@ export default function EdmsFileExplorer() {
         <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
           {renderTree(filteredNavJson)}
         </div>
-
       </div>
-      <div className="relative flex flex-1 flex-col h-full w-full overflow-auto bg-white">
 
+      <div className="relative flex h-full w-full flex-1 flex-col overflow-auto bg-white">
         {loadingComp && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-sm">
             <div className="flex flex-col items-center gap-3">
               <Loader2 className="h-8 w-8 animate-spin text-[#0055aa]" />
-              <p className="text-sm font-semibold uppercase tracking-widest text-[#0055aa]">Fetching Document...</p>
+              <p className="text-sm font-semibold uppercase tracking-widest text-[#0055aa]">
+                Fetching Document...
+              </p>
             </div>
           </div>
         )}
 
-        {/* 2. Changed 'h-full' to 'flex-1 min-h-full' so it can grow taller than the screen */}
-        <div className="flex-1 min-h-full w-full min-w-min flex flex-col">
-
+        <div className="flex min-h-full w-full min-w-min flex-1 flex-col">
           {!ActiveComponent && !loadingComp && (
-            <div className='flex flex-1 w-full flex-col items-center justify-center bg-white'>
-              <FolderOpen size={64} className="mb-4 text-gray-200" strokeWidth={1} />
-              <h1 className='mb-2 text-3xl font-bold tracking-tight text-gray-300'>
+            <div className="flex w-full flex-1 flex-col items-center justify-center bg-white">
+              <FolderOpen
+                size={64}
+                className="mb-4 text-gray-200"
+                strokeWidth={1}
+              />
+              <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-300">
                 No File Selected
               </h1>
-              <p className="text-sm text-gray-400">Select a document from the left sidebar to view its contents.</p>
+              <p className="text-sm text-gray-400">
+                Select a document from the left sidebar to view its contents.
+              </p>
             </div>
           )}
 
           {ActiveComponent && (
-
-            <div className="animate-in fade-in flex-1 w-full bg-white duration-300">
-              <Suspense fallback={
-                <div className="flex h-full min-h-[50vh] w-full items-center justify-center text-gray-400">
-                  <Loader2 className="mr-2 animate-spin" size={16} /> Rendering Component...
-                </div>
-              }>
+            <div className="animate-in fade-in w-full flex-1 bg-white duration-300">
+              <Suspense
+                fallback={
+                  <div className="flex h-full min-h-[50vh] w-full items-center justify-center text-gray-400">
+                    <Loader2 className="mr-2 animate-spin" size={16} />
+                    Rendering Component...
+                  </div>
+                }
+              >
                 <ActiveComponent />
               </Suspense>
             </div>

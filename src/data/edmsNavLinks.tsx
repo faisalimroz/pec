@@ -458,7 +458,7 @@ export const edmsTopNav = [
   },
   {
     title: 'Road & Traffic',
-    href: '/road-and-traffic/about',
+    href: '/road-and-traffic',
     isActive: false,
     logo: RntIcon,
     roles: ['superadmin', 'r&t-manager'],
