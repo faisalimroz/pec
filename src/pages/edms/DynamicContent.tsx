@@ -776,144 +776,159 @@ const navJson: TreeNode[] = [
       }
     ]
   },
-  {
-    "id": "rtw",
-    "title": "RTW",
-    "type": "folder",
-    "children": [
-
-
-      {
-        "id": "rtw-monitoring-reporting",
-        "title": "Monitoring And Reporting",
-        "type": "folder",
-        "children": [
-          {
-            "id": "rtw-daily-water-level",
-            "title": "Daily Water Level",
-            "type": "file",
-            "component": "rtw-edms/monitoring-and-reporting/daily-water-level-records/index"
-          },
-
-          {
-            "id": "rtw-monthly-reports",
-            "title": "RTW Monthly Reports",
-            "type": "file",
-            "component": "rtw-edms/monitoring-and-reporting/monthly-report/index"
-          },
-
-        ]
-      },
-      {
-        "id": "rtw-technical-documentation",
-        "title": "Technical Documentation",
-        "type": "folder",
-        "children": [
-          {
-            "id": "rtw-materials-equipment",
-            "title": "Materials Equipment",
-            "type": "file",
-            "component": "rtw-edms/technical-documentation/materials-and-equipment/index"
-          },
-          {
-            "id": "rtw-drawing",
-            "title": "RTW Drawing",
-            "type": "file",
-            "component": "rtw-edms/technical-documentation/rtw-drawings/index"
-          },
-          {
-            "id": "rtw-maintenance",
-            "title": "RTW Maintenance",
-            "type": "file",
-            "component": "rtw-edms/technical-documentation/rtw-maintenance-manual/index"
-          },
-          {
-            "id": "rtw-survey-reports",
-            "title": "Survey Reports",
-            "type": "file",
-            "component": "rtw-edms/technical-documentation/survey-reports/index"
-          }
-        ]
-      },
-      {
-        "id": "rtw-project-overview",
-        "title": "Project Overview",
-        "type": "file",
-        "component": "rtw-edms/project-overview/index"
-      },
-      {
-        "id": "rtw-organogram",
-        "title": "Organogram",
-        "type": "file",
-        "component": "rtw-edms/organom/index"
-      },
-      {
-        "id": "rtw-communication-correspondence",
-        "title": "Communication and Correspondence",
-        "type": "folder",
-        "children": [
-          {
-            "id": "rtw-letter-correspondence",
-            "title": "Letter Correspondence",
-            "type": "file",
-            "component": "rtw-edms/communication-correspondence/letter-official-correspondence/index"
-          },
-          {
-            "id": "rtw-meeting-minutes",
-            "title": "Meeting Minutes",
-            "type": "file",
-            "component": "rtw-edms/communication-correspondence/meeting-minutes/index"
-          }
-        ]
-      },
-
-      {
-        "id": "rtw-financial",
-        "title": "Financial",
-        "type": "folder",
-        "children": [
-          {
-            "id": "rtw-bills",
-            "title": "RTW Bills",
-            "type": "file",
-            "component": "rtw-edms/financial-documentation/rtw-bills/index"
-          }
-        ]
-      },
-      {
-        "id": "rtw-quality-safety",
-        "title": "Quality, Safety",
-        "type": "folder",
-        "children": [
-          {
-            "id": "rtw-material",
-            "title": "Material Test Report",
-            "type": "file",
-            "component": "rtw-edms/quality-safety/material-test-report/index"
-          },
-          {
-            "id": "rtw-safety",
-            "title": "Safety",
-            "type": "file",
-            "component": "rtw-edms/quality-safety/safety/index"
-          }
-        ]
-      },
-      {
-        "id": "rtw-visual-records-folder",
-        "title": "Visual Records",
-        "type": "folder",
-        "children": [
-          {
-            "id": "rtw-visual-records",
-            "title": "Pictures and Videos",
-            "type": "file",
-            "component": "rtw-edms/visual-records/pictures-and-videos/index"
-          }
-        ]
-      }
-    ]
-  },
+{
+  id: "rtw",
+  title: "RTW",
+  type: "folder",
+  countKey: "rtw-total",
+  children: [
+    {
+      id: "rtw-monitoring-reporting",
+      title: "Monitoring And Reporting",
+      type: "folder",
+      countKey: "rtw-monitoring-total",
+      children: [
+        {
+          id: "rtw-daily-water-level",
+          title: "Daily Water Level",
+          type: "file",
+          component: "rtw-edms/monitoring-and-reporting/daily-water-level-records/index",
+          countKey: "rtw-monitoring-daily-water-level",
+        },
+        {
+          id: "rtw-monthly-reports",
+          title: "RTW Monthly Reports",
+          type: "file",
+          component: "rtw-edms/monitoring-and-reporting/monthly-report/index",
+          countKey: "rtw-monitoring-monthly-report",
+        },
+      ],
+    },
+    {
+      id: "rtw-technical-documentation",
+      title: "Technical Documentation",
+      type: "folder",
+      countKey: "rtw-technical-total",
+      children: [
+        {
+          id: "rtw-materials-equipment",
+          title: "Materials Equipment",
+          type: "file",
+          component: "rtw-edms/technical-documentation/materials-and-equipment/index",
+          countKey: "rtw-technical-materials",
+        },
+        {
+          id: "rtw-drawing",
+          title: "RTW Drawing",
+          type: "file",
+          component: "rtw-edms/technical-documentation/rtw-drawings/index",
+          countKey: "rtw-technical-drawing",
+        },
+        {
+          id: "rtw-maintenance",
+          title: "RTW Maintenance",
+          type: "file",
+          component: "rtw-edms/technical-documentation/rtw-maintenance-manual/index",
+          countKey: "rtw-technical-maintenance",
+        },
+        {
+          id: "rtw-survey-reports",
+          title: "Survey Reports",
+          type: "file",
+          component: "rtw-edms/technical-documentation/survey-reports/index",
+          countKey: "rtw-technical-survey",
+        },
+      ],
+    },
+    {
+      id: "rtw-project-overview",
+      title: "Project Overview",
+      type: "file",
+      component: "rtw-edms/project-overview/index",
+      countKey: "rtw-project-overview",
+    },
+    {
+      id: "rtw-organogram",
+      title: "Organogram",
+      type: "file",
+      component: "rtw-edms/organom/index",
+      countKey: "rtw-organogram",
+    },
+    {
+      id: "rtw-communication-correspondence",
+      title: "Communication and Correspondence",
+      type: "folder",
+      children: [
+        {
+          id: "rtw-letter-correspondence",
+          title: "Letter Correspondence",
+          type: "file",
+          component: "rtw-edms/communication-correspondence/letter-official-correspondence/index",
+          countKey: "rtw-communication-letter",
+        },
+        {
+          id: "rtw-meeting-minutes",
+          title: "Meeting Minutes",
+          type: "file",
+          component: "rtw-edms/communication-correspondence/meeting-minutes/index",
+          countKey: "rtw-communication-meeting-minutes",
+        },
+      ],
+    },
+    {
+      id: "rtw-financial",
+      title: "Financial",
+      type: "folder",
+      countKey: "rtw-financial-bills",
+      children: [
+        {
+          id: "rtw-bills",
+          title: "RTW Bills",
+          type: "file",
+          component: "rtw-edms/financial-documentation/rtw-bills/index",
+          countKey: "rtw-financial-bills",
+        },
+      ],
+    },
+    {
+      id: "rtw-quality-safety",
+      title: "Quality, Safety",
+      type: "folder",
+      countKey: "rtw-quality-total",
+      children: [
+        {
+          id: "rtw-material",
+          title: "Material Test Report",
+          type: "file",
+          component: "rtw-edms/quality-safety/material-test-report/index",
+          countKey: "rtw-quality-material-test",
+        },
+        {
+          id: "rtw-safety",
+          title: "Safety",
+          type: "file",
+          component: "rtw-edms/quality-safety/safety/index",
+          countKey: "rtw-quality-safety",
+        },
+      ],
+    },
+    {
+      id: "rtw-visual-records-folder",
+      title: "Visual Records",
+      type: "folder",
+      countKey: "rtw-visual-picture",
+      children: [
+        {
+          id: "rtw-visual-records",
+          title: "Pictures and Videos",
+          type: "file",
+          component: "rtw-edms/visual-records/pictures-and-videos/index",
+          countKey: "rtw-visual-picture",
+        },
+      ],
+    },
+  ],
+},
   {
     "id": "toll-edms",
     "title": "Toll Operation",
@@ -1251,43 +1266,43 @@ export default function EdmsFileExplorer() {
     return filterTree(navWithCounts, searchQuery)
   }, [navWithCounts, searchQuery])
 
- useEffect(() => {
+useEffect(() => {
   const fetchCounts = async () => {
     try {
       setCountLoading(true)
 
       const token = localStorage.getItem("token")
 
-      const [adminRes, itsRes, roadRes] = await Promise.all([
+      const [adminRes, itsRes, roadRes, rtwRes] = await Promise.all([
         axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/admin/counts`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }),
         axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/its/counts`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }),
         axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/counts`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/rtw/counts`, {
+          headers: { Authorization: `Bearer ${token}` },
         }),
       ])
 
       const adminCounts = adminRes.data?.success ? adminRes.data.data : {}
       const itsCounts = itsRes.data?.success ? itsRes.data.data : {}
       const roadCounts = roadRes.data?.success ? roadRes.data.data : {}
+      const rtwCounts = rtwRes.data?.success ? rtwRes.data.data : {}
 
       setCounts({
         ...adminCounts,
         ...itsCounts,
         ...roadCounts,
+        ...rtwCounts,
 
         "admin-total": adminCounts.total ?? 0,
         "its-total": itsCounts.total ?? 0,
         "road-total": roadCounts["road-total"] ?? roadCounts.total ?? 0,
+        "rtw-total": rtwCounts["rtw-total"] ?? rtwCounts.total ?? 0,
       })
     } catch (error: any) {
       console.error("Failed to fetch sidebar counts:", error)
