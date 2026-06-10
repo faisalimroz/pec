@@ -63,7 +63,7 @@ export default function KecLetter() {
     const { roles, permissions } = useAuth()
       const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
     const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'mb-pmis-quality-safety');
-    const hasEditAccess = mbPmisPermission?.edit_authority === true &&  showAll;
+    const hasEditAccess = mbPmisPermission?.edit_authority === true;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

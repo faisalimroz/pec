@@ -68,7 +68,7 @@ export default function MonthlyReport() {
     const showAll = pathname.startsWith('/edms');
     const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
     const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-daily-report');
-    const hasEditAccess = tollPermission?.edit_authority === true && showAll;
+    const hasEditAccess = tollPermission?.edit_authority === true;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

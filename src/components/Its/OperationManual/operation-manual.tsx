@@ -63,7 +63,7 @@ export default function AssetManagementTable() {
   const { roles, permissions } = useAuth()
    const itsManagerPermission = permissions.find((p) => p.name === 'its-manager');
     const itsPermission = itsManagerPermission?.children?.find((child) => child.name === 'its-operation-manual');
-const hasEditAccess = itsPermission ?.edit_authority === true && showAll;
+const hasEditAccess = itsPermission ?.edit_authority === true;
   const [products, setProducts] = useState<any>([]) 
   const [productDialog, setProductDialog] = useState<boolean>(false)
   const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false)

@@ -70,7 +70,7 @@ export default function AssetManagementTable() {
 
     const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
     const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-wim-data');
-    const hasEditAccess = tollPermission?.edit_authority === true && showAll;
+    const hasEditAccess = tollPermission?.edit_authority === true;
     const locations = [
 
         { label: 'Mawa', value: 'Mawa' },
