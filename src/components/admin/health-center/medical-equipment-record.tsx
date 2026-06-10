@@ -62,7 +62,7 @@ export default function MedicalEquipment() {
     const showAll = pathname.startsWith('/edms');
     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'health-center');
-    const hasEditAccess = showAll && adminPermission?.edit_authority === true;
+    const hasEditAccess =  adminPermission?.edit_authority === true;
 
     const isClinic = roles.some((role) =>
         ['superadmin', 'clinic'].includes(role.title)

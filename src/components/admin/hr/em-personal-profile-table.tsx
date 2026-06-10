@@ -99,7 +99,7 @@ export default function EmPersonalProfileTable() {
   const showAll = pathname.startsWith('/edms');
   const adminManagerPermission = permissions.find((p) => p.name === 'admin');
   const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'employee-personal-profile');
-   const hasEditAccess = showAll && adminPermission?.edit_authority === true;
+   const hasEditAccess =  adminPermission?.edit_authority === true;
   const navigate = useNavigate()
   const location = useLocation()
 

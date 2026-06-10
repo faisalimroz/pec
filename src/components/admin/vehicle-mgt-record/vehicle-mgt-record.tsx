@@ -74,7 +74,7 @@ export default function MonthlyReport() {
   console.log('adminManagerPermission', adminManagerPermission);
   const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'vehicle-management');
 
-  const hasEditAccess = showAll && adminPermission?.edit_authority === true;
+  const hasEditAccess =  adminPermission?.edit_authority === true;
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<Product[]>([])

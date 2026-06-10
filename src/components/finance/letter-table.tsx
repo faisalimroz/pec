@@ -9,7 +9,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { Calendar } from 'primereact/calendar'
 import '@/styles/table-style.css'
-import { searchOfficialLetter } from '@/api/adminAPIs'
+import { searchVehicleMgtRecord } from '@/api/adminAPIs'
 import axios from 'axios'
 import { Dropdown } from 'primereact/dropdown'
 import MultiFileInput from '@/components/MultiFileInput'
@@ -415,8 +415,8 @@ export default function OfficialLetterTable() {
       letterType: selectedCode?.code || '',
     }
 
-    searchOfficialLetter(initialPayload).then((result) => {
-      setProducts(result?.OfficialLetters)
+    searchVehicleMgtRecord(initialPayload).then((result) => {
+      setProducts(result?.VehicleMgtRecords)
       setLoading(false)
     })
   }
@@ -545,8 +545,8 @@ export default function OfficialLetterTable() {
       searchQuery: '',
     }
 
-    searchOfficialLetter(initialPayload).then((result) => {
-      setProducts(result?.OfficialLetters)
+    searchVehicleMgtRecord(initialPayload).then((result) => {
+      setProducts(result?.VehicleMgtRecords)
       setLoading(false)
     })
   }
