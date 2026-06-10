@@ -67,7 +67,7 @@ const [approved, setApproved] = useState<boolean>(false);
    console.log('financeManagerPermission', financeManagerPermission);
     const financePermission = financeManagerPermission?.children?.find((child) => child.name === 'ipc-records');
     console.log('financePermission', financePermission);
-    const hasEditAccess = financePermission?.edit_authority === true && showAll;
+    const hasEditAccess = financePermission?.edit_authority === true;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
