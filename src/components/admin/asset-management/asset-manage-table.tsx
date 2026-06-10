@@ -919,7 +919,7 @@ export default function AssetManagementTable() {
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-sm truncate max-w-xs'
-            // sortable
+            sortable
             className='min-w-[10rem]'
             header='Date'
           ></Column>

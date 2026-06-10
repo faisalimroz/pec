@@ -80,7 +80,7 @@ export const adminTopNav = [
     href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
+    roles: ['superadmin',  'mb-pmis-manager'],
     uName: 'mb-pmis',
   },
   {
@@ -88,7 +88,7 @@ export const adminTopNav = [
     href: '/rtw',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
+    roles: ['superadmin', 'rtw-manager'],
     uName: 'rtw',
   },
   {
@@ -146,7 +146,7 @@ export const tollTopNav = [
     href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'mb-pmis-manager'],
+    roles: ['superadmin',  'mb-pmis-manager'],
     uName: 'mb-pmis',
   },
   {
@@ -154,7 +154,7 @@ export const tollTopNav = [
     href: '/rtw',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'rtw-manager'],
+    roles: ['superadmin',  'rtw-manager'],
     uName: 'rtw',
   },
   
@@ -184,228 +184,7 @@ export const tollTopNav = [
     uName: 'edms',
   },
 ];
-// export const clinicTopNav = [
-//   {
-//     title: 'General Information',
-//     href: '/general-information/general-status',
-//     isActive: false,
-//     logo: GiIcon,
-//     roles: ['general-information', 'superadmin'],
-//     uName: 'general-information',
-//   },
-//   {
-//     title: 'Road & Traffic',
-//     href: '/road-and-traffic',
-//     isActive: false,
-//     logo: RntIcon,
-//     roles: ['superadmin', 'r&t-manager'],
-//     uName: 'road-&-traffic',
-//   },
-//   {
-//     title: 'ITS',
-//     href: '/its',
-//     isActive: false,
-//     logo: ItsIcon,
-//     roles: ['superadmin', 'its-manager'],
-//     uName: 'its',
-//   },
-//   {
-//     title: 'Toll',
-//     href: '/toll',
-//     isActive: false,
-//     logo: tollIcon,
-//     roles: ['superadmin', 'toll-manager'],
-//     uName: 'toll',
-//   },
-//   {
-//     title: 'Administration',
-//     href: '/administrative',
-//     isActive: true,
-//     logo: AdminIcon,
-//     roles: ['superadmin', 'admin', 'finance-manager'],
-//     uName: 'administration',
-//   },
-//   {
-//     title: 'EDMS',
-//     href: '/edms',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['edms', 'superadmin'],
-//     uName: 'edms',
-//   },
-// ]
 
-// export const tollTopNav = [
- 
-//   {
-//     title: 'Administration',
-//     href: '/administrative',
-//     isActive: false,
-//     logo: AdminIcon,
-//     roles: ['superadmin', 'admin', 'finance-manager'],
-//     uName: 'administration',
-//   },
-//   {
-//     title: 'Road & Traffic',
-//     href: '/road-and-traffic',
-//     isActive: false,
-//     logo: RntIcon,
-//     roles: ['superadmin', 'r&t-manager'],
-//     uName: 'road-&-traffic',
-//   },
- 
-//   {
-//     title: 'RTW',
-//     href: '/rtw',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['superadmin', 'admin', 'finance-manager'],
-//     uName: 'rtw',
-//   },
-//     {
-//     title: 'Main Bridge',
-//     href: '/mb-pmis',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['superadmin', 'admin', 'finance-manager'],
-//     uName: 'mb-pmis',
-//   },
-//   {
-//     title: 'Toll Operation',
-//     href: '/toll',
-//     isActive: true,
-//     logo: edmsIcon,
-//     roles: ['superadmin', 'toll-manager','its-manager'],
-//     uName: 'toll',
-//   },
-//   {
-//     title: 'ITS',
-//     href: '/its',
-//     isActive: false,
-//     logo: ItsIcon,
-//     roles: ['superadmin', 'its-manager'],
-//     uName: 'its',
-//   },
-//   {
-//     title: 'EDMS',
-//     href: '/edms',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['edms', 'superadmin','its-manager'],
-//     uName: 'edms',
-//   },
-// ]
-
-// export const financeTopNav = [
-//   {
-//     title: 'General Information',
-//     href: '/general-information/general-status',
-//     isActive: false,
-//     logo: GiIcon,
-//     roles: ['general-information', 'superadmin'],
-//     uName: 'general-information',
-//   },
-//   {
-//     title: 'Road & Traffic',
-//     href: '/road-and-traffic',
-//     isActive: false,
-//     logo: RntIcon,
-//     roles: ['superadmin', 'r&t-manager'],
-//     uName: 'road-&-traffic',
-//   },
-//   {
-//     title: 'ITS',
-//     href: '/its',
-//     isActive: false,
-//     logo: ItsIcon,
-//     roles: ['superadmin', 'its-manager'],
-//     uName: 'its',
-//   },
-//   {
-//     title: 'Toll',
-//     href: '/toll',
-//     isActive: false,
-//     logo: tollIcon,
-//     roles: ['superadmin', 'toll-manager'],
-//     uName: 'toll',
-//   },
-//   {
-//     title: 'Administration',
-//     href: '/administrative',
-//     isActive: true,
-//     logo: AdminIcon,
-//     roles: ['superadmin', 'admin', 'finance-manager'],
-//     uName: 'administration',
-//   },
-//   {
-//     title: 'EDMS',
-//     href: '/edms',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['edms', 'superadmin'],
-//     uName: 'edms',
-//   },
-// ]
-
-// export const itsTopNav = [
-//   {
-//     title: 'Administration',
-//     href: '/administrative',
-//     isActive: false,
-//     logo: AdminIcon,
-//     roles: ['superadmin', 'admin', 'finance-manager'],
-//     uName: 'administration',
-//   },
-//   {
-//     title: 'Road & Traffic',
-//     href: '/road-and-traffic',
-//     isActive: false,
-//     logo: RntIcon,
-//     roles: ['superadmin', 'r&t-manager'],
-//     uName: 'road-&-traffic',
-//   },
-//   {
-//     title: 'Main Bridge',
-//     href: '/mb-pmis',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['superadmin', 'admin', 'mb-pmis-manager'],
-//     uName: 'mb-pmis',
-//   },
-//   {
-//     title: 'RTW',
-//     href: '/rtw',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['superadmin', 'admin', 'rtw-manager'],
-//     uName: 'rtw',
-//   },
-
-//   {
-//     title: 'Toll Operation',
-//     href: '/toll',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['superadmin', 'toll-manager','its-manager'],
-//     uName: 'toll',
-//   },
-//   {
-//     title: 'ITS',
-//     href: '/its',
-//     isActive: true,
-//     logo: ItsIcon,
-//     roles: ['superadmin', 'its-manager'],
-//     uName: 'its',
-//   },
-//   {
-//     title: 'EDMS',
-//     href: '/edms',
-//     isActive: false,
-//     logo: edmsIcon,
-//     roles: ['edms', 'superadmin'],
-//     uName: 'edms',
-//   },
-// ]
 export const itsTopNav = [
   {
     title: 'Administration',
@@ -430,7 +209,7 @@ export const itsTopNav = [
     href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'mb-pmis-manager'], 
+    roles: ['superadmin',  'mb-pmis-manager'], 
     uName: 'mb-pmis',
   },
   {
@@ -438,7 +217,7 @@ export const itsTopNav = [
     href: '/rtw',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'], // Reverted to match rtwTopNav
+    roles: ['superadmin', 'rtw-manager'], // Reverted to match rtwTopNav
     uName: 'rtw',
   },
   {
@@ -489,7 +268,7 @@ export const rntTopNav = [
     href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
+    roles: ['superadmin',  'mb-pmis-manager'],
     uName: 'mb-pmis',
   },
   {
@@ -497,7 +276,7 @@ export const rntTopNav = [
     href: '/rtw',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
+    roles: ['superadmin', 'rtw-manager'],
     uName: 'rtw',
   },
   {
@@ -547,7 +326,7 @@ export const rtwTopNav = [
     href: '/mb-pmis',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
+    roles: ['superadmin', 'mb-pmis-manager'],
     uName: 'mb-pmis',
   },
   {
@@ -555,7 +334,7 @@ export const rtwTopNav = [
     href: '/rtw',
     isActive: true,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
+    roles: ['superadmin', 'rtw-manager'],
     uName: 'rtw',
   },
   {
@@ -606,7 +385,7 @@ export const pmisTopNav = [
     href: '/mb-pmis',
     isActive: true,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager','mb-pmis-manager'],
+    roles: ['superadmin', 'mb-pmis-manager'],
     uName: 'mb-pmis',
   },
   {
@@ -614,7 +393,7 @@ export const pmisTopNav = [
     href: '/rtw',
     isActive: false,
     logo: edmsIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'],
+    roles: ['superadmin', 'rtw-manager'],
     uName: 'rtw',
   },
   {

@@ -1407,6 +1407,9 @@ export default function EdmsFileExplorer() {
 
     setSelected(node.id)
     setLoadingComp(true)
+    setActiveComponent(null)
+
+    const loadStartedAt = performance.now()
 
     try {
       const componentPath = `/src/pages/${node.component}.tsx`
@@ -1434,6 +1437,13 @@ export default function EdmsFileExplorer() {
         </div>
       ))
     } finally {
+      const elapsed = performance.now() - loadStartedAt
+      const minimumDisplayMs = 350
+
+      if (elapsed < minimumDisplayMs) {
+        await new Promise((resolve) => window.setTimeout(resolve, minimumDisplayMs - elapsed))
+      }
+
       setLoadingComp(false)
     }
   }
@@ -1542,12 +1552,12 @@ export default function EdmsFileExplorer() {
 
       <div className="relative flex h-full w-full flex-1 flex-col overflow-auto bg-white">
         {loadingComp && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-sm">
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="h-8 w-8 animate-spin text-[#0055aa]" />
-              <p className="text-sm font-semibold uppercase tracking-widest text-[#0055aa]">
-                Fetching Document...
-              </p>
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/90 backdrop-blur-sm">
+            <div className="flex items-center gap-3 text-[#0055aa]">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span className="text-sm font-semibold uppercase tracking-[0.25em]">
+                Loading
+              </span>
             </div>
           </div>
         )}
