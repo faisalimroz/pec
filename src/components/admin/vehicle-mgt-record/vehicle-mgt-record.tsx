@@ -885,6 +885,7 @@ const saveProduct = async () => {
               <Calendar
                 id='fitnessDuration'
                 selectionMode='range'
+               
                 value={fitnessRangeEdit}
                 onChange={(e) => {
                   const val = e.value as Date[] | null

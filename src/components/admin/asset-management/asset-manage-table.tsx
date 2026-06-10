@@ -1337,6 +1337,7 @@ export default function AssetManagementTable() {
                 <Calendar
                   id='date'
                   // @ts-ignore
+              
                   value={formDate}
                   onChange={(e) => setFormDate(e.value)}
                   dateFormat='dd/mm/yy'

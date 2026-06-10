@@ -918,7 +918,7 @@ const uploadFile = async () => {
                                 field='date'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-
+                                sortable
                                 className='min-w-[12rem]'
                                 header='Date'
                             ></Column>

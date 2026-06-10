@@ -747,7 +747,7 @@ export default function MonthlyReport() {
                     value={date}
                     // @ts-ignore
                     onChange={(e) => setDate(e.value)}
-
+                    
                     dateFormat="dd/mm/yy"
                     inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
                     placeholder='Start Date'
@@ -925,7 +925,7 @@ export default function MonthlyReport() {
                                 field='date'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-
+                                sortable
                                 className='min-w-[12rem]'
                                 header='Date Of Upload'
                             ></Column>
