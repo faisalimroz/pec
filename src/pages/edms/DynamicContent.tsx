@@ -25,114 +25,114 @@ const componentModules = import.meta.glob("/src/pages/**/*.tsx")
 const navJson: TreeNode[] = [
 
 
-{
-  id: "letters",
-  title: "Letters",
-  type: "folder",
-  countKey: "letter-grand-total",
-  children: [
-    {
-      id: "incoming-letters",
-      title: "Incoming Letters",
-      type: "folder",
-      countKey: "letter-incoming-total",
-      children: [
-        {
-          id: "letter-attachment-incoming-index",
-          title: "Administrative",
-          type: "file",
-          component: "admin- edms/letter-attachment/incoming/index",
-          countKey: "admin-letter-incoming",
-        },
-        {
-          id: "road-traffic-letter-attachment-incoming-index",
-          title: "Road & Traffic",
-          type: "file",
-          component: "road-and-traffic-edms/letter-attachment/incoming/index",
-          countKey: "road-letter-incoming",
-        },
-        {
-          id: "mb-letter-attachment-incoming",
-          title: "Main Bridge",
-          type: "file",
-          component: "mb-pis-edms/letter-attachment/incoming/index",
-          countKey: "mbpmis-letter-incoming",
-        },
-        {
-          id: "rtw-letter-attachment-incoming",
-          title: "RTW",
-          type: "file",
-          component: "rtw-edms/letter-attachment/incoming/index",
-          countKey: "rtw-letter-incoming",
-        },
-        {
-          id: "toll-letter-attachment-incoming",
-          title: "Toll",
-          type: "file",
-          component: "toll-edms/letter-attachment/incoming/index",
-          countKey: "toll-letter-incoming",
-        },
-        {
-          id: "its-letter-attachment-incoming-index",
-          title: "ITS",
-          type: "file",
-          component: "its-edms/letter-attachment/incoming/index",
-          countKey: "its-letter-incoming",
-        },
-      ],
-    },
-    {
-      id: "outgoing-letters",
-      title: "Outgoing Letters",
-      type: "folder",
-      countKey: "letter-outgoing-total",
-      children: [
-        {
-          id: "letter-attachment-outgoing-index",
-          title: "Administrative",
-          type: "file",
-          component: "admin- edms/letter-attachment/outgoing/index",
-          countKey: "admin-letter-outgoing",
-        },
-        {
-          id: "road-traffic-letter-attachment-outgoing-index",
-          title: "Road & Traffic",
-          type: "file",
-          component: "road-and-traffic-edms/letter-attachment/outgoing/index",
-          countKey: "road-letter-outgoing",
-        },
-        {
-          id: "mb-letter-attachment-outgoing",
-          title: "Main Bridge",
-          type: "file",
-          component: "mb-pis-edms/letter-attachment/outgoing/index",
-          countKey: "mbpmis-letter-outgoing",
-        },
-        {
-          id: "rtw-letter-attachment-outgoing",
-          title: "RTW",
-          type: "file",
-          component: "rtw-edms/letter-attachment/outcoming/index",
-          countKey: "rtw-letter-outgoing",
-        },
-        {
-          id: "toll-letter-attachment-outgoing",
-          title: "Toll",
-          type: "file",
-          component: "toll-edms/letter-attachment/outgoing/index",
-          countKey: "toll-letter-outgoing",
-        },
-        {
-          id: "its-letter-attachment-outgoing-index",
-          title: "ITS",
-          type: "file",
-          component: "its-edms/letter-attachment/outgoing/index",
-          countKey: "its-letter-outgoing",
-        },
-      ],
-    },
-  ],
-},
+  {
+    id: "letters",
+    title: "Letters",
+    type: "folder",
+    countKey: "letter-grand-total",
+    children: [
+      {
+        id: "incoming-letters",
+        title: "Incoming Letters",
+        type: "folder",
+        countKey: "letter-incoming-total",
+        children: [
+          {
+            id: "letter-attachment-incoming-index",
+            title: "Administrative",
+            type: "file",
+            component: "admin- edms/letter-attachment/incoming/index",
+            countKey: "admin-letter-incoming",
+          },
+          {
+            id: "road-traffic-letter-attachment-incoming-index",
+            title: "Road & Traffic",
+            type: "file",
+            component: "road-and-traffic-edms/letter-attachment/incoming/index",
+            countKey: "road-letter-incoming",
+          },
+          {
+            id: "mb-letter-attachment-incoming",
+            title: "Main Bridge",
+            type: "file",
+            component: "mb-pis-edms/letter-attachment/incoming/index",
+            countKey: "mbpmis-letter-incoming",
+          },
+          {
+            id: "rtw-letter-attachment-incoming",
+            title: "RTW",
+            type: "file",
+            component: "rtw-edms/letter-attachment/incoming/index",
+            countKey: "rtw-letter-incoming",
+          },
+          {
+            id: "toll-letter-attachment-incoming",
+            title: "Toll",
+            type: "file",
+            component: "toll-edms/letter-attachment/incoming/index",
+            countKey: "toll-letter-incoming",
+          },
+          {
+            id: "its-letter-attachment-incoming-index",
+            title: "ITS",
+            type: "file",
+            component: "its-edms/letter-attachment/incoming/index",
+            countKey: "its-letter-incoming",
+          },
+        ],
+      },
+      {
+        id: "outgoing-letters",
+        title: "Outgoing Letters",
+        type: "folder",
+        countKey: "letter-outgoing-total",
+        children: [
+          {
+            id: "letter-attachment-outgoing-index",
+            title: "Administrative",
+            type: "file",
+            component: "admin- edms/letter-attachment/outgoing/index",
+            countKey: "admin-letter-outgoing",
+          },
+          {
+            id: "road-traffic-letter-attachment-outgoing-index",
+            title: "Road & Traffic",
+            type: "file",
+            component: "road-and-traffic-edms/letter-attachment/outgoing/index",
+            countKey: "road-letter-outgoing",
+          },
+          {
+            id: "mb-letter-attachment-outgoing",
+            title: "Main Bridge",
+            type: "file",
+            component: "mb-pis-edms/letter-attachment/outgoing/index",
+            countKey: "mbpmis-letter-outgoing",
+          },
+          {
+            id: "rtw-letter-attachment-outgoing",
+            title: "RTW",
+            type: "file",
+            component: "rtw-edms/letter-attachment/outcoming/index",
+            countKey: "rtw-letter-outgoing",
+          },
+          {
+            id: "toll-letter-attachment-outgoing",
+            title: "Toll",
+            type: "file",
+            component: "toll-edms/letter-attachment/outgoing/index",
+            countKey: "toll-letter-outgoing",
+          },
+          {
+            id: "its-letter-attachment-outgoing-index",
+            title: "ITS",
+            type: "file",
+            component: "its-edms/letter-attachment/outgoing/index",
+            countKey: "its-letter-outgoing",
+          },
+        ],
+      },
+    ],
+  },
   {
     id: "admin-edms",
     title: "Administration",
@@ -209,6 +209,27 @@ const navJson: TreeNode[] = [
             component: "admin- edms/fire-mgt/fire-tools/index",
             countKey: "fire-tools",
           },
+        ],
+      },
+        {
+        id: "finance-management",
+        title: "Finance",
+        type: "folder",
+        children: [
+          {
+            id: "monthly-ipc",
+            title: "Monthly IPC Updates",
+            type: "file",
+            component: "admin- edms/ipc/ipc-monthly-updates/index",
+            countKey: "monthly-ipc",
+          },
+          {
+            id: "ipc-records",
+            title: "IPC Records",
+            type: "file",
+            component: "admin- edms/ipc/ipc-records/index",
+            countKey: "ipc-records",
+          }
         ],
       },
       {
@@ -336,725 +357,723 @@ const navJson: TreeNode[] = [
       },
     ],
   },
+  {
+    id: "road-and-traffic-edms",
+    title: "Road & Traffic",
+    type: "folder",
+    countKey: "road-total",
+    children: [
+      {
+        id: "road-traffic-orgaorganization-organogram",
+        title: "Orgaorganization Organogram",
+        type: "folder",
+        countKey: "road-organogram",
+        children: [
+          {
+            id: "road-traffic-orgaorganization-organogram-index",
+            title: "Index",
+            type: "file",
+            component: "road-and-traffic-edms/orgaorganization-organogram/index",
+            countKey: "road-organogram",
+          },
+        ],
+      },
+      {
+        id: "road-traffic-monthly-roaster",
+        title: "Monthly Roaster",
+        type: "folder",
+        countKey: "road-monthly-roster",
+        children: [
+          {
+            id: "road-traffic-monthly-roaster-index",
+            title: "Index",
+            type: "file",
+            component: "road-and-traffic-edms/monthly-roaster/index",
+            countKey: "road-monthly-roster",
+          },
+        ],
+      },
+      {
+        id: "road-traffic-monthly-report",
+        title: "Monthly Report",
+        type: "folder",
+        countKey: "road-monthly-report",
+        children: [
+          {
+            id: "road-traffic-monthly-report-index",
+            title: "Index",
+            type: "file",
+            component: "road-and-traffic-edms/monthly-report/index",
+            countKey: "road-monthly-report",
+          },
+        ],
+      },
 
-{
-  id: "road-and-traffic-edms",
-  title: "Road & Traffic",
-  type: "folder",
-  countKey: "road-total",
-  children: [
-    {
-      id: "road-traffic-orgaorganization-organogram",
-      title: "Orgaorganization Organogram",
-      type: "folder",
-      countKey: "road-organogram",
-      children: [
-        {
-          id: "road-traffic-orgaorganization-organogram-index",
-          title: "Index",
-          type: "file",
-          component: "road-and-traffic-edms/orgaorganization-organogram/index",
-          countKey: "road-organogram",
-        },
-      ],
-    },
-    {
-      id: "road-traffic-monthly-roaster",
-      title: "Monthly Roaster",
-      type: "folder",
-      countKey: "road-monthly-roster",
-      children: [
-        {
-          id: "road-traffic-monthly-roaster-index",
-          title: "Index",
-          type: "file",
-          component: "road-and-traffic-edms/monthly-roaster/index",
-          countKey: "road-monthly-roster",
-        },
-      ],
-    },
-    {
-      id: "road-traffic-monthly-report",
-      title: "Monthly Report",
-      type: "folder",
-      countKey: "road-monthly-report",
-      children: [
-        {
-          id: "road-traffic-monthly-report-index",
-          title: "Index",
-          type: "file",
-          component: "road-and-traffic-edms/monthly-report/index",
-          countKey: "road-monthly-report",
-        },
-      ],
-    },
+      {
+        id: "road-and-maintenance",
+        title: "Road And Maintenance",
+        type: "folder",
+        countKey: "road-maintenance-total",
+        children: [
+          {
+            id: "road-and-maintenance-accident",
+            title: "Accident",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-maintenance/accident/index",
+            countKey: "road-maintenance-accident-report",
+          },
+          {
+            id: "road-and-maintenance-completion-form",
+            title: "Completion Form",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-maintenance/completion-form/index",
+            countKey: "road-maintenance-completion-form",
+          },
+          {
+            id: "road-and-maintenance-drawing",
+            title: "Drawing",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-maintenance/drawing/index",
+            countKey: "road-maintenance-drawings",
+          },
+          {
+            id: "road-and-maintenance-inspection-report",
+            title: "Inspection Report",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-maintenance/inspection-report/index",
+            countKey: "road-maintenance-inspection-report",
+          },
+          {
+            id: "road-and-maintenance-letter-attachment",
+            title: "Letter Attachment",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-maintenance/letter-attachment/index",
+            countKey: "road-maintenance-letter-attachment",
+          },
+          {
+            id: "road-and-maintenance-miscellaneous",
+            title: "Miscellaneous",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-maintenance/miscellaneous/index",
+            countKey: "road-maintenance-miscellaneous",
+          },
+          {
+            id: "road-and-maintenance-reciving-materials-form",
+            title: "Reciving Materials Form",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-maintenance/reciving-materials-form/index",
+            countKey: "road-maintenance-receiving-materials",
+          },
+          {
+            id: "road-and-maintenance-requisition-form",
+            title: "Requisition Form",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-maintenance/requisition-form/index",
+            countKey: "road-maintenance-requisition-form",
+          },
+        ],
+      },
 
-    {
-      id: "road-and-maintenance",
-      title: "Road And Maintenance",
-      type: "folder",
-      countKey: "road-maintenance-total",
-      children: [
-        {
-          id: "road-and-maintenance-accident",
-          title: "Accident",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-maintenance/accident/index",
-          countKey: "road-maintenance-accident-report",
-        },
-        {
-          id: "road-and-maintenance-completion-form",
-          title: "Completion Form",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-maintenance/completion-form/index",
-          countKey: "road-maintenance-completion-form",
-        },
-        {
-          id: "road-and-maintenance-drawing",
-          title: "Drawing",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-maintenance/drawing/index",
-          countKey: "road-maintenance-drawings",
-        },
-        {
-          id: "road-and-maintenance-inspection-report",
-          title: "Inspection Report",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-maintenance/inspection-report/index",
-          countKey: "road-maintenance-inspection-report",
-        },
-        {
-          id: "road-and-maintenance-letter-attachment",
-          title: "Letter Attachment",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-maintenance/letter-attachment/index",
-          countKey: "road-maintenance-letter-attachment",
-        },
-        {
-          id: "road-and-maintenance-miscellaneous",
-          title: "Miscellaneous",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-maintenance/miscellaneous/index",
-          countKey: "road-maintenance-miscellaneous",
-        },
-        {
-          id: "road-and-maintenance-reciving-materials-form",
-          title: "Reciving Materials Form",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-maintenance/reciving-materials-form/index",
-          countKey: "road-maintenance-receiving-materials",
-        },
-        {
-          id: "road-and-maintenance-requisition-form",
-          title: "Requisition Form",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-maintenance/requisition-form/index",
-          countKey: "road-maintenance-requisition-form",
-        },
-      ],
-    },
+      {
+        id: "road-and-patrol",
+        title: "Road And Patrol",
+        type: "folder",
+        countKey: "road-safety-total",
+        children: [
+          {
+            id: "road-and-patrol-accident",
+            title: "Accident",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-patrol/accident/index",
+            countKey: "road-safety-accident-report",
+          },
+          {
+            id: "road-and-patrol-completion-form",
+            title: "Completion Form",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-patrol/completion-form/index",
+            countKey: "road-safety-completion-form",
+          },
+          {
+            id: "road-and-patrol-controllers-report",
+            title: "Controllers Report",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-patrol/controllers-report/index",
+            countKey: "road-safety-controllers-report",
+          },
+          {
+            id: "road-and-patrol-drawing",
+            title: "Drawing",
+            type: "file",
+            component: "road-and-traffic-edms/road-and-patrol/drawing/index",
+            countKey: "road-safety-drawing",
+          },
+          {
+            id: "road-and-patrol-inspection-report",
+            title: "Inspection Report",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-patrol/inspection-report/index",
+            countKey: "road-safety-inspection-report",
+          },
+          {
+            id: "road-and-patrol-letter-attachment",
+            title: "Letter Attachment",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-patrol/letter-attachment/index",
+            countKey: "road-safety-letter-attachment",
+          },
+          {
+            id: "road-and-patrol-miscellaneous",
+            title: "Miscellaneous",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-patrol/miscellaneous/index",
+            countKey: "road-safety-miscellaneous",
+          },
+          {
+            id: "road-and-patrol-reciving-materials-form",
+            title: "Reciving Materials Form",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-patrol/reciving-materials-form/index",
+            countKey: "road-safety-receiving-materials",
+          },
+          {
+            id: "road-and-patrol-requisition-form",
+            title: "Requisition Form",
+            type: "file",
+            component:
+              "road-and-traffic-edms/road-and-patrol/requisition-form/index",
+            countKey: "road-safety-requisition-form",
+          },
+        ],
+      },
 
-    {
-      id: "road-and-patrol",
-      title: "Road And Patrol",
-      type: "folder",
-      countKey: "road-safety-total",
-      children: [
-        {
-          id: "road-and-patrol-accident",
-          title: "Accident",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-patrol/accident/index",
-          countKey: "road-safety-accident-report",
-        },
-        {
-          id: "road-and-patrol-completion-form",
-          title: "Completion Form",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-patrol/completion-form/index",
-          countKey: "road-safety-completion-form",
-        },
-        {
-          id: "road-and-patrol-controllers-report",
-          title: "Controllers Report",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-patrol/controllers-report/index",
-          countKey: "road-safety-controllers-report",
-        },
-        {
-          id: "road-and-patrol-drawing",
-          title: "Drawing",
-          type: "file",
-          component: "road-and-traffic-edms/road-and-patrol/drawing/index",
-          countKey: "road-safety-drawing",
-        },
-        {
-          id: "road-and-patrol-inspection-report",
-          title: "Inspection Report",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-patrol/inspection-report/index",
-          countKey: "road-safety-inspection-report",
-        },
-        {
-          id: "road-and-patrol-letter-attachment",
-          title: "Letter Attachment",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-patrol/letter-attachment/index",
-          countKey: "road-safety-letter-attachment",
-        },
-        {
-          id: "road-and-patrol-miscellaneous",
-          title: "Miscellaneous",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-patrol/miscellaneous/index",
-          countKey: "road-safety-miscellaneous",
-        },
-        {
-          id: "road-and-patrol-reciving-materials-form",
-          title: "Reciving Materials Form",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-patrol/reciving-materials-form/index",
-          countKey: "road-safety-receiving-materials",
-        },
-        {
-          id: "road-and-patrol-requisition-form",
-          title: "Requisition Form",
-          type: "file",
-          component:
-            "road-and-traffic-edms/road-and-patrol/requisition-form/index",
-          countKey: "road-safety-requisition-form",
-        },
-      ],
-    },
-
-    {
-      id: "workshop",
-      title: "Workshop",
-      type: "folder",
-      countKey: "road-workshop-total",
-      children: [
-        {
-          id: "workshop-accident",
-          title: "Accident",
-          type: "file",
-          component: "road-and-traffic-edms/workshop/accident/index",
-          countKey: "road-workshop-accident",
-        },
-        {
-          id: "workshop-completion-form",
-          title: "Completion Form",
-          type: "file",
-          component: "road-and-traffic-edms/workshop/completion-form/index",
-          countKey: "road-workshop-completion",
-        },
-        {
-          id: "workshop-drawing",
-          title: "Drawing",
-          type: "file",
-          component: "road-and-traffic-edms/workshop/drawing/index",
-          countKey: "road-workshop-drawing",
-        },
-        {
-          id: "workshop-inspection-report",
-          title: "Inspection Report",
-          type: "file",
-          component: "road-and-traffic-edms/workshop/inspection-report/index",
-          countKey: "road-workshop-inspection",
-        },
-        {
-          id: "workshop-letter-attachment",
-          title: "Letter Attachment",
-          type: "file",
-          component:
-            "road-and-traffic-edms/workshop/letter-attachment/index",
-          countKey: "road-workshop-letter-attachment",
-        },
-        {
-          id: "workshop-miscellaneous",
-          title: "Miscellaneous",
-          type: "file",
-          component: "road-and-traffic-edms/workshop/miscellaneous/index",
-          countKey: "road-workshop-miscellaneous",
-        },
-        {
-          id: "workshop-reciving-materials-form",
-          title: "Reciving Materials Form",
-          type: "file",
-          component:
-            "road-and-traffic-edms/workshop/reciving-materials-form/index",
-          countKey: "road-workshop-receiving-materials",
-        },
-        {
-          id: "workshop-requisition-form",
-          title: "Requisition Form",
-          type: "file",
-          component:
-            "road-and-traffic-edms/workshop/requisition-form/index",
-          countKey: "road-workshop-requisition",
-        },
-      ],
-    },
-  ],
-},
-
-{
-  id: "mb-pis-edms",
-  title: "Main Bridge",
-  type: "folder",
-  countKey: "mbpmis-total",
-  children: [
-    {
-      id: "mb-communication-correspondence",
-      title: "Communication Correspondence",
-      type: "folder",
-      countKey: "mbpmis-communication-total",
-      children: [
-        {
-          id: "mb-communication-correspondence-index",
-          title: "All RTW-related Letters & Official Correspondence",
-          type: "file",
-          component:
-            "mb-pis-edms/communication-correspondence/letter-and-correspondence/index",
-          countKey: "mbpmis-communication-letter",
-        },
-        {
-          id: "mb-communication-correspondences",
-          title: "Meeting Minutes",
-          type: "file",
-          component:
-            "mb-pis-edms/communication-correspondence/meeting-minutes/index",
-          countKey: "mbpmis-communication-meeting-minutes",
-        },
-      ],
-    },
-    {
-      id: "mb-financial-documentation",
-      title: "Financial Documentation",
-      type: "folder",
-      countKey: "mbpmis-financial-bills",
-      children: [
-        {
-          id: "mb-financial-documentation-index",
-          title: "Main Bridge Bills",
-          type: "file",
-          component:
-            "mb-pis-edms/financial-documentation/main-bridge-bills/index",
-          countKey: "mbpmis-financial-bills",
-        },
-      ],
-    },
-    {
-      id: "mb-monitoring-reporting",
-      title: "Monitoring Reporting",
-      type: "folder",
-      countKey: "mbpmis-monitoring-total",
-      children: [
-        {
-          id: "mb-monitoring-reporting-index",
-          title: "Index",
-          type: "file",
-          component: "mb-pis-edms/monitoring-reporting/index",
-          countKey: "mbpmis-monitoring-reporting",
-        },
-      ],
-    },
-    {
-      id: "mb-organogram",
-      title: "Organogram",
-      type: "folder",
-      countKey: "mbpmis-organogram",
-      children: [
-        {
-          id: "mb-organogram-index",
-          title: "Index",
-          type: "file",
-          component: "mb-pis-edms/organogram/index",
-          countKey: "mbpmis-organogram",
-        },
-      ],
-    },
-    {
-      id: "mb-quality-safety",
-      title: "Quality Safety",
-      type: "folder",
-      countKey: "mbpmis-quality-total",
-      children: [
-        {
-          id: "mb-material-test-report",
-          title: "Material Test Report",
-          type: "file",
-          component:
-            "mb-pis-edms/quality-safety/material-test-report/index",
-          countKey: "mbpmis-quality-material-test",
-        },
-        {
-          id: "mb-safety",
-          title: "Safety",
-          type: "file",
-          component: "mb-pis-edms/quality-safety/safety/index",
-          countKey: "mbpmis-quality-safety",
-        },
-      ],
-    },
-    {
-      id: "mb-technical-documentation",
-      title: "Technical Documentation",
-      type: "folder",
-      countKey: "mbpmis-technical-total",
-      children: [
-        {
-          id: "mb-main-bridge-drawings",
-          title: "Main Bridge Drawings",
-          type: "file",
-          component:
-            "mb-pis-edms/technical-documentation/main-bridge-drawings/index",
-          countKey: "mbpmis-technical-drawing",
-        },
-        {
-          id: "mb-main-bridge-maintenance",
-          title: "Main Bridge Maintenance",
-          type: "file",
-          component:
-            "mb-pis-edms/technical-documentation/main-bridge-maintenace/index",
-          countKey: "mbpmis-technical-maintenance",
-        },
-        {
-          id: "mb-materials-equipment",
-          title: "Materials And Equipment",
-          type: "file",
-          component:
-            "mb-pis-edms/technical-documentation/materials-and-equipment/index",
-          countKey: "mbpmis-technical-materials",
-        },
-        {
-          id: "mb-others",
-          title: "Others",
-          type: "file",
-          component: "mb-pis-edms/technical-documentation/others/index",
-          countKey: "mbpmis-technical-others",
-        },
-        {
-          id: "mb-survey-reports",
-          title: "Survey Reports",
-          type: "file",
-          component:
-            "mb-pis-edms/technical-documentation/survery-reports/index",
-          countKey: "mbpmis-technical-survey-reports",
-        },
-      ],
-    },
-    {
-      id: "mb-visual-records",
-      title: "Visual Records",
-      type: "folder",
-      countKey: "mbpmis-visual-total",
-      children: [
-        {
-          id: "mb-visual-records-index",
-          title: "Pictures and Videos",
-          type: "file",
-          component: "mb-pis-edms/visual-records/index",
-          countKey: "mbpmis-visual-pictures",
-        },
-      ],
-    },
-  ],
-},
-{
-  id: "rtw",
-  title: "RTW",
-  type: "folder",
-  countKey: "rtw-total",
-  children: [
-    {
-      id: "rtw-monitoring-reporting",
-      title: "Monitoring And Reporting",
-      type: "folder",
-      countKey: "rtw-monitoring-total",
-      children: [
-        {
-          id: "rtw-daily-water-level",
-          title: "Daily Water Level",
-          type: "file",
-          component: "rtw-edms/monitoring-and-reporting/daily-water-level-records/index",
-          countKey: "rtw-monitoring-daily-water-level",
-        },
-        {
-          id: "rtw-monthly-reports",
-          title: "RTW Monthly Reports",
-          type: "file",
-          component: "rtw-edms/monitoring-and-reporting/monthly-report/index",
-          countKey: "rtw-monitoring-monthly-report",
-        },
-      ],
-    },
-    {
-      id: "rtw-technical-documentation",
-      title: "Technical Documentation",
-      type: "folder",
-      countKey: "rtw-technical-total",
-      children: [
-        {
-          id: "rtw-materials-equipment",
-          title: "Materials Equipment",
-          type: "file",
-          component: "rtw-edms/technical-documentation/materials-and-equipment/index",
-          countKey: "rtw-technical-materials",
-        },
-        {
-          id: "rtw-drawing",
-          title: "RTW Drawing",
-          type: "file",
-          component: "rtw-edms/technical-documentation/rtw-drawings/index",
-          countKey: "rtw-technical-drawing",
-        },
-        {
-          id: "rtw-maintenance",
-          title: "RTW Maintenance",
-          type: "file",
-          component: "rtw-edms/technical-documentation/rtw-maintenance-manual/index",
-          countKey: "rtw-technical-maintenance",
-        },
-        {
-          id: "rtw-survey-reports",
-          title: "Survey Reports",
-          type: "file",
-          component: "rtw-edms/technical-documentation/survey-reports/index",
-          countKey: "rtw-technical-survey",
-        },
-      ],
-    },
-    {
-      id: "rtw-project-overview",
-      title: "Project Overview",
-      type: "file",
-      component: "rtw-edms/project-overview/index",
-      countKey: "rtw-project-overview",
-    },
-    {
-      id: "rtw-organogram",
-      title: "Organogram",
-      type: "file",
-      component: "rtw-edms/organom/index",
-      countKey: "rtw-organogram",
-    },
-    {
-      id: "rtw-communication-correspondence",
-      title: "Communication and Correspondence",
-      type: "folder",
-      children: [
-        {
-          id: "rtw-letter-correspondence",
-          title: "Letter Correspondence",
-          type: "file",
-          component: "rtw-edms/communication-correspondence/letter-official-correspondence/index",
-          countKey: "rtw-communication-letter",
-        },
-        {
-          id: "rtw-meeting-minutes",
-          title: "Meeting Minutes",
-          type: "file",
-          component: "rtw-edms/communication-correspondence/meeting-minutes/index",
-          countKey: "rtw-communication-meeting-minutes",
-        },
-      ],
-    },
-    {
-      id: "rtw-financial",
-      title: "Financial",
-      type: "folder",
-      countKey: "rtw-financial-bills",
-      children: [
-        {
-          id: "rtw-bills",
-          title: "RTW Bills",
-          type: "file",
-          component: "rtw-edms/financial-documentation/rtw-bills/index",
-          countKey: "rtw-financial-bills",
-        },
-      ],
-    },
-    {
-      id: "rtw-quality-safety",
-      title: "Quality, Safety",
-      type: "folder",
-      countKey: "rtw-quality-total",
-      children: [
-        {
-          id: "rtw-material",
-          title: "Material Test Report",
-          type: "file",
-          component: "rtw-edms/quality-safety/material-test-report/index",
-          countKey: "rtw-quality-material-test",
-        },
-        {
-          id: "rtw-safety",
-          title: "Safety",
-          type: "file",
-          component: "rtw-edms/quality-safety/safety/index",
-          countKey: "rtw-quality-safety",
-        },
-      ],
-    },
-    {
-      id: "rtw-visual-records-folder",
-      title: "Visual Records",
-      type: "folder",
-      countKey: "rtw-visual-picture",
-      children: [
-        {
-          id: "rtw-visual-records",
-          title: "Pictures and Videos",
-          type: "file",
-          component: "rtw-edms/visual-records/pictures-and-videos/index",
-          countKey: "rtw-visual-picture",
-        },
-      ],
-    },
-  ],
-},
-{
-  id: "toll-edms",
-  title: "Toll Operation",
-  type: "folder",
-  countKey: "toll-total",
-  children: [
-    {
-      id: "toll-daily-report",
-      title: "Daily Report",
-      type: "folder",
-      countKey: "toll-daily-report",
-      children: [
-        {
-          id: "toll-daily-report-index",
-          title: "Index",
-          type: "file",
-          component: "toll-edms/report/index",
-          countKey: "toll-daily-report",
-        },
-      ],
-    },
-    {
-      id: "toll-daily-toll-traffic-comparison",
-      title: "Daily Toll & Traffic Data",
-      type: "folder",
-      countKey: "toll-daily-toll-traffic-total",
-      children: [
-        {
-          id: "toll-daily-toll-traffic-index",
-          title: "Daily Toll & Traffic Data",
-          type: "file",
-          component: "toll-edms/daily-report/index",
-          countKey: "toll-daily-toll-traffic-data",
-        },
-        {
-          id: "toll-daily-toll-traffic-comparison-index",
-          title: "Daily Toll & Traffic Data Comparison",
-          type: "file",
-          component: "toll-edms/daily-toll-trafic-comparison/index",
-          countKey: "toll-daily-toll-traffic-comparison",
-        },
-      ],
-    },
-    {
-      id: "toll-employee-personal-report",
-      title: "Employee Personal Report",
-      type: "folder",
-      countKey: "toll-employee-personal-report",
-      children: [
-        {
-          id: "toll-employee-personal-report-index",
-          title: "Index",
-          type: "file",
-          component: "toll-edms/employee-personal-report/index",
-          countKey: "toll-employee-personal-report",
-        },
-      ],
-    },
-    {
-      id: "toll-hierarchy",
-      title: "Hierarchy",
-      type: "folder",
-      countKey: "toll-hierarchy",
-      children: [
-        {
-          id: "toll-hierarchy-index",
-          title: "Index",
-          type: "file",
-          component: "toll-edms/hierarchy/index",
-          countKey: "toll-hierarchy",
-        },
-      ],
-    },
-    {
-      id: "toll-monthly-roster",
-      title: "Monthly Roster",
-      type: "folder",
-      countKey: "toll-main-bridge-bills",
-      children: [
-        {
-          id: "toll-monthly-roster-index",
-          title: "Main Bridge Bills",
-          type: "file",
-          component: "toll-edms/main-bridge/index",
-          countKey: "toll-main-bridge-bills",
-        },
-      ],
-    },
-    {
-      id: "toll-shift-wise",
-      title: "Shift Wise",
-      type: "folder",
-      countKey: "toll-shift-wise-total",
-      children: [
-        {
-          id: "toll-shift-wise-toll-comparison",
-          title: "Shift Wise Toll Comparison",
-          type: "file",
-          component: "toll-edms/shift-wise/shift-wise-toll-comparison/index",
-          countKey: "toll-shift-wise-toll-comparison",
-        },
-        {
-          id: "toll-shift-wise-toll-traffic-data",
-          title: "Shift Wise Toll Traffic Data",
-          type: "file",
-          component: "toll-edms/shift-wise/shift-wise-toll-traffic-data/index",
-          countKey: "toll-shift-wise-toll-traffic-data",
-        },
-      ],
-    },
-    {
-      id: "toll-wim-data",
-      title: "WIM Data",
-      type: "folder",
-      countKey: "toll-wim-total",
-      children: [
-        {
-          id: "toll-wim-data-index",
-          title: "Represent Wim Data",
-          type: "file",
-          component: "toll-edms/wim-data-comparison/index",
-          countKey: "toll-wim-data",
-        },
-        {
-          id: "toll-wim-data-indexs",
-          title: "Wim Data Comparison",
-          type: "file",
-          component: "toll-edms/wim-data/index",
-          countKey: "toll-wim-data-comparison",
-        },
-      ],
-    },
-  ],
-},
+      {
+        id: "workshop",
+        title: "Workshop",
+        type: "folder",
+        countKey: "road-workshop-total",
+        children: [
+          {
+            id: "workshop-accident",
+            title: "Accident",
+            type: "file",
+            component: "road-and-traffic-edms/workshop/accident/index",
+            countKey: "road-workshop-accident",
+          },
+          {
+            id: "workshop-completion-form",
+            title: "Completion Form",
+            type: "file",
+            component: "road-and-traffic-edms/workshop/completion-form/index",
+            countKey: "road-workshop-completion",
+          },
+          {
+            id: "workshop-drawing",
+            title: "Drawing",
+            type: "file",
+            component: "road-and-traffic-edms/workshop/drawing/index",
+            countKey: "road-workshop-drawing",
+          },
+          {
+            id: "workshop-inspection-report",
+            title: "Inspection Report",
+            type: "file",
+            component: "road-and-traffic-edms/workshop/inspection-report/index",
+            countKey: "road-workshop-inspection",
+          },
+          {
+            id: "workshop-letter-attachment",
+            title: "Letter Attachment",
+            type: "file",
+            component:
+              "road-and-traffic-edms/workshop/letter-attachment/index",
+            countKey: "road-workshop-letter-attachment",
+          },
+          {
+            id: "workshop-miscellaneous",
+            title: "Miscellaneous",
+            type: "file",
+            component: "road-and-traffic-edms/workshop/miscellaneous/index",
+            countKey: "road-workshop-miscellaneous",
+          },
+          {
+            id: "workshop-reciving-materials-form",
+            title: "Reciving Materials Form",
+            type: "file",
+            component:
+              "road-and-traffic-edms/workshop/reciving-materials-form/index",
+            countKey: "road-workshop-receiving-materials",
+          },
+          {
+            id: "workshop-requisition-form",
+            title: "Requisition Form",
+            type: "file",
+            component:
+              "road-and-traffic-edms/workshop/requisition-form/index",
+            countKey: "road-workshop-requisition",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "mb-pis-edms",
+    title: "Main Bridge",
+    type: "folder",
+    countKey: "mbpmis-total",
+    children: [
+      {
+        id: "mb-communication-correspondence",
+        title: "Communication Correspondence",
+        type: "folder",
+        countKey: "mbpmis-communication-total",
+        children: [
+          {
+            id: "mb-communication-correspondence-index",
+            title: "All RTW-related Letters & Official Correspondence",
+            type: "file",
+            component:
+              "mb-pis-edms/communication-correspondence/letter-and-correspondence/index",
+            countKey: "mbpmis-communication-letter",
+          },
+          {
+            id: "mb-communication-correspondences",
+            title: "Meeting Minutes",
+            type: "file",
+            component:
+              "mb-pis-edms/communication-correspondence/meeting-minutes/index",
+            countKey: "mbpmis-communication-meeting-minutes",
+          },
+        ],
+      },
+      {
+        id: "mb-financial-documentation",
+        title: "Financial Documentation",
+        type: "folder",
+        countKey: "mbpmis-financial-bills",
+        children: [
+          {
+            id: "mb-financial-documentation-index",
+            title: "Main Bridge Bills",
+            type: "file",
+            component:
+              "mb-pis-edms/financial-documentation/main-bridge-bills/index",
+            countKey: "mbpmis-financial-bills",
+          },
+        ],
+      },
+      {
+        id: "mb-monitoring-reporting",
+        title: "Monitoring Reporting",
+        type: "folder",
+        countKey: "mbpmis-monitoring-total",
+        children: [
+          {
+            id: "mb-monitoring-reporting-index",
+            title: "Index",
+            type: "file",
+            component: "mb-pis-edms/monitoring-reporting/index",
+            countKey: "mbpmis-monitoring-reporting",
+          },
+        ],
+      },
+      {
+        id: "mb-organogram",
+        title: "Organogram",
+        type: "folder",
+        countKey: "mbpmis-organogram",
+        children: [
+          {
+            id: "mb-organogram-index",
+            title: "Index",
+            type: "file",
+            component: "mb-pis-edms/organogram/index",
+            countKey: "mbpmis-organogram",
+          },
+        ],
+      },
+      {
+        id: "mb-quality-safety",
+        title: "Quality Safety",
+        type: "folder",
+        countKey: "mbpmis-quality-total",
+        children: [
+          {
+            id: "mb-material-test-report",
+            title: "Material Test Report",
+            type: "file",
+            component:
+              "mb-pis-edms/quality-safety/material-test-report/index",
+            countKey: "mbpmis-quality-material-test",
+          },
+          {
+            id: "mb-safety",
+            title: "Safety",
+            type: "file",
+            component: "mb-pis-edms/quality-safety/safety/index",
+            countKey: "mbpmis-quality-safety",
+          },
+        ],
+      },
+      {
+        id: "mb-technical-documentation",
+        title: "Technical Documentation",
+        type: "folder",
+        countKey: "mbpmis-technical-total",
+        children: [
+          {
+            id: "mb-main-bridge-drawings",
+            title: "Main Bridge Drawings",
+            type: "file",
+            component:
+              "mb-pis-edms/technical-documentation/main-bridge-drawings/index",
+            countKey: "mbpmis-technical-drawing",
+          },
+          {
+            id: "mb-main-bridge-maintenance",
+            title: "Main Bridge Maintenance",
+            type: "file",
+            component:
+              "mb-pis-edms/technical-documentation/main-bridge-maintenace/index",
+            countKey: "mbpmis-technical-maintenance",
+          },
+          {
+            id: "mb-materials-equipment",
+            title: "Materials And Equipment",
+            type: "file",
+            component:
+              "mb-pis-edms/technical-documentation/materials-and-equipment/index",
+            countKey: "mbpmis-technical-materials",
+          },
+          {
+            id: "mb-others",
+            title: "Others",
+            type: "file",
+            component: "mb-pis-edms/technical-documentation/others/index",
+            countKey: "mbpmis-technical-others",
+          },
+          {
+            id: "mb-survey-reports",
+            title: "Survey Reports",
+            type: "file",
+            component:
+              "mb-pis-edms/technical-documentation/survery-reports/index",
+            countKey: "mbpmis-technical-survey-reports",
+          },
+        ],
+      },
+      {
+        id: "mb-visual-records",
+        title: "Visual Records",
+        type: "folder",
+        countKey: "mbpmis-visual-total",
+        children: [
+          {
+            id: "mb-visual-records-index",
+            title: "Pictures and Videos",
+            type: "file",
+            component: "mb-pis-edms/visual-records/index",
+            countKey: "mbpmis-visual-pictures",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "rtw",
+    title: "RTW",
+    type: "folder",
+    countKey: "rtw-total",
+    children: [
+      {
+        id: "rtw-monitoring-reporting",
+        title: "Monitoring And Reporting",
+        type: "folder",
+        countKey: "rtw-monitoring-total",
+        children: [
+          {
+            id: "rtw-daily-water-level",
+            title: "Daily Water Level",
+            type: "file",
+            component: "rtw-edms/monitoring-and-reporting/daily-water-level-records/index",
+            countKey: "rtw-monitoring-daily-water-level",
+          },
+          {
+            id: "rtw-monthly-reports",
+            title: "RTW Monthly Reports",
+            type: "file",
+            component: "rtw-edms/monitoring-and-reporting/monthly-report/index",
+            countKey: "rtw-monitoring-monthly-report",
+          },
+        ],
+      },
+      {
+        id: "rtw-technical-documentation",
+        title: "Technical Documentation",
+        type: "folder",
+        countKey: "rtw-technical-total",
+        children: [
+          {
+            id: "rtw-materials-equipment",
+            title: "Materials Equipment",
+            type: "file",
+            component: "rtw-edms/technical-documentation/materials-and-equipment/index",
+            countKey: "rtw-technical-materials",
+          },
+          {
+            id: "rtw-drawing",
+            title: "RTW Drawing",
+            type: "file",
+            component: "rtw-edms/technical-documentation/rtw-drawings/index",
+            countKey: "rtw-technical-drawing",
+          },
+          {
+            id: "rtw-maintenance",
+            title: "RTW Maintenance",
+            type: "file",
+            component: "rtw-edms/technical-documentation/rtw-maintenance-manual/index",
+            countKey: "rtw-technical-maintenance",
+          },
+          {
+            id: "rtw-survey-reports",
+            title: "Survey Reports",
+            type: "file",
+            component: "rtw-edms/technical-documentation/survey-reports/index",
+            countKey: "rtw-technical-survey",
+          },
+        ],
+      },
+      {
+        id: "rtw-project-overview",
+        title: "Project Overview",
+        type: "file",
+        component: "rtw-edms/project-overview/index",
+        countKey: "rtw-project-overview",
+      },
+      {
+        id: "rtw-organogram",
+        title: "Organogram",
+        type: "file",
+        component: "rtw-edms/organom/index",
+        countKey: "rtw-organogram",
+      },
+      {
+        id: "rtw-communication-correspondence",
+        title: "Communication and Correspondence",
+        type: "folder",
+        children: [
+          {
+            id: "rtw-letter-correspondence",
+            title: "Letter Correspondence",
+            type: "file",
+            component: "rtw-edms/communication-correspondence/letter-official-correspondence/index",
+            countKey: "rtw-communication-letter",
+          },
+          {
+            id: "rtw-meeting-minutes",
+            title: "Meeting Minutes",
+            type: "file",
+            component: "rtw-edms/communication-correspondence/meeting-minutes/index",
+            countKey: "rtw-communication-meeting-minutes",
+          },
+        ],
+      },
+      {
+        id: "rtw-financial",
+        title: "Financial",
+        type: "folder",
+        countKey: "rtw-financial-bills",
+        children: [
+          {
+            id: "rtw-bills",
+            title: "RTW Bills",
+            type: "file",
+            component: "rtw-edms/financial-documentation/rtw-bills/index",
+            countKey: "rtw-financial-bills",
+          },
+        ],
+      },
+      {
+        id: "rtw-quality-safety",
+        title: "Quality, Safety",
+        type: "folder",
+        countKey: "rtw-quality-total",
+        children: [
+          {
+            id: "rtw-material",
+            title: "Material Test Report",
+            type: "file",
+            component: "rtw-edms/quality-safety/material-test-report/index",
+            countKey: "rtw-quality-material-test",
+          },
+          {
+            id: "rtw-safety",
+            title: "Safety",
+            type: "file",
+            component: "rtw-edms/quality-safety/safety/index",
+            countKey: "rtw-quality-safety",
+          },
+        ],
+      },
+      {
+        id: "rtw-visual-records-folder",
+        title: "Visual Records",
+        type: "folder",
+        countKey: "rtw-visual-picture",
+        children: [
+          {
+            id: "rtw-visual-records",
+            title: "Pictures and Videos",
+            type: "file",
+            component: "rtw-edms/visual-records/pictures-and-videos/index",
+            countKey: "rtw-visual-picture",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "toll-edms",
+    title: "Toll Operation",
+    type: "folder",
+    countKey: "toll-total",
+    children: [
+      {
+        id: "toll-daily-report",
+        title: "Daily Report",
+        type: "folder",
+        countKey: "toll-daily-report",
+        children: [
+          {
+            id: "toll-daily-report-index",
+            title: "Index",
+            type: "file",
+            component: "toll-edms/report/index",
+            countKey: "toll-daily-report",
+          },
+        ],
+      },
+      {
+        id: "toll-daily-toll-traffic-comparison",
+        title: "Daily Toll & Traffic Data",
+        type: "folder",
+        countKey: "toll-daily-toll-traffic-total",
+        children: [
+          {
+            id: "toll-daily-toll-traffic-index",
+            title: "Daily Toll & Traffic Data",
+            type: "file",
+            component: "toll-edms/daily-report/index",
+            countKey: "toll-daily-toll-traffic-data",
+          },
+          {
+            id: "toll-daily-toll-traffic-comparison-index",
+            title: "Daily Toll & Traffic Data Comparison",
+            type: "file",
+            component: "toll-edms/daily-toll-trafic-comparison/index",
+            countKey: "toll-daily-toll-traffic-comparison",
+          },
+        ],
+      },
+      {
+        id: "toll-employee-personal-report",
+        title: "Employee Personal Report",
+        type: "folder",
+        countKey: "toll-employee-personal-report",
+        children: [
+          {
+            id: "toll-employee-personal-report-index",
+            title: "Index",
+            type: "file",
+            component: "toll-edms/employee-personal-report/index",
+            countKey: "toll-employee-personal-report",
+          },
+        ],
+      },
+      {
+        id: "toll-hierarchy",
+        title: "Hierarchy",
+        type: "folder",
+        countKey: "toll-hierarchy",
+        children: [
+          {
+            id: "toll-hierarchy-index",
+            title: "Index",
+            type: "file",
+            component: "toll-edms/hierarchy/index",
+            countKey: "toll-hierarchy",
+          },
+        ],
+      },
+      {
+        id: "toll-monthly-roster",
+        title: "Monthly Roster",
+        type: "folder",
+        countKey: "toll-main-bridge-bills",
+        children: [
+          {
+            id: "toll-monthly-roster-index",
+            title: "Main Bridge Bills",
+            type: "file",
+            component: "toll-edms/main-bridge/index",
+            countKey: "toll-main-bridge-bills",
+          },
+        ],
+      },
+      {
+        id: "toll-shift-wise",
+        title: "Shift Wise",
+        type: "folder",
+        countKey: "toll-shift-wise-total",
+        children: [
+          {
+            id: "toll-shift-wise-toll-comparison",
+            title: "Shift Wise Toll Comparison",
+            type: "file",
+            component: "toll-edms/shift-wise/shift-wise-toll-comparison/index",
+            countKey: "toll-shift-wise-toll-comparison",
+          },
+          {
+            id: "toll-shift-wise-toll-traffic-data",
+            title: "Shift Wise Toll Traffic Data",
+            type: "file",
+            component: "toll-edms/shift-wise/shift-wise-toll-traffic-data/index",
+            countKey: "toll-shift-wise-toll-traffic-data",
+          },
+        ],
+      },
+      {
+        id: "toll-wim-data",
+        title: "WIM Data",
+        type: "folder",
+        countKey: "toll-wim-total",
+        children: [
+          {
+            id: "toll-wim-data-index",
+            title: "Represent Wim Data",
+            type: "file",
+            component: "toll-edms/wim-data-comparison/index",
+            countKey: "toll-wim-data",
+          },
+          {
+            id: "toll-wim-data-indexs",
+            title: "Wim Data Comparison",
+            type: "file",
+            component: "toll-edms/wim-data/index",
+            countKey: "toll-wim-data-comparison",
+          },
+        ],
+      },
+    ],
+  },
   {
     id: "its-edms",
     title: "ITS",
@@ -1253,7 +1272,7 @@ export default function EdmsFileExplorer() {
   const [countLoading, setCountLoading] = useState(false)
 
   const [expanded, setExpanded] = useState<Set<string>>(
-    new Set(["admin-edms"])
+    new Set(["letters"])
   )
 
   const [selected, setSelected] = useState<string | null>(null)
@@ -1268,89 +1287,89 @@ export default function EdmsFileExplorer() {
   const filteredNavJson = useMemo(() => {
     return filterTree(navWithCounts, searchQuery)
   }, [navWithCounts, searchQuery])
- useEffect(() => {
-  const fetchCounts = async () => {
-    try {
-      setCountLoading(true)
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        setCountLoading(true)
 
-      const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token")
 
-      const results = await Promise.allSettled([
-        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/admin/counts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/its/counts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/counts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/rtw/counts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/counts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/toll/counts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/letter/counts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ])
+        const results = await Promise.allSettled([
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/admin/counts`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/its/counts`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/road-traffic/counts`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/rtw/counts`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/counts`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/toll/counts`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/letter/counts`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ])
 
-      const getData = (index: number) => {
-        return results[index].status === "fulfilled"
-          ? results[index].value.data?.data || {}
-          : {}
+        const getData = (index: number) => {
+          return results[index].status === "fulfilled"
+            ? results[index].value.data?.data || {}
+            : {}
+        }
+
+        const adminCounts = getData(0)
+        const itsCounts = getData(1)
+        const roadCounts = getData(2)
+        const rtwCounts = getData(3)
+        const mbCounts = getData(4)
+        const tollCounts = getData(5)
+        const letterCounts = getData(6)
+
+        const incomingTotal =
+          (letterCounts["admin-letter-incoming"] || 0) +
+          (letterCounts["road-letter-incoming"] || 0) +
+          (letterCounts["mbpmis-letter-incoming"] || 0) +
+          (letterCounts["rtw-letter-incoming"] || 0) +
+          (letterCounts["toll-letter-incoming"] || 0) +
+          (letterCounts["its-letter-incoming"] || 0)
+
+        const outgoingTotal =
+          (letterCounts["admin-letter-outgoing"] || 0) +
+          (letterCounts["road-letter-outgoing"] || 0) +
+          (letterCounts["mbpmis-letter-outgoing"] || 0) +
+          (letterCounts["rtw-letter-outgoing"] || 0) +
+          (letterCounts["toll-letter-outgoing"] || 0) +
+          (letterCounts["its-letter-outgoing"] || 0)
+
+        setCounts({
+          ...adminCounts,
+          ...itsCounts,
+          ...roadCounts,
+          ...rtwCounts,
+          ...mbCounts,
+          ...tollCounts,
+          ...letterCounts,
+
+          "letter-incoming-total": incomingTotal,
+          "letter-outgoing-total": outgoingTotal,
+          "letter-grand-total": incomingTotal + outgoingTotal,
+        })
+      } catch (error) {
+        console.error("Failed to fetch sidebar counts:", error)
+      } finally {
+        setCountLoading(false)
       }
-
-      const adminCounts = getData(0)
-      const itsCounts = getData(1)
-      const roadCounts = getData(2)
-      const rtwCounts = getData(3)
-      const mbCounts = getData(4)
-      const tollCounts = getData(5)
-      const letterCounts = getData(6)
-
-      const incomingTotal =
-        (letterCounts["admin-letter-incoming"] || 0) +
-        (letterCounts["road-letter-incoming"] || 0) +
-        (letterCounts["mbpmis-letter-incoming"] || 0) +
-        (letterCounts["rtw-letter-incoming"] || 0) +
-        (letterCounts["toll-letter-incoming"] || 0) +
-        (letterCounts["its-letter-incoming"] || 0)
-
-      const outgoingTotal =
-        (letterCounts["admin-letter-outgoing"] || 0) +
-        (letterCounts["road-letter-outgoing"] || 0) +
-        (letterCounts["mbpmis-letter-outgoing"] || 0) +
-        (letterCounts["rtw-letter-outgoing"] || 0) +
-        (letterCounts["toll-letter-outgoing"] || 0) +
-        (letterCounts["its-letter-outgoing"] || 0)
-
-      setCounts({
-        ...adminCounts,
-        ...itsCounts,
-        ...roadCounts,
-        ...rtwCounts,
-        ...mbCounts,
-        ...tollCounts,
-        ...letterCounts,
-
-        "letter-incoming-total": incomingTotal,
-        "letter-outgoing-total": outgoingTotal,
-        "letter-grand-total": incomingTotal + outgoingTotal,
-      })
-    } catch (error) {
-      console.error("Failed to fetch sidebar counts:", error)
-    } finally {
-      setCountLoading(false)
     }
-  }
 
-  fetchCounts()
-}, [])
+    fetchCounts()
+  }, [])
   useEffect(() => {
     if (!searchQuery.trim()) return
 
@@ -1439,8 +1458,8 @@ export default function EdmsFileExplorer() {
           <div
             onClick={() => handleChildClick(node)}
             className={`relative flex w-full cursor-pointer select-none items-center px-3 py-1.5 ${isSelected
-                ? "bg-blue-50/70 text-[#2b5296]"
-                : "text-gray-700 hover:bg-gray-50"
+              ? "bg-blue-50/70 text-[#2b5296]"
+              : "text-gray-700 hover:bg-gray-50"
               }`}
             style={{ paddingLeft: `${level * 1.5 + 0.75}rem` }}
           >
