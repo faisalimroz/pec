@@ -908,129 +908,140 @@ const navJson: TreeNode[] = [
     },
   ],
 },
-  {
-    "id": "toll-edms",
-    "title": "Toll Operation",
-    "type": "folder",
-    "children": [
-      {
-        "id": "toll-daily-report",
-        "title": "Daily Report",
-        "type": "folder",
-        "children": [
-          {
-            "id": "toll-daily-report-index",
-            "title": "Index",
-            "type": "file",
-            "component": "toll-edms/daily-report/index"
-          }
-        ]
-      },
-
-      {
-        "id": "toll-daily-toll-traffic-comparison",
-        "title": "Daily Toll Traffic Comparison",
-        "type": "folder",
-        "children": [
-          {
-            "id": "toll-daily-toll-traffic-index",
-            "title": "Daily Toll & Traffic Data",
-            "type": "file",
-            "component": "toll-edms/daily-report/index"
-          },
-          {
-            "id": "toll-daily-toll-traffic-comparison-index",
-            "title": "Daily Toll & Traffic Data Comparison",
-            "type": "file",
-            "component": "toll-edms/daily-toll-trafic-comparison/index"
-          }
-        ]
-      },
-
-      {
-        "id": "toll-employee-personal-report",
-        "title": "Employee Personal Report",
-        "type": "folder",
-        "children": [
-          {
-            "id": "toll-employee-personal-report-index",
-            "title": "Index",
-            "type": "file",
-            "component": "toll-edms/employee-personal-report/index"
-          }
-        ]
-      },
-
-      {
-        "id": "toll-hierarchy",
-        "title": "Hierarchy",
-        "type": "folder",
-        "children": [
-          {
-            "id": "toll-hierarchy-index",
-            "title": "Index",
-            "type": "file",
-            "component": "toll-edms/hierarchy/index"
-          }
-        ]
-      },
-
-
-      {
-        "id": "toll-monthly-roster",
-        "title": "Monthly Roster",
-        "type": "folder",
-        "children": [
-          {
-            "id": "toll-monthly-roster-index",
-            "title": "Main Bridge Bills",
-            "type": "file",
-            "component": "toll-edms/monthly-roster/index"
-          }
-        ]
-      },
-
-      {
-        "id": "toll-shift-wise",
-        "title": "Shift Wise",
-        "type": "folder",
-        "children": [
-          {
-            "id": "toll-shift-wise-toll-comparison",
-            "title": "Shift Wise Toll Comparison",
-            "type": "file",
-            "component": "toll-edms/shift-wise/shift-wise-toll-comparison/index"
-          },
-          {
-            "id": "toll-shift-wise-toll-traffic-data",
-            "title": "Shift Wise Toll Traffic Data",
-            "type": "file",
-            "component": "toll-edms/shift-wise/shift-wise-toll-traffic-data/index"
-          }
-        ]
-      },
-
-      {
-        "id": "toll-wim-data",
-        "title": "WIM Data",
-        "type": "folder",
-        "children": [
-          {
-            "id": "toll-wim-data-index",
-            "title": "Represent Wim Data",
-            "type": "file",
-            "component": "toll-edms/wim-data-comparison/index"
-          },
-          {
-            "id": "toll-wim-data-indexs",
-            "title": "Wim Data Comparison",
-            "type": "file",
-            "component": "toll-edms/wim-data/index"
-          }
-        ]
-      }
-    ]
-  },
+{
+  id: "toll-edms",
+  title: "Toll Operation",
+  type: "folder",
+  countKey: "toll-total",
+  children: [
+    {
+      id: "toll-daily-report",
+      title: "Daily Report",
+      type: "folder",
+      countKey: "toll-daily-report",
+      children: [
+        {
+          id: "toll-daily-report-index",
+          title: "Index",
+          type: "file",
+          component: "toll-edms/report/index",
+          countKey: "toll-daily-report",
+        },
+      ],
+    },
+    {
+      id: "toll-daily-toll-traffic-comparison",
+      title: "Daily Toll Traffic Comparison",
+      type: "folder",
+      countKey: "toll-daily-toll-traffic-total",
+      children: [
+        {
+          id: "toll-daily-toll-traffic-index",
+          title: "Daily Toll & Traffic Data",
+          type: "file",
+          component: "toll-edms/daily-report/index",
+          countKey: "toll-daily-toll-traffic-data",
+        },
+        {
+          id: "toll-daily-toll-traffic-comparison-index",
+          title: "Daily Toll & Traffic Data Comparison",
+          type: "file",
+          component: "toll-edms/daily-toll-trafic-comparison/index",
+          countKey: "toll-daily-toll-traffic-comparison",
+        },
+      ],
+    },
+    {
+      id: "toll-employee-personal-report",
+      title: "Employee Personal Report",
+      type: "folder",
+      countKey: "toll-employee-personal-report",
+      children: [
+        {
+          id: "toll-employee-personal-report-index",
+          title: "Index",
+          type: "file",
+          component: "toll-edms/employee-personal-report/index",
+          countKey: "toll-employee-personal-report",
+        },
+      ],
+    },
+    {
+      id: "toll-hierarchy",
+      title: "Hierarchy",
+      type: "folder",
+      countKey: "toll-hierarchy",
+      children: [
+        {
+          id: "toll-hierarchy-index",
+          title: "Index",
+          type: "file",
+          component: "toll-edms/hierarchy/index",
+          countKey: "toll-hierarchy",
+        },
+      ],
+    },
+    {
+      id: "toll-monthly-roster",
+      title: "Monthly Roster",
+      type: "folder",
+      countKey: "toll-main-bridge-bills",
+      children: [
+        {
+          id: "toll-monthly-roster-index",
+          title: "Main Bridge Bills",
+          type: "file",
+          component: "toll-edms/main-bridge/index",
+          countKey: "toll-main-bridge-bills",
+        },
+      ],
+    },
+    {
+      id: "toll-shift-wise",
+      title: "Shift Wise",
+      type: "folder",
+      countKey: "toll-shift-wise-total",
+      children: [
+        {
+          id: "toll-shift-wise-toll-comparison",
+          title: "Shift Wise Toll Comparison",
+          type: "file",
+          component: "toll-edms/shift-wise/shift-wise-toll-comparison/index",
+          countKey: "toll-shift-wise-toll-comparison",
+        },
+        {
+          id: "toll-shift-wise-toll-traffic-data",
+          title: "Shift Wise Toll Traffic Data",
+          type: "file",
+          component: "toll-edms/shift-wise/shift-wise-toll-traffic-data/index",
+          countKey: "toll-shift-wise-toll-traffic-data",
+        },
+      ],
+    },
+    {
+      id: "toll-wim-data",
+      title: "WIM Data",
+      type: "folder",
+      countKey: "toll-wim-total",
+      children: [
+        {
+          id: "toll-wim-data-index",
+          title: "Represent Wim Data",
+          type: "file",
+          component: "toll-edms/wim-data-comparison/index",
+          countKey: "toll-wim-data",
+        },
+        {
+          id: "toll-wim-data-indexs",
+          title: "Wim Data Comparison",
+          type: "file",
+          component: "toll-edms/wim-data/index",
+          countKey: "toll-wim-data-comparison",
+        },
+      ],
+    },
+  ],
+},
   {
     id: "its-edms",
     title: "ITS",
@@ -1267,38 +1278,23 @@ useEffect(() => {
         axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/mb-pmis/counts`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
+        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/toll/counts`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ])
 
-      const adminCounts =
-        results[0].status === "fulfilled"
-          ? results[0].value.data.data
+      const getData = (index: number) => {
+        return results[index].status === "fulfilled"
+          ? results[index].value.data?.data || {}
           : {}
+      }
 
-      const itsCounts =
-        results[1].status === "fulfilled"
-          ? results[1].value.data.data
-          : {}
-
-      const roadCounts =
-        results[2].status === "fulfilled"
-          ? results[2].value.data.data
-          : {}
-
-      const rtwCounts =
-        results[3].status === "fulfilled"
-          ? results[3].value.data.data
-          : {}
-
-      const mbCounts =
-        results[4].status === "fulfilled"
-          ? results[4].value.data.data
-          : {}
-
-      console.log("ADMIN", adminCounts)
-      console.log("ITS", itsCounts)
-      console.log("ROAD", roadCounts)
-      console.log("RTW", rtwCounts)
-      console.log("MB", mbCounts)
+      const adminCounts = getData(0)
+      const itsCounts = getData(1)
+      const roadCounts = getData(2)
+      const rtwCounts = getData(3)
+      const mbCounts = getData(4)
+      const tollCounts = getData(5)
 
       setCounts({
         ...adminCounts,
@@ -1306,9 +1302,10 @@ useEffect(() => {
         ...roadCounts,
         ...rtwCounts,
         ...mbCounts,
+        ...tollCounts,
       })
     } catch (error) {
-      console.error(error)
+      console.error("Failed to fetch sidebar counts:", error)
     } finally {
       setCountLoading(false)
     }
