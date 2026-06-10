@@ -25,101 +25,114 @@ const componentModules = import.meta.glob("/src/pages/**/*.tsx")
 const navJson: TreeNode[] = [
 
 
-  {
-    id: "letters",
-    title: "Letters",
-    type: "folder",
-    children: [
-      {
-        id: "incoming-letters",
-        title: "Incoming Letters",
-        type: "folder",
-        children: [
-          {
-            id: "letter-attachment-incoming-index",
-            title: "Administrative",
-            type: "file",
-            component: "admin- edms/letter-attachment/incoming/index",
-          },
-          {
-            id: "road-traffic-letter-attachment-incoming-index",
-            title: "Road & Traffic",
-            type: "file",
-            component: "road-and-traffic-edms/letter-attachment/incoming/index",
-          },
-          {
-            "id": "mb-letter-attachment-incoming",
-            "title": "Main Bridge",
-            "type": "file",
-            "component": "mb-pis-edms/letter-attachment/incoming/index"
-          },
-          {
-            "id": "rtw-letter-attachment-incoming",
-            "title": "RTW",
-            "type": "file",
-            "component": "rtw-edms/letter-attachment/incoming/index"
-          },
-          {
-            "id": "toll-letter-attachment-incoming",
-            "title": "Toll",
-            "type": "file",
-            "component": "toll-edms/letter-attachment/incoming/index"
-          },
-          {
-            id: "its-letter-attachment-incoming-index",
-            title: "ITS",
-            type: "file",
-            component: "its-edms/letter-attachment/incoming/index",
-          },
-        ],
-      },
-      {
-        id: "outgoing-letters",
-        title: "Outgoing Letters",
-        type: "folder",
-        children: [
-          {
-            id: "letter-attachment-outgoing-index",
-            title: "Administrative",
-            type: "file",
-            component: "admin- edms/letter-attachment/outgoing/index",
-          },
-          {
-            id: "road-traffic-letter-attachment-outgoing-index",
-            title: "Road & Traffic",
-            type: "file",
-            component: "road-and-traffic-edms/letter-attachment/outgoing/index",
-          },
-          {
-            "id": "mb-letter-attachment-outgoing",
-            "title": "Main Bridge",
-            "type": "file",
-            "component": "mb-pis-edms/letter-attachment/outgoing/index"
-          },
-          {
-            "id": "rtw-letter-attachment-outgoing",
-            "title": "RTW",
-            "type": "file",
-            "component": "rtw-edms/letter-attachment/outcoming/index"
-          },
-          {
-            "id": "toll-letter-attachment-outgoing",
-            "title": "Toll",
-            "type": "file",
-            "component": "toll-edms/letter-attachment/outgoing/index"
-          },
-          {
-            id: "its-letter-attachment-outgoing-index",
-            title: "ITS",
-            type: "file",
-            component: "its-edms/letter-attachment/outgoing/index",
-          },
-
-
-        ],
-      },
-    ],
-  },
+{
+  id: "letters",
+  title: "Letters",
+  type: "folder",
+  countKey: "letter-grand-total",
+  children: [
+    {
+      id: "incoming-letters",
+      title: "Incoming Letters",
+      type: "folder",
+      countKey: "letter-incoming-total",
+      children: [
+        {
+          id: "letter-attachment-incoming-index",
+          title: "Administrative",
+          type: "file",
+          component: "admin- edms/letter-attachment/incoming/index",
+          countKey: "admin-letter-incoming",
+        },
+        {
+          id: "road-traffic-letter-attachment-incoming-index",
+          title: "Road & Traffic",
+          type: "file",
+          component: "road-and-traffic-edms/letter-attachment/incoming/index",
+          countKey: "road-letter-incoming",
+        },
+        {
+          id: "mb-letter-attachment-incoming",
+          title: "Main Bridge",
+          type: "file",
+          component: "mb-pis-edms/letter-attachment/incoming/index",
+          countKey: "mbpmis-letter-incoming",
+        },
+        {
+          id: "rtw-letter-attachment-incoming",
+          title: "RTW",
+          type: "file",
+          component: "rtw-edms/letter-attachment/incoming/index",
+          countKey: "rtw-letter-incoming",
+        },
+        {
+          id: "toll-letter-attachment-incoming",
+          title: "Toll",
+          type: "file",
+          component: "toll-edms/letter-attachment/incoming/index",
+          countKey: "toll-letter-incoming",
+        },
+        {
+          id: "its-letter-attachment-incoming-index",
+          title: "ITS",
+          type: "file",
+          component: "its-edms/letter-attachment/incoming/index",
+          countKey: "its-letter-incoming",
+        },
+      ],
+    },
+    {
+      id: "outgoing-letters",
+      title: "Outgoing Letters",
+      type: "folder",
+      countKey: "letter-outgoing-total",
+      children: [
+        {
+          id: "letter-attachment-outgoing-index",
+          title: "Administrative",
+          type: "file",
+          component: "admin- edms/letter-attachment/outgoing/index",
+          countKey: "admin-letter-outgoing",
+        },
+        {
+          id: "road-traffic-letter-attachment-outgoing-index",
+          title: "Road & Traffic",
+          type: "file",
+          component: "road-and-traffic-edms/letter-attachment/outgoing/index",
+          countKey: "road-letter-outgoing",
+        },
+        {
+          id: "mb-letter-attachment-outgoing",
+          title: "Main Bridge",
+          type: "file",
+          component: "mb-pis-edms/letter-attachment/outgoing/index",
+          countKey: "mbpmis-letter-outgoing",
+        },
+        {
+          id: "rtw-letter-attachment-outgoing",
+          title: "RTW",
+          type: "file",
+          component: "rtw-edms/letter-attachment/outcoming/index",
+          countKey: "rtw-letter-outgoing",
+        },
+        {
+          id: "toll-letter-attachment-outgoing",
+          title: "Toll",
+          type: "file",
+          component: "toll-edms/letter-attachment/outgoing/index",
+          countKey: "toll-letter-outgoing",
+        },
+        {
+          id: "its-letter-attachment-outgoing-index",
+          title: "ITS",
+          type: "file",
+          component: "its-edms/letter-attachment/outgoing/index",
+          countKey: "its-letter-outgoing",
+        },
+      ],
+    },
+  ],
+},
   {
     id: "admin-edms",
     title: "Administration",
@@ -931,7 +944,7 @@ const navJson: TreeNode[] = [
     },
     {
       id: "toll-daily-toll-traffic-comparison",
-      title: "Daily Toll Traffic Comparison",
+      title: "Daily Toll & Traffic Data",
       type: "folder",
       countKey: "toll-daily-toll-traffic-total",
       children: [
@@ -1255,7 +1268,7 @@ export default function EdmsFileExplorer() {
   const filteredNavJson = useMemo(() => {
     return filterTree(navWithCounts, searchQuery)
   }, [navWithCounts, searchQuery])
-useEffect(() => {
+ useEffect(() => {
   const fetchCounts = async () => {
     try {
       setCountLoading(true)
@@ -1281,6 +1294,9 @@ useEffect(() => {
         axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/toll/counts`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
+        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/letter/counts`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ])
 
       const getData = (index: number) => {
@@ -1295,6 +1311,23 @@ useEffect(() => {
       const rtwCounts = getData(3)
       const mbCounts = getData(4)
       const tollCounts = getData(5)
+      const letterCounts = getData(6)
+
+      const incomingTotal =
+        (letterCounts["admin-letter-incoming"] || 0) +
+        (letterCounts["road-letter-incoming"] || 0) +
+        (letterCounts["mbpmis-letter-incoming"] || 0) +
+        (letterCounts["rtw-letter-incoming"] || 0) +
+        (letterCounts["toll-letter-incoming"] || 0) +
+        (letterCounts["its-letter-incoming"] || 0)
+
+      const outgoingTotal =
+        (letterCounts["admin-letter-outgoing"] || 0) +
+        (letterCounts["road-letter-outgoing"] || 0) +
+        (letterCounts["mbpmis-letter-outgoing"] || 0) +
+        (letterCounts["rtw-letter-outgoing"] || 0) +
+        (letterCounts["toll-letter-outgoing"] || 0) +
+        (letterCounts["its-letter-outgoing"] || 0)
 
       setCounts({
         ...adminCounts,
@@ -1303,6 +1336,11 @@ useEffect(() => {
         ...rtwCounts,
         ...mbCounts,
         ...tollCounts,
+        ...letterCounts,
+
+        "letter-incoming-total": incomingTotal,
+        "letter-outgoing-total": outgoingTotal,
+        "letter-grand-total": incomingTotal + outgoingTotal,
       })
     } catch (error) {
       console.error("Failed to fetch sidebar counts:", error)
@@ -1313,7 +1351,6 @@ useEffect(() => {
 
   fetchCounts()
 }, [])
-
   useEffect(() => {
     if (!searchQuery.trim()) return
 
