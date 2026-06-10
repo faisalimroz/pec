@@ -6,8 +6,6 @@ import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
-
-import DemoTable from '@/components/road-traffic/safety-patrol/patrol-team-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function PatrolTeam() {
@@ -38,7 +36,7 @@ export default function PatrolTeam() {
                   Patrol Team
                 </h1>
 
-                <DemoTable />
+            
               </div>
             </LayoutBody>
           </Layout>

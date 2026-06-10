@@ -7,7 +7,6 @@ import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
 
-import DemoTable from '@/components/road-traffic/mechanical-electrical/inventory-report-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function InventoryReport() {
@@ -38,7 +37,7 @@ export default function InventoryReport() {
                   Inventory Report
                 </h1>
 
-                <DemoTable />
+               
               </div>
             </LayoutBody>
           </Layout>

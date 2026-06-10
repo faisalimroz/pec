@@ -35,7 +35,7 @@ export default function OnePageReport() {
                   One Page Report
                 </h1>
 
-                <DemoTable />
+               
               </div>
             </LayoutBody>
           </Layout>

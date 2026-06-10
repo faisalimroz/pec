@@ -36,7 +36,7 @@ export default function WorkCompletionReport() {
                   Daily Work Report
                 </h1>
 
-                <DemoTable />
+         
               </div>
             </LayoutBody>
           </Layout>

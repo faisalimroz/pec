@@ -7,7 +7,6 @@ import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
 
-import DemoTable from '@/components/road-traffic/maintenance/daily-work-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function DailyWorkReport() {
@@ -38,7 +37,6 @@ export default function DailyWorkReport() {
                   Daily Work Report
                 </h1>
 
-                <DemoTable />
               </div>
             </LayoutBody>
           </Layout>

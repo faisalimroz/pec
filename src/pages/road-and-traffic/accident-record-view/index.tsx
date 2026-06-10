@@ -6,8 +6,6 @@ import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
-
-import DemoTable from '@/components/road-traffic/road-safety-traffic/accident-report-view'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/custom/button'
 import { ArrowLeft } from 'lucide-react'
@@ -54,7 +52,7 @@ export default function RoadAndTraffic() {
                     <ArrowLeft /> Go Back
                   </Button>
                 </Link>
-                <DemoTable />
+              
               </div>
             </LayoutBody>
           </Layout>

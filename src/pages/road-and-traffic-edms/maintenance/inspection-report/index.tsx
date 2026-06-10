@@ -36,7 +36,7 @@ export default function InspectionReport() {
                   Inspection Report
                 </h1>
 
-                <DemoTable />
+            
               </div>
             </LayoutBody>
           </Layout>

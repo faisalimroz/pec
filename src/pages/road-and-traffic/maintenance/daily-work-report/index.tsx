@@ -45,7 +45,7 @@ export default function DailyWorkReport() {
                   Daily Work Report
                 </h1>
 
-                <DemoTable />
+          
               </div>
             </LayoutBody>
           </Layout>

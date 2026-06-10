@@ -7,7 +7,6 @@ import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
 
-import DemoTable from '@/components/road-traffic/road-safety-traffic/analysis/analysis-main'
 import { useAuth } from '@/provider/authProvider'
 
 export default function Analysis() {
@@ -38,7 +37,7 @@ export default function Analysis() {
                   Accident Analysis
                 </h1>
 
-                <DemoTable />
+    
               </div>
             </LayoutBody>
           </Layout>

@@ -36,7 +36,7 @@ export default function Miscellaneous() {
                   Miscellaneous
                 </h1>
 
-                <DemoTable />
+             
               </div>
             </LayoutBody>
           </Layout>

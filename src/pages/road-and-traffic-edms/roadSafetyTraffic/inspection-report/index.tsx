@@ -7,7 +7,6 @@ import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
 
-import DemoTable from '@/components/road-traffic/road-safety-traffic/inspection-report-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function InspectionReport() {
@@ -38,7 +37,6 @@ export default function InspectionReport() {
                   One Page Report
                 </h1>
 
-                <DemoTable />
               </div>
             </LayoutBody>
           </Layout>

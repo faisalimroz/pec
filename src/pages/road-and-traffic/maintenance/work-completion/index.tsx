@@ -45,7 +45,7 @@ export default function WorkCompletionReport() {
                   Work Completion Report
                 </h1>
 
-                <DemoTable />
+                
               </div>
             </LayoutBody>
           </Layout>

@@ -7,7 +7,6 @@ import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
 
-import DemoTable from '@/components/road-traffic/mechanical-electrical/fuel-consumption-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function FuelConsumptionReport() {
@@ -47,7 +46,7 @@ export default function FuelConsumptionReport() {
                   Fuel Consumption Report
                 </h1>
 
-                <DemoTable />
+         
               </div>
             </LayoutBody>
           </Layout>

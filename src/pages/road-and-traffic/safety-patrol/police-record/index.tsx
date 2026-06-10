@@ -6,7 +6,7 @@ import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
-import DemoTable from '@/components/road-traffic/safety-patrol/police-record-table'
+
 import { useAuth } from '@/provider/authProvider'
 
 export default function AccidentReport() {
@@ -46,7 +46,7 @@ export default function AccidentReport() {
                   Police Record
                 </h1>
 
-                <DemoTable />
+            
               </div>
             </LayoutBody>
           </Layout>

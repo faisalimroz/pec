@@ -6,8 +6,6 @@ import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
-
-import DemoTable from '@/components/road-traffic/mechanical-electrical/daily-vehicle-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function InspectionReport() {
@@ -38,7 +36,7 @@ export default function InspectionReport() {
                   Daily Vehicle Inspection Report
                 </h1>
 
-                <DemoTable />
+              
               </div>
             </LayoutBody>
           </Layout>

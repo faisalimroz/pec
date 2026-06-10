@@ -5,7 +5,7 @@ import useIsCollapsed from '@/hooks/use-is-collapsed'
 import Sidebar2 from '@/components/sidebar'
 import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
-import DemoTable from '@/components/road-traffic/mechanical-electrical/vehicle-documents-table'
+
 import { useAuth } from '@/provider/authProvider'
 
 export default function VehicleDocuments() {
@@ -45,7 +45,7 @@ export default function VehicleDocuments() {
                   Vehicle Documents
                 </h1>
 
-                <DemoTable />
+              
               </div>
             </LayoutBody>
           </Layout>

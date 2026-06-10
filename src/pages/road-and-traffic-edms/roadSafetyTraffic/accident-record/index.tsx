@@ -35,7 +35,7 @@ export default function AccidentReport() {
                   Accident Report
                 </h1>
 
-                <DemoTable />
+       
               </div>
             </LayoutBody>
           </Layout>

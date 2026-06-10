@@ -7,7 +7,6 @@ import { rntLinks } from '@/data/sidelinks'
 import { getFilteredNavLinks, rntTopNav } from '@/data/topNavLinks'
 //@ts-ignore
 
-import DemoTable from '@/components/road-traffic/maintenance/one-page-table'
 import { useAuth } from '@/provider/authProvider'
 
 export default function OnePageReport() {
@@ -47,7 +46,7 @@ export default function OnePageReport() {
                   One Page Report
                 </h1>
 
-                <DemoTable />
+              
               </div>
             </LayoutBody>
           </Layout>
