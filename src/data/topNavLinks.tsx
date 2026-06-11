@@ -191,7 +191,7 @@ export const itsTopNav = [
     href: '/administrative',
     isActive: false,
     logo: AdminIcon,
-    roles: ['superadmin', 'admin', 'finance-manager'], // Kept consistent with rtwTopNav
+    roles: ['superadmin', 'admin', 'finance-manager'], 
     uName: 'administration',
   },
   {
