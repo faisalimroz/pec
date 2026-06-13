@@ -103,7 +103,7 @@ export async function searchRTLetterAttachmentIncoming(param: unknown) {
   console.log('paramss', param)
 
   const response = await axios.post(
-    `${BASE_URL}/api/v1/road-traffic/letter-attachment/outgoing/data/search`,
+    `${BASE_URL}/api/v1/road-traffic/letter-attachment/incoming/data/search`,
     param,
     {
       headers: {

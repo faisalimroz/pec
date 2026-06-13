@@ -365,7 +365,31 @@ export default function MonthlyReport() {
     setDeleteProductDialog(false)
     setProduct(emptyProduct)
   }
+  // 1. Add this sort function in your component
+  const monthSortFunction = (event: any) => {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
 
+    const data = [...event.data];   // clone to avoid mutation
+
+    data.sort((a: any, b: any) => {
+      const monthA = a.monthName?.trim();
+      const monthB = b.monthName?.trim();
+
+      const indexA = months.indexOf(monthA);
+      const indexB = months.indexOf(monthB);
+
+      if (indexA === -1 || indexB === -1) {
+        return monthA?.localeCompare(monthB) || 0;
+      }
+
+      return (indexA - indexB) * event.order;
+    });
+
+    return data;
+  };
   const exportCSV = () => {
     if (selectedProducts && selectedProducts.length > 0) {
       dt.current?.exportCSV({ selectionOnly: true })
@@ -873,13 +897,14 @@ export default function MonthlyReport() {
 
 
               <Column
-                field='date'
-                headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                field="date"
+                header="Date"
+                headerClassName="bg-[#ffc2c2] text-sm"
+                bodyClassName="text-sm truncate max-w-xs"
+                className="min-w-[12rem]"
                 sortable
-                className='min-w-[12rem]'
-                header='Date'
-              ></Column>
+
+              />
 
               <Column
                 field='subjectName'
@@ -891,18 +916,18 @@ export default function MonthlyReport() {
               ></Column>
 
               <Column
-                field='monthName'
-                headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
-
-                className='min-w-[12rem]'
-                header='Month Name'
-              ></Column>
-              <Column
+                field="monthName"
+                header="Month Name"
+                headerClassName="bg-[#ffc2c2] text-sm"
+                bodyClassName="text-sm truncate max-w-xs"
+                className="min-w-[12rem]"
+                sortable
+                sortFunction={monthSortFunction}
+              />       
+                <Column
                 field='description'
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-sm truncate max-w-xs'
-
                 className='min-w-[8rem]'
                 header='Description'
               ></Column>

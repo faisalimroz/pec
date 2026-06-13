@@ -871,8 +871,6 @@ export default function MonthlyReport() {
                 className='min-w-[10rem]'
 
               ></Column>
-
-
               <Column
                 field='date'
                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -881,6 +879,7 @@ export default function MonthlyReport() {
                 className='min-w-[12rem]'
                 header='Date'
               ></Column>
+
               <Column
                 field='subjectName'
                 headerClassName='bg-[#ffc2c2] text-sm'

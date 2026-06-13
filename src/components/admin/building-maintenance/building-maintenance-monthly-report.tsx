@@ -61,7 +61,14 @@ export default function MonthlyReport() {
         remarks: '',
         attachments: [],
     }
-
+const monthSort = (event: any) => {
+  const { field, order, data } = event;
+  const monthArray = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return data.sort((a: any, b: any) => 
+    (monthArray.indexOf(a.monthName?.slice(0,3)) - 
+     monthArray.indexOf(b.monthName?.slice(0,3))) * order
+  );
+};
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
     const showAll = pathname.startsWith('/edms');
@@ -934,14 +941,15 @@ export default function MonthlyReport() {
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
-                            <Column
-                                field='monthName'
-                                headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
-                                sortable
-                                className='min-w-[12rem]'
-                                header='Month Name'
-                            ></Column>
+                          <Column
+  field="monthName"
+  header="Month Name"
+  headerClassName="bg-[#ffc2c2] text-sm"
+  bodyClassName="text-sm truncate max-w-xs"
+  className="min-w-[12rem]"
+  sortable
+  sortFunction={monthSort}
+/>
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
