@@ -35,7 +35,7 @@ interface Product {
     _id: string | null
     slNo: string
     subjectName: string
-    description: string 
+    description: string
     approved: boolean
     date: string
     remarks: string
@@ -59,13 +59,13 @@ export default function MonthlyReport() {
     }
 
     const { pathname } = useLocation();
- const showAll = pathname.startsWith('/edms');
-const { roles, permissions } = useAuth()
-           const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
+    const showAll = pathname.startsWith('/edms');
+    const { roles, permissions } = useAuth()
+    const rtManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
     console.log('rtManagerPermission', rtManagerPermission);
     const roadSafetyPermission = rtManagerPermission?.children?.find(
         (child) => child.name === 'r&t-road-safety-patrol');
-      
+
     const hasEditAccess = roadSafetyPermission?.edit_authority === true;
     const [activeIndex, setActiveIndex] = useState(0)
     const [products, setProducts] = useState<any>([])
@@ -98,8 +98,8 @@ const { roles, permissions } = useAuth()
     const [deleteMultipleDialog, setDeleteMultipleDialog] = useState(false)
 
 
-    
-     const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
+
+    const [viewProductDialog, setViewProductDialog] = useState<boolean>(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
     const [updateProductDialog, setUpdateProductDialog] = useState<boolean>(false)
@@ -244,7 +244,7 @@ const { roles, permissions } = useAuth()
         return `${day}-${month}-${year}`
     }
 
-const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
@@ -562,7 +562,7 @@ const saveProduct = async () => {
         }
         console.log(payload)
         searchAccidentReportRS(payload).then((result) => {
-             const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
         })
@@ -582,7 +582,7 @@ const saveProduct = async () => {
         setSelectedCode(null)
 
         searchAccidentReportRS(payload).then((result) => {
-             const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
         })
@@ -598,7 +598,7 @@ const saveProduct = async () => {
         }
 
         searchAccidentReportRS(payload).then((result) => {
-             const rows = Array.isArray(result?.data) ? result.data : [];
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
             setLoading(false)
         })
@@ -791,22 +791,32 @@ const saveProduct = async () => {
                                 className='min-w-[10rem]'
 
                             ></Column>
-
-
                             <Column
                                 field='date'
+                                header='Date'
+                                sortable
+                                sortFunction={(e) => {
+
+                                    return e.data.sort((a, b) => {
+
+                                        const formatForMath = (dateString: string) => {
+                                            if (!dateString) return 0; // Fallback for empty cells
+                                            const [day, month, year] = dateString.split('-');
+                                            return parseInt(`${year}${month}${day}`, 10);
+                                        };
+
+                                        return (formatForMath(a.date) - formatForMath(b.date)) * (e.order || 1);
+                                    });
+                                }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
                                 className='min-w-[12rem]'
-                                header='Date'
                             ></Column>
 
                             <Column
                                 field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
@@ -819,8 +829,6 @@ const saveProduct = async () => {
                                 className='min-w-[8rem]'
                                 header='Description'
                             ></Column>
-
-
 
                             <Column
                                 body={attachmentBodyTemplate}
@@ -838,7 +846,6 @@ const saveProduct = async () => {
                                 className='min-w-[12rem]'
                                 header='Remarks'
                             ></Column>
-
 
                             <Column
                                 body={actionBodyTemplate}
@@ -968,7 +975,7 @@ const saveProduct = async () => {
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                       
+
                     </div>
                 )}
             </Dialog>
@@ -1064,30 +1071,30 @@ const saveProduct = async () => {
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1166,7 +1173,7 @@ const saveProduct = async () => {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
@@ -1174,7 +1181,7 @@ const saveProduct = async () => {
                         </div>
                     </div>
 
-                    
+
                 </>
             </Dialog>
 

@@ -789,11 +789,14 @@ export default function KecLetter() {
 
                             <Column
                                 field='date'
+                                header='Date'
+                                sortable
+                                sortFunction={(e) => {
+                                    e.data.sort((a, b) => (new Date(a.date).getTime() - new Date(b.date).getTime()) * (e.order || 1));
+                                }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
                                 className='min-w-[12rem]'
-                                header='Date'
                             ></Column>
 
                             <Column
@@ -961,7 +964,7 @@ export default function KecLetter() {
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                       
+
                     </div>
                 )}
             </Dialog>
@@ -1166,7 +1169,7 @@ export default function KecLetter() {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                    
+
                 </>
             </Dialog>
 

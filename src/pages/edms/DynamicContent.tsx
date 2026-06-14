@@ -1552,7 +1552,7 @@ export default function EdmsFileExplorer() {
 
       <div className="relative flex h-full w-full flex-1 flex-col overflow-auto bg-white">
         {loadingComp && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/90 backdrop-blur-sm">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white backdrop-blur-sm">
             <div className="flex items-center gap-3 text-[#0055aa]">
               <Loader2 className="h-6 w-6 animate-spin" />
               <span className="text-sm font-semibold uppercase tracking-[0.25em]">

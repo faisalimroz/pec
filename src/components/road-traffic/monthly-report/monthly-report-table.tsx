@@ -897,14 +897,16 @@ export default function MonthlyReport() {
 
 
               <Column
-                field="date"
-                header="Date"
-                headerClassName="bg-[#ffc2c2] text-sm"
-                bodyClassName="text-sm truncate max-w-xs"
-                className="min-w-[12rem]"
+                field='date'
+                header='Date'
                 sortable
-
-              />
+                sortFunction={(e) => {
+                  e.data.sort((a, b) => (new Date(a.date).getTime() - new Date(b.date).getTime()) * (e.order || 1));
+                }}
+                headerClassName='bg-[#ffc2c2] text-sm'
+                bodyClassName='text-sm truncate max-w-xs'
+                className='min-w-[12rem]'
+              ></Column>
 
               <Column
                 field='subjectName'
@@ -923,8 +925,8 @@ export default function MonthlyReport() {
                 className="min-w-[12rem]"
                 sortable
                 sortFunction={monthSortFunction}
-              />       
-                <Column
+              />
+              <Column
                 field='description'
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-sm truncate max-w-xs'

@@ -65,7 +65,7 @@ export default function MonthlyReport() {
     const showAll = pathname.startsWith('/edms');
     const adminManagerPermission = permissions.find((p) => p.name === 'r&t-manager');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'r&t-letter-attachment');
-    const hasEditAccess =  adminPermission?.edit_authority === true;
+    const hasEditAccess = adminPermission?.edit_authority === true;
 
     const isClinic = roles.some((role) =>
         ['superadmin', 'clinic'].includes(role.title)
@@ -321,7 +321,7 @@ export default function MonthlyReport() {
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
             { value: remarks, name: 'Remarks' },
-           
+
             { value: formDate, name: 'Date' }
         ];
 
@@ -914,11 +914,14 @@ export default function MonthlyReport() {
 
                             <Column
                                 field='date'
+                                header='Date'
+                                sortable
+                                sortFunction={(e) => {
+                                    e.data.sort((a, b) => (new Date(a.date).getTime() - new Date(b.date).getTime()) * (e.order || 1));
+                                }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
                                 className='min-w-[12rem]'
-                                header='Date'
                             ></Column>
 
                             <Column
@@ -1119,7 +1122,7 @@ export default function MonthlyReport() {
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                       
+
                     </div>
                 )}
             </Dialog>
@@ -1215,30 +1218,30 @@ export default function MonthlyReport() {
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1317,14 +1320,14 @@ export default function MonthlyReport() {
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                    
+
                 </>
             </Dialog>
 

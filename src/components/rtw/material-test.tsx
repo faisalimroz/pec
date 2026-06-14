@@ -897,11 +897,24 @@ export default function KecLetter() {
 
                             <Column
                                 field='date'
+                                header='Date'
+                                sortable
+                                sortFunction={(e) => {
+
+                                    return e.data.sort((a, b) => {
+
+                                        const formatForMath = (dateString: string) => {
+                                            if (!dateString) return 0; // Fallback for empty cells
+                                            const [day, month, year] = dateString.split('-');
+                                            return parseInt(`${year}${month}${day}`, 10);
+                                        };
+
+                                        return (formatForMath(a.date) - formatForMath(b.date)) * (e.order || 1);
+                                    });
+                                }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-sm truncate max-w-xs'
-                                sortable
                                 className='min-w-[12rem]'
-                                header='Date'
                             ></Column>
 
                             <Column
