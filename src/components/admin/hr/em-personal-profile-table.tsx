@@ -488,7 +488,7 @@ const saveProduct = async () => {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
+        <div className='px-2 py-1.5 bg-main text-xs font-semibold text-white rounded-lg'>
           Document List
         </div>
         {/* {isAdmin && (

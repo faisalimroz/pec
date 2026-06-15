@@ -510,7 +510,7 @@ export default function AssetManagementTable() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='px-2 py-2 bg-main text-sm font-semibold text-white rounded-lg'>
+        <div className='px-2 py-1.5 bg-main text-xs font-semibold text-white rounded-lg'>
           Document List
         </div>
 
@@ -751,14 +751,14 @@ export default function AssetManagementTable() {
       />
 
       <IconField iconPosition='left' className='relative'>
-        <InputIcon className="pi pi-search text-sm" />
-        <InputText
-          type='search'
-          placeholder='Search'
-          className="text-xs border-0 focus:ring-0 py-1.5 pl-8 pr-4 w-48"
-          onChange={(e) => setSearchKey(e.target.value)}
-          value={searchKey}
-        />
+       <InputIcon className="pi pi-search text-sm" />
+                    <InputText
+                        type='search'
+                        placeholder='Search'
+                        className="text-xs border-0 focus:ring-0 py-3.5 pl-8 pr-4 w-48"
+                        onChange={(e) => setSearchKey(e.target.value)}
+                        value={searchKey}
+                    />
       </IconField>
 
       <div>

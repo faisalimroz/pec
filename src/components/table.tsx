@@ -175,7 +175,7 @@ export default function ProductsDemo() {
   const leftToolbarTemplate = () => {
     return (
       <div className=''>
-        <div className='p-3 bg-main text-lg font-semibold text-white rounded-t'>
+        <div className='p-1 bg-main text-xs font-semibold text-white rounded-t'>
           Document List
         </div>
         {/* <Button
