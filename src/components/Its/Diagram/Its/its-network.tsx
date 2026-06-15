@@ -779,7 +779,7 @@ export default function NetworkTable() {
         left={leftToolbarTemplate}
       ></Toolbar>
       <DataTable
-        ref={dt}
+        ref={dt}           size="small"           height={45}
         value={products}
         selection={selectedProducts}
         onSelectionChange={(e: any) => {

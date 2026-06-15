@@ -723,7 +723,7 @@ export default function OMActivityItsPreventive() {
         left={leftToolbarTemplate}
       ></Toolbar>
       <DataTable
-        ref={dt}
+        ref={dt}           size="small"           height={45}
         value={products}
         selection={selectedProducts}
         onSelectionChange={(e: any) => {

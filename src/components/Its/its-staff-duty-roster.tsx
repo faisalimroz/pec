@@ -734,7 +734,7 @@ export default function staffDutyRoster() {
         ></Toolbar>
 
         <DataTable
-          ref={dt}
+          ref={dt}           size="small"           height={45}
           onMouseDownCapture={(e) => { e.stopPropagation(); }}
           value={products}
           selection={selectedProducts}

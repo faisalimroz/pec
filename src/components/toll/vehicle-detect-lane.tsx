@@ -340,7 +340,7 @@ export default function VehicleDetectLaneTable({ id }: Props) {
         ></Toolbar>
 
         <DataTable
-          ref={dt}
+          ref={dt}           size="small"           height={45}
           value={products}
           selection={selectedProducts}
           onSelectionChange={(e: any) => {

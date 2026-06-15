@@ -1442,7 +1442,7 @@ export default function MonthlyIpcPsTable() {
           {/* 1st tab  */}
           <TabPanel>
             <DataTable
-              ref={dt}
+              ref={dt}           size="small"           height={45}
               value={products}
               selection={selectedProducts}
               onSelectionChange={(e: {
@@ -1615,7 +1615,7 @@ export default function MonthlyIpcPsTable() {
           {/* 2nd Tab  */}
           {/* <TabPanel>
             <DataTable
-              ref={dt}
+              ref={dt}           size="small"           height={45}
               value={products2}
               selection={selectedProducts2}
               onSelectionChange={(e: {

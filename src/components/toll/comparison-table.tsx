@@ -401,7 +401,7 @@ export default function VehicleComparison() {
       ></Toolbar>
       <div className='card'>
         <DataTable
-          ref={dt}
+          ref={dt}           size="small"           height={45}
           value={data}
           headerColumnGroup={headerGroup}
           rowClassName={rowClassName}

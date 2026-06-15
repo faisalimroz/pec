@@ -737,7 +737,7 @@ const saveProduct = async () => {
         <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
           <TabPanel>
             <DataTable
-              ref={dt}
+              ref={dt}           size="small"           height={45}
               value={products}
               selection={selectedProducts}
               onSelectionChange={(e: any) => {

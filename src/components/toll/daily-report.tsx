@@ -458,7 +458,7 @@ export default function VehicleDetectTollTable() {
 
             <div className="card">
                 <DataTable
-                    ref={dt}
+                    ref={dt}           size="small"           height={45}
                     value={products}
                     selection={selectedProducts}
                     onSelectionChange={(e: any) => setSelectedProducts(e.value)}

@@ -722,7 +722,7 @@ export default function AccessControll() {
       ></Toolbar>
 
       <DataTable
-        ref={dt}
+        ref={dt}           size="small"           height={45}
         value={products}
         selection={selectedProducts}
         onSelectionChange={(e: any) => {
