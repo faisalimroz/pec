@@ -76,7 +76,7 @@
 //         value={date}
 //         // @ts-ignore
 //         onChange={(e) => setDate(e.value)}
-//         inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+//         inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
 //         placeholder='Select Date'
 //         showIcon
 //         icon={() => <i className='pi pi-angle-down' />}

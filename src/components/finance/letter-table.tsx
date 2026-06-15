@@ -440,7 +440,7 @@ export default function OfficialLetterTable() {
         onChange={(e) => setDate(e.value)}
         view='month'
         dateFormat='MM'
-        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+        inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
         placeholder='By Month'
         showIcon
         icon={() => <i className='pi pi-angle-down' />}
@@ -452,17 +452,17 @@ export default function OfficialLetterTable() {
         onChange={(e) => setDate2(e.value)}
         view='year'
         dateFormat='yy'
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+        inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
         placeholder='By Year'
         showIcon
         icon={() => <i className='pi pi-angle-down' />}
       />
       <IconField iconPosition='left' className='relative'>
-        <InputIcon className='pi pi-search' />
+        <InputIcon className="pi pi-search text-sm" />
         <InputText
           type='search'
           placeholder='Search'
-          className='border-none ml-4 focus:ring-0'
+          className="text-xs border-0 focus:ring-0 py-3.5 pl-8 pr-4 w-48"
           onChange={(e) => setSearchKey(e.target.value)}
         />
 

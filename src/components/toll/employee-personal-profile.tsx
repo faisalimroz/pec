@@ -622,7 +622,7 @@ export default function EmPersonalProfileTable() {
           value={searchDate}
           // @ts-ignore
           onChange={(e) => setSearchDate(e.value)}
-          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+          inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
           placeholder='Start Date'
           showIcon
         />
@@ -632,7 +632,7 @@ export default function EmPersonalProfileTable() {
           value={searchDate2}
           // @ts-ignore
           onChange={(e) => setSearchDate2(e.value)}
-          inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+          inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
           placeholder='End Date'
           showIcon
         />
@@ -641,11 +641,11 @@ export default function EmPersonalProfileTable() {
 
 
       <IconField iconPosition='left' className='relative w-fit'>
-        <InputIcon className='pi pi-search' />
+        <InputIcon className="pi pi-search text-sm" />
         <InputText
           type='search'
           placeholder='Search...'
-          className='border-none ml-4 focus:ring-0'
+          className="text-xs border-0 focus:ring-0 py-3.5 pl-8 pr-4 w-48"
           onChange={(e) => setSearchKey(e.target.value)}
           value={searchKey}
         />

@@ -61,20 +61,20 @@ export default function MonthlyReport() {
         remarks: '',
         attachments: [],
     }
-const monthSort = (event: any) => {
-  const { field, order, data } = event;
-  const monthArray = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return data.sort((a: any, b: any) => 
-    (monthArray.indexOf(a.monthName?.slice(0,3)) - 
-     monthArray.indexOf(b.monthName?.slice(0,3))) * order
-  );
-};
+    const monthSort = (event: any) => {
+        const { field, order, data } = event;
+        const monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return data.sort((a: any, b: any) =>
+            (monthArray.indexOf(a.monthName?.slice(0, 3)) -
+                monthArray.indexOf(b.monthName?.slice(0, 3))) * order
+        );
+    };
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
     const showAll = pathname.startsWith('/edms');
     const adminManagerPermission = permissions.find((p) => p.name === 'admin');
     const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'building-maintenance');
-  const hasEditAccess =  adminPermission?.edit_authority === true;
+    const hasEditAccess = adminPermission?.edit_authority === true;
 
     const isClinic = roles.some((role) =>
         ['superadmin'].includes(role.title)
@@ -746,7 +746,7 @@ const monthSort = (event: any) => {
                     onChange={(e) => setDate(e.value)}
 
                     dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+                    inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
                     placeholder='Start Date'
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
@@ -758,18 +758,18 @@ const monthSort = (event: any) => {
                     onChange={(e) => setDate2(e.value)}
 
                     dateFormat="dd/mm/yy"
-                    inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+                    inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
                     placeholder='End Date'
                     showIcon
                     icon={() => <i className='pi pi-angle-down' />}
                 />
 
                 <IconField iconPosition='left' className='relative'>
-                    <InputIcon className='pi pi-search' />
+                    <InputIcon className="pi pi-search text-sm" />
                     <InputText
                         type='search'
                         placeholder='Search'
-                        className='border-none ml-4 focus:ring-0'
+                        className="text-xs border-0 focus:ring-0 py-3.5 pl-8 pr-4 w-48"
                         onChange={(e) => setSearchKey(e.target.value)}
                         value={searchKey}
                     />
@@ -882,7 +882,7 @@ const monthSort = (event: any) => {
                     {/* 1st tab  */}
                     <TabPanel>
                         <DataTable
-                            ref={dt}           size="small"           height={45}
+                            ref={dt} size="small" height={45}
                             value={products}
                             selection={selectedProducts}
                             onSelectionChange={(e: any) => {
@@ -954,15 +954,15 @@ const monthSort = (event: any) => {
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
                             ></Column>
-                          <Column
-  field="monthName"
-  header="Month Name"
-  headerClassName="bg-[#ffc2c2] text-sm"
-  bodyClassName="text-sm truncate max-w-xs"
-  className="min-w-[12rem]"
-  sortable
-  sortFunction={monthSort}
-/>
+                            <Column
+                                field="monthName"
+                                header="Month Name"
+                                headerClassName="bg-[#ffc2c2] text-sm"
+                                bodyClassName="text-sm truncate max-w-xs"
+                                className="min-w-[12rem]"
+                                sortable
+                                sortFunction={monthSort}
+                            />
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
@@ -1172,7 +1172,7 @@ const monthSort = (event: any) => {
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                       
+
                     </div>
                 )}
             </Dialog>
@@ -1395,7 +1395,7 @@ const monthSort = (event: any) => {
                             <MultiFileInput onFilesChange={handleFileChange} />
                         </div>
                     </div>
-                    
+
                 </>
             </Dialog>
 

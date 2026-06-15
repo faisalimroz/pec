@@ -183,7 +183,7 @@ export default function VehicleDetectLaneTable({ id }: Props) {
         value={date}
         // @ts-ignore
         onChange={(e) => setDate(e.value)}
-        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+        inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
         placeholder='Start Date'
         showIcon
         icon={() => <i className='pi pi-angle-down' />}
@@ -196,7 +196,7 @@ export default function VehicleDetectLaneTable({ id }: Props) {
         value={date2}
         // @ts-ignore
         onChange={(e) => setDate2(e.value)}
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+        inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
         placeholder='End Date'
         showIcon
         icon={() => <i className='pi pi-angle-down' />}
@@ -208,7 +208,7 @@ export default function VehicleDetectLaneTable({ id }: Props) {
         hourFormat='12'
         // @ts-ignore
         onChange={(e) => setTime(e.value)}
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+        inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
         placeholder='Start Time'
         timeOnly
         showIcon
@@ -223,7 +223,7 @@ export default function VehicleDetectLaneTable({ id }: Props) {
         hourFormat='12'
         // @ts-ignore
         onChange={(e) => setTime2(e.value)}
-        inputClassName='border-none rounded-none ml-4 cursor-pointer focus:ring-0'
+        inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
         placeholder='End Time'
         timeOnly
         showIcon

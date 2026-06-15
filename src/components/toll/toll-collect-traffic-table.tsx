@@ -286,7 +286,7 @@ export default function TollCollectTrafficTable() {
         onChange={(e) => setDate(e.value)}
         view='month'
         dateFormat='MM'
-        inputClassName='border-none rounded-none cursor-pointer focus:ring-0'
+        inputClassName="text-xs border-0 focus:ring-0 py-1.5 px-3 w-32"
         placeholder='By Month'
         showIcon
         // icon={() => <i className='pi pi-angle-down' />}
