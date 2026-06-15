@@ -1,29 +1,39 @@
 import { useEffect } from 'react'
 import useLocalStorage from './use-local-storage'
-
+import { useLocation } from 'react-router-dom'
 export default function useIsCollapsed() {
+  const location = useLocation()
+  const isEdmsRoute = location.pathname.startsWith('/edms')
+
   const [isCollapsed, setIsCollapsed] = useLocalStorage({
     key: 'collapsed-sidebar',
     defaultValue: false,
   })
 
   useEffect(() => {
+    if (isEdmsRoute) {
+      // Force collapsed on EDMS
+      setIsCollapsed(true)
+    } else {
+      // Force expanded on all other routes
+      setIsCollapsed(false)
+    }
+  }, [isEdmsRoute, setIsCollapsed])
+
+  // Handle mobile resize
+  useEffect(() => {
     const handleResize = () => {
-      // Update isCollapsed based on window.innerWidth
-      setIsCollapsed(window.innerWidth < 768 ? false : isCollapsed)
+      if (window.innerWidth < 768) {
+        setIsCollapsed(false)
+      }
     }
 
-    // Initial setup
     handleResize()
-
-    // Add event listener for window resize
     window.addEventListener('resize', handleResize)
 
-    // Cleanup event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [isCollapsed, setIsCollapsed])
+    return () => window.removeEventListener('resize', handleResize)
+  }, [setIsCollapsed])
 
   return [isCollapsed, setIsCollapsed] as const
 }
+
