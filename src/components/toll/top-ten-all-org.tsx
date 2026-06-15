@@ -520,7 +520,7 @@ export default function TopTenAllOrgTable() {
             field='slno'
             header='No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -528,7 +528,7 @@ export default function TopTenAllOrgTable() {
             field='organization'
             header='Organization'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -536,7 +536,7 @@ export default function TopTenAllOrgTable() {
             field='totalpass'
             header='Nos.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -544,7 +544,7 @@ export default function TopTenAllOrgTable() {
             field='percentage'
             header='%'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -552,7 +552,7 @@ export default function TopTenAllOrgTable() {
             field='location'
             header='Location'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 

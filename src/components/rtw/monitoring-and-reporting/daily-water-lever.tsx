@@ -1031,7 +1031,7 @@ export default function MonthlyReport() {
                                         headerStyle={{ width: '3rem' }}
                                         exportable={false}
                                         headerClassName='bg-[#ffc2c2] text-sm'
-                                        bodyClassName='text-sm truncate max-w-xs'
+                                        bodyClassName='text-xs truncate max-w-xs'
                                     ></Column>
                                 )}
 
@@ -1039,7 +1039,7 @@ export default function MonthlyReport() {
                                     field='slNo'
                                     header='SL No.'
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
                                     className='min-w-[10rem]'
 
                                 ></Column>
@@ -1048,7 +1048,7 @@ export default function MonthlyReport() {
                                 <Column
                                     field='date'
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
 
                                     className='min-w-[12rem]'
                                     header='Date'
@@ -1058,7 +1058,7 @@ export default function MonthlyReport() {
                                 <Column
                                     field='eightAM'
                                     headerClassName='bg-[#A5F3FC91] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
 
                                     className='min-w-[12rem]'
                                     header='8:00 AM Water Level (PWD)'
@@ -1066,7 +1066,7 @@ export default function MonthlyReport() {
                                 <Column
                                     field='twelvePM'
                                     headerClassName='bg-[#A5E2FC] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
 
                                     className='min-w-[12rem]'
                                     header='12:00 PM Water Level (PWD)'
@@ -1074,7 +1074,7 @@ export default function MonthlyReport() {
                                 <Column
                                     field='twoPM'
                                     headerClassName='bg-[#A5F3FC91] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
 
                                     className='min-w-[12rem]'
                                     header='2:00 PM Water Level (PWD)'
@@ -1082,7 +1082,7 @@ export default function MonthlyReport() {
                                 <Column
                                     field='sixPM'
                                     headerClassName='bg-[#A5E2FC] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
 
                                     className='min-w-[12rem]'
                                     header='6:00 PM Water Level (PWD)'
@@ -1091,7 +1091,7 @@ export default function MonthlyReport() {
                                 <Column
                                     field='maximumWaterLevel'
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
 
                                     className='min-w-[12rem]'
                                     header='Maximum Water Level'
@@ -1101,7 +1101,7 @@ export default function MonthlyReport() {
                                 <Column
                                     body={actionBodyTemplate}
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
                                     header='Actions'
                                     headerStyle={{ width: '3rem' }}
                                     exportable={false}

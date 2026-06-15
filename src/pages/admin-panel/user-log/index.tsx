@@ -707,14 +707,14 @@ export default function UserLog() {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
         )}
 
             <Column
               field='slNo'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='SL No.'
             ></Column>
@@ -722,7 +722,7 @@ export default function UserLog() {
             <Column
               field='name'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Name'
             ></Column>
@@ -730,7 +730,7 @@ export default function UserLog() {
             <Column
               field='email'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Email'
             ></Column>
@@ -738,7 +738,7 @@ export default function UserLog() {
             <Column
               field='logintimestamp'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Login Date/Time'
             ></Column>
@@ -746,7 +746,7 @@ export default function UserLog() {
         <Column
           body={actionBodyTemplate}
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Actions'
           headerStyle={{ width: '3rem' }}
           exportable={false}

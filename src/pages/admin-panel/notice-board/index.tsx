@@ -755,14 +755,14 @@ export default function NoticeBoard() {
             <Column
               field='slNo'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='SL No.'
             ></Column>
             <Column
               field='date'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Date'
             ></Column>
@@ -770,7 +770,7 @@ export default function NoticeBoard() {
             <Column
               field='title'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Title'
             ></Column>
@@ -778,7 +778,7 @@ export default function NoticeBoard() {
             <Column
               field='description'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Description'
             ></Column>
@@ -786,7 +786,7 @@ export default function NoticeBoard() {
             <Column
               field='department'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Department'
             ></Column>
@@ -794,7 +794,7 @@ export default function NoticeBoard() {
             <Column
               body={attachmentBodyTemplate}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Attachment'
             ></Column>
@@ -803,14 +803,14 @@ export default function NoticeBoard() {
               field='remarks'
               header='Remarks'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
             ></Column>
 
             <Column
               body={actionBodyTemplate}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               header='Actions'
               headerStyle={{ width: '3rem' }}
               exportable={false}

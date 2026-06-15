@@ -368,7 +368,7 @@ export default function TollCollectTrafficTable() {
         <Column
           header='Traffic'
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           colSpan={6}
         />
         <Column header='Toll' headerClassName='bg-blue-400' colSpan={6} />
@@ -377,37 +377,37 @@ export default function TollCollectTrafficTable() {
       <Row>
         <Column
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Dhaleshwari'
         ></Column>
 
         <Column
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Bhanga'
         ></Column>
 
         <Column
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Abdullahpur'
         ></Column>
 
         <Column
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Sreenagar'
         ></Column>
 
         <Column
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Pulia'
         ></Column>
 
         <Column
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Maligram'
         ></Column>
 
@@ -439,7 +439,7 @@ export default function TollCollectTrafficTable() {
           rowSpan={3}
           header='Actions'
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
         ></Column> */}
       </Row>
     </ColumnGroup>
@@ -486,7 +486,7 @@ export default function TollCollectTrafficTable() {
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
             frozen
           ></Column>
@@ -494,86 +494,86 @@ export default function TollCollectTrafficTable() {
           <Column
             field='dhaleshwari_traffic'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='bhanga_traffic'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='abdullahpur_traffic'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='sreenagar_traffic'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='pulia_traffic'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='maligram_traffic'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           {/* Toll  */}
           <Column
             field='dhaleshwari_toll'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='bhanga_toll'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='abdullahpur_toll'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='sreenagar_toll'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='pulia_toll'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='maligram_toll'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='total_traffic'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='total_toll'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           {/* <Column body={actionBodyTemplate} exportable={false}></Column> */}

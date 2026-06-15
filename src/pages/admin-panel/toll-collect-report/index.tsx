@@ -156,21 +156,21 @@
 //               headerStyle={{ width: '3rem' }}
 //               exportable={false}
 //               headerClassName='bg-[#ffc2c2] text-sm'
-// bodyClassName='text-sm truncate max-w-xs'
+// bodyClassName='text-xs truncate max-w-xs'
 //             ></Column> */}
 
 //             <Column
 //               field='name'
 //               header='Name'
 //               headerClassName='bg-[#ffc2c2] text-sm'
-//               bodyClassName='text-sm truncate max-w-xs'
+//               bodyClassName='text-xs truncate max-w-xs'
 //               sortable
 //             ></Column>
 
 //             <Column
 //               field='email'
 //               headerClassName='bg-[#ffc2c2] text-sm'
-//               bodyClassName='text-sm truncate max-w-xs'
+//               bodyClassName='text-xs truncate max-w-xs'
 //               sortable
 //               header='Email'
 //             ></Column>
@@ -178,7 +178,7 @@
 //             <Column
 //               field='startTimeDate'
 //               headerClassName='bg-[#ffc2c2] text-sm'
-//               bodyClassName='text-sm truncate max-w-xs'
+//               bodyClassName='text-xs truncate max-w-xs'
 //               sortable
 //               header='Start Time & Date'
 //             ></Column>
@@ -186,7 +186,7 @@
 //             <Column
 //               field='endTimeDate'
 //               headerClassName='bg-[#ffc2c2] text-sm'
-//               bodyClassName='text-sm truncate max-w-xs'
+//               bodyClassName='text-xs truncate max-w-xs'
 //               sortable
 //               header='End Time & Date'
 //             ></Column>

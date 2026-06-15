@@ -594,14 +594,14 @@ export default function OfficialLetterTable() {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -609,14 +609,14 @@ export default function OfficialLetterTable() {
             field='subject'
             header='Subject'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Date'
           ></Column>
@@ -625,7 +625,7 @@ export default function OfficialLetterTable() {
             field='letterType'
             header='Letter Type'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -633,7 +633,7 @@ export default function OfficialLetterTable() {
             field='refNo'
             header='Reference No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -648,14 +648,14 @@ export default function OfficialLetterTable() {
             field='remarks'
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             exportable={false}
           ></Column>

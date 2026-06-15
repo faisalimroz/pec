@@ -765,21 +765,21 @@ const saveProduct = async () => {
                   headerStyle={{ width: '3rem' }}
                   exportable={false}
                   headerClassName='bg-[#ffc2c2] text-sm'
-                  bodyClassName='text-sm truncate max-w-xs'
+                  bodyClassName='text-xs truncate max-w-xs'
                 />
               )}
 
-              <Column field='slNo' header='SL No.' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[10rem]' />
-              <Column field='vehicleName' header='Vehicle Name' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[8rem]' />
-              <Column field='regNo' header='Registration Number' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
-              <Column field='fitnessDuration' header='Fitness Duration' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
-              <Column field='vehicleClass' header='Vehicle Class' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
-              <Column field='taxTokenReport' header='Tax & Token Report' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
-              <Column field='status' header='Status' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[8rem]' />
-              <Column field='taxExpiryDate' header='Road Tax Expiry Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
-              <Column body={attachmentBodyTemplate} header='Attachment' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' className='min-w-[12rem]' />
-              <Column field='remarks' header='Remarks' headerClassName='bg-[#ffc2c2] text sm' bodyClassName='text-sm truncate max-w-xs' sortable className='min-w-[12rem]' />
-              <Column body={actionBodyTemplate} header='Actions' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-sm truncate max-w-xs' headerStyle={{ width: '3rem' }} exportable={false} />
+              <Column field='slNo' header='SL No.' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[10rem]' />
+              <Column field='vehicleName' header='Vehicle Name' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[8rem]' />
+              <Column field='regNo' header='Registration Number' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[12rem]' />
+              <Column field='fitnessDuration' header='Fitness Duration' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[12rem]' />
+              <Column field='vehicleClass' header='Vehicle Class' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[12rem]' />
+              <Column field='taxTokenReport' header='Tax & Token Report' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[12rem]' />
+              <Column field='status' header='Status' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[8rem]' />
+              <Column field='taxExpiryDate' header='Road Tax Expiry Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[12rem]' />
+              <Column body={attachmentBodyTemplate} header='Attachment' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[12rem]' />
+              <Column field='remarks' header='Remarks' headerClassName='bg-[#ffc2c2] text sm' bodyClassName='text-xs truncate max-w-xs' sortable className='min-w-[12rem]' />
+              <Column body={actionBodyTemplate} header='Actions' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' headerStyle={{ width: '3rem' }} exportable={false} />
             </DataTable>
           </TabPanel>
         </TabView>

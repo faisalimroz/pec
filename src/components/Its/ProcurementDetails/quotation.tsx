@@ -790,7 +790,7 @@ export default function ProcurementQuotation() {
               headerStyle={{ width: '3rem' }}
               exportable={false}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
             ></Column>
           )}
 
@@ -798,7 +798,7 @@ export default function ProcurementQuotation() {
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] min-w-[8rem]'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -806,7 +806,7 @@ export default function ProcurementQuotation() {
             field='fileName'
             header='File name'
             headerClassName='bg-[#ffc2c2] min-w-[12rem]'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column> */}
 
@@ -820,7 +820,7 @@ export default function ProcurementQuotation() {
           <Column
             field='subject'
             headerClassName='bg-[#ffc2c2] min-w-[14rem]'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Subject'
           ></Column>
@@ -828,7 +828,7 @@ export default function ProcurementQuotation() {
           <Column
             field='company'
             headerClassName='bg-[#ffc2c2] min-w-[8rem]'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Company'
           ></Column>
@@ -836,7 +836,7 @@ export default function ProcurementQuotation() {
           <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Attachment'
           ></Column>
@@ -845,14 +845,14 @@ export default function ProcurementQuotation() {
             field='remarks'
             header='Remarks'
             headerClassName='bg-[#ffc2c2] min-w-[8rem]'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

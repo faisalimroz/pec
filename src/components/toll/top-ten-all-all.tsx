@@ -519,7 +519,7 @@ export default function TopAllTable() {
             field='name'
             header='Name'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -527,7 +527,7 @@ export default function TopAllTable() {
             field='vehiclenum'
             header='Vehicle Number'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -535,7 +535,7 @@ export default function TopAllTable() {
             field='types'
             header='Class'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -543,7 +543,7 @@ export default function TopAllTable() {
             field='time'
             header='Time'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -551,7 +551,7 @@ export default function TopAllTable() {
             field='shift'
             header='Shift'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -559,7 +559,7 @@ export default function TopAllTable() {
             field='lane'
             header='Lane No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -567,7 +567,7 @@ export default function TopAllTable() {
             field='organization'
             header='Organization'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 

@@ -592,21 +592,21 @@ export default function SalaryTable() {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             field='filename'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Name'
           ></Column>
@@ -614,14 +614,14 @@ export default function SalaryTable() {
             field='month'
             header='Month'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Date'
           ></Column>
@@ -629,7 +629,7 @@ export default function SalaryTable() {
           <Column
             field='amount'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Amount (BDT)'
           ></Column>
@@ -637,7 +637,7 @@ export default function SalaryTable() {
           <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Attachments'
           ></Column>
@@ -646,14 +646,14 @@ export default function SalaryTable() {
             field='remarks'
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

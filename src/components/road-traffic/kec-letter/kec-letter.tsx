@@ -773,7 +773,7 @@ export default function KecLetter() {
                                     headerStyle={{ width: '3rem' }}
                                     exportable={false}
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
                                 ></Column>
                             )}
 
@@ -781,7 +781,7 @@ export default function KecLetter() {
                                 field='slNo'
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[10rem]'
 
                             ></Column>
@@ -795,14 +795,14 @@ export default function KecLetter() {
                                     e.data.sort((a, b) => (new Date(a.date).getTime() - new Date(b.date).getTime()) * (e.order || 1));
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                             ></Column>
 
                             <Column
                                 field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[8rem]'
                                 header='File Name'
@@ -811,7 +811,7 @@ export default function KecLetter() {
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[8rem]'
                                 header='Description'
@@ -822,7 +822,7 @@ export default function KecLetter() {
                             <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -830,7 +830,7 @@ export default function KecLetter() {
                             <Column
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 sortable
                                 className='min-w-[12rem]'
                                 header='Remarks'
@@ -840,7 +840,7 @@ export default function KecLetter() {
                             <Column
                                 body={actionBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 header='Actions'
                                 headerStyle={{ width: '3rem' }}
                                 exportable={false}

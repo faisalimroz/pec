@@ -647,21 +647,21 @@ export default function TollCollectModifyTable() {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           {/* <Column
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column> */}
 
           <Column
             field='amount'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Amount'
           ></Column>
@@ -669,7 +669,7 @@ export default function TollCollectModifyTable() {
           <Column
             field='lane'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Lane'
           ></Column>
@@ -678,7 +678,7 @@ export default function TollCollectModifyTable() {
             field='location'
             header='Location'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -686,7 +686,7 @@ export default function TollCollectModifyTable() {
             field='shift'
             header='Shift'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -694,7 +694,7 @@ export default function TollCollectModifyTable() {
             field='totalamount'
             header='Total Amount'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -702,7 +702,7 @@ export default function TollCollectModifyTable() {
             field='totalpass'
             header='Total Pass'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -710,14 +710,14 @@ export default function TollCollectModifyTable() {
             field='types'
             header='Vehicle Type'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

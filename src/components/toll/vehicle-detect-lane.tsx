@@ -366,13 +366,13 @@ export default function VehicleDetectLaneTable({ id }: Props) {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-bodyClassName='text-sm truncate max-w-xs'
+bodyClassName='text-xs truncate max-w-xs'
           ></Column> */}
 
           <Column
             body={vehicleBodyTemp}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Type Of Vehicle'
           ></Column>
@@ -380,7 +380,7 @@ bodyClassName='text-sm truncate max-w-xs'
           <Column
             field='totalVehicles'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Total Vehicles'
           ></Column>
@@ -388,7 +388,7 @@ bodyClassName='text-sm truncate max-w-xs'
           <Column
             field='shift'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Shift'
           ></Column>
@@ -396,7 +396,7 @@ bodyClassName='text-sm truncate max-w-xs'
           <Column
             field='totalAmount'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Total Amount'
           ></Column>
@@ -404,7 +404,7 @@ bodyClassName='text-sm truncate max-w-xs'
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             exportable={false}
           ></Column>

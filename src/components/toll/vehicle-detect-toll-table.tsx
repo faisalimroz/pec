@@ -491,7 +491,7 @@ export default function VehicleDetectTollTable() {
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Action'
             exportable={false}
           ></Column>

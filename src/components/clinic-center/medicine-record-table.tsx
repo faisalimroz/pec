@@ -735,7 +735,7 @@
 //               headerStyle={{ width: '3rem' }}
 //               exportable={false}
 //               headerClassName='bg-[#ffc2c2] text-sm'
-//               bodyClassName='text-sm truncate max-w-xs'
+//               bodyClassName='text-xs truncate max-w-xs'
 //             ></Column>
 //           )}
 
@@ -743,14 +743,14 @@
 //             field='slNo'
 //             header='SL No.'
 //             headerClassName='bg-[#ffc2c2] text-sm'
-//             bodyClassName='text-sm truncate max-w-xs'
+//             bodyClassName='text-xs truncate max-w-xs'
 //             sortable
 //           ></Column>
 
 //           <Column
 //             field='name'
 //             headerClassName='bg-[#ffc2c2] text-sm'
-//             bodyClassName='text-sm truncate max-w-xs'
+//             bodyClassName='text-xs truncate max-w-xs'
 //             sortable
 //             header='Name'
 //           ></Column>
@@ -758,7 +758,7 @@
 //           <Column
 //             field='date'
 //             headerClassName='bg-[#ffc2c2] text-sm'
-//             bodyClassName='text-sm truncate max-w-xs'
+//             bodyClassName='text-xs truncate max-w-xs'
 //             sortable
 //             header='Date'
 //           ></Column>
@@ -766,7 +766,7 @@
 //           <Column
 //             body={attachmentBodyTemplate}
 //             headerClassName='bg-[#ffc2c2] text-sm'
-//             bodyClassName='text-sm truncate max-w-xs'
+//             bodyClassName='text-xs truncate max-w-xs'
 //             sortable
 //             header='Attachment'
 //           ></Column>
@@ -775,14 +775,14 @@
 //             field='remarks'
 //             header='Remarks'
 //             headerClassName='bg-[#ffc2c2] text-sm'
-//             bodyClassName='text-sm truncate max-w-xs'
+//             bodyClassName='text-xs truncate max-w-xs'
 //             sortable
 //           ></Column>
 
 //           <Column
 //             body={actionBodyTemplate}
 //             headerClassName='bg-[#ffc2c2] text-sm'
-//             bodyClassName='text-sm truncate max-w-xs'
+//             bodyClassName='text-xs truncate max-w-xs'
 //             header='Actions'
 //             headerStyle={{ width: '3rem' }}
 //             exportable={false}

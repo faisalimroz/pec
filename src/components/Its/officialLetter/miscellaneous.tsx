@@ -638,14 +638,14 @@ export default function OfficialMiscellaneous() {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[10rem]'
             sortable
           ></Column>
@@ -653,7 +653,7 @@ export default function OfficialMiscellaneous() {
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[12rem]'
             header='Date'
@@ -662,7 +662,7 @@ export default function OfficialMiscellaneous() {
           <Column
             field='subject'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Subject'
@@ -671,7 +671,7 @@ export default function OfficialMiscellaneous() {
           <Column
             field='address'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Address'
@@ -680,7 +680,7 @@ export default function OfficialMiscellaneous() {
           <Column
             field='status'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Way'
@@ -689,7 +689,7 @@ export default function OfficialMiscellaneous() {
           <Column
             field='refNo'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Ref No'
@@ -698,7 +698,7 @@ export default function OfficialMiscellaneous() {
           <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Attachment'
           ></Column>
@@ -706,7 +706,7 @@ export default function OfficialMiscellaneous() {
           <Column
             field='remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[12rem]'
             header='Remarks'
@@ -715,7 +715,7 @@ export default function OfficialMiscellaneous() {
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

@@ -611,21 +611,21 @@ export default function RecruitmentTable() {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
 
           <Column
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           <Column
             field='filename'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='File Name'
           ></Column>
@@ -633,7 +633,7 @@ export default function RecruitmentTable() {
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Date'
           ></Column>
@@ -642,7 +642,7 @@ export default function RecruitmentTable() {
             field='unityType'
             header='Utility Type'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -650,7 +650,7 @@ export default function RecruitmentTable() {
             field='location'
             header='Location'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -658,7 +658,7 @@ export default function RecruitmentTable() {
             field='meterNo'
             header='Meter No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -666,7 +666,7 @@ export default function RecruitmentTable() {
             field='quantity'
             header='Quantity'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -674,7 +674,7 @@ export default function RecruitmentTable() {
             field='amount'
             header='Amount'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
@@ -688,7 +688,7 @@ export default function RecruitmentTable() {
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             exportable={false}
           ></Column>

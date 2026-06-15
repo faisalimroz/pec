@@ -830,7 +830,7 @@ const hasEditAccess = itsPermission ?.edit_authority === true;
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
 
           ></Column>
 
@@ -839,14 +839,14 @@ const hasEditAccess = itsPermission ?.edit_authority === true;
           <Column
             field='subjectName'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='File Name/Subject'
           ></Column>
 
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Date'
           ></Column>
@@ -854,14 +854,14 @@ const hasEditAccess = itsPermission ?.edit_authority === true;
           <Column
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Description'
           ></Column>
 
           <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             // 
             header='Attachment'
           ></Column>
@@ -870,14 +870,14 @@ const hasEditAccess = itsPermission ?.edit_authority === true;
             field='remarks'
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           // 
           ></Column>
 
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

@@ -848,14 +848,14 @@ export default function ElectricalTable() {
               headerStyle={{ width: '3rem' }}
               exportable={false}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
             ></Column>
           )}
 
           <Column
             field='title'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Title'
           ></Column>
@@ -863,7 +863,7 @@ export default function ElectricalTable() {
           <Column
             field='type'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Side'
           ></Column>
@@ -871,7 +871,7 @@ export default function ElectricalTable() {
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Date'
           ></Column>
@@ -880,14 +880,14 @@ export default function ElectricalTable() {
             field='remarks'
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
           ></Column>
 
           {/* <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             header='Attachment'
           ></Column> */}
@@ -895,7 +895,7 @@ export default function ElectricalTable() {
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

@@ -901,7 +901,7 @@ export default function MonthlyReport() {
                                     headerStyle={{ width: '3rem' }}
                                     exportable={false}
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
                                 ></Column>
                             )}
 
@@ -909,7 +909,7 @@ export default function MonthlyReport() {
                                 field='slNo'
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[10rem]'
 
                             ></Column>
@@ -933,14 +933,14 @@ export default function MonthlyReport() {
                                     });
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                             ></Column>
 
                             <Column
                                 field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
@@ -949,7 +949,7 @@ export default function MonthlyReport() {
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[8rem]'
                                 header='Description'
@@ -960,7 +960,7 @@ export default function MonthlyReport() {
                             <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -983,7 +983,7 @@ export default function MonthlyReport() {
                                     });
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                             ></Column>
 
@@ -991,7 +991,7 @@ export default function MonthlyReport() {
                             <Column
                                 body={actionBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 header='Actions'
                                 headerStyle={{ width: '3rem' }}
                                 exportable={false}

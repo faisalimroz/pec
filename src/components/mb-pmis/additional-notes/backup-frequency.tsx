@@ -880,7 +880,7 @@ const uploadFile = async () => {
                                     headerStyle={{ width: '3rem' }}
                                     exportable={false}
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
                                 ></Column>
                             )}
 
@@ -888,7 +888,7 @@ const uploadFile = async () => {
                                 field='slNo'
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[10rem]'
 
                             ></Column>
@@ -912,14 +912,14 @@ const uploadFile = async () => {
                                     });
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                             ></Column>
 
                            <Column
                                 field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
@@ -928,7 +928,7 @@ const uploadFile = async () => {
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[8rem]'
                                 header='Description'
@@ -939,7 +939,7 @@ const uploadFile = async () => {
                             <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -947,7 +947,7 @@ const uploadFile = async () => {
                             <Column
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 sortable
                                 className='min-w-[12rem]'
                                 header='Remarks'
@@ -957,7 +957,7 @@ const uploadFile = async () => {
                             <Column
                                 body={actionBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 header='Actions'
                                 headerStyle={{ width: '3rem' }}
                                 exportable={false}

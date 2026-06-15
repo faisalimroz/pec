@@ -750,7 +750,7 @@ export default function AccessControll() {
             headerStyle={{ width: '3rem' }}
             exportable={false}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
           ></Column>
         )}
 
@@ -758,14 +758,14 @@ export default function AccessControll() {
           field='slNo'
           header='SL No.'
           headerClassName='bg-[#ffc2c2] min-w-[8rem]'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           sortable
         ></Column>
 
         <Column
           field='date'
           headerClassName='bg-[#ffc2c2] min-w-[8rem]'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           sortable
           header='Date'
         ></Column>
@@ -773,7 +773,7 @@ export default function AccessControll() {
         <Column
           field='subject'
           headerClassName='bg-[#ffc2c2] min-w-[12rem]'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           sortable
           header='Subject'
         ></Column>
@@ -781,7 +781,7 @@ export default function AccessControll() {
         <Column
           field='site'
           headerClassName='bg-[#ffc2c2] min-w-[12rem]'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           sortable
           header='Site'
         ></Column>
@@ -789,7 +789,7 @@ export default function AccessControll() {
         <Column
           field='location'
           headerClassName='bg-[#ffc2c2] min-w-[12rem]'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           sortable
           header='Location'
         ></Column>
@@ -797,7 +797,7 @@ export default function AccessControll() {
         <Column
           body={attachmentBodyTemplate}
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           sortable
           header='Attachment'
         ></Column>
@@ -806,14 +806,14 @@ export default function AccessControll() {
           field='remarks'
           header='Remarks'
           headerClassName='bg-[#ffc2c2] min-w-[8rem]'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           sortable
         ></Column>
 
         <Column
           body={actionBodyTemplate}
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           header='Actions'
           headerStyle={{ width: '3rem' }}
           exportable={false}

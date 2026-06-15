@@ -1147,7 +1147,7 @@ export default function RhdBillDetails() {
               headerStyle={{ width: '3rem' }}
               exportable={false}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
             ></Column>
           )}
 
@@ -1155,7 +1155,7 @@ export default function RhdBillDetails() {
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[10rem]'
             sortable
           ></Column>
@@ -1163,7 +1163,7 @@ export default function RhdBillDetails() {
           <Column
             field='docTitle'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[14rem]'
             header='Doc Title'
@@ -1172,7 +1172,7 @@ export default function RhdBillDetails() {
           <Column
             field='boq'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[14rem]'
             header='BOQ'
@@ -1181,7 +1181,7 @@ export default function RhdBillDetails() {
           <Column
             field='dept'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Department'
@@ -1190,7 +1190,7 @@ export default function RhdBillDetails() {
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Date'
@@ -1199,7 +1199,7 @@ export default function RhdBillDetails() {
           <Column
             field='remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Remarks'
@@ -1208,7 +1208,7 @@ export default function RhdBillDetails() {
           {/* <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[8rem]'
             header='Attachments'
@@ -1217,7 +1217,7 @@ export default function RhdBillDetails() {
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

@@ -1346,7 +1346,7 @@ export default function RhdBillDetails() {
                   headerStyle={{ width: '3rem' }}
                   exportable={false}
                   headerClassName='bg-[#ffc2c2] text-sm'
-                  bodyClassName='text-sm truncate max-w-xs'
+                  bodyClassName='text-xs truncate max-w-xs'
                 ></Column>
               )}
 
@@ -1354,7 +1354,7 @@ export default function RhdBillDetails() {
                 field='slNo'
                 header='SL No.'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 className='min-w-[10rem]'
                 sortable
               ></Column>
@@ -1362,7 +1362,7 @@ export default function RhdBillDetails() {
               <Column
                 field='code'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Code'
@@ -1371,7 +1371,7 @@ export default function RhdBillDetails() {
               <Column
                 field='billNo'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Bill No'
@@ -1380,7 +1380,7 @@ export default function RhdBillDetails() {
               <Column
                 field='mbNo'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='MB No'
@@ -1389,7 +1389,7 @@ export default function RhdBillDetails() {
               <Column
                 field='details'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Details'
@@ -1398,7 +1398,7 @@ export default function RhdBillDetails() {
               <Column
                 field='currency'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Currency'
@@ -1407,7 +1407,7 @@ export default function RhdBillDetails() {
               <Column
                 field='date'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[10rem]'
                 header='Cheque Date'
@@ -1416,7 +1416,7 @@ export default function RhdBillDetails() {
               <Column
                 field='financial'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Financial Year'
@@ -1425,7 +1425,7 @@ export default function RhdBillDetails() {
               <Column
                 field='chequeNo'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Cheque No.'
@@ -1434,7 +1434,7 @@ export default function RhdBillDetails() {
               <Column
                 field='chequeAmount'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Cheque Amount'
@@ -1443,7 +1443,7 @@ export default function RhdBillDetails() {
               <Column
                 field='taxAmount'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Tax Amount'
@@ -1452,7 +1452,7 @@ export default function RhdBillDetails() {
               <Column
                 field='vatAmount'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Vat Amount'
@@ -1461,7 +1461,7 @@ export default function RhdBillDetails() {
               <Column
                 field='totalBillAmount'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Total Bill Amount'
@@ -1470,7 +1470,7 @@ export default function RhdBillDetails() {
               <Column
                 field='status'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Status'
@@ -1479,7 +1479,7 @@ export default function RhdBillDetails() {
               <Column
                 field='remarks'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Remarks'
@@ -1488,7 +1488,7 @@ export default function RhdBillDetails() {
               <Column
                 body={attachmentBodyTemplate}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 header='Attachment'
               ></Column>
@@ -1496,7 +1496,7 @@ export default function RhdBillDetails() {
               <Column
                 body={actionBodyTemplate}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 header='Actions'
                 headerStyle={{ width: '3rem' }}
                 exportable={false}
@@ -1535,20 +1535,20 @@ export default function RhdBillDetails() {
                 headerStyle={{ width: '3rem' }}
                 exportable={false}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
               ></Column>
 
               <Column
                 field='slNo'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 header='SL No.'
               ></Column>
               <Column
                 field='filename'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 header='PDF File Name'
               ></Column>
@@ -1556,7 +1556,7 @@ export default function RhdBillDetails() {
               <Column
                 field='date'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 header='Date'
               ></Column>
@@ -1564,7 +1564,7 @@ export default function RhdBillDetails() {
               <Column
                 field='code'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 header='Code'
               ></Column>
@@ -1572,7 +1572,7 @@ export default function RhdBillDetails() {
               <Column
                 body={attachmentBodyTemplate}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 header='Attachment'
               ></Column>
@@ -1581,14 +1581,14 @@ export default function RhdBillDetails() {
                 field='remarks'
                 header='Remarks'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
               ></Column>
 
               <Column
                 body={actionBodyTemplate2}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 header='Actions'
                 headerStyle={{ width: '3rem' }}
                 exportable={false}

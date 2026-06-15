@@ -876,7 +876,7 @@ export default function EmPersonalProfileTable() {
                 headerStyle={{ width: '3rem' }}
                 exportable={false}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
               ></Column>
             )}
 
@@ -884,7 +884,7 @@ export default function EmPersonalProfileTable() {
               field='boqNo'
               header='BOQ'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               sortable
               showClearButton
             ></Column>
@@ -892,7 +892,7 @@ export default function EmPersonalProfileTable() {
             <Column
               field='employeeId'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               // sortable
               header='Employee ID'
             ></Column>
@@ -900,7 +900,7 @@ export default function EmPersonalProfileTable() {
             <Column
               field='employeeName'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[12rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               sortable
               header='Employee Name'
             ></Column>
@@ -908,7 +908,7 @@ export default function EmPersonalProfileTable() {
             <Column
               field='position'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm'
+              bodyClassName='text-xs'
               // sortable
               header='Position'
             ></Column>
@@ -916,7 +916,7 @@ export default function EmPersonalProfileTable() {
             <Column
               field='dept'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm'
+              bodyClassName='text-xs'
               sortable
               header='Department'
             ></Column>
@@ -925,7 +925,7 @@ export default function EmPersonalProfileTable() {
               field='dateOfMobilization'
               header='Date of Mobilization'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
             // sortable
             ></Column>
 
@@ -933,7 +933,7 @@ export default function EmPersonalProfileTable() {
               field='dateOfDemobilization'
               header='Date of Demobilization'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
             // sortable
             ></Column>
 
@@ -942,7 +942,7 @@ export default function EmPersonalProfileTable() {
             <Column
               field='mobile'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               // sortable
               header='Mobile'
             ></Column>
@@ -950,7 +950,7 @@ export default function EmPersonalProfileTable() {
             <Column
               field='salary'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               sortable
               header='Salary'
             ></Column>
@@ -958,7 +958,7 @@ export default function EmPersonalProfileTable() {
             <Column
               body={actionBodyTemplate}
               headerClassName='bg-[#ffc2c2] text-sm min-w-[240px]'
-              bodyClassName='text-sm'
+              bodyClassName='text-xs'
               header='Action'
               exportable={false}
               frozen

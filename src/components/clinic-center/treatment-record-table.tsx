@@ -809,7 +809,7 @@ export default function TreatmentRecordTable() {
                   headerStyle={{ width: '3rem' }}
                   exportable={false}
                   headerClassName='bg-[#ffc2c2] text-sm'
-                  bodyClassName='text-sm truncate max-w-xs'
+                  bodyClassName='text-xs truncate max-w-xs'
                 ></Column>
               )}
 
@@ -817,7 +817,7 @@ export default function TreatmentRecordTable() {
                 field='slNo'
                 header='SL No.'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 className='min-w-[10rem]'
                 sortable
               ></Column>
@@ -825,7 +825,7 @@ export default function TreatmentRecordTable() {
               <Column
                 field='patientNo'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Patient No'
@@ -834,7 +834,7 @@ export default function TreatmentRecordTable() {
               <Column
                 field='patientName'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Patient Name'
@@ -843,7 +843,7 @@ export default function TreatmentRecordTable() {
               <Column
                 field='patientType'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Type'
@@ -852,7 +852,7 @@ export default function TreatmentRecordTable() {
               <Column
                 field='problem'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[8rem]'
                 header='Problem'
@@ -861,7 +861,7 @@ export default function TreatmentRecordTable() {
               <Column
                 field='date'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Date'
@@ -870,7 +870,7 @@ export default function TreatmentRecordTable() {
               <Column
                 body={attachmentBodyTemplate}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Attachment'
@@ -879,7 +879,7 @@ export default function TreatmentRecordTable() {
               <Column
                 field='remarks'
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 sortable
                 className='min-w-[12rem]'
                 header='Remarks'
@@ -888,7 +888,7 @@ export default function TreatmentRecordTable() {
               <Column
                 body={actionBodyTemplate}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
                 header='Actions'
                 headerStyle={{ width: '3rem' }}
                 exportable={false}

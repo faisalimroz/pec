@@ -901,7 +901,7 @@ export default function AssetManagementTable() {
             field='slNo'
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[10rem]'
           ></Column>
 
@@ -910,7 +910,7 @@ export default function AssetManagementTable() {
           <Column
             field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[10rem]'
             header='File Name/Subject'
           ></Column>
@@ -918,7 +918,7 @@ export default function AssetManagementTable() {
           <Column
             field='date'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             sortable
             className='min-w-[10rem]'
             header='Date'
@@ -927,7 +927,7 @@ export default function AssetManagementTable() {
           <Column
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[10rem]'
             header='Description'
           ></Column>
@@ -935,7 +935,7 @@ export default function AssetManagementTable() {
           <Column
             body={attachmentBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             // sortable
             header='Attachment'
           ></Column>
@@ -944,14 +944,14 @@ export default function AssetManagementTable() {
             field='remarks'
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[10rem]'
           ></Column>
 
           <Column
             body={actionBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             header='Actions'
             headerStyle={{ width: '3rem' }}
             exportable={false}

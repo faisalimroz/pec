@@ -204,21 +204,21 @@ export default function TollAmount() {
               headerStyle={{ width: '3rem' }}
               exportable={false}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
             ></Column>
 
             <Column
               field='slNo'
               header='SL No.'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
             ></Column>
 
             <Column
               field='title'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Vehicle Type'
             ></Column>
@@ -226,7 +226,7 @@ export default function TollAmount() {
             <Column
               field='amount'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               sortable
               header='Amount'
             ></Column>
@@ -234,7 +234,7 @@ export default function TollAmount() {
             <Column
               body={actionBodyTemplate}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
               header='Actions'
               headerStyle={{ width: '3rem' }}
               exportable={false}

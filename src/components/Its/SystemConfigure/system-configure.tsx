@@ -762,7 +762,7 @@ const { roles, permissions } = useAuth()
                                     headerStyle={{ width: '3rem' }}
                                     exportable={false}
                                     headerClassName='bg-[#ffc2c2] text-sm'
-                                    bodyClassName='text-sm truncate max-w-xs'
+                                    bodyClassName='text-xs truncate max-w-xs'
                                 ></Column>
                             )}
 
@@ -770,7 +770,7 @@ const { roles, permissions } = useAuth()
                                 field='slNo'
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[10rem]'
 
                             ></Column>
@@ -794,14 +794,14 @@ const { roles, permissions } = useAuth()
                                     });
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                             ></Column>
 
                             <Column
                                 field='subjectName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[12rem]'
                                 header='File Name/Subject'
@@ -810,7 +810,7 @@ const { roles, permissions } = useAuth()
                             <Column
                                 field='description'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
 
                                 className='min-w-[8rem]'
                                 header='Description'
@@ -821,7 +821,7 @@ const { roles, permissions } = useAuth()
                             <Column
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[12rem]'
                                 header='Attachment'
                             ></Column>
@@ -829,7 +829,7 @@ const { roles, permissions } = useAuth()
                             <Column
                                 field='remarks'
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 sortable
                                 className='min-w-[12rem]'
                                 header='Remarks'
@@ -839,7 +839,7 @@ const { roles, permissions } = useAuth()
                             <Column
                                 body={actionBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
-                                bodyClassName='text-sm truncate max-w-xs'
+                                bodyClassName='text-xs truncate max-w-xs'
                                 header='Actions'
                                 headerStyle={{ width: '3rem' }}
                                 exportable={false}

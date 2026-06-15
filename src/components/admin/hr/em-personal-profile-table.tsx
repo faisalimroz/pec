@@ -888,7 +888,7 @@ const saveProduct = async () => {
                 headerStyle={{ width: '3rem' }}
                 exportable={false}
                 headerClassName='bg-[#ffc2c2] text-sm'
-                bodyClassName='text-sm truncate max-w-xs'
+                bodyClassName='text-xs truncate max-w-xs'
               ></Column>
             )}
 
@@ -896,7 +896,7 @@ const saveProduct = async () => {
               field='boqNo'
               header='BOQ'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               sortable
               showClearButton
             ></Column>
@@ -904,7 +904,7 @@ const saveProduct = async () => {
             <Column
               field='employeeId'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               // sortable
               header='Employee ID'
             ></Column>
@@ -912,7 +912,7 @@ const saveProduct = async () => {
             <Column
               field='employeeName'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[12rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               sortable
               header='Employee Name'
             ></Column>
@@ -920,7 +920,7 @@ const saveProduct = async () => {
             <Column
               field='position'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm'
+              bodyClassName='text-xs'
               // sortable
               header='Position'
             ></Column>
@@ -928,7 +928,7 @@ const saveProduct = async () => {
             <Column
               field='dept'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm'
+              bodyClassName='text-xs'
               sortable
               header='Department'
             ></Column>
@@ -937,7 +937,7 @@ const saveProduct = async () => {
               field='dateOfMobilization'
               header='Date of Mobilization'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
             // sortable
             ></Column>
 
@@ -945,7 +945,7 @@ const saveProduct = async () => {
               field='dateOfDemobilization'
               header='Date of Demobilization'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
             // sortable
             ></Column>
 
@@ -954,7 +954,7 @@ const saveProduct = async () => {
             <Column
               field='branch'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               sortable
               header='Branch'
             ></Column>
@@ -962,7 +962,7 @@ const saveProduct = async () => {
             <Column
               field='mobile'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               // sortable
               header='Mobile'
             ></Column>
@@ -970,7 +970,7 @@ const saveProduct = async () => {
             <Column
               field='salary'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-lg'
+              bodyClassName='text-xs truncate max-w-lg'
               sortable
               header='Salary'
             ></Column>
@@ -978,7 +978,7 @@ const saveProduct = async () => {
             <Column
               body={actionBodyTemplate}
               headerClassName='bg-[#ffc2c2] text-sm min-w-[240px]'
-              bodyClassName='text-sm'
+              bodyClassName='text-xs'
               header='Action'
               exportable={false}
               frozen

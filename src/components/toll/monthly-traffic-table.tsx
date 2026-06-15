@@ -292,7 +292,7 @@ export default function MonthlyTrafficTable() {
         <Column
           header='Data By Days'
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           colSpan={32}
         />
       </Row>
@@ -307,7 +307,7 @@ export default function MonthlyTrafficTable() {
         {/* <Column
           header='Actions'
           headerClassName='bg-[#ffc2c2] text-sm'
-          bodyClassName='text-sm truncate max-w-xs'
+          bodyClassName='text-xs truncate max-w-xs'
           colSpan={1}
         /> */}
       </Row>
@@ -377,7 +377,7 @@ export default function MonthlyTrafficTable() {
           <Column
             field='vehicleId'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
             frozen
           ></Column>
@@ -386,28 +386,28 @@ export default function MonthlyTrafficTable() {
             frozen
             body={vehicleBodyTemplate}
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
           <Column
             field='totalpass'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
           <Column
             field='average'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
           <Column
             field='percentage'
             headerClassName='bg-[#ffc2c2] text-sm'
-            bodyClassName='text-sm truncate max-w-xs'
+            bodyClassName='text-xs truncate max-w-xs'
             className='min-w-[8rem]'
           ></Column>
 
@@ -416,7 +416,7 @@ export default function MonthlyTrafficTable() {
               key={i}
               field={`date-${i + 1}`}
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-sm truncate max-w-xs'
+              bodyClassName='text-xs truncate max-w-xs'
             ></Column>
           ))}
           {/* <Column body={actionBodyTemplate} exportable={false}></Column> */}
