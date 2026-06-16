@@ -881,7 +881,7 @@ export default function MonthlyReport() {
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[10rem]'
+                                className='min-w-[1rem]'
 
                             ></Column>
 
@@ -905,7 +905,7 @@ export default function MonthlyReport() {
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                             ></Column>
 
                             <Column
@@ -913,7 +913,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
 
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column
@@ -922,7 +922,7 @@ export default function MonthlyReport() {
                                 bodyClassName='text-xs truncate max-w-xs'
                                 sortable
 
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Month Name'
                             ></Column>
                             <Column
@@ -940,7 +940,7 @@ export default function MonthlyReport() {
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Attachment'
                             ></Column>
 
@@ -949,7 +949,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
                                 sortable
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Remarks'
                             ></Column>
 

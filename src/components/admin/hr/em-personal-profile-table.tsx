@@ -896,25 +896,28 @@ const saveProduct = async () => {
               field='boqNo'
               header='BOQ'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-xs truncate max-w-lg'
+              bodyClassName='text-xs truncate min-w-[1rem]'
               sortable
               showClearButton
+               className='min-w-[8rem]'
             ></Column>
 
             <Column
               field='employeeId'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
-              bodyClassName='text-xs truncate max-w-lg'
+              bodyClassName='text-xs truncate min-w-[1rem]'
               // sortable
               header='Employee ID'
+               className='min-w-[8rem]'
             ></Column>
 
             <Column
               field='employeeName'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[12rem]'
-              bodyClassName='text-xs truncate max-w-lg'
+              bodyClassName='text-xs truncate min-w-[1rem]'
               sortable
               header='Employee Name'
+               className='min-w-[8rem]'
             ></Column>
 
             <Column
@@ -922,6 +925,7 @@ const saveProduct = async () => {
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-xs'
               // sortable
+               className='min-w-[8rem]'
               header='Position'
             ></Column>
 
@@ -929,6 +933,7 @@ const saveProduct = async () => {
               field='dept'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
               bodyClassName='text-xs'
+               className='min-w-[8rem]'
               sortable
               header='Department'
             ></Column>
@@ -936,16 +941,18 @@ const saveProduct = async () => {
             <Column
               field='dateOfMobilization'
               header='Date of Mobilization'
+               className='min-w-[8rem]'
               headerClassName='bg-[#ffc2c2] text-sm text-sm min-w-[8rem]'
-              bodyClassName='text-xs truncate max-w-lg'
+              bodyClassName='text-xs truncate min-w-[1rem]'
             // sortable
             ></Column>
 
             <Column
               field='dateOfDemobilization'
               header='Date of Demobilization'
+               className='min-w-[8rem]'
               headerClassName='bg-[#ffc2c2] text-sm min-w-[8rem]'
-              bodyClassName='text-xs truncate max-w-lg'
+              bodyClassName='text-xs truncate min-w-[1rem]'
             // sortable
             ></Column>
 
@@ -954,7 +961,8 @@ const saveProduct = async () => {
             <Column
               field='branch'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-xs truncate max-w-lg'
+               className='min-w-[8rem]'
+              bodyClassName='text-xs truncate min-w-[1rem]'
               sortable
               header='Branch'
             ></Column>
@@ -962,7 +970,8 @@ const saveProduct = async () => {
             <Column
               field='mobile'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-xs truncate max-w-lg'
+               className='min-w-[8rem]'
+              bodyClassName='text-xs truncate min-w-[1rem]'
               // sortable
               header='Mobile'
             ></Column>
@@ -970,16 +979,18 @@ const saveProduct = async () => {
             <Column
               field='salary'
               headerClassName='bg-[#ffc2c2] text-sm'
-              bodyClassName='text-xs truncate max-w-lg'
+               className='min-w-[8rem]'
+              bodyClassName='text-xs truncate min-w-[1rem]'
               sortable
               header='Salary'
             ></Column>
 
             <Column
               body={actionBodyTemplate}
-              headerClassName='bg-[#ffc2c2] text-sm min-w-[240px]'
+              headerClassName='bg-[#ffc2c2] text-sm'
               bodyClassName='text-xs'
               header='Action'
+               className='min-w-[8rem]'
               exportable={false}
               frozen
               alignFrozen='right'

@@ -918,7 +918,7 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[10rem]'
+                                className='min-w-[1rem]'
 
                             ></Column>
 
@@ -942,7 +942,7 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                             ></Column>
 
                            <Column
@@ -950,7 +950,7 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
 
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='File Name/Subject'
                             ></Column>
                             <Column
@@ -958,7 +958,7 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
                                 sortable
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Month Name'
                             ></Column>
                             <Column
@@ -976,7 +976,7 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Attachment'
                             ></Column>
 
@@ -985,7 +985,7 @@ const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-mana
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
                                 sortable
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Remarks'
                             ></Column>
 

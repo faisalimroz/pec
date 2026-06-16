@@ -1465,7 +1465,7 @@ export default function RhdBillDetails() {
                 header='SL No.'
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
-                className='min-w-[10rem]'
+                className='min-w-[1rem]'
                 sortable
               ></Column>
 
@@ -1474,7 +1474,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[14rem]'
+                className='min-w-[1rem]'
                 header='Invoice Payment Date'
               ></Column>
 
@@ -1483,7 +1483,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Vendor Name'
               ></Column>
 
@@ -1501,7 +1501,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Invoice Payment Value (BDT)'
               ></Column>
 
@@ -1510,7 +1510,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Vat Amount'
               ></Column>
 
@@ -1519,7 +1519,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Tax Amount'
               ></Column>
 
@@ -1528,7 +1528,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Management Cost 10%'
               ></Column>
 
@@ -1537,7 +1537,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Total Payment Amount'
               ></Column>
 
@@ -1555,7 +1555,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='PS/Month/Vehicles'
               ></Column>
 

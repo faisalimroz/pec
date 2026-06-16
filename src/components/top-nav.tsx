@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from './custom/button'
-import { Menu } from 'lucide-react'
+import { Menu, ExternalLink } from 'lucide-react'
 import logo from '@/assets/bba.png'
 import { useAuth } from '@/provider/authProvider'
 
@@ -38,6 +38,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
   const location = useLocation()
   const showLogo = location.pathname === '/dashboard'
   const { permissions } = useAuth()
+  const encoder = new TextEncoder()
   
   const processedLinks = React.useMemo(() => {
     if (!links || !permissions || permissions.length === 0) return links
@@ -89,6 +90,71 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
       }
     })
   }, [links, permissions])
+
+  async function base64UrlEncodeUint8Array(bytes: Uint8Array) {
+    let binary = ''
+    const len = bytes.byteLength
+    for (let i = 0; i < len; i++) binary += String.fromCharCode(bytes[i])
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  }
+
+  async function base64UrlEncodeString(str: string) {
+    const bytes = encoder.encode(str)
+    return base64UrlEncodeUint8Array(bytes)
+  }
+
+  async function createJWT(payload: Record<string, any>, secret: string) {
+    const header = JSON.stringify({ alg: 'HS256', typ: 'JWT' })
+    const payloadWithIat = { ...payload, iat: Math.floor(Date.now() / 1000) }
+    const headerB64 = await base64UrlEncodeString(header)
+    const payloadB64 = await base64UrlEncodeString(JSON.stringify(payloadWithIat))
+    const data = `${headerB64}.${payloadB64}`
+
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    )
+
+    const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(data))
+    const sigB64 = await base64UrlEncodeUint8Array(new Uint8Array(signature))
+    return `${data}.${sigB64}`
+  }
+
+const handlePmbpClick = async () => {
+  const popup = window.open("", "_blank")
+
+  try {
+    const payload = {
+      key: "origin-pmis",
+      userInfo: {
+        userId: "d2342-234e",
+        name: "Faisal",
+        role: "super-admin",
+        email: "generalmanager@kec.com",
+      },
+    }
+
+    const secret = "ufeQ1e5AqivijXDXEORRNl"
+    const token = await createJWT(payload, secret)
+
+    const url = `http://103.161.47.20:5190/verify-token?token=${encodeURIComponent(token)}`
+
+    if (popup) {
+      popup.location.href = url
+    } else {
+      window.location.href = url
+    }
+  } catch (error) {
+    console.error("PMBP redirect failed:", error)
+
+    if (popup) {
+      popup.close()
+    }
+  }
+}
 
   return (
     <div className='flex items-center justify-between w-full'>
@@ -144,6 +210,13 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
             {Logo && <Logo className='h-4 w-4' />} {title}
           </Link>
         ))}
+       <button
+  type="button"
+  onClick={handlePmbpClick}
+  className="font-roboto text-xs font-medium flex items-center gap-1 xl:gap-2 px-2 py-1 rounded-md transition-colors hover:bg-white/10 ml-8 cursor-pointer text-white"
+>
+  <ExternalLink className="h-5 w-5" /> PMBP
+</button>
       </nav>
     </div>
   )

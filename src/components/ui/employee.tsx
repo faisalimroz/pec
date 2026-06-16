@@ -47,14 +47,14 @@ const ButtonGroup: React.FC<ButtonGroupWithIconsProps> = ({
   return (
     <div className="flex space-x-2">
       <button
-        className="flex items-center gap-2 bg-[#6F90AE] text-white border border-[#E2E8F0]  text-sm h-[40px] px-2 rounded-md font-bold"
+        className="flex items-center gap-2 bg-[#6F90AE] text-white border border-[#E2E8F0]  text-sm h-[30px] px-2 rounded-md font-bold"
         onClick={openNew}
       >
         <UploadIcon />
         Upload Document
       </button>
        {/* <button
-        className="flex items-center gap-2 bg-main text-white border border-[#E2E8F0] text-sm h-[40px] px-2 rounded-md font-bold"
+        className="flex items-center gap-2 bg-main text-white border border-[#E2E8F0] text-sm h-[30px] px-2 rounded-md font-bold"
         onClick={openNew2}
       >
         <UploadIcon />
@@ -62,7 +62,7 @@ const ButtonGroup: React.FC<ButtonGroupWithIconsProps> = ({
       </button> */}
   
       <button
-        className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold text-sm h-[40px] px-2 rounded-md"
+        className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold text-sm h-[30px] px-2 rounded-md"
         onClick={exportCSV}
       >
         <DownloadIcon />

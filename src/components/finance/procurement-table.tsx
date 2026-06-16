@@ -1156,7 +1156,7 @@ export default function RhdBillDetails() {
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
-            className='min-w-[10rem]'
+            className='min-w-[1rem]'
             sortable
           ></Column>
 
@@ -1165,7 +1165,7 @@ export default function RhdBillDetails() {
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
             sortable
-            className='min-w-[14rem]'
+            className='min-w-[1rem]'
             header='Doc Title'
           ></Column>
 
@@ -1174,7 +1174,7 @@ export default function RhdBillDetails() {
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
             sortable
-            className='min-w-[14rem]'
+            className='min-w-[1rem]'
             header='BOQ'
           ></Column>
 

@@ -1355,7 +1355,7 @@ export default function RhdBillDetails() {
                 header='SL No.'
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
-                className='min-w-[10rem]'
+                className='min-w-[1rem]'
                 sortable
               ></Column>
 
@@ -1364,7 +1364,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Code'
               ></Column>
 
@@ -1409,7 +1409,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[10rem]'
+                className='min-w-[1rem]'
                 header='Cheque Date'
               ></Column>
 
@@ -1418,7 +1418,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Financial Year'
               ></Column>
 
@@ -1427,7 +1427,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Cheque No.'
               ></Column>
 
@@ -1436,7 +1436,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Cheque Amount'
               ></Column>
 
@@ -1445,7 +1445,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Tax Amount'
               ></Column>
 
@@ -1454,7 +1454,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Vat Amount'
               ></Column>
 
@@ -1463,7 +1463,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Total Bill Amount'
               ></Column>
 
@@ -1481,7 +1481,7 @@ export default function RhdBillDetails() {
                 headerClassName='bg-[#ffc2c2] text-sm'
                 bodyClassName='text-xs truncate max-w-xs'
                 sortable
-                className='min-w-[12rem]'
+                className='min-w-[1rem]'
                 header='Remarks'
               ></Column>
 

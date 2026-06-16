@@ -121,7 +121,7 @@ export default function AssetManagementTable() {
     const tollPermission = tollManagerPermission?.children?.find(
         (child) => child.name === 'toll-hierarchy'
     )
-    const hasEditAccess = tollPermission?.edit_authority === true && !showAll
+    const hasEditAccess = tollPermission?.edit_authority === true && showAll
 
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)

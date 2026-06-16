@@ -889,7 +889,7 @@ const uploadFile = async () => {
                                 header='SL No.'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[10rem]'
+                                className='min-w-[1rem]'
 
                             ></Column>
 
@@ -913,7 +913,7 @@ const uploadFile = async () => {
                                 }}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                             ></Column>
 
                            <Column
@@ -921,7 +921,7 @@ const uploadFile = async () => {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
 
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='File Name/Subject'
                             ></Column>
                             
@@ -940,7 +940,7 @@ const uploadFile = async () => {
                                 body={attachmentBodyTemplate}
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Attachment'
                             ></Column>
 
@@ -949,7 +949,7 @@ const uploadFile = async () => {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
                                 sortable
-                                className='min-w-[12rem]'
+                                className='min-w-[1rem]'
                                 header='Remarks'
                             ></Column>
 

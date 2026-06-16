@@ -902,7 +902,7 @@ export default function AssetManagementTable() {
             header='SL No.'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
-            className='min-w-[10rem]'
+            className='min-w-[1rem]'
           ></Column>
 
 
@@ -911,7 +911,7 @@ export default function AssetManagementTable() {
             field='fileName'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
-            className='min-w-[10rem]'
+            className='min-w-[1rem]'
             header='File Name/Subject'
           ></Column>
 
@@ -920,7 +920,7 @@ export default function AssetManagementTable() {
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
             sortable
-            className='min-w-[10rem]'
+            className='min-w-[1rem]'
             header='Date'
           ></Column>
 
@@ -928,7 +928,7 @@ export default function AssetManagementTable() {
             field='description'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
-            className='min-w-[10rem]'
+            className='min-w-[1rem]'
             header='Description'
           ></Column>
 
@@ -945,7 +945,7 @@ export default function AssetManagementTable() {
             header='Remarks'
             headerClassName='bg-[#ffc2c2] text-sm'
             bodyClassName='text-xs truncate max-w-xs'
-            className='min-w-[10rem]'
+            className='min-w-[1rem]'
           ></Column>
 
           <Column
