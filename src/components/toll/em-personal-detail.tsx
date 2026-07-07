@@ -287,10 +287,11 @@ export default function EmPersonalDetail({
       formData.append('salary', updatedEmployee.salary || '')
       formData.append('boqNo', updatedEmployee.boqNo || '')
       formData.append('location', updatedEmployee.location || '')
-    
+
       formData.append('branch', updatedEmployee.branch || '')
       formData.append('mobile', updatedEmployee.mobile || '')
       formData.append('address', updatedEmployee.address || '')
+      formData.append('salary', updatedEmployee.salary || '')
       formData.append('email', updatedEmployee.email || '')
       if (!newProfileImage) {
         formData.append('profileImg', '')
@@ -592,7 +593,7 @@ export default function EmPersonalDetail({
     { label: 'Employee ID', value: employeeData.employeeId },
     { label: 'Department Name', value: employeeData.dept },
     { label: 'Position', value: employeeData.position },
-    // { label: 'Salary', value: employeeData.salary },
+    { label: 'Salary', value: employeeData.salary },
 
 
     { label: 'BOQ NO.', value: employeeData.boqNo },
@@ -842,7 +843,27 @@ export default function EmPersonalDetail({
                 }
               />
             </div>
-
+            <div className='field mb-3'>
+              <label htmlFor='salary' className='block font-bold mb-2'>
+                Salary
+              </label>
+              <InputNumber
+                id='salary'
+                value={
+                  updatedEmployee.salary
+                    ? parseFloat(updatedEmployee.salary)
+                    : undefined
+                }
+                onValueChange={(e) =>
+                  setUpdatedEmployee({
+                    ...updatedEmployee,
+                    salary: e.value?.toString() || '',
+                  })
+                }
+                mode='currency'
+                currency='BDT'
+              />
+            </div>
             {/* <div className='field mb-3'>
               <label htmlFor='remarks' className='block font-bold mb-2'>
                 Remarks
@@ -1074,7 +1095,68 @@ export default function EmPersonalDetail({
                 </div>
               ))}
             </div>
+            <div className='field mb-2'>
+              <label
+                htmlFor='newInsuranceClaimings'
+                className='block font-bold mb-2'
+              >
+                New Insurance Documents
+              </label>
+              <MultiFileInput
+                onFilesChange={(files) => setNewInsuranceClaimings(files)}
+              />
+            </div>
+            <div className='field'>
+              <label className='block font-bold mb-2'>
+                Existing Insurance Documents
+              </label>
+              {updatedEmployee.insuranceClaiming.map((attachment) => (
+                <div key={attachment._id} className='flex items-center'>
+                  <a
+                    href={attachment.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {attachment.url?.split('/').pop()}
+                  </a>
+                  <Button
+                    icon='pi pi-times text-red-500'
+                    onClick={() => removeInsuranceClaiming(attachment._id)}
+                  />
+                </div>
+              ))}
+            </div>
 
+            <div className='field mb-3'>
+              <label
+                htmlFor='newShowcaseLetters'
+                className='block font-bold mb-2'
+              >
+                New Other Documents
+              </label>
+              <MultiFileInput
+                onFilesChange={(files) => setNewShowcaseLetters(files)}
+              />
+            </div><div className='field'>
+              <label className='block font-bold mb-2'>
+                Existing Others Documents
+              </label>
+              {updatedEmployee.showcaseLetter.map((attachment) => (
+                <div key={attachment._id} className='flex items-center'>
+                  <a
+                    href={attachment.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {attachment.url?.split('/').pop()}
+                  </a>
+                  <Button
+                    icon='pi pi-times text-red-500'
+                    onClick={() => removeShowcaseLetter(attachment._id)}
+                  />
+                </div>
+              ))}
+            </div>
             {/* <div className='field mb-3'>
               <label htmlFor='newCertificates' className='block font-bold mb-2'>
                 New Certificates

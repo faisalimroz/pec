@@ -983,21 +983,21 @@ const navJson: TreeNode[] = [
           },
         ],
       },
-      {
-        id: "toll-employee-personal-report",
-        title: "Employee Personal Report",
-        type: "folder",
-        countKey: "toll-employee-personal-report",
-        children: [
-          {
-            id: "toll-employee-personal-report-index",
-            title: "Index",
-            type: "file",
-            component: "toll-edms/employee-personal-report/index",
-            countKey: "toll-employee-personal-report",
-          },
-        ],
-      },
+      // {
+      //   id: "toll-employee-personal-report",
+      //   title: "Employee Personal Report",
+      //   type: "folder",
+      //   countKey: "toll-employee-personal-report",
+      //   children: [
+      //     {
+      //       id: "toll-employee-personal-report-index",
+      //       title: "Index",
+      //       type: "file",
+      //       component: "toll-edms/employee-personal-report/index",
+      //       countKey: "toll-employee-personal-report",
+      //     },
+      //   ],
+      // },
       {
         id: "toll-hierarchy",
         title: "Hierarchy",

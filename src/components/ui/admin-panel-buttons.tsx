@@ -46,7 +46,7 @@ const AdminButton: React.FC<AdminButton> = ({
   return (
     <div className="flex space-x-2 mb-1">
       <button
-        className="flex items-center gap-2 bg-[#6F90AE]  text-white border border-[#E2E8F0] text-sm h-[40px] px-2 rounded-md font-bold"
+        className="flex items-center gap-2 bg-[#6F90AE]  text-white border border-[#E2E8F0] text-sm h-[30px] px-2 rounded-md font-bold"
         onClick={openNew}
       >
         <UploadIcon />
@@ -54,7 +54,7 @@ const AdminButton: React.FC<AdminButton> = ({
       </button>
 
       <button
-        className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold text-sm h-[40px] px-2 rounded-md"
+        className="flex items-center gap-2 bg-[#0B1F8F]  text-white border border-[#E2E8F0]  font-bold text-sm h-[30px] px-2 rounded-md"
         onClick={exportCSV}
       >
         <BulkUpload />
@@ -62,7 +62,7 @@ const AdminButton: React.FC<AdminButton> = ({
       </button>
 
       <button
-        className={`flex items-center gap-2 text-sm h-[40px] px-2 text-[#FF4141] border border-[#F39A9C] font-semibold rounded-md ${
+        className={`flex items-center gap-2 text-sm h-[30px] px-2 text-[#FF4141] border border-[#F39A9C] font-semibold rounded-md ${
           selectedProducts && selectedProducts.length > 0
             ? "bg-[#FFDBDC]"
             : "bg-[#FFDBDC] cursor-not-allowed"

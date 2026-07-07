@@ -965,7 +965,7 @@ export default function MonthlyReport() {
                                 header='Attachment'
                             ></Column>
 
-                            <Column
+                            {/* <Column
                                 field='date'
                                 header='Date'
                                 sortable
@@ -985,7 +985,7 @@ export default function MonthlyReport() {
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
                                 className='min-w-[1rem]'
-                            ></Column>
+                            ></Column> */}
 
 
                             <Column

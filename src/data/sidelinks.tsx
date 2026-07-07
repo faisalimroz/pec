@@ -670,13 +670,13 @@ export const tollLinks: SideLink[] = [
     uName: 'toll-daily-report',
     icon: <FileIcon />,
   },
-    {
-    title: 'Employee Personal Report',
-    label: '',
-    href: '/toll/employee-personal-report',
-    uName: 'toll-monthly-roster',
-    icon: <FileIcon />,
-  },
+  //   {
+  //   title: 'Employee Personal Report',
+  //   label: '',
+  //   href: '/toll/employee-personal-report',
+  //   uName: 'toll-monthly-roster',
+  //   icon: <FileIcon />,
+  // },
   {
     title: 'Monthly Roster',
     label: '',

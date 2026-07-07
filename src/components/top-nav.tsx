@@ -11,6 +11,7 @@ import { Button } from './custom/button'
 import { Menu, ExternalLink } from 'lucide-react'
 import logo from '@/assets/bba.png'
 import { useAuth } from '@/provider/authProvider'
+import CryptoJS from 'crypto-js' // Required for HTTP-safe JWT generation
 
 interface ExtendedPermission {
   name: string
@@ -38,8 +39,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
   const location = useLocation()
   const showLogo = location.pathname === '/dashboard'
   const { permissions } = useAuth()
-  const encoder = new TextEncoder()
-  
+
   const processedLinks = React.useMemo(() => {
     if (!links || !permissions || permissions.length === 0) return links
     const extendedPermissions = permissions as unknown as ExtendedPermission[]
@@ -57,13 +57,13 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
         'ai-dashboard',
         'mb-pmis-manager',
         'rtw-manager',
-        'notice',    
+        'notice',
       ]
 
       if (excludedDepartments.includes(departmentName)) {
         return link
       }
-      
+
       const baseHref = `/${departmentName}`
       const department = extendedPermissions.find(
         (dept) => dept.displayName === departmentName
@@ -91,69 +91,15 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
     })
   }, [links, permissions])
 
-  async function base64UrlEncodeUint8Array(bytes: Uint8Array) {
-    let binary = ''
-    const len = bytes.byteLength
-    for (let i = 0; i < len; i++) binary += String.fromCharCode(bytes[i])
-    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-  }
+  // HTTP-SAFE JWT GENERATOR (Works on both localhost and deployed IP addresses)
+const handlePmbpClick = () => {
+  const secretCode = "ufeQ1e5AqivijXDXEORRNl"
 
-  async function base64UrlEncodeString(str: string) {
-    const bytes = encoder.encode(str)
-    return base64UrlEncodeUint8Array(bytes)
-  }
+  const url = `http://103.161.47.20:5190/verify-token?secretCode=${encodeURIComponent(
+    secretCode
+  )}`
 
-  async function createJWT(payload: Record<string, any>, secret: string) {
-    const header = JSON.stringify({ alg: 'HS256', typ: 'JWT' })
-    const payloadWithIat = { ...payload, iat: Math.floor(Date.now() / 1000) }
-    const headerB64 = await base64UrlEncodeString(header)
-    const payloadB64 = await base64UrlEncodeString(JSON.stringify(payloadWithIat))
-    const data = `${headerB64}.${payloadB64}`
-
-    const key = await crypto.subtle.importKey(
-      'raw',
-      encoder.encode(secret),
-      { name: 'HMAC', hash: 'SHA-256' },
-      false,
-      ['sign']
-    )
-
-    const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(data))
-    const sigB64 = await base64UrlEncodeUint8Array(new Uint8Array(signature))
-    return `${data}.${sigB64}`
-  }
-
-const handlePmbpClick = async () => {
-  const popup = window.open("", "_blank")
-
-  try {
-    const payload = {
-      key: "origin-pmis",
-      userInfo: {
-        userId: "d2342-234e",
-        name: "Faisal",
-        role: "super-admin",
-        email: "generalmanager@kec.com",
-      },
-    }
-
-    const secret = "ufeQ1e5AqivijXDXEORRNl"
-    const token = await createJWT(payload, secret)
-
-    const url = `http://103.161.47.20:5190/verify-token?token=${encodeURIComponent(token)}`
-
-    if (popup) {
-      popup.location.href = url
-    } else {
-      window.location.href = url
-    }
-  } catch (error) {
-    console.error("PMBP redirect failed:", error)
-
-    if (popup) {
-      popup.close()
-    }
-  }
+  window.open(url, "_blank")
 }
 
   return (
@@ -182,7 +128,7 @@ const handlePmbpClick = async () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      
+
       <nav
         className={cn(
           'hidden lg:flex items-center space-x-1 xl:space-x-2 text-white',
@@ -194,7 +140,7 @@ const handlePmbpClick = async () => {
           <Link to='/dashboard' className='mr-4'>
             <div className='flex gap-4 items-center font-medium'>
               <img src={logo} alt='Logo' className='h-8 w-auto' />
-              <h3 className='text-xs'>PADMA MULTIPURPOSE<br />BRIDGE O & M</h3>
+              <h3 className='text-xs'>PADMA BRIDGE </h3>
             </div>
           </Link>
         )}
@@ -210,13 +156,15 @@ const handlePmbpClick = async () => {
             {Logo && <Logo className='h-4 w-4' />} {title}
           </Link>
         ))}
-       <button
-  type="button"
-  onClick={handlePmbpClick}
-  className="font-roboto text-xs font-medium flex items-center gap-1 xl:gap-2 px-2 py-1 rounded-md transition-colors hover:bg-white/10 ml-8 cursor-pointer text-white"
->
-  <ExternalLink className="h-5 w-5" /> PMBP
-</button>
+        
+        {/* Changed from <a> to <button> for better accessibility and event handling */}
+        <button
+          type="button"
+          onClick={handlePmbpClick}
+          className="font-roboto text-xs font-medium flex items-center gap-1 xl:gap-2 px-2 py-1 rounded-md transition-colors hover:bg-white/10 ml-8 cursor-pointer text-white"
+        >
+          <ExternalLink className="h-5 w-5" /> PMBP
+        </button>
       </nav>
     </div>
   )

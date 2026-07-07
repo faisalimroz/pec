@@ -85,15 +85,15 @@ export default function EmPersonalDetail({
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const pageParam = searchParams.get('page')
-   const [approved, setApproved] = useState<boolean>(false);
+  const [approved, setApproved] = useState<boolean>(false);
   // all update dialog func here
   const { roles, permissions } = useAuth()
   const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+  const showAll = pathname.startsWith('/edms');
 
   const adminManagerPermission = permissions.find((p) => p.name === 'admin');
-    const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'employee-personal-profile');
-    const hasEditAccess =  adminPermission?.edit_authority === true;
+  const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'employee-personal-profile');
+  const hasEditAccess = adminPermission?.edit_authority === true;
   const handleProfileImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -615,10 +615,10 @@ export default function EmPersonalDetail({
   const documents = [
     { label: 'Upload CV', files: employeeData.cvCertificates },
     // { label: 'Employment Agreement', files: employeeData.agreement },
-    // { label: 'Showcase Letter', files: employeeData.showcaseLetter },
+    { label: 'OTher Documents', files: employeeData.showcaseLetter },
     // { label: 'Warning Letter', files: employeeData.warningLetter },
     // { label: 'Resignation or Termination', files: employeeData.termination },
-    // { label: 'Insurance Claiming', files: employeeData.insuranceClaiming },
+    { label: 'Insurance Document ', files: employeeData.insuranceClaiming },
   ]
 
   // console.log(employeeData)
@@ -664,7 +664,7 @@ export default function EmPersonalDetail({
       <div className='p-4'>
         <Card className='mb-4'>
           <div className='flex flex-col md:flex-row items-start gap-6 p-6 bg-white  rounded-lg'>
-       
+
             <div className='flex-shrink-0'>
               <img
                 src={
@@ -676,7 +676,7 @@ export default function EmPersonalDetail({
               />
             </div>
 
-       
+
             <div className='flex-grow'>
               <h2 className='text-xl font-bold mb-4 bg-red-200 p-2 rounded'>
                 Employee Personal Profile
@@ -1076,7 +1076,68 @@ export default function EmPersonalDetail({
                 </div>
               ))}
             </div>
-
+    <div className='field mb-2'>
+              <label
+                htmlFor='newInsuranceClaimings'
+                className='block font-bold mb-2'
+              >
+                New Insurance Documnent
+              </label>
+              <MultiFileInput
+                onFilesChange={(files) => setNewInsuranceClaimings(files)}
+              />
+            </div>
+            <div className='field'>
+              <label className='block font-bold mb-2'>
+                Existing Insurance Document
+              </label>
+              {updatedEmployee.insuranceClaiming.map((attachment) => (
+                <div key={attachment._id} className='flex items-center'>
+                  <a
+                    href={attachment.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {attachment.url?.split('/').pop()}
+                  </a>
+                  <Button
+                    icon='pi pi-times text-red-500'
+                    onClick={() => removeInsuranceClaiming(attachment._id)}
+                  />
+                </div>
+              ))}
+            </div> 
+            <div className='field mb-3'>
+              <label
+                htmlFor='newShowcaseLetters'
+                className='block font-bold mb-2'
+              >
+                New Other Documents
+              </label>
+              <MultiFileInput
+                onFilesChange={(files) => setNewShowcaseLetters(files)}
+              />
+            </div>
+            <div className='field'>
+              <label className='block font-bold mb-2'>
+                Existing Other Documents
+              </label>
+              {updatedEmployee.showcaseLetter.map((attachment) => (
+                <div key={attachment._id} className='flex items-center'>
+                  <a
+                    href={attachment.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    {attachment.url?.split('/').pop()}
+                  </a>
+                  <Button
+                    icon='pi pi-times text-red-500'
+                    onClick={() => removeShowcaseLetter(attachment._id)}
+                  />
+                </div>
+              ))}
+            </div>
             {/* <div className='mb-3'>
               <label htmlFor='newAgreements' className='block font-bold mb-2'>
                 New Agreements
@@ -1107,37 +1168,7 @@ export default function EmPersonalDetail({
               ))}
             </div> */}
 
-            {/* <div className='field mb-3'>
-              <label
-                htmlFor='newShowcaseLetters'
-                className='block font-bold mb-2'
-              >
-                New Showcase Letters
-              </label>
-              <MultiFileInput
-                onFilesChange={(files) => setNewShowcaseLetters(files)}
-              />
-            </div>
-            <div className='field'>
-              <label className='block font-bold mb-2'>
-                Existing Showcase Letters
-              </label>
-              {updatedEmployee.showcaseLetter.map((attachment) => (
-                <div key={attachment._id} className='flex items-center'>
-                  <a
-                    href={attachment.url}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    {attachment.url?.split('/').pop()}
-                  </a>
-                  <Button
-                    icon='pi pi-times text-red-500'
-                    onClick={() => removeShowcaseLetter(attachment._id)}
-                  />
-                </div>
-              ))}
-            </div>
+            {/* 
 
             <div className='field mb-3'>
               <label
@@ -1200,37 +1231,7 @@ export default function EmPersonalDetail({
               ))}
             </div>
 
-            <div className='field mb-2'>
-              <label
-                htmlFor='newInsuranceClaimings'
-                className='block font-bold mb-2'
-              >
-                New Insurance Claimings
-              </label>
-              <MultiFileInput
-                onFilesChange={(files) => setNewInsuranceClaimings(files)}
-              />
-            </div>
-            <div className='field'>
-              <label className='block font-bold mb-2'>
-                Existing Insurance Claimings
-              </label>
-              {updatedEmployee.insuranceClaiming.map((attachment) => (
-                <div key={attachment._id} className='flex items-center'>
-                  <a
-                    href={attachment.url}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    {attachment.url?.split('/').pop()}
-                  </a>
-                  <Button
-                    icon='pi pi-times text-red-500'
-                    onClick={() => removeInsuranceClaiming(attachment._id)}
-                  />
-                </div>
-              ))}
-            </div> */}
+        */}
             {/* <div className="col-span-2 mt-2">
                                         <label className="font-bold mb-2 block">Approval</label>
                                         <div className="flex items-center gap-3">

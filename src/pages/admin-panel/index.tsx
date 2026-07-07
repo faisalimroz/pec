@@ -8,7 +8,7 @@ import {
 import { Menu, UserCircleIcon } from 'lucide-react'
 // import logo from '@/assets/rhd.png'
 import logo from '@/assets/rhd-logo.png'
-import kecLogo from '@/assets/ex-pic.png'
+// import kecLogo from '@/assets/ex-pic.png'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/provider/authProvider'
@@ -57,7 +57,7 @@ export default function AdminPanelLayout({
                 <Link to='/dashboard' className='mr-4'>
                   <div className='flex gap-4 items-center font-medium'>
                     <img src={logo} alt='Logo' className='h-10 w-auto' />
-                    <h3 className='text-xs'>PADMA MULTIPURPOSE<br />BRIDGE O & M</h3>
+                    <h3 className='text-xs'>PADMA BRIDGE </h3>
                   </div>
 
                 </Link>
@@ -108,9 +108,9 @@ export default function AdminPanelLayout({
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <div className='ml-2'>
+                {/* <div className='ml-2'>
                   <img className='w-auto h-10' src={kecLogo} alt='Logo' />
-                </div>
+                </div> */}
               </div>
               <div className='mr-2 flex items-center sm:hidden'>
                 <Button className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-red-600 focus:ring-0 focus:ring-offset-0'>

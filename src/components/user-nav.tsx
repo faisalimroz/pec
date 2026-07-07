@@ -147,9 +147,9 @@ export function UserNav() {
           <AvatarImage src={avatar} alt='@shadcn' />
         </Avatar>
       </Button>
-      <div className='ml-4'>
+      {/* <div className='ml-4'>
         <img src={kecLogo} alt='Logo' className='w-auto h-auto' />
-      </div>
+      </div> */}
     </div>
   )
 }

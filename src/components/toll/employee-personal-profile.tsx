@@ -26,10 +26,9 @@ import { Checkbox } from 'primereact/checkbox'
 interface Product {
   _id: string
   employeeName: string
-  // approved: string
   employeeId: string
   dept: string
- 
+
   position: string
   salary?: string
   boqNo?: string
@@ -38,7 +37,6 @@ interface Product {
   mobile?: string
   address?: string
   email?: string
-  approved: boolean;
   dateOfMobilization: string
   dateOfDemobilization: string
   remarks: string
@@ -73,9 +71,9 @@ export default function EmPersonalProfileTable() {
   let emptyProduct: Product = {
     _id: '',
     employeeName: '',
-    approved: false,
+
     employeeId: '',
-   
+
     dept: '',
     position: '',
     salary: '',
@@ -99,7 +97,7 @@ export default function EmPersonalProfileTable() {
   }
   const { pathname } = useLocation();
   const showAll = pathname.startsWith('/edms');
-  const [approved, setApproved] = useState<boolean>(false);
+
   const { roles, permissions } = useAuth()
   const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager');
   const tollPermission = tollManagerPermission?.children?.find((child) => child.name === 'toll-employee-report');
@@ -139,7 +137,7 @@ export default function EmPersonalProfileTable() {
     employeeName: '',
     employeeId: '',
     dept: '',
- 
+
     position: '',
     dateOfMobilization: '',
     dateOfDemobilization: '',
@@ -271,7 +269,7 @@ export default function EmPersonalProfileTable() {
     return `${day}-${month}-${year}`
   }
 
- const saveProduct = async () => {
+  const saveProduct = async () => {
     // --- 1. VALIDATION START ---
     // List of fields to validate from your formData state
     const requiredFields = [
@@ -281,25 +279,25 @@ export default function EmPersonalProfileTable() {
       { value: formData.remarks, name: 'Remarks' },
       { value: formData.salary, name: 'Salary' },
       { value: formData.position, name: 'Position' },
-        { value: formData.boqNo, name: 'BOQ No.' },
+      { value: formData.boqNo, name: 'BOQ No.' },
       { value: formData.location, name: 'Location' },
-    
-     
-    
+
+
+
       { value: formData.branch, name: 'Branch' },
       { value: formData.mobile, name: 'Mobile' },
       { value: formData.address, name: 'Address' },
       { value: formData.email, name: 'Email' },
-        { value: formData.dateOfMobilization, name: 'Date of Mobilization' },
+      { value: formData.dateOfMobilization, name: 'Date of Mobilization' },
       { value: formData.dateOfDemobilization, name: 'Date of Demobilization' },
-     
+
     ];
 
     for (const field of requiredFields) {
-   
+
       if (
-        field.value === null || 
-        field.value === undefined || 
+        field.value === null ||
+        field.value === undefined ||
         (typeof field.value === 'string' && field.value.trim() === '')
       ) {
         toast.warning(`${field.name} is required!`);
@@ -365,13 +363,13 @@ export default function EmPersonalProfileTable() {
       hideDialog()
       toast.success('Data Saved Successfully')
       refetch();
-      
+
       // Reset form data after successful save
       setFormData({
         employeeName: '',
         employeeId: '',
         dept: '',
-     
+
         position: '',
         dateOfMobilization: '',
         dateOfDemobilization: '',
@@ -382,7 +380,7 @@ export default function EmPersonalProfileTable() {
         branch: '',
         mobile: '',
         address: '',
-        approved: false, // Reset approved to false or keep formData.approved based on preference
+
         email: '',
         cvCertificates: [],
         agreement: [],
@@ -844,7 +842,7 @@ export default function EmPersonalProfileTable() {
           ></Toolbar>
 
           <DataTable
-            ref={dt}           size="small"           height={45}
+            ref={dt} size="small" height={45}
             value={products}
             selection={selectedProducts}
             onSelectionChange={(e: any) => {
@@ -1176,11 +1174,29 @@ export default function EmPersonalProfileTable() {
 
             <div className='gap-3 mt-5'>
               <label className='block mb-1 font-semibold'>
-                Upload CV Certificate Files
+                Upload CV  
               </label>
 
               <div>
                 <MultiFileInput onFilesChange={handleCvCertificates} />
+              </div>
+            </div>
+            <div className='gap-3 mt-5'>
+              <label className='block mb-1 font-semibold'>
+                Upload Insurance Documents
+              </label>
+
+              <div>
+                <MultiFileInput onFilesChange={handleInsuranceClaiming} />
+              </div>
+            </div>
+            <div className='gap-3 mt-5'>
+              <label className='block mb-1 font-semibold'>
+                Upload Other Documents
+              </label>
+
+              <div>
+                <MultiFileInput onFilesChange={handleShowcaseLetter} />
               </div>
             </div>
             {/* 
@@ -1261,24 +1277,7 @@ export default function EmPersonalProfileTable() {
                 </div>
               )}
             </div>
-            <div className="col-span-2 mt-2">
-              <label className="font-bold mb-2 block">Approval</label>
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  inputId="approve"
-                  checked={formData.approved}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      approved: e.checked,
-                    })
-                  }
-                />
-                <label htmlFor="approve" className="text-sm">
-                  Add this document for all
-                </label>
-              </div>
-            </div>
+
           </>
         </Dialog>
 
