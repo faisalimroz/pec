@@ -21,6 +21,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import EmPersonalDetail from './em-personal-detail'
 import ButtonGroup from '@/components/ui/employee'
 import Refresh from '@/components/ui/refresh'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 
 interface Product {

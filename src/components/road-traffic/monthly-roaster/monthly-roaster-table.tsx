@@ -24,6 +24,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom';
 import BulkUploadDialog from '@/components/bulk-upload'

@@ -25,6 +25,7 @@ import JSZip from 'jszip'
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import FileIcon from '@/components/icons/FileIcon'
 import { searchRtwBills } from '@/api/rtwAPIs'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom';
 import BulkUploadDialog from '@/components/bulk-upload'
@@ -390,13 +391,26 @@ export default function MonthlyReport() {
 
     return data;
   };
-  const exportCSV = () => {
-    if (selectedProducts && selectedProducts.length > 0) {
-      dt.current?.exportCSV({ selectionOnly: true })
-    } else {
-      dt.current?.exportCSV()
-    }
-  }
+  // const exportCSV = () => {
+  //   if (selectedProducts && selectedProducts.length > 0) {
+  //     dt.current?.exportCSV({ selectionOnly: true })
+  //   } else {
+  //     dt.current?.exportCSV()
+  //   }
+  // }
+    const exportCSV = () => {
+       const dataToExport =
+          selectedProducts && selectedProducts.length > 0
+              ? selectedProducts
+              : products;
+  
+      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+      const workbook = XLSX.utils.book_new();
+  
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+  
+      XLSX.writeFile(workbook, "data.xlsx");
+      }
   // multi delete funcs
   const confirmDeleteSelected = () => {
     if (selectedProducts.length > 0) {

@@ -23,6 +23,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom'
 import FileIcon from '@/components/icons/FileIcon' // Imported to match previous code style
@@ -448,12 +449,26 @@ export default function MonthlyReport() {
         setProduct(emptyProduct)
     }
 
+     // const exportCSV = () => {
+    //     if (selectedProducts && selectedProducts.length > 0) {
+    //         dt.current?.exportCSV({ selectionOnly: true })
+    //     } else {
+    //         dt.current?.exportCSV()
+    //     }
+    // }
+
     const exportCSV = () => {
-        if (selectedProducts && selectedProducts.length > 0) {
-            dt.current?.exportCSV({ selectionOnly: true })
-        } else {
-            dt.current?.exportCSV()
-        }
+     const dataToExport =
+        selectedProducts && selectedProducts.length > 0
+            ? selectedProducts
+            : products;
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    XLSX.writeFile(workbook, "data.xlsx");
     }
     // multi delete funcs
     const confirmDeleteSelected = () => {

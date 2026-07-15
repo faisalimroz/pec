@@ -23,6 +23,7 @@ import { Dropdown } from 'primereact/dropdown';
 import ButtonGroupWithIcons from '@/components/ui/commonbuttons'
 import Wim from './limited-wim-data'
 import { searchAllWimData } from '@/api/tollApi'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
@@ -455,12 +456,26 @@ const uploadFile = async () => {
         setProduct(emptyProduct)
     }
 
+     // const exportCSV = () => {
+    //     if (selectedProducts && selectedProducts.length > 0) {
+    //         dt.current?.exportCSV({ selectionOnly: true })
+    //     } else {
+    //         dt.current?.exportCSV()
+    //     }
+    // }
+
     const exportCSV = () => {
-        if (selectedProducts && selectedProducts.length > 0) {
-            dt.current?.exportCSV({ selectionOnly: true })
-        } else {
-            dt.current?.exportCSV()
-        }
+     const dataToExport =
+        selectedProducts && selectedProducts.length > 0
+            ? selectedProducts
+            : products;
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    XLSX.writeFile(workbook, "data.xlsx");
     }
 
     const confirmDeleteSelected = () => {

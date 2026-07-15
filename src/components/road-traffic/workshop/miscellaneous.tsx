@@ -13,6 +13,7 @@ import '@/styles/table-style.css'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { FilePreview } from '@/components/file-preview'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom';
 import BulkUploadDialog from '@/components/bulk-upload'
@@ -356,12 +357,26 @@ export default function MonthlyReport() {
         setProduct(emptyProduct)
     }
 
+     // const exportCSV = () => {
+    //     if (selectedProducts && selectedProducts.length > 0) {
+    //         dt.current?.exportCSV({ selectionOnly: true })
+    //     } else {
+    //         dt.current?.exportCSV()
+    //     }
+    // }
+
     const exportCSV = () => {
-        if (selectedProducts && selectedProducts.length > 0) {
-            dt.current?.exportCSV({ selectionOnly: true })
-        } else {
-            dt.current?.exportCSV()
-        }
+     const dataToExport =
+        selectedProducts && selectedProducts.length > 0
+            ? selectedProducts
+            : products;
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    XLSX.writeFile(workbook, "data.xlsx");
     }
     // multi delete funcs
     const confirmDeleteSelected = () => {

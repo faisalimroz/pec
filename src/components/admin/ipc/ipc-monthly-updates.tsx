@@ -23,11 +23,10 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import ButtonGroupWithIcon from '@/components/ui/common-all-buttons'
-
-import FileIcon from '@/components/icons/FileIcon'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 import { useLocation } from 'react-router-dom'
-
+import FileIcon from '@/components/icons/FileIcon'
 interface Attachment {
     url: string
     _id: string
@@ -39,7 +38,7 @@ interface Product {
     description: string
     monthName: string;
     ipcNo: string
-   approved?: boolean
+    approved?: boolean
     date: string
     remarks: string
     attachments: Attachment[]
@@ -61,10 +60,10 @@ export default function MonthlyReport() {
         remarks: '',
         attachments: [],
     }
-const [approved, setApproved] = useState<boolean>(false);
+    const [approved, setApproved] = useState<boolean>(false);
     const { roles, permissions } = useAuth()
     const { pathname } = useLocation();
-     const showAll = pathname.startsWith('/edms');
+    const showAll = pathname.startsWith('/edms');
     const financeManagerPermission = permissions.find((p) => p.name === 'finance-manager');
     console.log('financeManagerPermission', financeManagerPermission);
     const financePermission = financeManagerPermission?.children?.find((child) => child.name === 'monthly-ipc-updates');
@@ -142,7 +141,7 @@ const [approved, setApproved] = useState<boolean>(false);
         try {
             setLoading2(true)
             const formData = new FormData()
-         
+
             formData.append('subjectName', updatedProduct.subjectName)
             formData.append('description', updatedProduct.description)
             formData.append('approved', updatedProduct.approved ? 'true' : 'false')
@@ -283,17 +282,21 @@ const [approved, setApproved] = useState<boolean>(false);
         </>
     )
 
-    const handleFileChange2 = (e: { target: { files: any[] } }) => {
-        const selectedFile = e.target.files[0]
-        if (selectedFile && selectedFile.name.endsWith('.xlsx')) {
-            setFile(selectedFile)
-            setUploadStatus('')
+    const handleFileChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    
+    if (selectedFile) {
+        const fileName = selectedFile.name.toLowerCase();
+        
+        if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls') || fileName.endsWith('.csv')) {
+            setFile(selectedFile);
+            setUploadStatus('');
         } else {
-            setFile(null)
-            setUploadStatus('Please select a valid .xlsx file.')
+            setFile(null);
+            setUploadStatus('Please select a valid .xlsx, .xls, or .csv file.');
         }
     }
-
+};
 
     const handleFileChange = (newFiles: File[]) => {
         setFilesInput(newFiles)
@@ -329,7 +332,7 @@ const [approved, setApproved] = useState<boolean>(false);
         return `${day}-${month}-${year}`
     }
 
-   const saveProduct = async () => {
+    const saveProduct = async () => {
         // --- 1. VALIDATION SHORTCUT ---
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
@@ -377,7 +380,7 @@ const [approved, setApproved] = useState<boolean>(false);
                 }
             )
 
-           
+
             setSubjectName('')
             setDescription('')
             setIpcNo('')
@@ -446,12 +449,26 @@ const [approved, setApproved] = useState<boolean>(false);
         setProduct(emptyProduct)
     }
 
+    // const exportCSV = () => {
+    //     if (selectedProducts && selectedProducts.length > 0) {
+    //         dt.current?.exportCSV({ selectionOnly: true })
+    //     } else {
+    //         dt.current?.exportCSV()
+    //     }
+    // }
+
     const exportCSV = () => {
-        if (selectedProducts && selectedProducts.length > 0) {
-            dt.current?.exportCSV({ selectionOnly: true })
-        } else {
-            dt.current?.exportCSV()
-        }
+     const dataToExport =
+        selectedProducts && selectedProducts.length > 0
+            ? selectedProducts
+            : products;
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    XLSX.writeFile(workbook, "data.xlsx");
     }
     // multi delete funcs
     const confirmDeleteSelected = () => {
@@ -642,33 +659,33 @@ const [approved, setApproved] = useState<boolean>(false);
         </>
     )
 
-   const handleSearch = () => {
-       setLoading(true)
+    const handleSearch = () => {
+        setLoading(true)
         const payload = {
-        
+
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
 
         searchIpcMonthlyUpdates(payload).then((result) => {
             const rows = Array.isArray(result?.data) ? result.data : [];
-            console.log(products,'products')
+            console.log(products, 'products')
             setProducts(rows)
             setLoading(false)
         })
     }
 
     const handleReset = () => {
-         setLoading(true)
+        setLoading(true)
         const payload = {
-       
+
             date_range: date && date2 ? `${formatDate(date)} to ${formatDate(date2)}` : '',
             searchQuery: searchKey,
         }
 
-                  setDate(null)
-            setDate2(null)
-            setSearchKey('')
+        setDate(null)
+        setDate2(null)
+        setSearchKey('')
         setSelectedCode(null)
 
         searchIpcMonthlyUpdates(payload).then((result) => {
@@ -805,22 +822,22 @@ const [approved, setApproved] = useState<boolean>(false);
         </>
     )
 
-      const refetch = () => {
-             setLoading(true)
-          
-             const payload = {
-             
-                 date_range: '',
-                 searchQuery: '',
-             }
-     
-             searchIpcMonthlyUpdates(payload).then((result) => {
-                 const rows = Array.isArray(result?.data) ? result.data : [];
+    const refetch = () => {
+        setLoading(true)
+
+        const payload = {
+
+            date_range: '',
+            searchQuery: '',
+        }
+
+        searchIpcMonthlyUpdates(payload).then((result) => {
+            const rows = Array.isArray(result?.data) ? result.data : [];
             setProducts(rows)
-                 setLoading(false)
-             })
-         }
-     
+            setLoading(false)
+        })
+    }
+
 
     // initial data load - Internal
     useEffect(() => {
@@ -849,7 +866,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     {/* 1st tab  */}
                     <TabPanel>
                         <DataTable
-                            ref={dt}           size="small"           height={45}
+                            ref={dt} size="small" height={45}
                             value={products}
                             selection={selectedProducts}
                             onSelectionChange={(e: any) => {
@@ -925,7 +942,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 field='monthName'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                               
+
                                 className='min-w-[1rem]'
                                 header='Month Name'
                             ></Column>
@@ -933,7 +950,7 @@ const [approved, setApproved] = useState<boolean>(false);
                                 field='ipcNo'
                                 headerClassName='bg-[#ffc2c2] text-sm'
                                 bodyClassName='text-xs truncate max-w-xs'
-                                
+
                                 className='min-w-[1rem]'
                                 header='IPC No.'
                             ></Column>
@@ -991,7 +1008,7 @@ const [approved, setApproved] = useState<boolean>(false);
                 <div className='grid grid-cols-2 items-center gap-6'>
                     <div className='field col-span-2'>
                         <label htmlFor='bulkUpload' className='font-bold'>
-                            Select File (.xlsx Only):
+                            Select File (.xlsx):
                         </label>
                         <br />
                         <input
@@ -1160,7 +1177,7 @@ const [approved, setApproved] = useState<boolean>(false);
                             <h3 className='font-bold mb-2'>Add New Attachments</h3>
                             <MultiFileInput onFilesChange={handleNewAttachments} />
                         </div>
-                       
+
                     </div>
                 )}
             </Dialog>
@@ -1263,30 +1280,30 @@ const [approved, setApproved] = useState<boolean>(false);
                             </div>
 
                             <div className='col-span-2'>
-                <h3 className='font-bold'>Attachments/Download</h3>
-                <div className='grid grid-cols-2 gap-4'>
-                  {selectedProduct.attachments.map((attachment) => (
-                    <div
-                      key={attachment._id}
-                      className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
-                    >
-                      <FilePreview url={attachment.url} />
-                      <div className='mt-3 flex items-center justify-between gap-2'>
-                        <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
-                          {attachment.url?.split('/').pop()}
-                        </span>
-                        <Button
-                          icon='pi pi-external-link'
-                          onClick={() =>
-                            window.open(attachment.url, '_blank')
-                          }
-                          className='p-button-text p-button-rounded flex-shrink-0'
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                                <h3 className='font-bold'>Attachments/Download</h3>
+                                <div className='grid grid-cols-2 gap-4'>
+                                    {selectedProduct.attachments.map((attachment) => (
+                                        <div
+                                            key={attachment._id}
+                                            className='border rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer'
+                                        >
+                                            <FilePreview url={attachment.url} />
+                                            <div className='mt-3 flex items-center justify-between gap-2'>
+                                                <span className='text-sm font-medium text-gray-900 truncate max-w-[80%]'>
+                                                    {attachment.url?.split('/').pop()}
+                                                </span>
+                                                <Button
+                                                    icon='pi pi-external-link'
+                                                    onClick={() =>
+                                                        window.open(attachment.url, '_blank')
+                                                    }
+                                                    className='p-button-text p-button-rounded flex-shrink-0'
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </>
                 )}
@@ -1352,10 +1369,10 @@ const [approved, setApproved] = useState<boolean>(false);
                                 onChange={(e) => setMonthName(e.value)}
                                 options={months}
                                 placeholder="Select a Month"
-                               optionValue='name'
-                            optionLabel='name'
-                             className='w-full'
-                             itemTemplate={itemTemplate}
+                                optionValue='name'
+                                optionLabel='name'
+                                className='w-full'
+                                itemTemplate={itemTemplate}
                             />
                         </div>
                         <div className='field'>
@@ -1390,7 +1407,7 @@ const [approved, setApproved] = useState<boolean>(false);
                     <div className='gap-3 mt-5'>
                         <label className='block mb-1 font-semibold'>
                             Upload Document
-                            
+
                         </label>
 
                         <div>
@@ -1398,18 +1415,18 @@ const [approved, setApproved] = useState<boolean>(false);
                         </div>
                     </div>
                     <div className="col-span-2 mt-2">
-                            <label className="font-bold mb-2 block">Approval</label>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    inputId="approve"
-                                    checked={approved}
-                                    onChange={(e) => setApproved(!!e.checked)}
-                                />
-                                <label htmlFor="approve" className="text-sm">
-                                    Add this document for all
-                                </label>
-                            </div>
+                        <label className="font-bold mb-2 block">Approval</label>
+                        <div className="flex items-center gap-3">
+                            <Checkbox
+                                inputId="approve"
+                                checked={approved}
+                                onChange={(e) => setApproved(!!e.checked)}
+                            />
+                            <label htmlFor="approve" className="text-sm">
+                                Add this document for all
+                            </label>
                         </div>
+                    </div>
                 </>
             </Dialog>
 

@@ -17,6 +17,7 @@ import MultiFileInput from '@/components/MultiFileInput'
 import { Menu } from 'primereact/menu'
 import { toast } from 'sonner'
 import { FilePreview } from '@/components/file-preview'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 
 interface Attachment {

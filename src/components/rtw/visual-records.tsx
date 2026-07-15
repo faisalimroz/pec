@@ -24,8 +24,10 @@ import RefreshButton from '@/components/refresh-button'
 import FileIcon from '@/components/icons/FileIcon'
 import ButtonGroupWithIcon from '../ui/common-all-buttons'
 import { searchPictures } from '@/api/rtwAPIs'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox';
 import { useLocation } from 'react-router-dom'
+
 interface Attachment {
   url: string
   _id: string
@@ -445,13 +447,27 @@ const saveProduct = async () => {
     setProduct(emptyProduct)
   }
 
-  const exportCSV = () => {
-    if (selectedProducts && selectedProducts.length > 0) {
-      dt.current?.exportCSV({ selectionOnly: true })
-    } else {
-      dt.current?.exportCSV()
+  // const exportCSV = () => {
+  //   if (selectedProducts && selectedProducts.length > 0) {
+  //     dt.current?.exportCSV({ selectionOnly: true })
+  //   } else {
+  //     dt.current?.exportCSV()
+  //   }
+  // }
+
+    const exportCSV = () => {
+     const dataToExport =
+        selectedProducts && selectedProducts.length > 0
+            ? selectedProducts
+            : products;
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+    XLSX.writeFile(workbook, "data.xlsx");
     }
-  }
   // multi delete funcs
   const confirmDeleteSelected = () => {
     if (selectedProducts.length > 0) {
@@ -795,7 +811,7 @@ const saveProduct = async () => {
             itemTemplate={itemTemplate}
             optionLabel='name'
             placeholder='Type'
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+            className='border-none rounded-none ml-4  cursor-pointer ring-0'
           />
         </div>
         <IconField iconPosition='left' className='relative'>

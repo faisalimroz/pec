@@ -21,6 +21,7 @@ import { useAuth } from '@/provider/authProvider'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import MultiFileInputTwo from '@/components/MultiFileInputTwo'
+import * as XLSX from 'xlsx';
 import { Checkbox } from 'primereact/checkbox'
 interface Attachment {
   url: string
