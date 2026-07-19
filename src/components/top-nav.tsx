@@ -95,7 +95,7 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
 const handlePmbpClick = () => {
   const secretCode = "ufeQ1e5AqivijXDXEORRNl"
 
-  const url = `http://103.161.47.20:5190/verify-token?secretCode=${encodeURIComponent(
+  const url = `http://103.161.46.19:3040/verify-token?secretCode=${encodeURIComponent(
     secretCode
   )}`
 
