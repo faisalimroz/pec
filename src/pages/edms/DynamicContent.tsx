@@ -291,7 +291,7 @@ const navJson: TreeNode[] = [
             title: "Monthly Report",
             type: "file",
             component:
-              "admin-edms/it-electronics-communication/it-electronics-monthly-report/index",
+              "admin- edms/it-electronics-communication/it-electronics-monthly-report/index",
             countKey: "it-electronics-monthly-report",
           },
           {
@@ -299,7 +299,7 @@ const navJson: TreeNode[] = [
             title: "Tools",
             type: "file",
             component:
-              "admin-edms/it-electronics-communication/it-electronics-tools/index",
+              "admin- edms/it-electronics-communication/it-electronics-tools/index",
             countKey: "it-electronics-tools",
           },
         ],
