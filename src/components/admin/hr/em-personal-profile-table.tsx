@@ -271,143 +271,190 @@ export default function EmPersonalProfileTable() {
   }
 
 const saveProduct = async () => {
-   
-    const fieldLabels = {
-        employeeName: 'Employee Name',
-        employeeId: 'Employee ID',
-        dept: 'Department',
- 
-        position: 'Position',
-        dateOfMobilization: 'Date of Mobilization',
-        dateOfDemobilization: 'Date of Demobilization',
-        remarks: 'Remarks',
-        salary: 'Salary',
-        boqNo: 'BOQ No.',
-        location: 'Location',
-        branch: 'Branch',
-        mobile: 'Mobile',
-        address: 'Address',
-        email: 'Email'
-    };
+  const fieldLabels: Record<string, string> = {
+    employeeName: 'Employee Name',
+    employeeId: 'Employee ID',
+    dept: 'Department',
+    position: 'Position',
+    dateOfMobilization: 'Date of Mobilization',
+    dateOfDemobilization: 'Date of Demobilization',
+    remarks: 'Remarks',
+    salary: 'Salary',
+    boqNo: 'BOQ No.',
+    location: 'Location',
+    branch: 'Branch',
+    mobile: 'Mobile',
+    address: 'Address',
+    email: 'Email',
+  }
 
-    // Loop through the formData state to check for empty values
-    for (const [key, value] of Object.entries(formData)) {
-        // Skip array/file fields here if you validate them separately, 
-        // otherwise this checks strings/dates/numbers.
-        if (
-            key !== 'cvCertificates' && 
-            key !== 'agreement' && 
-            key !== 'showcaseLetter' && 
-            key !== 'warningLetter' && 
-            key !== 'termination' && 
-            key !== 'insuranceClaiming' &&
-            key !== 'profileImg' 
-        ) {
-            if (!value || (typeof value === 'string' && value.trim() === '')) {
-                // Use the friendly name or the key
-                const fieldName = fieldLabels[key] || key;
-                toast.warning(`${fieldName} is required!`);
-                return; // Stop execution
-            }
-        }
-    }
+  // Only these fields are required.
+  // Salary, mobile, mobilization date and demobilization date are optional.
+  const requiredFields = [
+    'employeeName',
+    'employeeId',
+    'dept',
+    'position',
+    'remarks',
+    'boqNo',
+    'location',
+    'branch',
+    'address',
+    'email',
+  ]
 
- 
+  for (const key of requiredFields) {
+    const value = formData[key]
 
-    try {
-      setLoading2(true)
-      const data = new FormData()
+    const isEmpty =
+      value === null ||
+      value === undefined ||
+      (typeof value === 'string' && value.trim() === '')
 
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value instanceof Date) {
-          data.append(key, formatDate(value))
-        } else if (value instanceof File) {
-          data.append(key, value)
-        } else if (value !== null) {
-          // @ts-ignore
-          data.append(key, value.toString())
-        }
-      })
-
-      // ... rest of your file appending logic ...
-      cvCertificates.forEach((file) => {
-        data.append('cvCertificates', file)
-      })
-
-      agreement.forEach((file) => {
-        data.append('agreement', file)
-      })
-
-      showcaseLetter.forEach((file) => {
-        data.append('showcaseLetter', file)
-      })
-
-      warningLetter.forEach((file) => {
-        data.append('warningLetter', file)
-      })
-
-      termination.forEach((file) => {
-        data.append('termination', file)
-      })
-
-      insuranceClaiming.forEach((file) => {
-        data.append('insuranceClaiming', file)
-      })
-
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/upload`,
-        data,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      )
-
-      const response = res
-      console.log(response)
-      hideDialog()
-      toast.success('Data Saved Successfully')
-      refetch();
-      
-      // Reset form data after successful save
-      setFormData({
-        employeeName: '',
-        employeeId: '',
-        dept: '',
-  
-        position: '',
-        dateOfMobilization: '',
-        dateOfDemobilization: '',
-        remarks: '',
-        salary: '',
-        boqNo: '',
-        location: '',
-        branch: '',
-        mobile: '',
-        address: '',
-        email: '',
-        cvCertificates: [],
-        agreement: [],
-        showcaseLetter: [],
-        warningLetter: [],
-        termination: [],
-        insuranceClaiming: [],
-        profileImg: '',
-      });
-
-    } catch (error: any) {
-      if (error.response) {
-        const { message } = error.response.data
-        toast.error(message)
-      } else {
-        console.log(error)
-      }
-    } finally {
-      setLoading2(false)
+    if (isEmpty) {
+      toast.warning(`${fieldLabels[key] || key} is required!`)
+      return
     }
   }
+
+  try {
+    setLoading2(true)
+
+    const data = new FormData()
+
+    // These file arrays are appended separately below.
+    const attachmentFields = [
+      'cvCertificates',
+      'agreement',
+      'showcaseLetter',
+      'warningLetter',
+      'termination',
+      'insuranceClaiming',
+    ]
+
+    // Optional fields should not be sent when empty.
+    const optionalFields = [
+      'salary',
+      'mobile',
+      'dateOfMobilization',
+      'dateOfDemobilization',
+    ]
+
+    Object.entries(formData).forEach(([key, value]) => {
+      // Skip attachment arrays because they are handled separately.
+      if (attachmentFields.includes(key)) {
+        return
+      }
+
+      // Skip empty optional values.
+      if (
+        optionalFields.includes(key) &&
+        (value === '' || value === null || value === undefined)
+      ) {
+        return
+      }
+
+      if (value instanceof Date) {
+        data.append(key, formatDate(value))
+        return
+      }
+
+      if (value instanceof File) {
+        data.append(key, value)
+        return
+      }
+
+      if (
+        value !== null &&
+        value !== undefined &&
+        !Array.isArray(value)
+      ) {
+        data.append(key, String(value))
+      }
+    })
+
+    cvCertificates.forEach((file) => {
+      data.append('cvCertificates', file)
+    })
+
+    agreement.forEach((file) => {
+      data.append('agreement', file)
+    })
+
+    showcaseLetter.forEach((file) => {
+      data.append('showcaseLetter', file)
+    })
+
+    warningLetter.forEach((file) => {
+      data.append('warningLetter', file)
+    })
+
+    termination.forEach((file) => {
+      data.append('termination', file)
+    })
+
+    insuranceClaiming.forEach((file) => {
+      data.append('insuranceClaiming', file)
+    })
+
+    await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/v1/admin/hr/employee-personal/upload`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    )
+
+    toast.success('Data Saved Successfully')
+    hideDialog()
+    refetch()
+
+    setFormData({
+      employeeName: '',
+      employeeId: '',
+      dept: '',
+      position: '',
+      dateOfMobilization: '',
+      dateOfDemobilization: '',
+      remarks: '',
+      salary: '',
+      boqNo: '',
+      location: '',
+      branch: '',
+      mobile: '',
+      address: '',
+      email: '',
+      cvCertificates: [],
+      agreement: [],
+      showcaseLetter: [],
+      warningLetter: [],
+      termination: [],
+      insuranceClaiming: [],
+      profileImg: '',
+    })
+
+    setCvCertificates([])
+    setAgreement([])
+    setShowcaseLetter([])
+    setWarningLetter([])
+    setTermination([])
+    setInsuranceClaiming([])
+    setProfileImagePreview(null)
+  } catch (error: any) {
+    console.error('Employee creation error:', error)
+
+    const message =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      'Failed to save employee data'
+
+    toast.error(message)
+  } finally {
+    setLoading2(false)
+  }
+}
 
   const exportCSV = () => {
     if (selectedProducts && selectedProducts.length > 0) {
@@ -1118,7 +1165,7 @@ const saveProduct = async () => {
                   id='salary'
                   value={formData.salary}
                   onChange={handleInputChange}
-                  required
+                  
                 />
               </div>
 
@@ -1166,7 +1213,7 @@ const saveProduct = async () => {
                   id='mobile'
                   value={formData.mobile}
                   onChange={handleInputChange}
-                  required
+                  
                 />
               </div>
 
@@ -1232,17 +1279,7 @@ const saveProduct = async () => {
                   />
                 </div>
               </div>
-              {/* <div className='field'>
-                <label htmlFor='firmName' className='font-bold'>
-                  Firm Name
-                </label>
-                <InputText
-                  id='firmName'
-                  value={formData.firmName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div> */}
+              
             </div>
 
             <div className='gap-3 mt-5'>

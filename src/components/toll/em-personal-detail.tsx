@@ -982,37 +982,7 @@ export default function EmPersonalDetail({
               />
             </div>
 
-            {/* <div className='field mb-3'>
-              <label htmlFor='address' className='block font-bold mb-2'>
-                Address
-              </label>
-              <InputText
-                id='address'
-                value={updatedEmployee.address}
-                onChange={(e) =>
-                  setUpdatedEmployee({
-                    ...updatedEmployee,
-                    address: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className='field mb-3'>
-              <label htmlFor='email' className='block font-bold mb-2'>
-                Email
-              </label>
-              <InputText
-                id='email'
-                value={updatedEmployee.email}
-                onChange={(e) =>
-                  setUpdatedEmployee({
-                    ...updatedEmployee,
-                    email: e.target.value,
-                  })
-                }
-              />
-            </div> */}
+          
 
             {/* Add more fields for other employee properties */}
             <div className='field'>
