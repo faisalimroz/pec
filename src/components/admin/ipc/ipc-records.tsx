@@ -108,7 +108,7 @@ const [approved, setApproved] = useState<boolean>(false);
         
         { name: "Tax Challan", value: "Tax Challan" },
         { name: "BBA Approval", value: "BBA Approval" },
-        { name: "USSD Forwarding", value: "USSD Forwarding" },
+        { name: "USD Forwarding", value: "USSD Forwarding" },
         { name: "Check Payment Record", value: "Check Payment Record" }
     ];
     const itemTemplate = (option: { name: string; value: string }) => (
@@ -566,7 +566,7 @@ const [approved, setApproved] = useState<boolean>(false);
            
             { name: "Tax Challan", value: "Tax Challan" },
             { name: "BBA Approval", value: "BBA Approval" },
-            { name: "USSD Forwarding", value: "USSD Forwarding" },
+            { name: "USD Forwarding", value: "USSD Forwarding" },
             { name: "Check Payment Record", value: "Check Payment Record" }
         ]
         const handleButtonClick = (buttonValue: string) => {
