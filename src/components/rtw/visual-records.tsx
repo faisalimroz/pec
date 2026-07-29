@@ -338,7 +338,7 @@ const saveProduct = async () => {
             { value: description, name: 'Description' },
             { value: types, name: 'Types' },
             { value: contentType, name: 'Content Type' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: formDate, name: 'Date' }
         ];
 

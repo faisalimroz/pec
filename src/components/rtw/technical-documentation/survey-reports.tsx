@@ -335,7 +335,7 @@ const saveProduct = async () => {
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
             { value: refNo, name: 'Ref No' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: typesofSurvey, name: 'Types of Survey' },
             { value: formDate, name: 'Date' }
         ];
@@ -1418,7 +1418,7 @@ const saveProduct = async () => {
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 

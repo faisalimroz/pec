@@ -336,7 +336,7 @@ export default function MedicineInOutRecord() {
             { value: refNo, name: 'Reference No' },
             { value: description, name: 'Description' },
             { value: sender, name: 'Sender' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: statusType, name: 'Status Type' },
             { value: formDate, name: 'Date' }
         ];
@@ -1426,7 +1426,7 @@ export default function MedicineInOutRecord() {
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 

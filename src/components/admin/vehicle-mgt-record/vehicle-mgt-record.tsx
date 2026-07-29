@@ -44,6 +44,12 @@ interface Product {
   vehicleClass: string
   remarks: string
   fitnessDuration: string
+  engineNo: string
+  chasisNo: string
+  registrationType: string
+  registrationLocation: string
+  fitnessStartDate: string
+  fitnessEndDate: string
   attachments: Attachment[]
   creator?: string
   creationTimestamp?: string
@@ -65,6 +71,12 @@ export default function MonthlyReport() {
     taxExpiryDate: '',
     remarks: '',
     fitnessDuration: '',
+    engineNo: '',
+    chasisNo: '',
+    registrationType: '',
+    registrationLocation: '',
+    fitnessStartDate: '',
+    fitnessEndDate: '',
     attachments: [],
   }
 
@@ -72,10 +84,9 @@ export default function MonthlyReport() {
   const { pathname } = useLocation();
   const showAll = pathname.startsWith('/edms');
   const adminManagerPermission = permissions.find((p) => p.name === 'admin');
-  console.log('adminManagerPermission', adminManagerPermission);
   const adminPermission = adminManagerPermission?.children?.find((child) => child.name === 'vehicle-management');
 
-  const hasEditAccess =  adminPermission?.edit_authority === true;
+  const hasEditAccess = adminPermission?.edit_authority === true;
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [products, setProducts] = useState<Product[]>([])
@@ -95,14 +106,22 @@ export default function MonthlyReport() {
   const [searchKey, setSearchKey] = useState('')
   const [loading, setLoading] = useState(false)
   const [loading2, setLoading2] = useState(false)
+
+  // Form fields for Create
   const [vehicleName, setVehicleName] = useState('')
   const [taxTokenReport, setTaxTokenReport] = useState('')
   const [regNo, setRegNo] = useState('')
   const [remarks, setRemarks] = useState('')
   const [vehicleClass, setVehicleClass] = useState('')
   const [status, setStatus] = useState<string>('')
+  const [engineNo, setEngineNo] = useState('')
+  const [chasisNo, setChasisNo] = useState('')
+  const [registrationType, setRegistrationType] = useState('')
+  const [registrationLocation, setRegistrationLocation] = useState('')
+  const [fitnessStartDate, setFitnessStartDate] = useState<Date | null>(null)
+  const [fitnessEndDate, setFitnessEndDate] = useState<Date | null>(null)
 
-  // CREATE dialog: keep both raw Date[] and the string payload
+  // CREATE dialog: keep both raw Date[] and the string payload for old fitnessDuration if needed, or handle start/end separately
   const [fitnessRange, setFitnessRange] = useState<Date[] | null>(null)
   const [fitnessDuration, setFitnessDuration] = useState<string>('')
 
@@ -186,24 +205,24 @@ export default function MonthlyReport() {
   const handleUpdateProduct = async () => {
     if (!updatedProduct) return
 
-    // guard: require a proper range string if your backend expects it
-    if (!updatedProduct.fitnessDuration || !updatedProduct.fitnessDuration.includes(' - ')) {
-      toast.error('Please select a valid Fitness Duration range.')
-      return
-    }
-
     try {
       setLoading2(true)
       const formData = new FormData()
-      formData.append('vehicleName', updatedProduct.vehicleName)
-      formData.append('taxTokenReport', updatedProduct.taxTokenReport)
-      formData.append('regNo', updatedProduct.regNo)
-      formData.append('remarks', updatedProduct.remarks)
-      formData.append('taxExpiryDate', updatedProduct.taxExpiryDate)
-      formData.append('status', updatedProduct.status)
+      formData.append('vehicleName', updatedProduct.vehicleName || '')
+      formData.append('taxTokenReport', updatedProduct.taxTokenReport || '')
+      formData.append('regNo', updatedProduct.regNo || '')
+      formData.append('remarks', updatedProduct.remarks || '')
+      formData.append('taxExpiryDate', updatedProduct.taxExpiryDate || '')
+      formData.append('status', updatedProduct.status || '')
       formData.append('approved', updatedProduct.approved ? 'true' : 'false')
-      formData.append('vehicleClass', updatedProduct.vehicleClass)
-      formData.append('fitnessDuration', updatedProduct.fitnessDuration)
+      formData.append('vehicleClass', updatedProduct.vehicleClass || '')
+      formData.append('fitnessDuration', updatedProduct.fitnessDuration || '')
+      formData.append('engineNo', updatedProduct.engineNo || '')
+      formData.append('chasisNo', updatedProduct.chasisNo || '')
+      formData.append('registrationType', updatedProduct.registrationType || '')
+      formData.append('registrationLocation', updatedProduct.registrationLocation || '')
+      formData.append('fitnessStartDate', updatedProduct.fitnessStartDate || '')
+      formData.append('fitnessEndDate', updatedProduct.fitnessEndDate || '')
 
       newAttachments.forEach((f) => formData.append('attachments', f))
       removedAttachments.forEach((id) => formData.append('removedAttachments', id))
@@ -313,7 +332,6 @@ export default function MonthlyReport() {
   )
 
   // create dialog
-  const handleFileChange = (newFiles: File[]) => setFilesInput(newFiles)
   const openNew = () => {
     setProduct(emptyProduct)
     setSubmitted(false)
@@ -323,66 +341,45 @@ export default function MonthlyReport() {
     setSubmitted(false)
     setProductDialog(false)
   }
-const saveProduct = async () => {
-    // --- 1. VALIDATION SHORTCUT ---
-    const requiredFields = [
-      { value: vehicleName, name: 'Vehicle Name' },
-      { value: taxTokenReport, name: 'Tax Token Report' },
-      { value: regNo, name: 'Reg No' },
-      { value: remarks, name: 'Remarks' },
-      { value: vehicleClass, name: 'Vehicle Class' },
-      { value: status, name: 'Status' },
-      { value: taxExpiryDate, name: 'Tax Expiry Date' },
-      { value: fitnessDuration, name: 'Fitness Duration' }
-    ];
 
-    for (const field of requiredFields) {
-      if (!field.value) {
-        toast.warning(`${field.name} is required!`);
-        return;
-      }
-    }
-
-    // Specific validation for Fitness Duration range
-    if (!fitnessDuration.includes(' - ')) {
-      toast.error('Please select a valid Fitness Duration range.')
-      return
-    }
-
+  const saveProduct = async () => {
     try {
       setLoading2(true)
       const formData = new FormData()
 
       formData.append('vehicleName', vehicleName)
       formData.append('taxTokenReport', taxTokenReport)
- 
       formData.append('regNo', regNo)
       formData.append('remarks', remarks)
       formData.append('vehicleClass', vehicleClass)
-      formData.append('approved', approved ? 'true' : 'false');
+      formData.append('approved', approved ? 'true' : 'false')
       formData.append('status', status)
       formData.append('taxExpiryDate', formatDate(taxExpiryDate))
       formData.append('fitnessDuration', fitnessDuration)
+      formData.append('engineNo', engineNo)
+      formData.append('chasisNo', chasisNo)
+      formData.append('registrationType', registrationType)
+      formData.append('registrationLocation', registrationLocation)
+      formData.append('fitnessStartDate', formatDate(fitnessStartDate))
+      formData.append('fitnessEndDate', formatDate(fitnessEndDate))
 
-      // Append files only if they exist
       if (filesInput && filesInput.length > 0) {
         filesInput.forEach((file) => {
           formData.append('attachments', file)
         })
       }
 
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/create`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data', // Kept as per standard layout
+            'Content-Type': 'multipart/form-data',
           },
         }
       )
 
-      // --- 2. RESET ALL FIELDS HERE ---
       setVehicleName('')
       setTaxTokenReport('')
       setRegNo('')
@@ -392,6 +389,12 @@ const saveProduct = async () => {
       setStatus('')
       setTaxExpiryDate(null)
       setFitnessDuration('')
+      setEngineNo('')
+      setChasisNo('')
+      setRegistrationType('')
+      setRegistrationLocation('')
+      setFitnessStartDate(null)
+      setFitnessEndDate(null)
       setFilesInput([])
       setFitnessRange([])
       hideDialog()
@@ -408,19 +411,12 @@ const saveProduct = async () => {
       setLoading2(false)
     }
   }
-// const exportCSV = () => {
-    //     if (selectedProducts && selectedProducts.length > 0) {
-    //         dt.current?.exportCSV({ selectionOnly: true })
-    //     } else {
-    //         dt.current?.exportCSV()
-    //     }
-    // }
 
-    const exportCSV = () => {
-     const dataToExport =
-        selectedProducts && selectedProducts.length > 0
-            ? selectedProducts
-            : products;
+  const exportCSV = () => {
+    const dataToExport =
+      selectedProducts && selectedProducts.length > 0
+        ? selectedProducts
+        : products;
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
@@ -428,8 +424,8 @@ const saveProduct = async () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
 
     XLSX.writeFile(workbook, "data.xlsx");
-    }
-  // deletes
+  }
+
   const confirmDeleteProduct = (p: Product) => {
     setProduct(p)
     setDeleteProductDialog(true)
@@ -493,27 +489,6 @@ const saveProduct = async () => {
     setSelectedProducts([])
   }
 
-  const deleteMultipleDialogFooter = (
-    <div className='flex justify-end gap-2'>
-      <button
-        type='button'
-        className='text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 font-semibold py-2 px-4 rounded border'
-        onClick={hideDeleteMultipleDialog}
-      >
-        Cancel
-      </button>
-      <button
-        type='button'
-        className='bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded'
-        onClick={deleteSelectedProducts}
-        disabled={loading2}
-      >
-        Delete
-      </button>
-    </div>
-  )
-
-  // toolbar
   const leftToolbarTemplate = () => (
     <div className='flex items-center gap-3'>
       <div className='px-2 py-1.5 bg-main text-xs font-semibold text-white rounded-lg'>
@@ -529,7 +504,7 @@ const saveProduct = async () => {
           selectedProducts={selectedProducts}
           openNew={openNew}
           openNew2={openNew2}
-         exportCSV={exportCSV}
+          exportCSV={exportCSV}
           confirmDeleteSelected={confirmDeleteSelected}
         />
       )}
@@ -537,7 +512,6 @@ const saveProduct = async () => {
     </>
   )
 
-  // view dialog
   const hideViewDialog = () => {
     setViewProductDialog(false)
     setSelectedProduct(null)
@@ -591,7 +565,6 @@ const saveProduct = async () => {
     )
   }
 
-  // search/reset/refetch
   const handleSearch = () => {
     setLoading(true)
     const payload = {
@@ -688,7 +661,7 @@ const saveProduct = async () => {
             itemTemplate={itemTemplate}
             optionLabel='name'
             placeholder='Status '
-            className='border-none rounded-none ml-4 cursor-pointer ring-0'
+            className='border-none  rounded-none ml-4 cursor-pointer ring-0'
           />
         </div>
         <IconField iconPosition='left' className='relative'>
@@ -730,18 +703,6 @@ const saveProduct = async () => {
       <Button label='Save' loading={loading2} icon='pi pi-check' onClick={saveProduct} />
     </>
   )
-  const deleteProductDialogFooter = (
-    <>
-      <Button label='No' icon='pi pi-times' outlined onClick={() => setDeleteProductDialog(false)} />
-      <Button label='Yes' icon='pi pi-check' severity='danger' onClick={deleteProduct} />
-    </>
-  )
-  const deleteProductsDialogFooter = (
-    <>
-      <Button label='No' icon='pi pi-times' outlined onClick={() => setDeleteProductsDialog(false)} />
-      <Button label='Yes' icon='pi pi-check' severity='danger' onClick={deleteSelectedProducts} />
-    </>
-  )
 
   return (
     <div className=''>
@@ -755,7 +716,9 @@ const saveProduct = async () => {
         <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
           <TabPanel>
             <DataTable
-              ref={dt}           size="small"           height={45}
+              ref={dt}
+              size="small"
+              height={45}
               value={products}
               selection={selectedProducts}
               onSelectionChange={(e: any) => {
@@ -790,13 +753,21 @@ const saveProduct = async () => {
               <Column field='slNo' header='SL No.' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
               <Column field='vehicleName' header='Vehicle Name' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[8rem]' />
               <Column field='regNo' header='Registration Number' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='fitnessDuration' header='Fitness Duration' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='vehicleClass' header='Vehicle Class' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='taxTokenReport' header='Tax & Token Report' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='status' header='Status' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[8rem]' />
+
+               <Column field='taxTokenReport' header='Tax Token' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
               <Column field='taxExpiryDate' header='Road Tax Expiry Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='fitnessStartDate' header='Fitness Start Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='fitnessEndDate' header='Fitness End Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='vehicleClass' header='Vehicle Class' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+               <Column field='engineNo' header='Engine No' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='chasisNo' header='Chasis No' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='registrationType' header='Registration Type' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='registrationLocation' header='Registration Location' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='status' header='Status' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[8rem]' />
+             
+
               <Column body={attachmentBodyTemplate} header='Attachment' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='remarks' header='Remarks' headerClassName='bg-[#ffc2c2] text sm' bodyClassName='text-xs truncate max-w-xs' sortable className='min-w-[1rem]' />
+              <Column field='remarks' header='Remarks' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' sortable className='min-w-[1rem]' />
               <Column body={actionBodyTemplate} header='Actions' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' headerStyle={{ width: '3rem' }} exportable={false} />
             </DataTable>
           </TabPanel>
@@ -842,6 +813,46 @@ const saveProduct = async () => {
                 value={updatedProduct.vehicleClass}
                 onChange={(e) =>
                   setUpdatedProduct({ ...updatedProduct, vehicleClass: e.target.value })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='engineNo' className='font-bold'>Engine No</label>
+              <InputText
+                id='engineNo'
+                value={updatedProduct.engineNo}
+                onChange={(e) =>
+                  setUpdatedProduct({ ...updatedProduct, engineNo: e.target.value })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='chasisNo' className='font-bold'>Chasis No</label>
+              <InputText
+                id='chasisNo'
+                value={updatedProduct.chasisNo}
+                onChange={(e) =>
+                  setUpdatedProduct({ ...updatedProduct, chasisNo: e.target.value })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='registrationType' className='font-bold'>Registration Type</label>
+              <InputText
+                id='registrationType'
+                value={updatedProduct.registrationType}
+                onChange={(e) =>
+                  setUpdatedProduct({ ...updatedProduct, registrationType: e.target.value })
+                }
+              />
+            </div>
+            <div className='field'>
+              <label htmlFor='registrationLocation' className='font-bold'>Registration Location</label>
+              <InputText
+                id='registrationLocation'
+                value={updatedProduct.registrationLocation}
+                onChange={(e) =>
+                  setUpdatedProduct({ ...updatedProduct, registrationLocation: e.target.value })
                 }
               />
             </div>
@@ -898,31 +909,35 @@ const saveProduct = async () => {
               />
             </div>
 
+         
+
             <div className='field'>
-              <label htmlFor='fitnessDuration' className='font-bold'>Fitness Duration</label>
+              <label htmlFor='fitnessStartDate' className='font-bold'>Fitness Start Date</label>
               <Calendar
-                id='fitnessDuration'
-                selectionMode='range'
-               
-                value={fitnessRangeEdit}
-                onChange={(e) => {
-                  const val = e.value as Date[] | null
-                  setFitnessRangeEdit(val)
-                  if (Array.isArray(val) && val[0] && val[1]) {
-                    setUpdatedProduct({
-                      ...updatedProduct,
-                      fitnessDuration: stringifyRange(val),
-                    })
-                  } else {
-                    setUpdatedProduct({
-                      ...updatedProduct,
-                      fitnessDuration: '',
-                    })
-                  }
-                }}
+                id='fitnessStartDate'
+                value={updatedProduct.fitnessStartDate ? parseDDMMYYYY(updatedProduct.fitnessStartDate) : null}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    fitnessStartDate: e.value ? formatDate(e.value as Date) : '',
+                  })
+                }
                 dateFormat='dd/mm/yy'
-                readOnlyInput
-                hideOnRangeSelection
+              />
+            </div>
+
+            <div className='field'>
+              <label htmlFor='fitnessEndDate' className='font-bold'>Fitness End Date</label>
+              <Calendar
+                id='fitnessEndDate'
+                value={updatedProduct.fitnessEndDate ? parseDDMMYYYY(updatedProduct.fitnessEndDate) : null}
+                onChange={(e) =>
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    fitnessEndDate: e.value ? formatDate(e.value as Date) : '',
+                  })
+                }
+                dateFormat='dd/mm/yy'
               />
             </div>
 
@@ -1047,12 +1062,16 @@ const saveProduct = async () => {
               <div><h3 className='font-bold'>Road Tax Expiry Date</h3><p>{selectedProduct.taxExpiryDate}</p></div>
               <div><h3 className='font-bold'>Vehicle Name</h3><p className='break-all'>{selectedProduct.vehicleName}</p></div>
               <div><h3 className='font-bold'>Vehicle Class</h3><p className='break-all'>{selectedProduct.vehicleClass}</p></div>
+              <div><h3 className='font-bold'>Engine No</h3><p className='break-all'>{selectedProduct.engineNo}</p></div>
+              <div><h3 className='font-bold'>Chasis No</h3><p className='break-all'>{selectedProduct.chasisNo}</p></div>
+              <div><h3 className='font-bold'>Registration Type</h3><p className='break-all'>{selectedProduct.registrationType}</p></div>
+              <div><h3 className='font-bold'>Registration Location</h3><p className='break-all'>{selectedProduct.registrationLocation}</p></div>
               <div><h3 className='font-bold'>Status</h3><p className='break-all'>{selectedProduct.status}</p></div>
-              <div><h3 className='font-bold'>Registration Number</h3><p className='break-all'>{selectedProduct.regNo}</p></div>
-              <div><h3 className='font-bold'>Fitness Duration</h3><p className='break-all'>{selectedProduct.fitnessDuration}</p></div>
+              <div><h3 className='font-bold'>Registration Number</h3><p className='break-all'>{selectedProduct.regNo}</p></div>  
+              <div><h3 className='font-bold'>Fitness Start Date</h3><p className='break-all'>{selectedProduct.fitnessStartDate}</p></div>
+              <div><h3 className='font-bold'>Fitness End Date</h3><p className='break-all'>{selectedProduct.fitnessEndDate}</p></div>
               <div><h3 className='font-bold'>Remarks</h3><p className='break-all'>{selectedProduct.remarks}</p></div>
 
-           
                 <div className='col-span-2'>
                   <h3 className='font-bold'>Attachments/Download</h3>
                   <div className='w-fit mt-2 flex flex-col justify-start'>
@@ -1067,7 +1086,7 @@ const saveProduct = async () => {
                     ))}
                   </div>
                 </div>
-           
+            
             </div>
           </>
         )}
@@ -1076,7 +1095,7 @@ const saveProduct = async () => {
       {/* Create / Upload Document */}
       <Dialog
         visible={productDialog}
-        style={{ width: '42rem' }}
+        style={{ width: '45rem' }}
         breakpoints={{ '960px': '75vw', '641px': '90vw' }}
         header='Upload Document'
         modal
@@ -1095,12 +1114,9 @@ const saveProduct = async () => {
                 autoFocus
                 className={classNames({ 'p-invalid': submitted && !vehicleName })}
               />
-              {submitted && !vehicleName && (
-                <small className='p-error'>Vehicle Name is required.</small>
-              )}
             </div>
             <div className='field'>
-              <label htmlFor='taxTokenReport' className='font-bold'>Tax & Token Report</label>
+              <label htmlFor='taxTokenReport' className='font-bold'>Tax Token</label>
               <InputText id='taxTokenReport' onChange={(e) => setTaxTokenReport(e.target.value)} required />
             </div>
             <div className='field'>
@@ -1112,6 +1128,22 @@ const saveProduct = async () => {
               <InputText id='regNo' onChange={(e) => setRegNo(e.target.value)} required />
             </div>
             <div className='field'>
+              <label htmlFor='engineNo' className='font-bold'>Engine No</label>
+              <InputText id='engineNo' onChange={(e) => setEngineNo(e.target.value)} />
+            </div>
+            <div className='field'>
+              <label htmlFor='chasisNo' className='font-bold'>Chasis No</label>
+              <InputText id='chasisNo' onChange={(e) => setChasisNo(e.target.value)} />
+            </div>
+            <div className='field'>
+              <label htmlFor='registrationType' className='font-bold'>Registration Type</label>
+              <InputText id='registrationType' onChange={(e) => setRegistrationType(e.target.value)} />
+            </div>
+            <div className='field'>
+              <label htmlFor='registrationLocation' className='font-bold'>Registration Location</label>
+              <InputText id='registrationLocation' onChange={(e) => setRegistrationLocation(e.target.value)} />
+            </div>
+            <div className='field'>
               <label htmlFor='status' className='font-bold'>Status</label>
               <Dropdown
                 id='status'
@@ -1119,7 +1151,7 @@ const saveProduct = async () => {
                 onChange={(e) => setStatus(e.value)}
                 options={statusType}
                 optionLabel='name'
-                optionValue='code'   // store plain string
+                optionValue='code'
                 placeholder='Status'
                 itemTemplate={itemTemplate}
                 className='w-full'
@@ -1145,28 +1177,30 @@ const saveProduct = async () => {
               </div>
             </div>
 
+           
+
             <div>
-              <label htmlFor='fitnessDuration' className='font-bold'>Fitness Duration</label>
+              <label htmlFor='fitnessStartDate' className='font-bold'>Fitness Start Date</label>
               <div className='border rounded-md'>
                 <Calendar
-                  id='fitnessDuration'
-                  selectionMode='range'
-                  value={fitnessRange}
-                  onChange={(e) => {
-                    const val = e.value as Date[] | null
-                    setFitnessRange(val)
-                    if (Array.isArray(val) && val[0] && val[1]) {
-                      setFitnessDuration(`${formatDate(val[0])} - ${formatDate(val[1])}`)
-                    } else {
-                      setFitnessDuration('')
-                    }
-                  }}
+                  id='fitnessStartDate'
+                  value={fitnessStartDate}
+                  onChange={(e) => setFitnessStartDate(e.value as Date | null)}
                   dateFormat='dd/mm/yy'
-                  readOnlyInput
-                  hideOnRangeSelection
-                  inputClassName='border-0 focus:ring-0 cursor-pointer'
-                  className='focus:ring-0'
-                  placeholder='Select Date Range'
+                  placeholder='Select Start Date'
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor='fitnessEndDate' className='font-bold'>Fitness End Date</label>
+              <div className='border rounded-md'>
+                <Calendar
+                  id='fitnessEndDate'
+                  value={fitnessEndDate}
+                  onChange={(e) => setFitnessEndDate(e.value as Date | null)}
+                  dateFormat='dd/mm/yy'
+                  placeholder='Select End Date'
                 />
               </div>
             </div>
@@ -1192,27 +1226,17 @@ const saveProduct = async () => {
         breakpoints={{ '960px': '75vw', '641px': '90vw' }}
         header='Confirm'
         modal
-        footer={deleteProductDialogFooter}
+        footer={
+          <>
+            <Button label='No' icon='pi pi-times' outlined onClick={() => setDeleteProductDialog(false)} />
+            <Button label='Yes' icon='pi pi-check' severity='danger' onClick={deleteProduct} />
+          </>
+        }
         onHide={() => setDeleteProductDialog(false)}
       >
         <div className='confirmation-content'>
           <i className='pi pi-exclamation-triangle mr-3' style={{ fontSize: '2rem' }} />
           {product && <span>Are you sure you want to delete <b>{product.slNo}</b>?</span>}
-        </div>
-      </Dialog>
-
-      <Dialog
-        visible={deleteProductsDialog}
-        style={{ width: '42rem' }}
-        breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-        header='Confirm'
-        modal
-        footer={deleteProductsDialogFooter}
-        onHide={() => setDeleteProductsDialog(false)}
-      >
-        <div className='confirmation-content'>
-          <i className='pi pi-exclamation-triangle mr-3' style={{ fontSize: '3rem' }} />
-          <span>Are you sure you want to delete the selected products?</span>
         </div>
       </Dialog>
 

@@ -347,7 +347,7 @@ formData.append('approved', updatedProduct.approved ? 'true' : 'false');
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
             { value: monthName, name: 'Month Name' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: formDate, name: 'Date' }
         ];
 
@@ -1373,7 +1373,7 @@ formData.append('approved', updatedProduct.approved ? 'true' : 'false');
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 

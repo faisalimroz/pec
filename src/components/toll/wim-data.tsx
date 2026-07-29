@@ -349,7 +349,7 @@ const uploadFile = async () => {
             { value: shiftName, name: 'Shift Name' },
             { value: pass, name: 'Pass' },
             { value: violation, name: 'Violation' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: formDate, name: 'Date' }
         ];
 

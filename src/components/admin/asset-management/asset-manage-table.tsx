@@ -324,7 +324,7 @@ export default function AssetManagementTable() {
       { value: fileName, name: 'File Name/Subject' },
       { value: formDate, name: 'Date' },
       { value: description, name: 'Description' },
-      { value: remarks, name: 'Remarks' },
+      
       { value: type, name: 'Type' }
     ];
 

@@ -323,7 +323,7 @@ const uploadFile = async () => {
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
-            { value: remarks, name: 'Remarks' },
+            
        
             { value: formDate, name: 'Date' }
         ];
@@ -1322,7 +1322,7 @@ const uploadFile = async () => {
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 

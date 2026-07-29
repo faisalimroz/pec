@@ -246,7 +246,7 @@ const [approved, setApproved] = useState<boolean>(false);
         const requiredFields = [
             { value: subjectName, name: 'Subject Name' },
             { value: description, name: 'Description' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: formDate, name: 'Date' }
         ];
 
@@ -1166,7 +1166,7 @@ const [approved, setApproved] = useState<boolean>(false);
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 

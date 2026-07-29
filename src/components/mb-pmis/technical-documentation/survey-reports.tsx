@@ -335,7 +335,7 @@ export default function MonthlyReport() {
             { value: sender, name: 'Sender' },
             { value: refNo, name: 'Reference No' },
             { value: type, name: 'Type' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: formDate, name: 'Date' }
         ];
 
@@ -1418,7 +1418,7 @@ export default function MonthlyReport() {
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 

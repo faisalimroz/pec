@@ -249,7 +249,7 @@ const hasEditAccess = itsPermission ?.edit_authority === true;
             { value: subjectName, name: 'Subject Name' },
             { value: type, name: 'Type' },
             { value: description, name: 'Description' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: formDate, name: 'Date' }
         ];
 

@@ -265,7 +265,7 @@ export default function MonthlyReport() {
       { value: subjectName, name: 'Subject Name' },
       { value: description, name: 'Description' },
       { value: type, name: 'Type' },
-      { value: remarks, name: 'Remarks' },
+      
       { value: formDate, name: 'Date' }
     ];
 

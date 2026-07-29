@@ -331,7 +331,7 @@ export default function MonthlyReport() {
         const requiredFields = [
             { value: subjectName, name: 'File Name/Subject' },
             { value: description, name: 'Description' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: monthName, name: 'Month Name' },
             { value: formDate, name: 'Date' }
         ];
@@ -1378,7 +1378,7 @@ export default function MonthlyReport() {
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 

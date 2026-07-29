@@ -259,7 +259,7 @@ export default function MonthlyReport() {
     const requiredFields = [
       { value: subjectName, name: 'Subject Name' },
       { value: description, name: 'Description' },
-      { value: remarks, name: 'Remarks' },
+      
       { value: monthName, name: 'Month Name' },
       { value: formDate, name: 'Date' }
     ];

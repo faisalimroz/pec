@@ -323,7 +323,7 @@ export default function MedicineInOutRecord() {
             { value: medicineName, name: 'Medicine Name' },
             { value: refNo, name: 'Reference No' },
             { value: inoutType, name: 'In/Out Type' },
-            { value: remarks, name: 'Remarks' },
+            
             { value: formDate, name: 'Date' }
         ];
 
@@ -1336,7 +1336,7 @@ export default function MedicineInOutRecord() {
                             <InputText
                                 id='remarks'
                                 onChange={(e) => setRemarks(e.target.value)}
-                                required
+                               
                             />
                         </div>
 
