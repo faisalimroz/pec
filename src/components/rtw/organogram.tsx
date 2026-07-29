@@ -97,7 +97,10 @@ const OrgChart: React.FC = () => {
   const checkPermission = checkRole?.children.find(
     (c) => c.name === 'rtw-organom')
   const showAll = pathname.startsWith('/edms')
-  const isGeneral = checkPermission?.edit_authority === true && showAll
+    const rtwManagerPermission = permissions.find((p) => p.name === 'rtw-manager');
+  const rtwPermission = rtwManagerPermission?.children?.find((child) => child.name === 'rtw-visual-records');
+  const isGeneral = rtwPermission?.edit_authority === true;
+  // const isGeneral = checkPermission?.edit_authority === true && showAll
 
   // State
   const [layout, setLayout] = useState<ProjectLayout | null>(null)

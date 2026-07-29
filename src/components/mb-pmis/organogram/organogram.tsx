@@ -97,7 +97,10 @@ const OrgChart: React.FC = () => {
   const checkPermission = checkRole?.children.find(
     (c) => c.name === 'its-organization/organogram')
   const showAll = pathname.startsWith('/edms')
-  const isGeneral = checkPermission?.edit_authority === true && showAll
+   const mbPmisManagerPermission = permissions.find((p) => p.name === 'mb-pmis-manager');
+    const mbPmisPermission = mbPmisManagerPermission?.children?.find((child) => child.name === 'mb-pmis-communication-correspondence');
+    const isGeneral = mbPmisPermission?.edit_authority === true;
+  // const isGeneral = checkPermission?.edit_authority === true && showAll
 
   // State
   const [layout, setLayout] = useState<ProjectLayout | null>(null)

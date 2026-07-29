@@ -117,12 +117,14 @@ export default function AssetManagementTable() {
     const { pathname } = useLocation()
     const showAll = pathname.startsWith('/edms')
 
-    const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager')
-    const tollPermission = tollManagerPermission?.children?.find(
-        (child) => child.name === 'toll-hierarchy'
-    )
-    const hasEditAccess = tollPermission?.edit_authority === true && showAll
-
+    // const tollManagerPermission = permissions.find((p) => p.name === 'toll-manager')
+    // const tollPermission = tollManagerPermission?.children?.find(
+    //     (child) => child.name === 'toll-letter-attachment'
+    // )
+    // const hasEditAccess = tollPermission?.edit_authority === true && showAll
+ const tollManagerPermission = permissions.find((p) => p.name === "toll-manager");
+  const tollPermission = tollManagerPermission?.children?.find((child) => child.name === "toll-daily-report");
+  const hasEditAccess = tollPermission?.edit_authority === true;
     const [products, setProducts] = useState<any>([])
     const [productDialog, setProductDialog] = useState<boolean>(false)
     const [product, setProduct] = useState<any>(emptyProduct)

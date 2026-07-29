@@ -609,18 +609,18 @@ const PermissionManager = () => {
     },
 
 
-    {
-      name: 'ai-dashboard',
-      authority: false,
-      children: [
-        {
-          name: 'ai-dashboard',
-          view_authority: false,
-          edit_authority: false,
-          g_children: [],
-        },
-      ],
-    },
+    // {
+    //   name: 'ai-dashboard',
+    //   authority: false,
+    //   children: [
+    //     {
+    //       name: 'ai-dashboard',
+    //       view_authority: false,
+    //       edit_authority: false,
+    //       g_children: [],
+    //     },
+    //   ],
+    // },
     {
       name: 'notice',
       authority: false,

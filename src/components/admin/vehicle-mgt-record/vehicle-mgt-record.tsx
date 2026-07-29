@@ -342,76 +342,169 @@ export default function MonthlyReport() {
     setProductDialog(false)
   }
 
-  const saveProduct = async () => {
-    try {
-      setLoading2(true)
-      const formData = new FormData()
+  // const saveProduct = async () => {
+  //   try {
+  //     setLoading2(true)
+  //     const formData = new FormData()
 
-      formData.append('vehicleName', vehicleName)
-      formData.append('taxTokenReport', taxTokenReport)
-      formData.append('regNo', regNo)
-      formData.append('remarks', remarks)
-      formData.append('vehicleClass', vehicleClass)
-      formData.append('approved', approved ? 'true' : 'false')
-      formData.append('status', status)
-      formData.append('taxExpiryDate', formatDate(taxExpiryDate))
-      formData.append('fitnessDuration', fitnessDuration)
-      formData.append('engineNo', engineNo)
-      formData.append('chasisNo', chasisNo)
-      formData.append('registrationType', registrationType)
-      formData.append('registrationLocation', registrationLocation)
-      formData.append('fitnessStartDate', formatDate(fitnessStartDate))
-      formData.append('fitnessEndDate', formatDate(fitnessEndDate))
+  //     formData.append('vehicleName', vehicleName)
+  //     formData.append('taxTokenReport', taxTokenReport)
+  //     formData.append('regNo', regNo)
+  //     formData.append('remarks', remarks)
+  //     formData.append('vehicleClass', vehicleClass)
+  //     formData.append('approved', approved ? 'true' : 'false')
+  //     formData.append('status', status)
+  //     formData.append('taxExpiryDate', formatDate(taxExpiryDate))
+  //     formData.append('fitnessDuration', fitnessDuration)
+  //     formData.append('engineNo', engineNo)
+  //     formData.append('chasisNo', chasisNo)
+  //     formData.append('registrationType', registrationType)
+  //     formData.append('registrationLocation', registrationLocation)
+  //     formData.append('fitnessStartDate', formatDate(fitnessStartDate))
+  //     formData.append('fitnessEndDate', formatDate(fitnessEndDate))
 
-      if (filesInput && filesInput.length > 0) {
-        filesInput.forEach((file) => {
-          formData.append('attachments', file)
-        })
-      }
+  //     if (filesInput && filesInput.length > 0) {
+  //       filesInput.forEach((file) => {
+  //         formData.append('attachments', file)
+  //       })
+  //     }
 
-      await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
+  //     await axios.post(
+  //       `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/create`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem('token')}`,
+  //           'Content-Type': 'multipart/form-data',
+  //         },
+  //       }
+  //     )
 
-      setVehicleName('')
-      setTaxTokenReport('')
-      setRegNo('')
-      setRemarks('')
-      setVehicleClass('')
-      setApproved(false)
-      setStatus('')
-      setTaxExpiryDate(null)
-      setFitnessDuration('')
-      setEngineNo('')
-      setChasisNo('')
-      setRegistrationType('')
-      setRegistrationLocation('')
-      setFitnessStartDate(null)
-      setFitnessEndDate(null)
-      setFilesInput([])
-      setFitnessRange([])
-      hideDialog()
-      toast.success('Data Saved Successfully')
-      refetch()
-    } catch (error: any) {
-      if (error.response) {
-        const { message } = error.response.data
-        toast.error(message)
-      } else {
-        console.log(error)
-      }
-    } finally {
-      setLoading2(false)
-    }
-  }
+  //     setVehicleName('')
+  //     setTaxTokenReport('')
+  //     setRegNo('')
+  //     setRemarks('')
+  //     setVehicleClass('')
+  //     setApproved(false)
+  //     setStatus('')
+  //     setTaxExpiryDate(null)
+  //     setFitnessDuration('')
+  //     setEngineNo('')
+  //     setChasisNo('')
+  //     setRegistrationType('')
+  //     setRegistrationLocation('')
+  //     setFitnessStartDate(null)
+  //     setFitnessEndDate(null)
+  //     setFilesInput([])
+  //     setFitnessRange([])
+  //     hideDialog()
+  //     toast.success('Data Saved Successfully')
+  //     refetch()
+  //   } catch (error: any) {
+  //     if (error.response) {
+  //       const { message } = error.response.data
+  //       toast.error(message)
+  //     } else {
+  //       console.log(error)
+  //     }
+  //   } finally {
+  //     setLoading2(false)
+  //   }
+  // }
+const saveProduct = async () => {
+       // --- 1. VALIDATION SHORTCUT ---
+       const requiredFields = [
+           { value: vehicleName, name: 'Vehicle Name' },
+           { value: taxTokenReport, name: 'Tax Token Report' },
+           { value: regNo, name: 'Registration Number' },
+          
+           { value: vehicleClass, name: 'Vehicle Class' },
+           { value: status, name: 'Status' },
+        
+      
+           { value: engineNo, name: 'Engine No' },
+           { value: chasisNo, name: 'Chasis No' },
+           { value: registrationType, name: 'Registration Type' },
+           { value: registrationLocation, name: 'Registration Location' },
+           { value: fitnessStartDate, name: 'Fitness Start Date' },
+           { value: fitnessEndDate, name: 'Fitness End Date' }
+       ];
 
+       for (const field of requiredFields) {
+           if (!field.value) {
+               toast.warning(`${field.name} is required!`);
+               return;
+           }
+       }
+
+       try {
+           setLoading2(true)
+           const formData = new FormData()
+
+           formData.append('vehicleName', vehicleName)
+           formData.append('taxTokenReport', taxTokenReport)
+           formData.append('regNo', regNo)
+           formData.append('remarks', remarks)
+           formData.append('vehicleClass', vehicleClass)
+           formData.append('approved', approved ? 'true' : 'false')
+           formData.append('status', status)
+           formData.append('taxExpiryDate', formatDate(taxExpiryDate))
+           formData.append('fitnessDuration', fitnessDuration)
+           formData.append('engineNo', engineNo)
+           formData.append('chasisNo', chasisNo)
+           formData.append('registrationType', registrationType)
+           formData.append('registrationLocation', registrationLocation)
+           formData.append('fitnessStartDate', formatDate(fitnessStartDate))
+           formData.append('fitnessEndDate', formatDate(fitnessEndDate))
+
+           if (filesInput && filesInput.length > 0) {
+               filesInput.forEach((file) => {
+                   formData.append('attachments', file)
+               })
+           }
+
+           await axios.post(
+               `${import.meta.env.VITE_BASE_URL}/api/v1/admin/vehicle-mgt-record/create`,
+               formData,
+               {
+                   headers: {
+                       Authorization: `Bearer ${localStorage.getItem('token')}`,
+                       'Content-Type': 'multipart/form-data',
+                   },
+               }
+           )
+
+           setVehicleName('')
+           setTaxTokenReport('')
+           setRegNo('')
+           setRemarks('')
+           setVehicleClass('')
+           setApproved(false)
+           setStatus('')
+           setTaxExpiryDate(null)
+           setFitnessDuration('')
+           setEngineNo('')
+           setChasisNo('')
+           setRegistrationType('')
+           setRegistrationLocation('')
+           setFitnessStartDate(null)
+           setFitnessEndDate(null)
+           setFilesInput([])
+           setFitnessRange([])
+           hideDialog()
+           toast.success('Data Saved Successfully')
+           refetch()
+       } catch (error: any) {
+           if (error.response) {
+               const { message } = error.response.data
+               toast.error(message)
+           } else {
+               console.log(error)
+           }
+       } finally {
+           setLoading2(false)
+       }
+   }
   const exportCSV = () => {
     const dataToExport =
       selectedProducts && selectedProducts.length > 0
