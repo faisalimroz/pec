@@ -418,7 +418,7 @@ const saveProduct = async () => {
            { value: taxTokenReport, name: 'Tax Token Report' },
            { value: regNo, name: 'Registration Number' },
           
-           { value: vehicleClass, name: 'Vehicle Class' },
+           { value: vehicleClass, name: 'Description' },
            { value: status, name: 'Status' },
         
       
@@ -426,8 +426,8 @@ const saveProduct = async () => {
            { value: chasisNo, name: 'Chasis No' },
            { value: registrationType, name: 'Registration Type' },
            { value: registrationLocation, name: 'Registration Location' },
-           { value: fitnessStartDate, name: 'Fitness Start Date' },
-           { value: fitnessEndDate, name: 'Fitness End Date' }
+          //  { value: fitnessStartDate, name: 'Fitness Start Date' },
+           { value: fitnessEndDate, name: 'Fitness Expiry Date' }
        ];
 
        for (const field of requiredFields) {
@@ -845,13 +845,14 @@ const saveProduct = async () => {
 
               <Column field='slNo' header='SL No.' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
               <Column field='vehicleName' header='Vehicle Name' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[8rem]' />
+                <Column field='vehicleClass' header='Description' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
               <Column field='regNo' header='Registration Number' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
 
                <Column field='taxTokenReport' header='Tax Token' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='taxExpiryDate' header='Road Tax Expiry Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='fitnessStartDate' header='Fitness Start Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='fitnessEndDate' header='Fitness End Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
-              <Column field='vehicleClass' header='Vehicle Class' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              <Column field='taxExpiryDate' header='Tax Token Expiry Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+              {/* <Column field='fitnessStartDate' header='Fitness Start Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' /> */}
+              <Column field='fitnessEndDate' header='Fitness Expiry Date' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
+            
                <Column field='engineNo' header='Engine No' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
               <Column field='chasisNo' header='Chasis No' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
               <Column field='registrationType' header='Registration Type' headerClassName='bg-[#ffc2c2] text-sm' bodyClassName='text-xs truncate max-w-xs' className='min-w-[1rem]' />
@@ -900,7 +901,7 @@ const saveProduct = async () => {
               />
             </div>
             <div className='field'>
-              <label htmlFor='vehicleClass' className='font-bold'>Vehicle Class</label>
+              <label htmlFor='vehicleClass' className='font-bold'>Description</label>
               <InputText
                 id='vehicleClass'
                 value={updatedProduct.vehicleClass}
@@ -986,7 +987,7 @@ const saveProduct = async () => {
               />
             </div>
             <div className='field'>
-              <label htmlFor='taxExpiryDate' className='font-bold'>Road Tax Expiry Date</label>
+              <label htmlFor='taxExpiryDate' className='font-bold'>Tax Token Expiry Date</label>
               <Calendar
                 id='taxExpiryDate'
                 value={updatedProduct.taxExpiryDate
@@ -1020,7 +1021,7 @@ const saveProduct = async () => {
             </div>
 
             <div className='field'>
-              <label htmlFor='fitnessEndDate' className='font-bold'>Fitness End Date</label>
+              <label htmlFor='fitnessEndDate' className='font-bold'>Fitness Expiry Date</label>
               <Calendar
                 id='fitnessEndDate'
                 value={updatedProduct.fitnessEndDate ? parseDDMMYYYY(updatedProduct.fitnessEndDate) : null}
@@ -1152,9 +1153,9 @@ const saveProduct = async () => {
 
             <div className='grid grid-cols-2 gap-4'>
               <div><h3 className='font-bold'>SL No.</h3><p className='break-all'>{selectedProduct.slNo}</p></div>
-              <div><h3 className='font-bold'>Road Tax Expiry Date</h3><p>{selectedProduct.taxExpiryDate}</p></div>
+              <div><h3 className='font-bold'>Tax Token Expiry Date</h3><p>{selectedProduct.taxExpiryDate}</p></div>
               <div><h3 className='font-bold'>Vehicle Name</h3><p className='break-all'>{selectedProduct.vehicleName}</p></div>
-              <div><h3 className='font-bold'>Vehicle Class</h3><p className='break-all'>{selectedProduct.vehicleClass}</p></div>
+              <div><h3 className='font-bold'>Description</h3><p className='break-all'>{selectedProduct.vehicleClass}</p></div>
               <div><h3 className='font-bold'>Engine No</h3><p className='break-all'>{selectedProduct.engineNo}</p></div>
               <div><h3 className='font-bold'>Chasis No</h3><p className='break-all'>{selectedProduct.chasisNo}</p></div>
               <div><h3 className='font-bold'>Registration Type</h3><p className='break-all'>{selectedProduct.registrationType}</p></div>
@@ -1162,7 +1163,7 @@ const saveProduct = async () => {
               <div><h3 className='font-bold'>Status</h3><p className='break-all'>{selectedProduct.status}</p></div>
               <div><h3 className='font-bold'>Registration Number</h3><p className='break-all'>{selectedProduct.regNo}</p></div>  
               <div><h3 className='font-bold'>Fitness Start Date</h3><p className='break-all'>{selectedProduct.fitnessStartDate}</p></div>
-              <div><h3 className='font-bold'>Fitness End Date</h3><p className='break-all'>{selectedProduct.fitnessEndDate}</p></div>
+              <div><h3 className='font-bold'>Fitness Expiry Date</h3><p className='break-all'>{selectedProduct.fitnessEndDate}</p></div>
               <div><h3 className='font-bold'>Remarks</h3><p className='break-all'>{selectedProduct.remarks}</p></div>
 
                 <div className='col-span-2'>
@@ -1213,7 +1214,7 @@ const saveProduct = async () => {
               <InputText id='taxTokenReport' onChange={(e) => setTaxTokenReport(e.target.value)} required />
             </div>
             <div className='field'>
-              <label htmlFor='vehicleClass' className='font-bold'>Vehicle Class</label>
+              <label htmlFor='vehicleClass' className='font-bold'>Description</label>
               <InputText id='vehicleClass' onChange={(e) => setVehicleClass(e.target.value)} required />
             </div>
             <div className='field'>
@@ -1256,7 +1257,7 @@ const saveProduct = async () => {
             </div>
 
             <div>
-              <label htmlFor='taxExpiryDate' className='font-bold'>Road Tax Expiry Date</label>
+              <label htmlFor='taxExpiryDate' className='font-bold'>Tax Token Expiry Date</label>
               <div className='border rounded-md'>
                 <Calendar
                   id='taxExpiryDate'
@@ -1272,7 +1273,7 @@ const saveProduct = async () => {
 
            
 
-            <div>
+            {/* <div>
               <label htmlFor='fitnessStartDate' className='font-bold'>Fitness Start Date</label>
               <div className='border rounded-md'>
                 <Calendar
@@ -1283,10 +1284,10 @@ const saveProduct = async () => {
                   placeholder='Select Start Date'
                 />
               </div>
-            </div>
+            </div> */}
 
             <div>
-              <label htmlFor='fitnessEndDate' className='font-bold'>Fitness End Date</label>
+              <label htmlFor='fitnessEndDate' className='font-bold'>Fitness Expiry Date</label>
               <div className='border rounded-md'>
                 <Calendar
                   id='fitnessEndDate'
