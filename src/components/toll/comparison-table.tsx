@@ -407,7 +407,7 @@ export default function VehicleComparison() {
           rowClassName={rowClassName}
           showGridlines
           className='border'
-          size='small'
+     
           loading={loading}
           rowGroupMode='rowspan'
           groupRowsBy='lane'
