@@ -347,7 +347,7 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Completion Form',
+        title: 'Completion Report',
         label: '',
         href: '/road-and-traffic/road-and-maintanance/completion-form',
         icon: '',
@@ -377,13 +377,13 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
+        title: 'Reciving Materials Report',
         label: '',
         href: '/road-and-traffic/road-and-maintanance/reciving-materials-form',
         icon: '',
       },
       {
-        title: 'Requisition Form',
+        title: 'Requisition Report',
         label: '',
         href: '/road-and-traffic/road-and-maintanance/requisition-form',
         icon: '',
@@ -404,7 +404,7 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Completion Form',
+        title: 'Completion Report',
         label: '',
         href: '/road-and-traffic/road-and-patrol/completion-form',
         icon: '',
@@ -440,13 +440,13 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
+        title: 'Reciving Materials Report',
         label: '',
         href: '/road-and-traffic/road-and-patrol/reciving-materials-form',
         icon: '',
       },
       {
-        title: 'Requisition Form',
+        title: 'Requisition Report',
         label: '',
         href: '/road-and-traffic/road-and-patrol/requisition-form',
         icon: '',
@@ -467,7 +467,7 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Completion Form',
+        title: 'Completion Report',
         label: '',
         href: '/road-and-traffic/workshop/completion-form',
         icon: '',
@@ -497,13 +497,13 @@ export const rntLinks: SideLink[] = [
         icon: '',
       },
       {
-        title: 'Reciving Materials From',
+        title: 'Reciving Materials Report',
         label: '',
         href: '/road-and-traffic/workshop/reciving-materials-form',
         icon: '',
       },
       {
-        title: 'Requisition Form',
+        title: 'Requisition Report',
         label: '',
         href: '/road-and-traffic/workshop/requisition-form',
         icon: '',

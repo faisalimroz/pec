@@ -424,7 +424,7 @@ const navJson: TreeNode[] = [
           },
           {
             id: "road-and-maintenance-completion-form",
-            title: "Completion Form",
+            title: "Completion Report",
             type: "file",
             component: "road-and-traffic-edms/road-and-maintenance/completion-form/index",
             countKey: "road-maintenance-completion-form",
@@ -467,7 +467,7 @@ const navJson: TreeNode[] = [
           },
           {
             id: "road-and-maintenance-requisition-form",
-            title: "Requisition Form",
+            title: "Requisition Report",
             type: "file",
             component:
               "road-and-traffic-edms/road-and-maintenance/requisition-form/index",
@@ -491,7 +491,7 @@ const navJson: TreeNode[] = [
           },
           {
             id: "road-and-patrol-completion-form",
-            title: "Completion Form",
+            title: "Completion Report",
             type: "file",
             component:
               "road-and-traffic-edms/road-and-patrol/completion-form/index",
@@ -546,7 +546,7 @@ const navJson: TreeNode[] = [
           },
           {
             id: "road-and-patrol-requisition-form",
-            title: "Requisition Form",
+            title: "Requisition Report",
             type: "file",
             component:
               "road-and-traffic-edms/road-and-patrol/requisition-form/index",
@@ -570,7 +570,7 @@ const navJson: TreeNode[] = [
           },
           {
             id: "workshop-completion-form",
-            title: "Completion Form",
+            title: "Completion Report",
             type: "file",
             component: "road-and-traffic-edms/workshop/completion-form/index",
             countKey: "road-workshop-completion",
@@ -614,7 +614,7 @@ const navJson: TreeNode[] = [
           },
           {
             id: "workshop-requisition-form",
-            title: "Requisition Form",
+            title: "Requisition Report",
             type: "file",
             component:
               "road-and-traffic-edms/workshop/requisition-form/index",
